@@ -1,5 +1,6 @@
 <?php
 
+use App\Jobs\TestRabbitMQJob;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,6 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    cache()->store('redis')->put('test', 'value1', 10);
-    echo cache()->store('redis')->get('test');
+    dispatch(new TestRabbitMQJob());
 });
