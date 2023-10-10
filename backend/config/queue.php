@@ -71,6 +71,16 @@ return [
             'after_commit' => false,
         ],
 
+        'rabbitmq' => [
+            'driver' => 'rabbitmq',
+            'host' => 'rabbitmq',
+            'port' => 5672,
+            'login' => 'admin',
+            'password' => 'admin',
+            'queue' => 'default',
+            'vhost'   => '/',
+        ],
+
     ],
 
     /*
