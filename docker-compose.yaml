@@ -1,0 +1,56 @@
+services:
+    backend:
+        build:
+            context: ./backend
+            dockerfile: Dockerfile
+
+        environment:
+            DB_HOST: mysql
+            DB_DATABASE: twitter
+            DB_USERNAME: root
+            DB_PASSWORD: root
+            MAIL_MAILER: smtp
+            MAIL_HOST: docker.from.mac.localhost
+            MAIL_PORT: 1025
+        ports:
+            - 8000:8000
+            - 1025:1025
+
+        volumes:
+            - ./backend:/app/backend
+
+        depends_on:
+            - mysql
+
+        networks:
+            - app
+
+    frontend:
+        build:
+            context: ./frontend
+            dockerfile: Dockerfile
+        tty: true
+        ports:
+            - 3000:3000
+        volumes:
+            - ./frontend:/app/frontend
+        depends_on:
+            - backend
+        networks:
+            - app
+
+    mysql:
+        image: mysql
+        environment:
+            MYSQL_DATABASE: "twitter"
+            MYSQL_USER: "root"
+            MYSQL_PASSWORD: "root"
+            MYSQL_ROOT_PASSWORD: "root"
+        volumes:
+            - .dbdata:/var/lib/mysql
+        networks:
+            - app
+
+networks:
+    app:
+        driver: bridge
