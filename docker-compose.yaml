@@ -22,6 +22,7 @@ services:
         depends_on:
             - mysql
             - redis
+            - elasticsearch
 
         networks:
             - app
@@ -56,6 +57,19 @@ services:
         image: redis
         ports:
             - 6379:6379
+        networks:
+            - app
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+        volumes:
+            - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+        environment:
+            - "discovery.type=single-node"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ports:
+            - 9200:9200
+            - 9300:9300
         networks:
             - app
 
