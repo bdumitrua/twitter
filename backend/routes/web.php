@@ -14,5 +14,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return 1;
+    cache()->store('redis')->put('test', 'value1', 10);
+    echo cache()->store('redis')->get('test');
 });
