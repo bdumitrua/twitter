@@ -31,10 +31,10 @@ class MakeModule extends Command
     {
         $moduleName = $this->argument('name');
 
-        $dirs = ['Models', 'Repositories', 'Jobs'];
+        $dirs = ['Model', 'Controller', 'Service'];
 
         foreach ($dirs as $dir) {
-            $path = app_path() . "/Modules/$moduleName/$dir";
+            $path = app_path() . "/Modules/$moduleName/$dir" . 's';
             if (!is_dir($path)) {
                 mkdir($path, 0777, true);
             }
