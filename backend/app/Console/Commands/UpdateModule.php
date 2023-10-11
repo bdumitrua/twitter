@@ -2,11 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Traits\FileGeneratorTrait;
 use DirectoryIterator;
 use Illuminate\Console\Command;
 
 class UpdateModule extends Command
 {
+    use FileGeneratorTrait;
     /**
      * The name and signature of the console command.
      *
@@ -51,20 +53,5 @@ class UpdateModule extends Command
         }
 
         $this->info("Modules updated successfully.");
-    }
-
-    private function generateFileContent($moduleName, $dir)
-    {
-        $className = "{$moduleName}{$dir}";
-
-        return "<?php
-
-namespace App\\Modules\\{$moduleName}\\{$dir};
-
-class {$className}
-{
-    // TODO: Implement your class logic here
-}
-";
     }
 }
