@@ -18,6 +18,7 @@ services:
 
         volumes:
             - ./backend:/app/backend
+            - vendor:/app/backend/vendor
 
         depends_on:
             - mysql
@@ -35,7 +36,8 @@ services:
         ports:
             - 3000:3000
         volumes:
-            - ./frontend:/app/frontend
+            - ./frontend/src:/app/frontend/src
+            - node_modules:/app/frontend/node_modules
         depends_on:
             - backend
         networks:
@@ -87,3 +89,7 @@ services:
 networks:
     app:
         driver: bridge
+
+volumes:
+    node_modules:
+    vendor:
