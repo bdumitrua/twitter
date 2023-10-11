@@ -31,7 +31,7 @@ class MakeModule extends Command
         $dirs = ['Models', 'Repositories', 'Jobs'];
 
         foreach ($dirs as $dir) {
-            $path = app_path() . "/$moduleName/$dir";
+            $path = app_path() . "/Modules/$moduleName/$dir";
             if (!is_dir($path)) {
                 mkdir($path, 0777, true);
             }
@@ -50,7 +50,7 @@ class MakeModule extends Command
 
         return "<?php
 
-namespace App\\{$moduleName}\\{$dir};
+namespace App\\Modules\\{$moduleName}\\{$dir};
 
 class {$className}
 {
