@@ -43,7 +43,10 @@ class RenameModule extends Command
         $this->info("Renamed module directory $oldName to $newName.");
 
         // Update the files names within the renamed directory
-        $iterator = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($moduleDir . '/' . $newName, RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::SELF_FIRST);
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($moduleDir . '/' . $newName, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
 
         foreach ($iterator as $item) {
             if ($item->isFile() && $item->getExtension() === 'php') {

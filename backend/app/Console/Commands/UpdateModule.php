@@ -31,7 +31,7 @@ class UpdateModule extends Command
         $moduleDir = app_path() . '/Modules/';
 
         // Список всех папок, которые должны быть в модулях
-        $dirs = ['Models', 'Repositories', 'Jobs', 'Events'];
+        $dirs = ['Model', 'Controller', 'Service'];
 
         foreach (new DirectoryIterator($moduleDir) as $fileInfo) {
             if ($fileInfo->isDot()) continue;
