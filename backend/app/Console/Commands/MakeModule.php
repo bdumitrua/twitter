@@ -2,10 +2,13 @@
 
 namespace App\Console\Commands;
 
+use App\Traits\FileGeneratorTrait;
 use Illuminate\Console\Command;
 
 class MakeModule extends Command
 {
+    use FileGeneratorTrait;
+
     /**
      * The name and signature of the console command.
      *
@@ -42,20 +45,5 @@ class MakeModule extends Command
         }
 
         $this->info("Module $moduleName created successfully.");
-    }
-
-    private function generateFileContent($moduleName, $dir)
-    {
-        $className = "{$moduleName}{$dir}";
-
-        return "<?php
-
-namespace App\\Modules\\{$moduleName}\\{$dir};
-
-class {$className}
-{
-    // TODO: Implement your class logic here
-}
-";
     }
 }
