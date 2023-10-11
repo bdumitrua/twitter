@@ -30,7 +30,6 @@ class MakeModule extends Command
     public function handle()
     {
         $moduleName = $this->argument('name');
-
         $dirs = ['Model', 'Controller', 'Service'];
 
         foreach ($dirs as $dir) {
