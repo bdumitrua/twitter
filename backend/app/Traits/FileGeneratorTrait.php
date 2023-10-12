@@ -6,15 +6,14 @@ use App\Helpers\FileGeneratorHelper;
 
 trait FileGeneratorTrait
 {
-    private function generateFileContent($moduleName, $entityName, $folderName)
+    private function generateFileContent($moduleName, $folderName, $fileName, $entityName)
     {
-        $className = ucfirst($moduleName) . $entityName;
         $methodName = "get" . ucfirst($entityName) . "Content";
         if (is_callable([FileGeneratorHelper::class, $methodName])) {
-            return FileGeneratorHelper::$methodName($moduleName, $folderName, $className);
+            return FileGeneratorHelper::$methodName($moduleName, $folderName, $fileName);
         }
 
         // Запасной контент или логика, если специфический метод не найден
-        return FileGeneratorHelper::getBaseContent($moduleName, $folderName, $className);
+        return FileGeneratorHelper::getBaseContent($moduleName, $folderName, $fileName);
     }
 }

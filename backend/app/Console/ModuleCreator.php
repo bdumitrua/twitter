@@ -38,9 +38,14 @@ class ModuleCreator
             mkdir($path, 0777, true);
         }
 
-        $fileName = "{$moduleName}{$entityName}.php";
-        $fileContent = $this->generateFileContent($moduleName, $entityName, $folderName);
-        file_put_contents("$path/$fileName", $fileContent);
+        $fileNameMappings = [
+            'Event' => "New{$moduleName}Event",
+            'Listener' => "NotifyAboutNew{$moduleName}Event",
+        ];
+        $defaultFileName = "{$moduleName}{$entityName}";
+        $fileName = $fileNameMappings[$entityName] ?? $defaultFileName;
+        $fileContent = $this->generateFileContent($moduleName, $folderName, $fileName, $entityName);
+        file_put_contents("$path/$fileName.php", $fileContent);
     }
 
     protected function createMigration($moduleName)
