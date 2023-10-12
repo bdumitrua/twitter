@@ -8,20 +8,20 @@ namespace App\Helpers;
 
 class FileGeneratorHelper
 {
-    public static function getBaseContent($moduleName, $folderName, $className)
+    public static function getBaseContent($moduleName, $folderName, $fileName)
     {
         return "<?php
 
 namespace App\\Modules\\{$moduleName}\\{$folderName};
 
-class {$className}
+class {$fileName}
 {
     // TODO: Implement your class logic here
 }
 ";
     }
 
-    public static function getModelContent($moduleName, $folderName, $className)
+    public static function getModelContent($moduleName, $folderName, $fileName)
     {
         return "<?php
 
@@ -30,7 +30,7 @@ namespace App\\Modules\\{$moduleName}\\{$folderName};
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class {$className} extends Model
+class {$fileName} extends Model
 {
     use HasFactory;
 
@@ -45,7 +45,7 @@ class {$className} extends Model
 ";
     }
 
-    public static function getServiceContent($moduleName, $folderName, $className)
+    public static function getServiceContent($moduleName, $folderName, $fileName)
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
         $modelClassName = ucfirst($modelVariableName);
@@ -59,7 +59,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\\$moduleName\\Models\\{$modelClassName};
 
-class {$className}
+class {$fileName}
 {
     public function show($modelClassName \$$modelVariableName)
     {
@@ -69,7 +69,7 @@ class {$className}
 ";
     }
 
-    public static function getControllerContent($moduleName, $folderName, $className)
+    public static function getControllerContent($moduleName, $folderName, $fileName)
     {
         $serviceVariableName = lcfirst($moduleName) . 'Service';
         $serviceClassName = ucfirst($serviceVariableName);
@@ -86,7 +86,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\\$moduleName\\Models\\{$modelClassName};
 use App\Modules\\$moduleName\\Services\\{$serviceClassName};
 
-class {$className} extends Controller
+class {$fileName} extends Controller
 {
     private \$$serviceVariableName;
 
@@ -107,7 +107,7 @@ class {$className} extends Controller
 ";
     }
 
-    public static function getRepositoryContent($moduleName, $folderName, $className)
+    public static function getRepositoryContent($moduleName, $folderName, $fileName)
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
         $modelClassName = ucfirst($modelVariableName);
@@ -118,7 +118,7 @@ namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 use App\Modules\\$moduleName\\Models\\{$modelClassName};
 
-class {$className}
+class {$fileName}
 {
     protected \$$modelVariableName;
 
@@ -136,7 +136,7 @@ class {$className}
 ";
     }
 
-    public static function getEventContent($moduleName, $folderName, $className)
+    public static function getEventContent($moduleName, $folderName, $fileName)
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
 
@@ -147,7 +147,7 @@ namespace App\\Modules\\{$moduleName}\\{$folderName};
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class New{$className} implements ShouldBroadcast
+class {$fileName} implements ShouldBroadcast
 {
     public \$$modelVariableName;
 
@@ -167,7 +167,7 @@ class New{$className} implements ShouldBroadcast
 ";
     }
 
-    public static function getListenerContent($moduleName, $folderName, $className)
+    public static function getListenerContent($moduleName, $folderName, $fileName)
     {
         $eventVariableName = "new{$moduleName}Event";
         $eventClassName = ucfirst($eventVariableName);
@@ -180,7 +180,7 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Modules\\$moduleName\\Events\\{$eventClassName};
 
-class NotifyAbout{$eventClassName}
+class {$fileName}
 {
     /**
      * Create the event listener.
@@ -201,7 +201,7 @@ class NotifyAbout{$eventClassName}
 ";
     }
 
-    public static function getQueueContent($moduleName, $folderName, $className)
+    public static function getQueueContent($moduleName, $folderName, $fileName)
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
 
@@ -215,7 +215,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class {$className} implements ShouldQueue
+class {$fileName} implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -234,7 +234,7 @@ class {$className} implements ShouldQueue
 ";
     }
 
-    public static function getResourceContent($moduleName, $folderName, $className)
+    public static function getResourceContent($moduleName, $folderName, $fileName)
     {
         return "<?php
 
@@ -243,7 +243,7 @@ namespace App\\Modules\\{$moduleName}\\{$folderName};
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class {$className} extends JsonResource
+class {$fileName} extends JsonResource
 {
     /**
      * Transform the resource into an array.
