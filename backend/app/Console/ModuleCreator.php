@@ -30,8 +30,7 @@ class ModuleCreator
         ];
 
         foreach ($moduleDirectories as $entityName => $folderName) {
-            $folderPath = $this->createModuleFolder($moduleName, $folderName);
-            $this->createModuleFile($moduleName, $entityName, $folderName, $folderPath);
+            $this->createModuleContent($moduleName, $folderName, $entityName);
         }
 
         $this->createMigration($moduleName);
@@ -39,22 +38,19 @@ class ModuleCreator
         $this->createSeeder($moduleName);
     }
 
-    protected function createModuleFolder($moduleName, $folderName): string
+    protected function createModuleContent($moduleName, $folderName, $entityName): void
     {
         $folderPath = app_path("Modules/$moduleName/$folderName");
+        $fileName = $this->generateFileName($moduleName, $entityName);
+
         if (!is_dir($folderPath)) {
             mkdir($folderPath, 0777, true);
         }
 
-        return $folderPath;
-    }
-
-    protected function createModuleFile($moduleName, $entityName, $folderName, $folderPath): void
-    {
-        $fileName = $this->generateFileName($moduleName, $entityName);
-        $fileContent = $this->generateFileContent($moduleName, $folderName, $fileName, $entityName);
-
-        file_put_contents("$folderPath/$fileName.php", $fileContent);
+        if (!file_exists("$folderPath/$fileName.php")) {
+            $fileContent = $this->generateFileContent($moduleName, $folderName, $fileName, $entityName);
+            file_put_contents("$folderPath/$fileName.php", $fileContent);
+        }
     }
 
     protected function generateFileName($moduleName, $entityName): string
