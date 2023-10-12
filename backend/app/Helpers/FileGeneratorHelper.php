@@ -156,10 +156,12 @@ class New{$className} implements ShouldBroadcast
         \$this->{$modelVariableName} = \$$modelVariableName;
     }
 
-    public function broadcastOn()
+    public function broadcastOn(): array
     {
-        // Implement your logic here
-        // return new PrivateChannel();
+        // You can implement your sockets logic here
+        // return [
+        //     new PrivateChannel('channel-name'),
+        // ];
     }
 }
 ";
