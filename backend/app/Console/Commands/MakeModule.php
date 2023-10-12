@@ -24,7 +24,7 @@ class MakeModule extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $moduleName = $this->argument('name');
         $moduleCreator = new ModuleCreator();

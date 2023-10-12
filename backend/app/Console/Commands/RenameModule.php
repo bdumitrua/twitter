@@ -21,7 +21,7 @@ class RenameModule extends Command
     /**
      * Execute the console command.
      */
-    public function handle()
+    public function handle(): void
     {
         $oldName = $this->argument('oldName');
         $newName = $this->argument('newName');
@@ -43,7 +43,7 @@ class RenameModule extends Command
         $this->info("Module $oldName renamed to $newName successfully.");
     }
 
-    protected function renameModuleFiles($modulePath, $oldName, $newName)
+    protected function renameModuleFiles($modulePath, $oldName, $newName): void
     {
         $iterator = new RecursiveIteratorIterator(
             new RecursiveDirectoryIterator($modulePath, RecursiveDirectoryIterator::SKIP_DOTS),

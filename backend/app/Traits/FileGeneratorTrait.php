@@ -6,7 +6,7 @@ use App\Helpers\FileGeneratorHelper;
 
 trait FileGeneratorTrait
 {
-    private function generateFileContent($moduleName, $folderName, $fileName, $entityName)
+    private function generateFileContent($moduleName, $folderName, $fileName, $entityName): string
     {
         $methodName = "get" . ucfirst($entityName) . "Content";
         if (is_callable([FileGeneratorHelper::class, $methodName])) {

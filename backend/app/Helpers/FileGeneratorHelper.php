@@ -8,7 +8,7 @@ namespace App\Helpers;
 
 class FileGeneratorHelper
 {
-    public static function getBaseContent($moduleName, $folderName, $fileName)
+    public static function getBaseContent($moduleName, $folderName, $fileName): string
     {
         return "<?php
 
@@ -21,7 +21,7 @@ class {$fileName}
 ";
     }
 
-    public static function getModelContent($moduleName, $folderName, $fileName)
+    public static function getModelContent($moduleName, $folderName, $fileName): string
     {
         return "<?php
 
@@ -45,7 +45,7 @@ class {$fileName} extends Model
 ";
     }
 
-    public static function getServiceContent($moduleName, $folderName, $fileName)
+    public static function getServiceContent($moduleName, $folderName, $fileName): string
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
         $modelClassName = ucfirst($modelVariableName);
@@ -69,7 +69,7 @@ class {$fileName}
 ";
     }
 
-    public static function getControllerContent($moduleName, $folderName, $fileName)
+    public static function getControllerContent($moduleName, $folderName, $fileName): string
     {
         $serviceVariableName = lcfirst($moduleName) . 'Service';
         $serviceClassName = ucfirst($serviceVariableName);
@@ -107,7 +107,7 @@ class {$fileName} extends Controller
 ";
     }
 
-    public static function getRepositoryContent($moduleName, $folderName, $fileName)
+    public static function getRepositoryContent($moduleName, $folderName, $fileName): string
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
         $modelClassName = ucfirst($modelVariableName);
@@ -136,7 +136,7 @@ class {$fileName}
 ";
     }
 
-    public static function getEventContent($moduleName, $folderName, $fileName)
+    public static function getEventContent($moduleName, $folderName, $fileName): string
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
 
@@ -167,7 +167,7 @@ class {$fileName} implements ShouldBroadcast
 ";
     }
 
-    public static function getListenerContent($moduleName, $folderName, $fileName)
+    public static function getListenerContent($moduleName, $folderName, $fileName): string
     {
         $eventVariableName = "new{$moduleName}Event";
         $eventClassName = ucfirst($eventVariableName);
@@ -201,7 +201,7 @@ class {$fileName}
 ";
     }
 
-    public static function getQueueContent($moduleName, $folderName, $fileName)
+    public static function getQueueContent($moduleName, $folderName, $fileName): string
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
 
@@ -234,7 +234,7 @@ class {$fileName} implements ShouldQueue
 ";
     }
 
-    public static function getResourceContent($moduleName, $folderName, $fileName)
+    public static function getResourceContent($moduleName, $folderName, $fileName): string
     {
         return "<?php
 
