@@ -9,8 +9,10 @@ class ModuleCreator
 {
     use FileGeneratorTrait;
 
-    public function createModule($moduleName)
+    public function createModule($moduleName): void
     {
+        // Для некоторых слов недостаточно добавить 's' в конце
+        // Так что необходим такой массив названий для папок
         $moduleDirectories = [
             'Model' => 'Models',
             'Controller' => 'Controllers',
@@ -23,7 +25,8 @@ class ModuleCreator
         ];
 
         foreach ($moduleDirectories as $entityName => $folderName) {
-            $this->createModuleFile($moduleName, $entityName, $folderName);
+            $folderPath = $this->createModuleFolder($moduleName, $folderName);
+            $this->createModuleFile($moduleName, $entityName, $folderName, $folderPath);
         }
 
         $this->createMigration($moduleName);
@@ -31,29 +34,40 @@ class ModuleCreator
         $this->createSeeder($moduleName);
     }
 
-    protected function createModuleFile($moduleName, $entityName, $folderName)
+    protected function createModuleFolder($moduleName, $folderName): string
     {
-        $path = app_path("Modules/$moduleName/$folderName");
-        if (!is_dir($path)) {
-            mkdir($path, 0777, true);
+        $folderPath = app_path("Modules/$moduleName/$folderName");
+        if (!is_dir($folderPath)) {
+            mkdir($folderPath, 0777, true);
         }
 
+        return $folderPath;
+    }
+
+    protected function createModuleFile($moduleName, $entityName, $folderName, $folderPath): void
+    {
+        $fileName = $this->generateFileName($moduleName, $entityName);
+        $fileContent = $this->generateFileContent($moduleName, $folderName, $fileName, $entityName);
+
+        file_put_contents("$folderPath/$fileName.php", $fileContent);
+    }
+
+    protected function generateFileName($moduleName, $entityName): string
+    {
         $fileNameMappings = [
             'Event' => "New{$moduleName}Event",
             'Listener' => "NotifyAboutNew{$moduleName}Event",
         ];
-        $defaultFileName = "{$moduleName}{$entityName}";
-        $fileName = $fileNameMappings[$entityName] ?? $defaultFileName;
-        $fileContent = $this->generateFileContent($moduleName, $folderName, $fileName, $entityName);
-        file_put_contents("$path/$fileName.php", $fileContent);
+
+        return $fileNameMappings[$entityName] ?? "{$moduleName}{$entityName}";
     }
 
-    protected function createMigration($moduleName)
+    protected function createMigration($moduleName): void
     {
         Artisan::call('make:migration', ['name' => "create_{$moduleName}_table"]);
     }
 
-    protected function createFactory($moduleName)
+    protected function createFactory($moduleName): void
     {
         Artisan::call('make:factory', [
             'name' => "{$moduleName}Factory",
@@ -61,7 +75,7 @@ class ModuleCreator
         ]);
     }
 
-    protected function createSeeder($moduleName)
+    protected function createSeeder($moduleName): void
     {
         Artisan::call('make:seeder', ['name' => "{$moduleName}TableSeeder"]);
     }
