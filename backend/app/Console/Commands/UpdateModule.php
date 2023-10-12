@@ -2,9 +2,10 @@
 
 namespace App\Console\Commands;
 
+use App\Console\ModuleCreator;
 use App\Traits\FileGeneratorTrait;
-use DirectoryIterator;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\File;
 
 class UpdateModule extends Command
 {
@@ -14,7 +15,7 @@ class UpdateModule extends Command
      *
      * @var string
      */
-    protected $signature = 'update:module';
+    protected $signature = 'update:modules';
 
     /**
      * The console command description.
@@ -28,28 +29,13 @@ class UpdateModule extends Command
      */
     public function handle()
     {
-        $moduleDir = app_path() . '/Modules/';
+        $moduleDir = app_path('Modules');
+        $moduleFolders = File::directories($moduleDir);
+        $moduleCreator = new ModuleCreator();
 
-        // Список всех папок, которые должны быть в модулях
-        $dirs = ['Model', 'Controller', 'Service'];
-
-        foreach (new DirectoryIterator($moduleDir) as $fileInfo) {
-            if ($fileInfo->isDot()) continue;
-            if ($fileInfo->isDir()) {
-                $moduleName = $fileInfo->getFilename();
-
-                foreach ($dirs as $dir) {
-                    $path = $moduleDir . "/$moduleName/$dir";
-
-                    if (!is_dir($path)) {
-                        mkdir($path, 0777, true);
-                        $fileName = "{$moduleName}{$dir}.php";
-                        $fileContent = $this->generateFileContent($moduleName, $dir);
-                        file_put_contents("{$path}/{$fileName}", $fileContent);
-                        $this->info("Added $dir to $moduleName");
-                    }
-                }
-            }
+        foreach ($moduleFolders as $modulePath) {
+            $moduleName = last(explode('/', $modulePath));
+            $moduleCreator->updateModules($moduleName);
         }
 
         $this->info("Modules updated successfully.");

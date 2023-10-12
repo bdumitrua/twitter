@@ -4,8 +4,6 @@ namespace App\Console\Commands;
 
 use App\Console\ModuleCreator;
 use Illuminate\Console\Command;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class RenameModule extends Command
 {
