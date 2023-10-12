@@ -93,4 +93,33 @@ class $className extends Controller
 }
 ";
     }
+
+    public static function getRepositoryContent($moduleName, $dir, $className)
+    {
+        $modelVariableName = lcfirst($moduleName) . 'Model';
+        $modelClassName = ucfirst($modelVariableName);
+
+        return "<?php
+        
+namespace App\\Modules\\{$moduleName}\\{$dir}s;
+
+use App\Modules\\$moduleName\\Models\\$modelClassName;
+
+class $className
+{
+    protected \$$modelVariableName;
+
+    public function __construct($modelClassName \$$modelVariableName)
+    {
+        \$this->$modelVariableName = \$$modelVariableName;
+    }
+
+    // Base method example
+    public function findById(\$id)
+    {
+        return \$this->{$modelVariableName}->find(\$id);
+    }
+}
+";
+    }
 }
