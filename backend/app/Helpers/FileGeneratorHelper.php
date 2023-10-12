@@ -129,6 +129,8 @@ class $className
 
         return "<?php
 
+namespace App\\Modules\\{$moduleName}\\{$dir}s;
+
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
@@ -145,6 +147,39 @@ class New{$className} implements ShouldBroadcast
     {
         // Implement your logic here
         // return new PrivateChannel();
+    }
+}
+";
+    }
+
+    public static function getJobContent($moduleName, $dir, $className)
+    {
+        $modelVariableName = lcfirst($moduleName) . 'Model';
+
+        return "<?php
+
+namespace App\\Modules\\{$moduleName}\\{$dir}s;
+
+use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Foundation\Bus\Dispatchable;
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Queue\SerializesModels;
+
+class $className implements ShouldQueue
+{
+    use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
+
+    protected \$$modelVariableName;
+    
+    public function __construct(\$$modelVariableName)
+    {
+        \$this->{$modelVariableName} = \$$modelVariableName;
+    }
+
+    public function handle()
+    {
+        // Implement your logic here
     }
 }
 ";
