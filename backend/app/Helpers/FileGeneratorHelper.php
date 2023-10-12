@@ -122,4 +122,31 @@ class $className
 }
 ";
     }
+
+    public static function getEventContent($moduleName, $dir, $className)
+    {
+        $modelVariableName = lcfirst($moduleName) . 'Model';
+
+        return "<?php
+
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+
+class New{$className} implements ShouldBroadcast
+{
+    public \$$modelVariableName;
+
+    public function __construct(\$$modelVariableName)
+    {
+        \$this->{$modelVariableName} = \$$modelVariableName;
+    }
+
+    public function broadcastOn()
+    {
+        // Implement your logic here
+        // return new PrivateChannel();
+    }
+}
+";
+    }
 }
