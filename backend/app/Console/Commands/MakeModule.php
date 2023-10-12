@@ -31,20 +31,27 @@ class MakeModule extends Command
     public function handle()
     {
         $moduleName = $this->argument('name');
-        // TODO
-        // Make key=>value for folders/namespaces
-        $dirs = ['Model', 'Controller', 'Service', 'Repository', 'Event', 'Job', 'Listener', 'Resource'];
+        $dirs = [
+            'Model' => 'Models',
+            'Controller' => 'Controllers',
+            'Service' => 'Services',
+            'Repository' => 'Repositories',
+            'Event' => 'Events',
+            'Queue' => 'Jobs',
+            'Listener' => 'Listeners',
+            'Resource' => 'Resources',
+        ];
 
-        foreach ($dirs as $dir) {
+        foreach ($dirs as $entityName => $folderName) {
             // TODO
             // Separate logic 
-            $path = app_path() . "/Modules/$moduleName/$dir" . 's';
+            $path = app_path() . "/Modules/$moduleName/$folderName";
             if (!is_dir($path)) {
                 mkdir($path, 0777, true);
             }
 
-            $fileName = "{$moduleName}{$dir}.php";
-            $fileContent = $this->generateFileContent($moduleName, $dir);
+            $fileName = "{$moduleName}{$entityName}.php";
+            $fileContent = $this->generateFileContent($moduleName, $entityName, $folderName);
             file_put_contents("{$path}/{$fileName}", $fileContent);
 
             Artisan::call('make:migration', ['name' => "create_{$moduleName}_table"]);
