@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Traits\FileGeneratorTrait;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Artisan;
 
 class MakeModule extends Command
 {
@@ -41,6 +42,13 @@ class MakeModule extends Command
             $fileName = "{$moduleName}{$dir}.php";
             $fileContent = $this->generateFileContent($moduleName, $dir);
             file_put_contents("{$path}/{$fileName}", $fileContent);
+
+            Artisan::call('make:migration', ['name' => "create_{$moduleName}_table"]);
+            Artisan::call('make:factory', [
+                'name' => "{$moduleName}Factory",
+                '--model' => "App\\Modules\\{$moduleName}\\Models\\{$moduleName}Model"
+            ]);
+            Artisan::call('make:seeder', ['name' => "{$moduleName}TableSeeder"]);
         }
 
         $this->info("Module $moduleName created successfully.");
