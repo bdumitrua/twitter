@@ -156,12 +156,46 @@ class New{$className} implements ShouldBroadcast
         \$this->{$modelVariableName} = \$$modelVariableName;
     }
 
-    public function broadcastOn(): array
+    public function broadcastOn()
     {
         // You can implement your sockets logic here
         // return [
         //     new PrivateChannel('channel-name'),
         // ];
+    }
+}
+";
+    }
+
+    public static function getListenerContent($moduleName, $dir, $className)
+    {
+        $eventVariableName = "new{$moduleName}Event";
+        $eventClassName = ucfirst($eventVariableName);
+
+        return "<?php
+
+namespace App\\Modules\\{$moduleName}\\{$dir}s;
+
+use Illuminate\Queue\InteractsWithQueue;
+use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Modules\\$moduleName\\Events\\$eventClassName;
+
+class NotifyAbout{$eventClassName}
+{
+    /**
+     * Create the event listener.
+     */
+    public function __construct()
+    {
+        //
+    }
+
+    /**
+     * Handle the event.
+     */
+    public function handle($eventClassName \$$eventVariableName): void
+    {
+        //
     }
 }
 ";
