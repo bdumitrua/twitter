@@ -8,11 +8,11 @@ namespace App\Helpers;
 
 class FileGeneratorHelper
 {
-    public static function getBaseContent($moduleName, $dir, $className)
+    public static function getBaseContent($moduleName, $folderName, $className)
     {
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 class {$className}
 {
@@ -21,11 +21,11 @@ class {$className}
 ";
     }
 
-    public static function getModelContent($moduleName, $dir, $className)
+    public static function getModelContent($moduleName, $folderName, $className)
     {
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\$folderName;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,14 +45,14 @@ class {$className} extends Model
 ";
     }
 
-    public static function getServiceContent($moduleName, $dir, $className)
+    public static function getServiceContent($moduleName, $folderName, $className)
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
         $modelClassName = ucfirst($modelVariableName);
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\$folderName;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -69,7 +69,7 @@ class $className
 ";
     }
 
-    public static function getControllerContent($moduleName, $dir, $className)
+    public static function getControllerContent($moduleName, $folderName, $className)
     {
         $serviceVariableName = lcfirst($moduleName) . 'Service';
         $serviceClassName = ucfirst($serviceVariableName);
@@ -79,7 +79,7 @@ class $className
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\$folderName;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -107,14 +107,14 @@ class $className extends Controller
 ";
     }
 
-    public static function getRepositoryContent($moduleName, $dir, $className)
+    public static function getRepositoryContent($moduleName, $folderName, $className)
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
         $modelClassName = ucfirst($modelVariableName);
 
         return "<?php
         
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\$folderName;
 
 use App\Modules\\$moduleName\\Models\\$modelClassName;
 
@@ -136,13 +136,13 @@ class $className
 ";
     }
 
-    public static function getEventContent($moduleName, $dir, $className)
+    public static function getEventContent($moduleName, $folderName, $className)
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\$folderName;
 
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -167,14 +167,14 @@ class New{$className} implements ShouldBroadcast
 ";
     }
 
-    public static function getListenerContent($moduleName, $dir, $className)
+    public static function getListenerContent($moduleName, $folderName, $className)
     {
         $eventVariableName = "new{$moduleName}Event";
         $eventClassName = ucfirst($eventVariableName);
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\$folderName;
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -201,13 +201,13 @@ class NotifyAbout{$eventClassName}
 ";
     }
 
-    public static function getJobContent($moduleName, $dir, $className)
+    public static function getQueueContent($moduleName, $folderName, $className)
     {
         $modelVariableName = lcfirst($moduleName) . 'Model';
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\$folderName;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -234,11 +234,11 @@ class $className implements ShouldQueue
 ";
     }
 
-    public static function getResourceContent($moduleName, $dir, $className)
+    public static function getResourceContent($moduleName, $folderName, $className)
     {
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
+namespace App\\Modules\\{$moduleName}\\$folderName;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
