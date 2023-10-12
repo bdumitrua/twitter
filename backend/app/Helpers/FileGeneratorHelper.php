@@ -8,6 +8,19 @@ namespace App\Helpers;
 
 class FileGeneratorHelper
 {
+    public static function getBaseContent($moduleName, $dir, $className)
+    {
+        return "<?php
+
+namespace App\\Modules\\{$moduleName}\\{$dir}s;
+
+class {$className}
+{
+    // TODO: Implement your class logic here
+}
+";
+    }
+
     public static function getModelContent($moduleName, $dir, $className)
     {
         return "<?php

@@ -15,14 +15,6 @@ trait FileGeneratorTrait
         }
 
         // Запасной контент или логика, если специфический метод не найден
-        return "<?php
-
-namespace App\\Modules\\{$moduleName}\\{$dir}s;
-
-class {$className}
-{
-    // TODO: Implement your class logic here
-}
-";
+        return FileGeneratorHelper::getBaseContent($moduleName, $dir, $className);
     }
 }
