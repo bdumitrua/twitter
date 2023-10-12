@@ -31,9 +31,13 @@ class MakeModule extends Command
     public function handle()
     {
         $moduleName = $this->argument('name');
-        $dirs = ['Model', 'Controller', 'Service'];
+        // TODO
+        // Make key=>value for folders/namespaces
+        $dirs = ['Model', 'Controller', 'Service', 'Repository', 'Event', 'Job', 'Listener'];
 
         foreach ($dirs as $dir) {
+            // TODO
+            // Separate logic 
             $path = app_path() . "/Modules/$moduleName/$dir" . 's';
             if (!is_dir($path)) {
                 mkdir($path, 0777, true);
