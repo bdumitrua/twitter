@@ -11,25 +11,29 @@ class ModuleCreator
 {
     use FileGeneratorTrait;
 
-    /*
-    *   Creating module logic start
-    */
+    // Для некоторых слов недостаточно добавить 's' в конце
+    // Так что необходим такой массив названий для папок
+    private $moduleDirectories = [
+        'Model' => 'Models',
+        'Controller' => 'Controllers',
+        'Service' => 'Services',
+        'Repository' => 'Repositories',
+        'Event' => 'Events',
+        'Queue' => 'Jobs',
+        'Listener' => 'Listeners',
+        'Resource' => 'Resources',
+    ];
+
+    public function updateModules($moduleName): void
+    {
+        foreach ($this->moduleDirectories as $entityName => $folderName) {
+            $this->createModuleContent($moduleName, $folderName, $entityName);
+        }
+    }
+
     public function createModule($moduleName): void
     {
-        // Для некоторых слов недостаточно добавить 's' в конце
-        // Так что необходим такой массив названий для папок
-        $moduleDirectories = [
-            'Model' => 'Models',
-            'Controller' => 'Controllers',
-            'Service' => 'Services',
-            'Repository' => 'Repositories',
-            'Event' => 'Events',
-            'Queue' => 'Jobs',
-            'Listener' => 'Listeners',
-            'Resource' => 'Resources',
-        ];
-
-        foreach ($moduleDirectories as $entityName => $folderName) {
+        foreach ($this->moduleDirectories as $entityName => $folderName) {
             $this->createModuleContent($moduleName, $folderName, $entityName);
         }
 
@@ -80,13 +84,7 @@ class ModuleCreator
     {
         Artisan::call('make:seeder', ['name' => "{$moduleName}TableSeeder"]);
     }
-    /*
-    *   Creating module logic end
-    */
 
-    /*
-    *   Renaming module logic start
-    */
     public function moduleExists($moduleName): bool
     {
         $moduleDir = app_path('Modules');
@@ -117,14 +115,10 @@ class ModuleCreator
                 $newFileName = str_replace($oldName, $newName, $oldFileName);
                 $newFilePath = $item->getPath() . '/' . $newFileName;
 
-                // Переименование файла, если он содержит старое имя модуля
                 if (strpos($oldFileName, $oldName) !== false) {
                     rename($item->getRealPath(), $newFilePath);
                 }
             }
         }
     }
-    /*
-    *   Renaming module logic end
-    */
 }
