@@ -1,14 +1,13 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
 	mode: "development",
 	entry: "./src/index.js",
 	output: {
-		path: path.resolve(__dirname, "public/js"),
+		path: path.resolve(__dirname, "build"),
 		filename: "[name].bundle.js",
 		chunkFilename: "[id].[chunkhash].js",
 		publicPath: "/",
@@ -78,7 +77,7 @@ module.exports = {
 					{
 						loader: "sass-resources-loader",
 						options: {
-							resources: "./src/assets/styles/resources.scss", // Путь к вашему главному SCSS или файлам ресурсов
+							resources: "./src/assets/styles/resources.scss", // Путь к главному SCSS или файлам ресурсов
 						},
 					},
 				],
@@ -103,10 +102,13 @@ module.exports = {
 		},
 	},
 	plugins: [
-		new CleanWebpackPlugin(),
+		new CleanWebpackPlugin({
+			cleanOnceBeforeBuildPatterns: ["!public/*"],
+		}),
+
 		new HtmlWebpackPlugin({
-			template: "./public/index.html",
-			filename: "./index.html",
+			template: path.resolve(__dirname, "./public/index.html"),
+			filename: "index.html",
 		}),
 		new MiniCssExtractPlugin({
 			filename: "[name].css",
