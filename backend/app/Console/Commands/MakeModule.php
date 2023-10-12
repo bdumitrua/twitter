@@ -33,7 +33,7 @@ class MakeModule extends Command
         $moduleName = $this->argument('name');
         // TODO
         // Make key=>value for folders/namespaces
-        $dirs = ['Model', 'Controller', 'Service', 'Repository', 'Event', 'Job', 'Listener'];
+        $dirs = ['Model', 'Controller', 'Service', 'Repository', 'Event', 'Job', 'Listener', 'Resource'];
 
         foreach ($dirs as $dir) {
             // TODO
