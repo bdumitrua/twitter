@@ -1,7 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-const { HotModuleReplacementPlugin } = require("webpack");
+
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
@@ -9,7 +9,7 @@ module.exports = {
 	entry: "./src/index.js",
 	output: {
 		path: path.resolve(__dirname, "public/js"),
-		filename: "[name].bundle.js", // <- Изменено здесь
+		filename: "[name].bundle.js",
 		chunkFilename: "[id].[chunkhash].js",
 		publicPath: "/",
 	},
@@ -106,9 +106,8 @@ module.exports = {
 		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
 			template: "./public/index.html",
-			filename: "./public/index.html",
+			filename: "./index.html",
 		}),
-		new HotModuleReplacementPlugin(),
 		new MiniCssExtractPlugin({
 			filename: "[name].css",
 			chunkFilename: "[id].css",
