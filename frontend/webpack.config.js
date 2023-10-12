@@ -6,10 +6,11 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 
 module.exports = {
 	mode: "development",
-	entry: "./src/js/index.jsx",
+	entry: "./src/index.js",
 	output: {
 		path: path.resolve(__dirname, "public/js"),
-		filename: "bundle.js",
+		filename: "[name].bundle.js", // <- Изменено здесь
+		chunkFilename: "[id].[chunkhash].js",
 		publicPath: "/",
 	},
 	module: {
@@ -71,13 +72,13 @@ module.exports = {
 						loader: "sass-loader",
 						options: {
 							sourceMap: true,
-							additionalData: '@import "path/to/your/global/styles.scss";',
+							additionalData: '@import "./src/assets/styles/resources.scss";',
 						},
 					},
 					{
 						loader: "sass-resources-loader",
 						options: {
-							resources: "./path/to/your/global/resources.scss", // Путь к вашему главному SCSS или файлам ресурсов
+							resources: "./src/assets/styles/resources.scss", // Путь к вашему главному SCSS или файлам ресурсов
 						},
 					},
 				],
@@ -88,7 +89,10 @@ module.exports = {
 		extensions: [".js", ".jsx"],
 	},
 	devServer: {
-		contentBase: path.join(__dirname, "public"),
+		port: 3000,
+		static: {
+			directory: path.join(__dirname, "public"),
+		},
 		historyApiFallback: true,
 		hot: true,
 	},
@@ -102,7 +106,7 @@ module.exports = {
 		new CleanWebpackPlugin(),
 		new HtmlWebpackPlugin({
 			template: "./public/index.html",
-			filename: "../index.html",
+			filename: "./public/index.html",
 		}),
 		new HotModuleReplacementPlugin(),
 		new MiniCssExtractPlugin({
