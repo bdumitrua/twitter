@@ -4,11 +4,16 @@ namespace App\Console;
 
 use App\Traits\FileGeneratorTrait;
 use Illuminate\Support\Facades\Artisan;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class ModuleCreator
 {
     use FileGeneratorTrait;
 
+    /*
+    *   Creating module logic start
+    */
     public function createModule($moduleName): void
     {
         // Для некоторых слов недостаточно добавить 's' в конце
@@ -79,4 +84,51 @@ class ModuleCreator
     {
         Artisan::call('make:seeder', ['name' => "{$moduleName}TableSeeder"]);
     }
+    /*
+    *   Creating module logic end
+    */
+
+    /*
+    *   Renaming module logic start
+    */
+    public function moduleExists($moduleName): bool
+    {
+        $moduleDir = app_path('Modules');
+        return is_dir("$moduleDir/$moduleName");
+    }
+
+    public function renameModule($oldName, $newName): void
+    {
+        $moduleDir = app_path('Modules');
+
+        // Переименование директории модуля
+        rename("$moduleDir/$oldName", "$moduleDir/$newName");
+
+        // Обновление имен файлов внутри переименованной директории
+        $this->renameModuleFiles("$moduleDir/$newName", $oldName, $newName);
+    }
+
+    protected function renameModuleFiles($modulePath, $oldName, $newName): void
+    {
+        $iterator = new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($modulePath, RecursiveDirectoryIterator::SKIP_DOTS),
+            RecursiveIteratorIterator::SELF_FIRST
+        );
+
+        foreach ($iterator as $item) {
+            if ($item->isFile() && $item->getExtension() === 'php') {
+                $oldFileName = $item->getFilename();
+                $newFileName = str_replace($oldName, $newName, $oldFileName);
+                $newFilePath = $item->getPath() . '/' . $newFileName;
+
+                // Переименование файла, если он содержит старое имя модуля
+                if (strpos($oldFileName, $oldName) !== false) {
+                    rename($item->getRealPath(), $newFilePath);
+                }
+            }
+        }
+    }
+    /*
+    *   Renaming module logic end
+    */
 }
