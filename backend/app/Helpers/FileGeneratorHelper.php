@@ -25,7 +25,7 @@ class {$className}
     {
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\$folderName;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -52,14 +52,14 @@ class {$className} extends Model
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\$folderName;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use App\Modules\\$moduleName\\Models\\$modelClassName;
+use App\Modules\\$moduleName\\Models\\{$modelClassName};
 
-class $className
+class {$className}
 {
     public function show($modelClassName \$$modelVariableName)
     {
@@ -79,14 +79,14 @@ class $className
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\$folderName;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Modules\\$moduleName\\Models\\$modelClassName;
-use App\Modules\\$moduleName\\Services\\$serviceClassName;
+use App\Modules\\$moduleName\\Models\\{$modelClassName};
+use App\Modules\\$moduleName\\Services\\{$serviceClassName};
 
-class $className extends Controller
+class {$className} extends Controller
 {
     private \$$serviceVariableName;
 
@@ -114,11 +114,11 @@ class $className extends Controller
 
         return "<?php
         
-namespace App\\Modules\\{$moduleName}\\$folderName;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
-use App\Modules\\$moduleName\\Models\\$modelClassName;
+use App\Modules\\$moduleName\\Models\\{$modelClassName};
 
-class $className
+class {$className}
 {
     protected \$$modelVariableName;
 
@@ -142,7 +142,7 @@ class $className
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\$folderName;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
@@ -174,11 +174,11 @@ class New{$className} implements ShouldBroadcast
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\$folderName;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Modules\\$moduleName\\Events\\$eventClassName;
+use App\Modules\\$moduleName\\Events\\{$eventClassName};
 
 class NotifyAbout{$eventClassName}
 {
@@ -207,7 +207,7 @@ class NotifyAbout{$eventClassName}
 
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\$folderName;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -215,7 +215,7 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 
-class $className implements ShouldQueue
+class {$className} implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
@@ -238,7 +238,7 @@ class $className implements ShouldQueue
     {
         return "<?php
 
-namespace App\\Modules\\{$moduleName}\\$folderName;
+namespace App\\Modules\\{$moduleName}\\{$folderName};
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
