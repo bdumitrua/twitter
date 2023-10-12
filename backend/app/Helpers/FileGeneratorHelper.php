@@ -233,4 +233,31 @@ class $className implements ShouldQueue
 }
 ";
     }
+
+    public static function getResourceContent($moduleName, $dir, $className)
+    {
+        return "<?php
+
+namespace App\\Modules\\{$moduleName}\\{$dir}s;
+
+use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
+
+class {$className} extends JsonResource
+{
+    /**
+     * Transform the resource into an array.
+     *
+     * @return array<string, mixed>
+     */
+    public function toArray(Request \$request): array
+    {
+        // Implement your logic here
+        return [
+            'id' => \$this->id,
+        ];
+    }
+}
+";
+    }
 }
