@@ -260,4 +260,29 @@ class {$fileName} extends JsonResource
 }
 ";
     }
+
+    public static function getRouteContent($moduleName, $folderName, $fileName): string
+    {
+        $modelVariableName = lcfirst($moduleName) . 'Model';
+        $controllerClassName = ucfirst($moduleName) . 'Controller';
+        $lcModule = lcfirst($moduleName);
+
+        return "<?php
+
+namespace App\\Modules\\{$moduleName}\\{$folderName};
+
+use Illuminate\Support\Facades\Route;
+use App\Modules\\$moduleName\\Controllers\\{$controllerClassName};
+
+Route::prefix('$moduleName')->controller({$controllerClassName}::class)->group(function () {
+    // Поиск по имени товара
+    Route::get('/search', 'search')->name('{$lcModule}.search');
+
+    Route::middleware(['auth:api'])->group(function () {
+        // Удалить продукт 
+        Route::delete('delete/{{$modelVariableName}}', 'destroy')->name('$lcModule.delete');
+    });
+});
+";
+    }
 }
