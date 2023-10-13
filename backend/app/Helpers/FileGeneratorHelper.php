@@ -274,7 +274,7 @@ namespace App\\Modules\\{$moduleName}\\{$folderName};
 use Illuminate\Support\Facades\Route;
 use App\Modules\\$moduleName\\Controllers\\{$controllerClassName};
 
-Route::prefix('$moduleName')->controller({$controllerClassName}::class)->group(function () {
+Route::prefix('$lcModule')->controller({$controllerClassName}::class)->group(function () {
     // Поиск по имени товара
     Route::get('/search', 'search')->name('{$lcModule}.search');
 
