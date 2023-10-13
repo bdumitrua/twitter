@@ -13,7 +13,7 @@ class ModuleCreator
 
     // Для некоторых слов недостаточно добавить 's' в конце
     // Так что необходим такой массив названий для папок
-    private $moduleDirectories = [
+    public $moduleDirectories = [
         'Model' => 'Models',
         'Controller' => 'Controllers',
         'Service' => 'Services',
@@ -42,10 +42,10 @@ class ModuleCreator
         $this->createSeeder($moduleName);
     }
 
-    protected function createModuleContent($moduleName, $folderName, $entityName): void
+    public function createModuleContent($moduleName, $folderName, $entityName, $fileName = null): void
     {
         $folderPath = app_path("Modules/$moduleName/$folderName");
-        $fileName = $this->generateFileName($moduleName, $entityName);
+        $fileName = $fileName ?? $this->generateFileName($moduleName, $entityName);
 
         if (!is_dir($folderPath)) {
             mkdir($folderPath, 0777, true);
