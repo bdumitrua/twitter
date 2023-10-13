@@ -7,6 +7,8 @@ use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvi
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -36,5 +38,26 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        $this->loadModuleRoutes();
+    }
+
+    protected function loadModuleRoutes(): void
+    {
+        $moduleDir = app_path('Modules');
+
+        foreach (new RecursiveIteratorIterator(
+            new RecursiveDirectoryIterator($moduleDir),
+            RecursiveIteratorIterator::SELF_FIRST
+        ) as $fileInfo) {
+            if ($fileInfo->isFile() && $fileInfo->getFilename() === 'routes.php') {
+                $moduleRoutes = $fileInfo->getPathname();
+
+                // Подключите маршруты из модуля с префиксом и middleware 'api'
+                Route::prefix('api')
+                    ->middleware('api')
+                    ->group($moduleRoutes);
+            }
+        }
     }
 }

@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    dispatch(new TestRabbitMQJob());
+    return 'Home route!';
 });
