@@ -22,6 +22,7 @@ class ModuleCreator
         'Queue' => 'Jobs',
         'Listener' => 'Listeners',
         'Resource' => 'Resources',
+        'Route' => 'Routes',
     ];
 
     public function updateModules($moduleName): void
@@ -62,6 +63,7 @@ class ModuleCreator
         $fileNameMappings = [
             'Event' => "New{$moduleName}Event",
             'Listener' => "NotifyAboutNew{$moduleName}Event",
+            'Route' => 'routes',
         ];
 
         return $fileNameMappings[$entityName] ?? "{$moduleName}{$entityName}";
