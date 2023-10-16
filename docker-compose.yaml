@@ -1,4 +1,18 @@
 services:
+    nginx:
+        image: nginx:latest
+        ports:
+            - "80:80"
+        volumes:
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - ./backend/public:/var/www/html
+        depends_on:
+            - backend
+            - mysql
+            - frontend
+        networks:
+            - app
+
     backend:
         build:
             context: ./backend
@@ -6,7 +20,7 @@ services:
 
         environment:
             DB_HOST: mysql
-            DB_DATABASE: twitter
+            DB_DATABASE: underpen
             DB_USERNAME: root
             DB_PASSWORD: root
             MAIL_MAILER: smtp
@@ -22,21 +36,20 @@ services:
 
         depends_on:
             - mysql
-            - redis
-            - elasticsearch
 
         networks:
             - app
 
     frontend:
         build:
-            context: ./frontend
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: frontend/Dockerfile
         tty: true
         ports:
             - 3000:3000
         volumes:
             - ./frontend:/app/frontend
+            - ./backend/.env:/app/frontend/.env
             - node_modules:/app/frontend/node_modules
         depends_on:
             - backend
@@ -46,43 +59,14 @@ services:
     mysql:
         image: mysql
         environment:
-            MYSQL_DATABASE: "twitter"
-            MYSQL_USER: "root"
+            MYSQL_DATABASE: "underpen"
+            MYSQL_USER: "admin"
             MYSQL_PASSWORD: "root"
             MYSQL_ROOT_PASSWORD: "root"
+        ports:
+            - 3306:3306
         volumes:
             - .dbdata:/var/lib/mysql
-        networks:
-            - app
-
-    redis:
-        image: redis
-        ports:
-            - 6379:6379
-        networks:
-            - app
-
-    elasticsearch:
-        image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
-        volumes:
-            - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-        environment:
-            - "discovery.type=single-node"
-            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
-        ports:
-            - 9200:9200
-            - 9300:9300
-        networks:
-            - app
-
-    rabbitmq:
-        image: "rabbitmq:3.12"
-        ports:
-            - "15672:15672" # Web Management
-            - "5672:5672"
-        environment:
-            - RABBITMQ_DEFAULT_USER=admin
-            - RABBITMQ_DEFAULT_PASS=admin
         networks:
             - app
 
@@ -93,3 +77,4 @@ networks:
 volumes:
     node_modules:
     vendor:
+    .env:
