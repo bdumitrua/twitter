@@ -1,0 +1,3 @@
+/.dbdata/*
+!/.dbdata/.gitkeep
+.DS_Store
