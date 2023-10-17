@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Models;
 
+use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -15,6 +16,7 @@ class User extends Authenticatable implements JWTSubject
         'name',
         'email',
         'password',
+        'link'
     ];
 
     protected $hidden = [
@@ -29,5 +31,10 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    protected static function newFactory()
+    {
+        return UserFactory::new();
     }
 }
