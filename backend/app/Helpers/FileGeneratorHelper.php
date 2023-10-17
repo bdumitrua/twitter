@@ -50,6 +50,9 @@ class {$fileName} extends Model
         $modelVariableName = lcfirst($moduleName);
         $modelClassName = ucfirst($modelVariableName);
 
+        $repositoryVariableName = lcfirst($moduleName) . 'Repository';
+        $repositoryClassName = ucfirst($repositoryVariableName);
+
         return "<?php
 
 namespace App\\Modules\\{$moduleName}\\{$folderName};
@@ -61,9 +64,12 @@ use App\Modules\\$moduleName\\Models\\{$modelClassName};
 
 class {$fileName}
 {
-    public function show($modelClassName \$$modelVariableName)
-    {
-        return \$$modelVariableName;
+    private \$$repositoryVariableName;
+    
+    public function __construct(
+        $repositoryClassName \$$repositoryVariableName
+    ) {
+        \$this->$repositoryVariableName = \$$repositoryVariableName;
     }
 }
 ";
