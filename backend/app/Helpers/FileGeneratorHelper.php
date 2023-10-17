@@ -47,7 +47,7 @@ class {$fileName} extends Model
 
     public static function getServiceContent($moduleName, $folderName, $fileName): string
     {
-        $modelVariableName = lcfirst($moduleName) . 'Model';
+        $modelVariableName = lcfirst($moduleName);
         $modelClassName = ucfirst($modelVariableName);
 
         return "<?php
@@ -74,7 +74,7 @@ class {$fileName}
         $serviceVariableName = lcfirst($moduleName) . 'Service';
         $serviceClassName = ucfirst($serviceVariableName);
 
-        $modelVariableName = lcfirst($moduleName) . 'Model';
+        $modelVariableName = lcfirst($moduleName);
         $modelClassName = ucfirst($modelVariableName);
 
         return "<?php
@@ -109,7 +109,7 @@ class {$fileName} extends Controller
 
     public static function getRepositoryContent($moduleName, $folderName, $fileName): string
     {
-        $modelVariableName = lcfirst($moduleName) . 'Model';
+        $modelVariableName = lcfirst($moduleName);
         $modelClassName = ucfirst($modelVariableName);
 
         return "<?php
@@ -138,7 +138,7 @@ class {$fileName}
 
     public static function getEventContent($moduleName, $folderName, $fileName): string
     {
-        $modelVariableName = lcfirst($moduleName) . 'Model';
+        $modelVariableName = lcfirst($moduleName);
 
         return "<?php
 
@@ -203,7 +203,7 @@ class {$fileName}
 
     public static function getQueueContent($moduleName, $folderName, $fileName): string
     {
-        $modelVariableName = lcfirst($moduleName) . 'Model';
+        $modelVariableName = lcfirst($moduleName);
 
         return "<?php
 
@@ -263,7 +263,7 @@ class {$fileName} extends JsonResource
 
     public static function getRouteContent($moduleName, $folderName, $fileName): string
     {
-        $modelVariableName = lcfirst($moduleName) . 'Model';
+        $modelVariableName = lcfirst($moduleName);
         $controllerClassName = ucfirst($moduleName) . 'Controller';
         $lcModule = lcfirst($moduleName);
 
@@ -275,11 +275,9 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\\$moduleName\\Controllers\\{$controllerClassName};
 
 Route::prefix('$lcModule')->controller({$controllerClassName}::class)->group(function () {
-    // Поиск по имени товара
     Route::get('/search', 'search')->name('{$lcModule}.search');
 
     Route::middleware(['auth:api'])->group(function () {
-        // Удалить продукт 
         Route::delete('delete/{{$modelVariableName}}', 'destroy')->name('$lcModule.delete');
     });
 });

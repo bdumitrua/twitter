@@ -64,6 +64,7 @@ class ModuleCreator
             'Event' => "New{$moduleName}Event",
             'Listener' => "NotifyAboutNew{$moduleName}Event",
             'Route' => 'routes',
+            'Model' => $moduleName,
         ];
 
         return $fileNameMappings[$entityName] ?? "{$moduleName}{$entityName}";
