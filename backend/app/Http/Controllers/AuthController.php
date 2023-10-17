@@ -8,6 +8,7 @@ use App\Http\Requests\RegistrationRequest;
 use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -17,6 +18,7 @@ class AuthController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'link' => str_replace(' ', '', $request->name) . Str::random(10),
         ]);
 
         return response()->json(['message' => 'User created successfully']);

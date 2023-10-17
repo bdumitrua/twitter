@@ -2,7 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use App\Modules\User\Models\User;
+use Database\Factories\UserFactory;
 use Illuminate\Database\Seeder;
 
 class UserTableSeeder extends Seeder
@@ -12,6 +13,6 @@ class UserTableSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        User::factory(50)->create();
     }
 }
