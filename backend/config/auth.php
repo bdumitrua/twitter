@@ -1,7 +1,5 @@
 <?php
 
-use App\Modules\User\Models\User;
-
 return [
 
     /*
@@ -38,6 +36,10 @@ return [
     */
 
     'guards' => [
+        'web' => [
+            'driver' => 'session',
+            'provider' => 'users',
+        ],
         'api' => [
             'driver' => 'jwt',
             'provider' => 'users',
@@ -64,7 +66,7 @@ return [
     'providers' => [
         'users' => [
             'driver' => 'eloquent',
-            'model' => User::class,
+            'model' => App\Modules\User\Models\User::class,
         ],
 
         // 'users' => [
