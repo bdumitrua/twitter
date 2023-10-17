@@ -70,6 +70,37 @@ services:
         networks:
             - app
 
+    redis:
+        image: redis
+        ports:
+            - 6379:6379
+        networks:
+            - app
+
+    elasticsearch:
+        image: docker.elastic.co/elasticsearch/elasticsearch:8.10.1
+        volumes:
+            - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+        environment:
+            - "discovery.type=single-node"
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ports:
+            - 9200:9200
+            - 9300:9300
+        networks:
+            - app
+
+    rabbitmq:
+        image: "rabbitmq:3.12"
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        environment:
+            - RABBITMQ_DEFAULT_USER=admin
+            - RABBITMQ_DEFAULT_PASS=admin
+        networks:
+            - app
+
 networks:
     app:
         driver: bridge
