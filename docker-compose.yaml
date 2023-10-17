@@ -20,7 +20,7 @@ services:
 
         environment:
             DB_HOST: mysql
-            DB_DATABASE: underpen
+            DB_DATABASE: twitter
             DB_USERNAME: root
             DB_PASSWORD: root
             MAIL_MAILER: smtp
@@ -59,7 +59,7 @@ services:
     mysql:
         image: mysql
         environment:
-            MYSQL_DATABASE: "underpen"
+            MYSQL_DATABASE: "twitter"
             MYSQL_USER: "admin"
             MYSQL_PASSWORD: "root"
             MYSQL_ROOT_PASSWORD: "root"
