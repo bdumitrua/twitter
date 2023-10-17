@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Route;
 
@@ -15,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Авторизация
-Route::prefix('auth')->controller(Controller::class)->group(function () {
+Route::prefix('auth')->controller(AuthController::class)->group(function () {
     // Зарегистрироваться
     Route::post('register', 'register')->name('auth.register');
     // Залогиниться
