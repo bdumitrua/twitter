@@ -26,8 +26,6 @@ class Controller extends BaseController
             if ($response) {
                 return response()->json($response, 200);
             }
-
-            return response()->json(['message' => 'success'], 200);
         } catch (\Throwable $error) {
             return response()->json(['errors' => $error['error']], 500);
         }

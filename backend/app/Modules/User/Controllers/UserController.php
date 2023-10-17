@@ -17,10 +17,22 @@ class UserController extends Controller
     }
 
     // Method realization example
+    public function index()
+    {
+        return $this->handleServiceCall(function () {
+            return $this->userService->index();
+        });
+    }
     public function show(User $user)
     {
         return $this->handleServiceCall(function () use ($user) {
             return $this->userService->show($user);
+        });
+    }
+    public function search(Request $request)
+    {
+        return $this->handleServiceCall(function () use ($request) {
+            return $this->userService->search($request);
         });
     }
 }

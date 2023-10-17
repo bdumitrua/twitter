@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\Controller;
+use App\Modules\User\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -31,13 +32,16 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 });
 
 // Работа с пользователями
-Route::prefix('users')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
-    // Получить данные аккаунта
-    Route::get('/', 'index')->name('user.index');
+Route::prefix('users')->controller(UserController::class)->group(function () {
     // Получить данные по id пользователя
-    Route::get('/{user}', 'show')->name('user.byid');
-    // Поиск по нику/ссылке пользователя
-    Route::get('/search/', 'search')->name('user.search');
+    Route::get('/show/{user}', 'show')->name('user.byid');
+
+    Route::middleware(['auth:api'])->group(function () {
+        // Получить данные своего аккаунта
+        Route::get('/', 'index')->name('user.index');
+        // Поиск по нику/ссылке пользователя
+        Route::get('/search', 'search')->name('user.search');
+    });
 });
 
 // Работа с подписками
