@@ -289,4 +289,36 @@ Route::prefix('$lcModule')->controller({$controllerClassName}::class)->group(fun
 });
 ";
     }
+
+    public static function getRequestContent($moduleName, $folderName, $fileName): string
+    {
+        return "<?php
+
+namespace App\\Modules\\{$moduleName}\\{$folderName};
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class {$fileName} extends FormRequest
+{
+    public function authorize(): bool
+    {
+        return true;
+    }
+
+    public function rules(): array
+    {
+        return [
+            // 
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            // 
+        ];
+    }
+}
+";
+    }
 }
