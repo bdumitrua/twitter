@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('user_subscribtions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('subsriber_id');
+            $table->unsignedBigInteger('subscriber_id');
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->foreign('subsriber_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('subscriber_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

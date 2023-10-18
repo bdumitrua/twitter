@@ -12,7 +12,7 @@ class UserSubscribtion extends Model
 
     protected $fillable = [
         'user_id',
-        'subsriber_id',
+        'subscriber_id',
     ];
 
     protected static function newFactory()

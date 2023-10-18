@@ -38,6 +38,11 @@ class UserSubscribtionRepository
             ->where('user_id', '=', $userId);
     }
 
+    protected function subscribtionExist(int $subscriberId, int $userId): bool
+    {
+        return $this->queryByBothIds($subscriberId, $userId)->exists();
+    }
+
     public function getSubscriptions(int $userId): Collection
     {
         return $this->baseQuery()->where('subscriber_id', '=', $userId)->get();
@@ -48,12 +53,14 @@ class UserSubscribtionRepository
         return $this->baseQuery()->where('user_id', '=', $userId)->get();
     }
 
-    public function create(int $subscriberId, int $userId): void
+    public function create(int $subscriberId, int $userId)
     {
-        UserSubscribtion::create([
-            'subscriber_id' => $subscriberId,
-            'user_id' => $userId
-        ]);
+        if (empty($this->subscribtionExist($subscriberId, $userId))) {
+            $this->userSubscribtions->create([
+                'subscriber_id' => $subscriberId,
+                'user_id' => $userId
+            ]);
+        }
     }
 
     public function remove(int $subscriberId, int $userId): void

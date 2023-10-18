@@ -32,7 +32,7 @@ class UserSubscriptionService
 
     public function add(User $user)
     {
-        $this->userSubscribtionRepository->create(Auth::id(), $user->id);
+        return $this->userSubscribtionRepository->create(Auth::id(), $user->id);
     }
 
     public function remove(User $user)
