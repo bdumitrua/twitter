@@ -16,10 +16,28 @@ class UserSubscribtionController extends Controller
         $this->userSubscriptionService = $userSubscriptionService;
     }
 
-    // public function index()
-    // {
-    //     return $this->handleServiceCall(function () {
-    //         return $this->userSubscriptionService->index();
-    //     });
-    // }
+    public function subscriptions(User $user)
+    {
+        return $this->handleServiceCall(function () use ($user) {
+            return $this->userSubscriptionService->subscriptions($user);
+        });
+    }
+    public function subscribers(User $user)
+    {
+        return $this->handleServiceCall(function () use ($user) {
+            return $this->userSubscriptionService->subscribers($user);
+        });
+    }
+    public function add(User $user)
+    {
+        return $this->handleServiceCall(function () use ($user) {
+            return $this->userSubscriptionService->add($user);
+        });
+    }
+    public function remove(User $user)
+    {
+        return $this->handleServiceCall(function () use ($user) {
+            return $this->userSubscriptionService->remove($user);
+        });
+    }
 }

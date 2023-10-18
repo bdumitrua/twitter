@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
-    private $userRepository;
+    protected $userRepository;
 
     public function __construct(
         UserRepository $userRepository,

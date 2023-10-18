@@ -3,37 +3,38 @@
 namespace App\Modules\User\Repositories;
 
 use App\Modules\User\Models\User;
-use Elastic\Elasticsearch\Client as ElasticSearch;
 use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class UserRepository
 {
-    protected $user;
-    protected $elasticSearch;
+    protected $users;
 
     public function __construct(
         User $user,
-        ElasticSearch $elasticSearch
     ) {
-        $this->user = $user;
-        $this->elasticSearch = $elasticSearch;
+        $this->users = $user;
     }
 
-    protected function baseQuery(): Builder
+    protected function baseQuery(array $relations = []): Builder
     {
-        return $this->user->newQuery();
+        return $this->users->newQuery()->with($relations);
     }
 
-    protected function queryById(int $id): Builder
+    protected function queryById(int $id, array $relations = []): Builder
     {
-        return $this->baseQuery()->where('id', '=', $id);
+        return $this->baseQuery($relations)->where('id', '=', $id);
     }
 
-    public function getById(int $id)
+    public function getByIdWithRelations(int $id, array $relations = []): User
     {
-        return $this->baseQuery()->whereId($id)->first();
+        return $this->queryById($id, $relations)->first();
+    }
+
+    public function getById(int $id): User
+    {
+        return $this->queryById($id)->first();
     }
 
     public function search(string $text): Collection
