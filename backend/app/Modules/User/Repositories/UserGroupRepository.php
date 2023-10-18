@@ -36,6 +36,11 @@ class UserGroupRepository
         return $this->baseQuery()->where('id', '=', $id);
     }
 
+    protected function queryByUserId(int $id): Builder
+    {
+        return $this->baseQuery()->where('user_id', '=', $id);
+    }
+
     protected function queryByBothIds(int $userGroupId, int $userId): Builder
     {
         return $this->userGroupMember->newQuery()
@@ -51,6 +56,11 @@ class UserGroupRepository
     public function getById(int $id): UserGroup
     {
         return $this->queryById($id)->first() ?? new UserGroup();
+    }
+
+    public function getByUserId(int $userId): UserGroup
+    {
+        return $this->queryByUserId($userId)->first() ?? new UserGroup();
     }
 
     public function create(int $userId, UserGroupDTO $dto): void

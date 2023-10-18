@@ -14,7 +14,6 @@ class UserGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => 'required|integer',
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
         ];
@@ -23,9 +22,6 @@ class UserGroupRequest extends FormRequest
     public function messages(): array
     {
         return [
-            'user_id.required' => 'id пользователя является обязательным полем.',
-            'user_id.integer' => 'id пользователя должен быть числом.',
-
             'name.required' => 'Название группы является обязательным полем.',
             'name.string'    => 'Название группы должно быть строкой.',
             'name.max'    => 'Название группы не может быть длиннее 255 символов.',
