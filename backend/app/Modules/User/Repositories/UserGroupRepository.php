@@ -47,7 +47,7 @@ class UserGroupRepository
         return $this->queryByBothIds($userGroupId, $userId)->exists();
     }
 
-    public function getById(int $id): UserGroup
+    public function getById(int $id): ?UserGroup
     {
         return $this->queryById($id)->first();
     }
