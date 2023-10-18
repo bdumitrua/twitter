@@ -20,4 +20,9 @@ class UserGroup extends Model
     {
         return UserGroupFactory::new();
     }
+
+    public function members()
+    {
+        return $this->hasMany(UserGroupMember::class, USER_GROUP_ID);
+    }
 }

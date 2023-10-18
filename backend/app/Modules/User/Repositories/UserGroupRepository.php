@@ -31,14 +31,14 @@ class UserGroupRepository
         return $this->baseQuery()->with($relations);
     }
 
-    protected function queryById(int $id): Builder
+    protected function queryById(int $id, array $relations = []): Builder
     {
-        return $this->baseQuery()->where('id', '=', $id);
+        return $this->baseQueryWithRelations($relations)->where('id', '=', $id);
     }
 
-    protected function queryByUserId(int $id): Builder
+    protected function queryByUserId(int $id, array $relations = []): Builder
     {
-        return $this->baseQuery()->where(USER_ID, '=', $id);
+        return $this->baseQueryWithRelations($relations)->where(USER_ID, '=', $id);
     }
 
     protected function queryByBothIds(int $userGroupId, int $userId): Builder
@@ -53,14 +53,14 @@ class UserGroupRepository
         return $this->queryByBothIds($userGroupId, $userId)->exists();
     }
 
-    public function getById(int $id): UserGroup
+    public function getById(int $id, array $relations = []): UserGroup
     {
-        return $this->queryById($id)->first() ?? new UserGroup();
+        return $this->queryById($id, $relations)->first() ?? new UserGroup();
     }
 
-    public function getByUserId(int $userId): UserGroup
+    public function getByUserId(int $userId, array $relations = []): Collection
     {
-        return $this->queryByUserId($userId)->first() ?? new UserGroup();
+        return $this->queryByUserId($userId, $relations)->get() ?? new Collection();
     }
 
     public function create(int $userId, UserGroupDTO $dto): void
