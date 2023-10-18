@@ -8,14 +8,13 @@ use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
+    protected $model = User::class;
+
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-
-    protected $model = User::class;
-
     public function definition(): array
     {
         $name = fake()->name();

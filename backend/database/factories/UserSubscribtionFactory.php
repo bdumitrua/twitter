@@ -9,14 +9,13 @@ use Illuminate\Support\Str;
 
 class UserSubscribtionFactory extends Factory
 {
+    protected $model = UserSubscribtion::class;
+
     /**
      * Define the model's default state.
      *
      * @return array<string, mixed>
      */
-
-    protected $model = UserSubscribtion::class;
-
     public function definition(): array
     {
         $subscriber = User::all()->random();
