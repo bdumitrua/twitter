@@ -14,12 +14,12 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable, Searchable;
 
     protected $searchable = [
-        'name',
+        NAME,
         'link',
     ];
 
     protected $fillable = [
-        'name',
+        NAME,
         'email',
         'password',
         'link'
@@ -61,11 +61,11 @@ class User extends Authenticatable implements JWTSubject
 
     public function subscribtions()
     {
-        return $this->hasMany(UserSubscribtion::class, 'subscriber_id');
+        return $this->hasMany(UserSubscribtion::class, SUBSCRIBER_ID);
     }
 
     public function subscribers()
     {
-        return $this->hasMany(UserSubscribtion::class, 'user_id');
+        return $this->hasMany(UserSubscribtion::class, USER_ID);
     }
 }

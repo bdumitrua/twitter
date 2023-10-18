@@ -26,7 +26,7 @@ class MakeModule extends Command
      */
     public function handle(): void
     {
-        $moduleName = $this->argument('name');
+        $moduleName = $this->argument(NAME);
         $folderPath = app_path("Modules/$moduleName");
 
         if (is_dir($folderPath)) {

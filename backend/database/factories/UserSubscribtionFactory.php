@@ -22,8 +22,8 @@ class UserSubscribtionFactory extends Factory
         $user = User::where('id', '!=', $subscriber->id)->get()->random();
 
         return [
-            'subscriber_id' => $subscriber->id,
-            'user_id' => $user->id,
+            SUBSCRIBER_ID => $subscriber->id,
+            USER_ID => $user->id,
         ];
     }
 }

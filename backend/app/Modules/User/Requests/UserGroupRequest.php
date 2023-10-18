@@ -14,17 +14,17 @@ class UserGroupRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
+            NAME => 'required|string|max:255',
+            DESCRIPTION => 'nullable|string|max:255',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'name.required' => 'Название группы является обязательным полем.',
-            'name.string'    => 'Название группы должно быть строкой.',
-            'name.max'    => 'Название группы не может быть длиннее 255 символов.',
+            NAME . '.required' => 'Название группы является обязательным полем.',
+            NAME . '.string'    => 'Название группы должно быть строкой.',
+            NAME . '.max'    => 'Название группы не может быть длиннее 255 символов.',
 
             'description.string'    => 'Описание группы должно быть строкой.',
             'description.max'    => 'Описание группы не может быть длиннее 255 символов.',

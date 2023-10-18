@@ -11,8 +11,8 @@ class UserSubscribtion extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
-        'subscriber_id',
+        USER_ID,
+        SUBSCRIBER_ID,
     ];
 
     protected static function newFactory()
