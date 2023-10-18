@@ -10,14 +10,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 class UserSubscribtionRepository
 {
-    protected $users;
     protected $userSubscribtions;
 
     public function __construct(
-        User $users,
         UserSubscribtion $userSubscribtions
     ) {
-        $this->users = $users;
         $this->userSubscribtions = $userSubscribtions;
     }
 
