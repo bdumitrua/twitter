@@ -17,8 +17,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 // @See app/Providers/RouteServiceProvider.php
+// checkRights:userGroup
 
-// Авторизация
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     // Зарегистрироваться
     Route::post('register', 'register')->name('auth.register');
@@ -47,12 +47,14 @@ Route::prefix('twitts')->controller(Controller::class)->group(function () {
         // Создать твит
         Route::post('create', 'create');
         // Удалить твит
-        Route::delete('destroy/{twitt}', 'destroy');
+        Route::middleware(['checkRights:twitt'])->group(function () {
+            Route::delete('destroy/{twitt}', 'destroy');
+        });
     });
 });
 
 // Действия производимые с твитами
-Route::prefix('twitts/actions/')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
+Route::prefix('twitts/actions')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
     // Лайки
     Route::prefix('likes')->group(function () {
         // Получить свои лайки
@@ -85,18 +87,26 @@ Route::prefix('polls')->middleware(['auth:api'])->controller(Controller::class)-
 });
 
 // Списки с только с постами выбранных пользователей
-Route::prefix('subscriptions/lists')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
+Route::prefix('twitts/lists')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
     // Получить свои списки
     Route::get('/', 'index');
     // Создать список
     Route::post('create', 'create');
-    // Изменить список
-    Route::patch('update/{userslist}', 'update');
-    // Удалить список
-    Route::delete('destroy/{userslist}', 'destroy');
 
-    // Добавить пользователя в список читаемых в списке
-    Route::post('members/add/{user}', 'add');
-    // Убрать пользователя из списка читаемых в списке
-    Route::post('members/remove/{user}', 'remove');
+    Route::middleware(['checkRights:userslist'])->group(function () {
+        // Изменить список
+        Route::patch('update/{userslist}', 'update');
+        // Удалить список
+        Route::delete('destroy/{userslist}', 'destroy');
+
+        // Добавить пользователя в список читаемых в списке
+        Route::post('members/add/{userslist}/{user}', 'add');
+        // Убрать пользователя из списка читаемых в списке
+        Route::post('members/remove/{userslist}/{user}', 'remove');
+    });
+
+    // Подписаться на список
+    Route::post('subscribe/{userslist}', 'add');
+    // Отписаться от списка
+    Route::post('unsubscribe/{userslist}', 'remove');
 });
