@@ -64,7 +64,7 @@ class ModuleCreator
         $fileNameMappings = [
             'Event' => "New{$moduleName}Event",
             'Listener' => "NotifyAboutNew{$moduleName}Event",
-            'Route' => 'routes',
+            'Route' => lcfirst($moduleName) . "{$entityName}s",
             'Model' => $moduleName,
         ];
 
