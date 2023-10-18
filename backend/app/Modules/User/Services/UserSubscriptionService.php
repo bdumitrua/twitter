@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
-use App\Modules\User\Repositories\UserRepository;
 use App\Modules\User\Repositories\UserSubscribtionRepository;
 use Illuminate\Support\Facades\Auth;
 
