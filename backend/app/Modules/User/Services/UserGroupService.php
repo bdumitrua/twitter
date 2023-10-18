@@ -28,13 +28,13 @@ class UserGroupService
     {
         return $this->userGroupRepository->create(Auth::id(), $request);
     }
-    public function update(UserGroup $userGroup)
+    public function update(UserGroup $userGroup, Request $request)
     {
-        return $this->userGroupRepository->update($userGroup->id, $request);
+        return $this->userGroupRepository->update($userGroup, $request);
     }
     public function destroy(UserGroup $userGroup)
     {
-        return $this->userGroupRepository->delete($userGroup->id);
+        return $this->userGroupRepository->delete($userGroup);
     }
     public function add(UserGroup $userGroup, User $user)
     {
