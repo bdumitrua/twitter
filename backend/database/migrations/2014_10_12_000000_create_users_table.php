@@ -14,7 +14,7 @@ return new class extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string(NAME);
             $table->string('email')->unique();
             $table->string('password');
             $table->string('link');
@@ -31,7 +31,7 @@ return new class extends Migration
                 'body' => [
                     'mappings' => [
                         'properties' => [
-                            'name' => [
+                            NAME => [
                                 'type' => 'text'
                             ],
                             'link' => [

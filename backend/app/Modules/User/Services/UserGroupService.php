@@ -26,26 +26,31 @@ class UserGroupService
     {
         return $this->userGroupRepository->getByUserId(Auth::id());
     }
+
     public function create(UserGroupRequest $userGroupRequest)
     {
         $userGroupDTO = $this->createDTO($userGroupRequest);
 
         return $this->userGroupRepository->create(Auth::id(), $userGroupDTO);
     }
+
     public function update(UserGroup $userGroup, UserGroupRequest $userGroupRequest)
     {
         $userGroupDTO = $this->createDTO($userGroupRequest);
 
         return $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
+
     public function destroy(UserGroup $userGroup)
     {
         return $this->userGroupRepository->delete($userGroup);
     }
+
     public function add(UserGroup $userGroup, User $user)
     {
         return $this->userGroupRepository->addUser($userGroup->id, $user->id);
     }
+
     public function remove(UserGroup $userGroup, User $user)
     {
         return $this->userGroupRepository->removeUser($userGroup->id, $user->id);

@@ -25,6 +25,15 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // 
+        $this->defineConstants();
+    }
+
+    private function defineConstants(): void
+    {
+        define('USER_ID', 'user_id');
+        define('SUBSCRIBER_ID', 'subscriber_id');
+        define('USER_GROUP_ID', 'user_group_id');
+        define('NAME', 'name');
+        define('DESCRIPTION', 'description');
     }
 }

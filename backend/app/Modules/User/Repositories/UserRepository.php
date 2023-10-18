@@ -51,7 +51,7 @@ class UserRepository
     public function search(string $text): Collection
     {
         $query = Query::match()
-            ->field('name')
+            ->field(NAME)
             ->query($text)
             ->fuzziness('AUTO');
 

@@ -11,8 +11,8 @@ class UserGroupMember extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_group_id',
-        'user_id',
+        USER_GROUP_ID,
+        USER_ID,
     ];
 
     protected static function newFactory()
