@@ -26,7 +26,7 @@ class SearchRequest extends FormRequest
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'search.required' => 'Поиск не может быть по пустому значению.',
