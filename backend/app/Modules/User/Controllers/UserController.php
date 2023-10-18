@@ -5,6 +5,7 @@ namespace App\Modules\User\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Models\User;
+use App\Modules\User\Requests\SearchRequest;
 use App\Modules\User\Services\UserService;
 
 class UserController extends Controller
@@ -29,7 +30,7 @@ class UserController extends Controller
             return $this->userService->show($user);
         });
     }
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
         return $this->handleServiceCall(function () use ($request) {
             return $this->userService->search($request);
