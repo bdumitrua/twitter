@@ -9,14 +9,11 @@ use Illuminate\Database\Eloquent\Collection;
 
 class UserGroupRepository
 {
-    protected $users;
     protected $userGroup;
 
     public function __construct(
-        User $users,
         UserGroup $userGroup
     ) {
-        $this->users = $users;
         $this->userGroup = $userGroup;
     }
 
