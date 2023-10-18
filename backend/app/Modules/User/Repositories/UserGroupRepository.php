@@ -26,4 +26,44 @@ class UserGroupRepository
     {
         return $this->baseQuery()->with($relations);
     }
+
+    protected function queryById(int $id): Builder
+    {
+        return $this->baseQuery()->where('id', '=', $id);
+    }
+
+    public function getById(int $id): UserGroup
+    {
+        return $this->queryById($id)->first();
+    }
+
+    public function create(int $userId, $data): void
+    {
+        $this->userGroup->create([
+            'user_id' => $userId,
+            'name' => $data->name,
+            'description' => $data->description
+        ]);
+    }
+    public function update(UserGroup $userGroup, $data): void
+    {
+        $userGroup->update([
+            'name' => $data->name,
+            'description' => $data->description
+        ]);
+    }
+    public function delete(UserGroup $userGroup): void
+    {
+        $userGroup->delete();
+    }
+
+    public function addUser(): void
+    {
+        // 
+    }
+
+    public function removeUser(): void
+    {
+        // 
+    }
 }
