@@ -2,15 +2,16 @@
 
 namespace Database\Factories;
 
-use App\Modules\User\Models\UserGroup;
+use App\Modules\User\Models\UserGroupMember;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Modules\UserGroup\Models\UserGroupModel>
  */
-class UserGroupFactory extends Factory
+class UserGroupMemberFactory extends Factory
 {
-    protected $model = UserGroup::class;
+    protected $model = UserGroupMember::class;
+
     /**
      * Define the model's default state.
      *
