@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Modules\User\DTO\UserGroupDTO;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use Illuminate\Database\Eloquent\Builder;
@@ -52,20 +53,20 @@ class UserGroupRepository
         return $this->queryById($id)->first();
     }
 
-    public function create(int $userId, $data): void
+    public function create(int $userId, UserGroupDTO $dto): void
     {
         $this->userGroup->create([
             'user_id' => $userId,
-            'name' => $data->name,
-            'description' => $data->description
+            'name' => $dto->name,
+            'description' => $dto->description
         ]);
     }
 
-    public function update(UserGroup $userGroup, $data): void
+    public function update(UserGroup $userGroup, UserGroupDTO $dto): void
     {
         $userGroup->update([
-            'name' => $data->name,
-            'description' => $data->description
+            'name' => $dto->name,
+            'description' => $dto->description
         ]);
     }
 

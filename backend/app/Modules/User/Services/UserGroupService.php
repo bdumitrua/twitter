@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Services;
 
+use App\Modules\User\DTO\UserGroupDTO;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -26,11 +27,15 @@ class UserGroupService
     }
     public function create(Request $request)
     {
-        return $this->userGroupRepository->create(Auth::id(), $request);
+        $userGroupDTO = $this->createDTO($request);
+
+        return $this->userGroupRepository->create(Auth::id(), $userGroupDTO);
     }
     public function update(UserGroup $userGroup, Request $request)
     {
-        return $this->userGroupRepository->update($userGroup, $request);
+        $userGroupDTO = $this->createDTO($request);
+
+        return $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
     public function destroy(UserGroup $userGroup)
     {
@@ -43,5 +48,14 @@ class UserGroupService
     public function remove(UserGroup $userGroup, User $user)
     {
         return $this->userGroupRepository->removeUser($userGroup->id, $user->id);
+    }
+
+    protected function createDTO(Request $request): UserGroupDTO
+    {
+        return new UserGroupDTO(
+            $request->user_id,
+            $request->name,
+            $request->description,
+        );
     }
 }
