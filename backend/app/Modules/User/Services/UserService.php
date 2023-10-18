@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserRepository;
+use App\Modules\User\Requests\SearchRequest;
 use Elastic\Elasticsearch\Client as ElasticSearch;
 use Illuminate\Support\Facades\Auth;
 
@@ -39,8 +40,8 @@ class UserService
         );
     }
 
-    public function search(Request $request)
+    public function search(SearchRequest $request)
     {
-        return $this->userRepository->search($request->text);
+        return $this->userRepository->search($request->search);
     }
 }

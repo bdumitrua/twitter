@@ -9,6 +9,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Repositories\UserGroupRepository;
+use App\Modules\User\Requests\UserGroupRequest;
 use Illuminate\Support\Facades\Auth;
 
 class UserGroupService
@@ -25,15 +26,15 @@ class UserGroupService
     {
         return $this->userGroupRepository->getById(Auth::id());
     }
-    public function create(Request $request)
+    public function create(UserGroupRequest $userGroupRequest)
     {
-        $userGroupDTO = $this->createDTO($request);
+        $userGroupDTO = $this->createDTO($userGroupRequest);
 
         return $this->userGroupRepository->create(Auth::id(), $userGroupDTO);
     }
-    public function update(UserGroup $userGroup, Request $request)
+    public function update(UserGroup $userGroup, UserGroupRequest $userGroupRequest)
     {
-        $userGroupDTO = $this->createDTO($request);
+        $userGroupDTO = $this->createDTO($userGroupRequest);
 
         return $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
@@ -50,12 +51,12 @@ class UserGroupService
         return $this->userGroupRepository->removeUser($userGroup->id, $user->id);
     }
 
-    protected function createDTO(Request $request): UserGroupDTO
+    protected function createDTO(UserGroupRequest $userGroupRequest): UserGroupDTO
     {
         return new UserGroupDTO(
-            $request->user_id,
-            $request->name,
-            $request->description,
+            $userGroupRequest->user_id,
+            $userGroupRequest->name,
+            $userGroupRequest->description,
         );
     }
 }
