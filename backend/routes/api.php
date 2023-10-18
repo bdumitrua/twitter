@@ -21,15 +21,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     // Зарегистрироваться
-    Route::post('register', 'register')->name('auth.register');
+    Route::post('register', 'register');
     // Залогиниться
-    Route::post('login', 'login')->name('auth.login');
+    Route::post('login', 'login');
     // Получить новый токен (по уже истёкшему)
-    Route::get('refresh', 'refresh')->name('auth.refresh');
+    Route::get('refresh', 'refresh');
 
     Route::middleware(['auth:api'])->group(function () {
         // Выйти
-        Route::post('logout', 'logout')->name('auth.logout');
+        Route::post('logout', 'logout');
     });
 });
 

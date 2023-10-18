@@ -24,7 +24,10 @@ class UserGroupService
 
     public function index()
     {
-        return $this->userGroupRepository->getByUserId(Auth::id());
+        return $this->userGroupRepository->getByUserId(
+            Auth::id(),
+            ['members']
+        );
     }
 
     public function create(UserGroupRequest $userGroupRequest)
