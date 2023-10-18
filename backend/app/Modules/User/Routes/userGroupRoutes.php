@@ -10,12 +10,15 @@ Route::prefix('users/groups')->middleware(['auth:api'])->controller(UserGroupCon
     // Создать группу
     Route::post('create', 'create');
     // Изменить группу
-    Route::patch('update/{userGroup}', 'update');
-    // Удалить группу
-    Route::delete('destroy/{userGroup}', 'destroy');
 
-    // Добавить пользователя в группу
-    Route::post('add/{userGroup}/{user}', 'add');
-    // Удалить пользователя из группы
-    Route::post('remove/{userGroup}/{user}', 'remove');
+    Route::middleware(['checkRights:userGroup'])->group(function () {
+        Route::patch('update/{userGroup}', 'update');
+        // Удалить группу
+        Route::delete('destroy/{userGroup}', 'destroy');
+
+        // Добавить пользователя в группу
+        Route::post('add/{userGroup}/{user}', 'add');
+        // Удалить пользователя из группы
+        Route::post('remove/{userGroup}/{user}', 'remove');
+    });
 });

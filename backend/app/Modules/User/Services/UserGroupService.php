@@ -24,7 +24,7 @@ class UserGroupService
 
     public function index()
     {
-        return $this->userGroupRepository->getById(Auth::id());
+        return $this->userGroupRepository->getByUserId(Auth::id());
     }
     public function create(UserGroupRequest $userGroupRequest)
     {
@@ -54,7 +54,6 @@ class UserGroupService
     protected function createDTO(UserGroupRequest $userGroupRequest): UserGroupDTO
     {
         return new UserGroupDTO(
-            $userGroupRequest->user_id,
             $userGroupRequest->name,
             $userGroupRequest->description,
         );
