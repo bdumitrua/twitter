@@ -40,12 +40,12 @@ class UserRepository
 
     public function getByIdWithRelations(int $id, array $fullRelations = [],  array $countRelations = []): ?User
     {
-        return $this->queryById($id, $fullRelations, $countRelations)->first();
+        return $this->queryById($id, $fullRelations, $countRelations)->first() ?? new User();
     }
 
     public function getById(int $id): User
     {
-        return $this->queryById($id)->first();
+        return $this->queryById($id)->first() ?? new User();
     }
 
     public function search(string $text): Collection
