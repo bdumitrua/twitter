@@ -17,19 +17,30 @@ class UserRepository
         $this->users = $user;
     }
 
-    protected function baseQuery(array $relations = []): Builder
+    protected function baseQuery(): Builder
     {
-        return $this->users->newQuery()->with($relations);
+        return $this->users->newQuery();
     }
 
-    protected function queryById(int $id, array $relations = []): Builder
+    protected function baseQueryWithRelations(array $fullRelations = [], array $countRelations = []): Builder
     {
-        return $this->baseQuery($relations)->where('id', '=', $id);
+        $query = $this->baseQuery()->with($fullRelations);
+
+        foreach ($countRelations as $countRelation) {
+            $query->withCount($countRelation);
+        }
+
+        return $query;
     }
 
-    public function getByIdWithRelations(int $id, array $relations = []): User
+    protected function queryById(int $id, array $fullRelations = [], array $countRelations = []): Builder
     {
-        return $this->queryById($id, $relations)->first();
+        return $this->baseQueryWithRelations($fullRelations, $countRelations)->where('id', '=', $id);
+    }
+
+    public function getByIdWithRelations(int $id, array $fullRelations = [],  array $countRelations = []): User
+    {
+        return $this->queryById($id, $fullRelations, $countRelations)->first();
     }
 
     public function getById(int $id): User

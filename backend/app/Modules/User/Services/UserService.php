@@ -22,12 +22,21 @@ class UserService
 
     public function index()
     {
-        return $this->userRepository->getById(Auth::id());
+        return $this->userRepository->getByIdWithRelations(
+            Auth::id(),
+            [],
+            ['subscribtions', 'subscribers']
+        );
     }
 
     public function show(User $user)
     {
-        return $user;
+        return $this->userRepository->getByIdWithRelations(
+            $user->id,
+            [],
+            ['subscribtions', 'subscribers'],
+
+        );
     }
 
     public function search(Request $request)
