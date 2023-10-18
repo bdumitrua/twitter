@@ -23,7 +23,8 @@ class ModuleCreator
         'Listener' => 'Listeners',
         'Resource' => 'Resources',
         'Route' => 'Routes',
-        'Request' => 'Requests'
+        'Request' => 'Requests',
+        'DTO' => 'DTO'
     ];
 
     public function updateModules($moduleName): void

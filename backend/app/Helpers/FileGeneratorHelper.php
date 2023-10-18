@@ -312,4 +312,21 @@ class {$fileName} extends FormRequest
 }
 ";
     }
+
+    public static function getDTOContent($moduleName, $folderName, $fileName): string
+    {
+        return "<?php
+
+namespace App\\Modules\\{$moduleName}\\{$folderName};
+
+class {$fileName}
+{
+    public function __construct(
+        // 
+    ) {
+        // 
+    }
+}
+";
+    }
 }
