@@ -269,9 +269,7 @@ class {$fileName} extends JsonResource
 
     public static function getRouteContent($moduleName, $folderName, $fileName): string
     {
-        $modelVariableName = lcfirst($moduleName);
         $controllerClassName = ucfirst($moduleName) . 'Controller';
-        $lcModule = lcfirst($moduleName);
 
         return "<?php
 
@@ -280,13 +278,6 @@ namespace App\\Modules\\{$moduleName}\\{$folderName};
 use Illuminate\Support\Facades\Route;
 use App\Modules\\$moduleName\\Controllers\\{$controllerClassName};
 
-Route::prefix('$lcModule')->controller({$controllerClassName}::class)->group(function () {
-    Route::get('/search', 'search')->name('{$lcModule}.search');
-
-    Route::middleware(['auth:api'])->group(function () {
-        Route::delete('delete/{{$modelVariableName}}', 'destroy')->name('$lcModule.delete');
-    });
-});
 ";
     }
 
