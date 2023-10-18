@@ -22,14 +22,15 @@ class SearchRequest extends FormRequest
     public function rules(): array
     {
         return [
-            // 
+            'search' => 'required|string|max:255',
         ];
     }
 
     public function messages()
     {
         return [
-            // 
+            'search.required' => 'Поиск не может быть по пустому значению.',
+            'search.max'    => 'Текст поиска не может быть не длиннее 255 символов.',
         ];
     }
 }
