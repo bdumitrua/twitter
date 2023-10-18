@@ -15,7 +15,7 @@ Route::prefix('users/groups')->middleware(['auth:api'])->controller(UserGroupCon
     Route::delete('destroy/{userGroup}', 'destroy');
 
     // Добавить пользователя в группу
-    Route::post('add/{user}', 'add');
+    Route::post('add/{userGroup}/{user}', 'add');
     // Удалить пользователя из группы
-    Route::post('remove/{user}', 'remove');
+    Route::post('remove/{userGroup}/{user}', 'remove');
 });

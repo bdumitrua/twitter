@@ -23,16 +23,16 @@ class UserGroupController extends Controller
             return $this->userGroupService->index();
         });
     }
-    public function create()
+    public function create(Request $request)
     {
-        return $this->handleServiceCall(function () {
-            return $this->userGroupService->create();
+        return $this->handleServiceCall(function () use ($request) {
+            return $this->userGroupService->create($request);
         });
     }
-    public function update(UserGroup $userGroup)
+    public function update(UserGroup $userGroup, Request $request)
     {
-        return $this->handleServiceCall(function () use ($userGroup) {
-            return $this->userGroupService->update($userGroup);
+        return $this->handleServiceCall(function () use ($userGroup, $request) {
+            return $this->userGroupService->update($userGroup, $request);
         });
     }
     public function destroy(UserGroup $userGroup)
@@ -41,16 +41,16 @@ class UserGroupController extends Controller
             return $this->userGroupService->destroy($userGroup);
         });
     }
-    public function add(User $user)
+    public function add(UserGroup $userGroup, User $user)
     {
-        return $this->handleServiceCall(function () use ($user) {
-            return $this->userGroupService->add($user);
+        return $this->handleServiceCall(function () use ($userGroup, $user) {
+            return $this->userGroupService->add($userGroup, $user);
         });
     }
-    public function remove(User $user)
+    public function remove(UserGroup $userGroup, User $user)
     {
-        return $this->handleServiceCall(function () use ($user) {
-            return $this->userGroupService->remove($user);
+        return $this->handleServiceCall(function () use ($userGroup, $user) {
+            return $this->userGroupService->remove($userGroup, $user);
         });
     }
 }
