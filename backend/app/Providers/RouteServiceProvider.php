@@ -50,7 +50,7 @@ class RouteServiceProvider extends ServiceProvider
             new RecursiveDirectoryIterator($moduleDir),
             RecursiveIteratorIterator::SELF_FIRST
         ) as $fileInfo) {
-            if ($fileInfo->isFile() && $fileInfo->getFilename() === 'routes.php') {
+            if ($fileInfo->isFile() && $fileInfo->getExtension() === 'php') {
                 $moduleRoutes = $fileInfo->getPathname();
 
                 // Подключите маршруты из модуля с префиксом и middleware 'api'
