@@ -22,26 +22,26 @@ class UserGroupService
 
     public function index()
     {
-        // 
+        return $this->userGroupRepository->getById(Auth::id());
     }
-    public function create()
+    public function create(Request $request)
     {
-        // 
+        return $this->userGroupRepository->create(Auth::id(), $request);
     }
     public function update(UserGroup $userGroup)
     {
-        // 
+        return $this->userGroupRepository->update($userGroup->id, $request);
     }
     public function destroy(UserGroup $userGroup)
     {
-        // 
+        return $this->userGroupRepository->delete($userGroup->id);
     }
-    public function add(User $user)
+    public function add(UserGroup $userGroup, User $user)
     {
-        // 
+        return $this->userGroupRepository->addUser($userGroup->id, $user->id);
     }
-    public function remove(User $user)
+    public function remove(UserGroup $userGroup, User $user)
     {
-        // 
+        return $this->userGroupRepository->removeUser($userGroup->id, $user->id);
     }
 }
