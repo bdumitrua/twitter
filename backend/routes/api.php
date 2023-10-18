@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// @See app/Providers/RouteServiceProvider.php
+
 // Авторизация
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
     // Зарегистрироваться
@@ -29,31 +31,6 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
         // Выйти
         Route::post('logout', 'logout')->name('auth.logout');
     });
-});
-
-// Работа с пользователями
-Route::prefix('users')->controller(UserController::class)->group(function () {
-    // Получить данные по id пользователя
-    Route::get('/show/{user}', 'show')->name('user.byid');
-
-    Route::middleware(['auth:api'])->group(function () {
-        // Получить данные своего аккаунта
-        Route::get('/', 'index')->name('user.index');
-        // Поиск по нику/ссылке пользователя
-        Route::get('/search', 'search')->name('user.search');
-    });
-});
-
-// Работа с подписками
-Route::prefix('users/subscriptions')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
-    // На кого пользователь подписан
-    Route::get('/{user}', 'subscriptions');
-    // Кто подписан на пользователя
-    Route::get('subscribers/{user}', 'subscribers');
-    // Подписаться на пользователя
-    Route::post('add/{user}', 'add');
-    // Отписаться от пользователя
-    Route::post('remove/{user}', 'remove');
 });
 
 // Работа с группами пользователей
