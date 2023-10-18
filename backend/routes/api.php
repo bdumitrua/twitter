@@ -33,22 +33,6 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     });
 });
 
-// Работа с группами пользователей
-Route::prefix('users/groups')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
-    // Получить мои группы 
-    Route::get('/', 'index');
-    // Создать группу
-    Route::post('create', 'create');
-    // Изменить группу
-    Route::patch('update/{post}', 'update');
-    // Удалить группу
-    Route::delete('destroy/{post}', 'destroy');
-
-    // Добавить пользователя в группу
-    Route::post('add/{user}', 'add');
-    // Удалить пользователя из группы
-    Route::post('remove/{user}', 'remove');
-});
 
 // Работа с твитами
 Route::prefix('twitts')->controller(Controller::class)->group(function () {
