@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Modules\User\Models\User;
+use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,8 +21,12 @@ class UserGroupMemberFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::all()->random();
+        $userGroup = UserGroup::all()->random();
+
         return [
-            //
+            'user_id' => $user->id,
+            'user_group_id' => $userGroup->id
         ];
     }
 }

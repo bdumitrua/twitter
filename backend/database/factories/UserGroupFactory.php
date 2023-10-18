@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -18,8 +19,12 @@ class UserGroupFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::all()->random();
+
         return [
-            //
+            'user_id' => $user->id,
+            'name' => fake()->words(3, true),
+            'description' => fake()->words(10, true)
         ];
     }
 }
