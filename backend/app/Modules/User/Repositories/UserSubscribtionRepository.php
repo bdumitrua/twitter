@@ -50,7 +50,7 @@ class UserSubscribtionRepository
         return $this->baseQuery()->where('user_id', '=', $userId)->get();
     }
 
-    public function create(int $subscriberId, int $userId)
+    public function create(int $subscriberId, int $userId): void
     {
         if (empty($this->subscribtionExist($subscriberId, $userId))) {
             $this->userSubscribtions->create([

@@ -38,7 +38,7 @@ class UserRepository
         return $this->baseQueryWithRelations($fullRelations, $countRelations)->where('id', '=', $id);
     }
 
-    public function getByIdWithRelations(int $id, array $fullRelations = [],  array $countRelations = []): User
+    public function getByIdWithRelations(int $id, array $fullRelations = [],  array $countRelations = []): ?User
     {
         return $this->queryById($id, $fullRelations, $countRelations)->first();
     }
