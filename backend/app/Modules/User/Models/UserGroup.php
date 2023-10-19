@@ -23,6 +23,6 @@ class UserGroup extends Model
 
     public function members()
     {
-        return $this->hasMany(UserGroupMember::class, USER_GROUP_ID);
+        return $this->hasMany(UserGroupMember::class, USER_GROUP_ID)->with('users_data');
     }
 }

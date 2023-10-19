@@ -19,4 +19,9 @@ class UserGroupMember extends Model
     {
         return UserGroupMemberFactory::new();
     }
+
+    public function users_data()
+    {
+        return $this->belongsTo(User::class, USER_ID);
+    }
 }
