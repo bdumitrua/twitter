@@ -2,10 +2,13 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Modules\User\DTO\UserUpdateDTO;
 use App\Modules\User\Models\User;
 use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserRepository
 {
@@ -40,6 +43,24 @@ class UserRepository
     public function getById(int $id): User
     {
         return $this->queryById($id)->first() ?? new User();
+    }
+
+    public function update(int $userId, UserUpdateDTO $dto): void
+    {
+        $user = $this->getById($userId);
+        $dtoProperties = get_object_vars($dto);
+
+        foreach ($dtoProperties as $property => $value) {
+            $property = Str::snake($property);
+
+            if (!empty($value)) {
+                $user->$property = $property === 'password'
+                    ? Hash::make($value)
+                    : $value;
+            }
+        }
+
+        $user->save();
     }
 
     public function search(string $text): Collection
