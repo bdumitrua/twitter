@@ -24,7 +24,7 @@ Route::prefix('twitts/lists')->middleware(['auth:api'])->controller(Controller::
     });
 
     // Подписаться на список
-    Route::post('subscribe/{userslist}', 'add');
+    Route::post('subscribe/{userslist}', 'subscribe');
     // Отписаться от списка
-    Route::post('unsubscribe/{userslist}', 'remove');
+    Route::post('unsubscribe/{userslist}', 'unsubscribe');
 });
