@@ -22,4 +22,14 @@ class UsersList extends Model
     {
         return UsersListFactory::new();
     }
+
+    public function members()
+    {
+        return $this->hasMany(UsersListMember::class, 'users_list_id');
+    }
+
+    public function subscribers()
+    {
+        return $this->hasMany(UsersListSubscribtion::class, 'users_list_id');
+    }
 }

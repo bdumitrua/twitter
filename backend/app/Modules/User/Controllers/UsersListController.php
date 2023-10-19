@@ -25,42 +25,56 @@ class UsersListController extends Controller
             return $this->usersListService->index();
         });
     }
+
+    public function show(UsersList $usersList)
+    {
+        return $this->handleServiceCall(function () use ($usersList) {
+            return $this->usersListService->show($usersList);
+        });
+    }
+
     public function create(UsersListRequest $usersListRequest)
     {
         return $this->handleServiceCall(function () use ($usersListRequest) {
             return $this->usersListService->create($usersListRequest);
         });
     }
+
     public function update(UsersList $usersList, UsersListRequest $usersListRequest)
     {
         return $this->handleServiceCall(function () use ($usersList, $usersListRequest) {
             return $this->usersListService->update($usersList, $usersListRequest);
         });
     }
+
     public function destroy(UsersList $usersList)
     {
         return $this->handleServiceCall(function () use ($usersList) {
             return $this->usersListService->destroy($usersList);
         });
     }
+
     public function add(UsersList $usersList, User $user)
     {
         return $this->handleServiceCall(function () use ($usersList, $user) {
             return $this->usersListService->add($usersList, $user);
         });
     }
+
     public function remove(UsersList $usersList, User $user)
     {
         return $this->handleServiceCall(function () use ($usersList, $user) {
             return $this->usersListService->remove($usersList, $user);
         });
     }
+
     public function subscribe(UsersList $usersList)
     {
         return $this->handleServiceCall(function () use ($usersList) {
             return $this->usersListService->subscribe($usersList);
         });
     }
+
     public function unsubscribe(UsersList $usersList)
     {
         return $this->handleServiceCall(function () use ($usersList) {

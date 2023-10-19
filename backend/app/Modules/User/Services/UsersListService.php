@@ -26,6 +26,14 @@ class UsersListService
         return $this->usersListRepository->getByUserId(Auth::id());
     }
 
+    public function show(UsersList $usersList)
+    {
+        return $this->usersListRepository->getById(
+            $usersList->id,
+            ['members', 'subscribers']
+        );
+    }
+
     public function create(UsersListRequest $usersListRequest)
     {
         $usersListDTO = $this->createDTO($usersListRequest);
