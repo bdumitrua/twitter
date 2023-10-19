@@ -5,6 +5,7 @@ namespace App\Modules\User\Repositories;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListMember;
+use App\Modules\User\Models\UsersListSubscribtion;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -12,13 +13,16 @@ class UsersListRepository
 {
     protected $usersList;
     protected $usersListMember;
+    protected $usersListSubscribtion;
 
     public function __construct(
         UsersList $usersList,
         UsersListMember $usersListMember,
+        UsersListSubscribtion $usersListSubscribtion,
     ) {
         $this->usersList = $usersList;
         $this->usersListMember = $usersListMember;
+        $this->usersListSubscribtion = $usersListSubscribtion;
     }
 
     protected function baseQuery(): Builder
@@ -51,6 +55,18 @@ class UsersListRepository
     protected function userIsListMember(int $usersListId, int $userId): bool
     {
         return $this->queryUserMembership($usersListId, $userId)->exists();
+    }
+
+    protected function queryUserSubscribtion(int $usersListId, int $userId): Builder
+    {
+        return $this->usersListMember->newQuery()
+            ->where('users_list_id', '=', $usersListId)
+            ->where(USER_ID, '=', $userId);
+    }
+
+    protected function userIsListSubscriber(int $usersListId, int $userId): bool
+    {
+        return $this->queryUserSubscribtion($usersListId, $userId)->exists();
     }
 
     public function getById(int $id, array $relations = []): UsersList
@@ -95,7 +111,7 @@ class UsersListRepository
     {
         if (empty($this->userIsListMember($usersListId, $userId))) {
             $this->usersListMember->create([
-                USER_GROUP_ID => $usersListId,
+                'users_list_id' => $usersListId,
                 USER_ID => $userId
             ]);
         }
@@ -108,6 +124,26 @@ class UsersListRepository
 
         if ($membership) {
             $membership->delete();
+        }
+    }
+
+    public function subscribe(int $usersListId, int $userId): void
+    {
+        if (empty($this->userIsListSubscriber($usersListId, $userId))) {
+            $this->usersListSubscribtion->create([
+                'users_list_id' => $usersListId,
+                USER_ID => $userId
+            ]);
+        }
+    }
+
+    public function unsubscribe(int $usersListId, int $userId): void
+    {
+        /** @var UsersListSubscribtion */
+        $subscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first();
+
+        if ($subscribtion) {
+            $subscribtion->delete();
         }
     }
 }
