@@ -24,6 +24,7 @@ class UsersListFactory extends Factory
 
         return [
             NAME => fake()->words(3, true),
+            DESCRIPTION => fake()->words(15, true),
             USER_ID => $user->id,
             'bg_image' => fake()->imageUrl(),
             'is_private' => fake()->boolean(50),

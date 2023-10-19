@@ -3,9 +3,9 @@
 namespace App\Modules\User\Routes;
 
 use Illuminate\Support\Facades\Route;
-use App\Modules\User\Controllers\UserController;
+use App\Modules\User\Controllers\UsersListController;
 
-Route::prefix('twitts/lists')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
+Route::prefix('users/lists')->middleware(['auth:api'])->controller(UsersListController::class)->group(function () {
     // Получить свои списки
     Route::get('/', 'index');
     // Создать список

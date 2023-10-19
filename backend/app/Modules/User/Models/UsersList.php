@@ -11,10 +11,11 @@ class UsersList extends Model
     use HasFactory;
 
     protected $fillable = [
+        USER_ID,
         NAME,
         DESCRIPTION,
         'bg_image',
-        'is_private'
+        'is_private',
     ];
 
     protected static function newFactory()
