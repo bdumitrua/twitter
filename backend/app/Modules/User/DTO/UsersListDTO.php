@@ -13,7 +13,7 @@ class UsersListDTO
         string $name,
         string $description,
         string $bgImage,
-        string $isPrivate
+        bool $isPrivate
     ) {
         $this->name = $name;
         $this->description = $description;

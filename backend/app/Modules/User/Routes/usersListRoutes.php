@@ -11,20 +11,20 @@ Route::prefix('users/lists')->middleware(['auth:api'])->controller(UsersListCont
     // Создать список
     Route::post('create', 'create');
 
-    Route::middleware(['checkRights:userslist'])->group(function () {
+    Route::middleware(['checkRights:usersList'])->group(function () {
         // Изменить список
-        Route::patch('update/{userslist}', 'update');
+        Route::patch('update/{usersList}', 'update');
         // Удалить список
-        Route::delete('destroy/{userslist}', 'destroy');
+        Route::delete('destroy/{usersList}', 'destroy');
 
         // Добавить пользователя в список читаемых в списке
-        Route::post('members/add/{userslist}/{user}', 'add');
+        Route::post('members/add/{usersList}/{user}', 'add');
         // Убрать пользователя из списка читаемых в списке
-        Route::post('members/remove/{userslist}/{user}', 'remove');
+        Route::post('members/remove/{usersList}/{user}', 'remove');
     });
 
     // Подписаться на список
-    Route::post('subscribe/{userslist}', 'subscribe');
+    Route::post('subscribe/{usersList}', 'subscribe');
     // Отписаться от списка
-    Route::post('unsubscribe/{userslist}', 'unsubscribe');
+    Route::post('unsubscribe/{usersList}', 'unsubscribe');
 });
