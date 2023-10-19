@@ -4,17 +4,21 @@ namespace App\Modules\User\Repositories;
 
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Models\UsersList;
+use App\Modules\User\Models\UsersListMember;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class UsersListRepository
 {
     protected $usersList;
+    protected $usersListMember;
 
     public function __construct(
         UsersList $usersList,
+        UsersListMember $usersListMember,
     ) {
         $this->usersList = $usersList;
+        $this->usersListMember = $usersListMember;
     }
 
     protected function baseQuery(): Builder
@@ -37,17 +41,17 @@ class UsersListRepository
         return $this->baseQueryWithRelations($relations)->where(USER_ID, '=', $id);
     }
 
-    // protected function queryByBothIds(int $userGroupId, int $userId): Builder
-    // {
-    //     return $this->userGroupMember->newQuery()
-    //         ->where(USER_GROUP_ID, '=', $userGroupId)
-    //         ->where(USER_ID, '=', $userId);
-    // }
+    protected function queryUserMembership(int $usersListId, int $userId): Builder
+    {
+        return $this->usersListMember->newQuery()
+            ->where('users_list_id', '=', $usersListId)
+            ->where(USER_ID, '=', $userId);
+    }
 
-    // protected function userInGroupExist(int $userGroupId, int $userId): bool
-    // {
-    //     return $this->queryByBothIds($userGroupId, $userId)->exists();
-    // }
+    protected function userIsListMember(int $usersListId, int $userId): bool
+    {
+        return $this->queryUserMembership($usersListId, $userId)->exists();
+    }
 
     public function getById(int $id, array $relations = []): UsersList
     {
@@ -87,23 +91,23 @@ class UsersListRepository
         $usersList->delete();
     }
 
-    // public function addUser(int $usersListId, int $userId): void
-    // {
-    //     if (empty($this->userInGroupExist($usersListId, $userId))) {
-    //         $this->usersListMember->create([
-    //             USER_GROUP_ID => $usersListId,
-    //             USER_ID => $userId
-    //         ]);
-    //     }
-    // }
+    public function addMember(int $usersListId, int $userId): void
+    {
+        if (empty($this->userIsListMember($usersListId, $userId))) {
+            $this->usersListMember->create([
+                USER_GROUP_ID => $usersListId,
+                USER_ID => $userId
+            ]);
+        }
+    }
 
-    // public function removeUser(int $usersListId, int $userId): void
-    // {
-    //     /** @var UsersListMember */
-    //     $subscribtion = $this->queryByBothIds($usersListId, $userId)->first();
+    public function removeMember(int $usersListId, int $userId): void
+    {
+        /** @var UsersListMember */
+        $membership = $this->queryUserMembership($usersListId, $userId)->first();
 
-    //     if ($subscribtion) {
-    //         $subscribtion->delete();
-    //     }
-    // }
+        if ($membership) {
+            $membership->delete();
+        }
+    }
 }
