@@ -97,8 +97,9 @@ class UsersListRepository
         $usersList->update([
             NAME => $dto->name,
             DESCRIPTION => $dto->description,
-            'bg_image' => $dto->bgImage,
             'is_private' => $dto->isPrivate,
+            // TODO FILES
+            'bg_image' => $dto->bgImage,
         ]);
     }
 
