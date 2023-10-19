@@ -45,15 +45,15 @@ class UsersListService
         return $this->usersListRepository->delete($usersList);
     }
 
-    // public function add(UsersList $usersList, User $user)
-    // {
-    //     return $this->usersListRepository->add($usersList->id, $user->id);
-    // }
+    public function add(UsersList $usersList, User $user)
+    {
+        return $this->usersListRepository->addMember($usersList->id, $user->id);
+    }
 
-    // public function remove(UsersList $usersList, User $user)
-    // {
-    //     return $this->usersListRepository->remove($usersList->id, $user->id);
-    // }
+    public function remove(UsersList $usersList, User $user)
+    {
+        return $this->usersListRepository->removeMember($usersList->id, $user->id);
+    }
 
     // public function subscribe(UsersList $usersList)
     // {
