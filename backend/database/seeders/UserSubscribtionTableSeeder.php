@@ -12,6 +12,11 @@ class UserSubscribtionTableSeeder extends Seeder
      */
     public function run(): void
     {
+        // $start = microtime(true);
+        // $end = microtime(true);
+        // $time = $end - $start;
+        // echo "Seeding time: {$time} seconds";
+
         UserSubscribtion::factory(500)->create();
     }
 }
