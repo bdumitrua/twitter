@@ -23,7 +23,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     // Зарегистрироваться
     Route::post('register', 'register');
     // Залогиниться
-    Route::post('login', 'login');
+    Route::post('login', 'login')->name('auth.login');
     // Получить новый токен (по уже истёкшему)
     Route::get('refresh', 'refresh');
 
