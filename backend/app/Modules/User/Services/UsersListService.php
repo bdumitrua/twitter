@@ -55,15 +55,15 @@ class UsersListService
         return $this->usersListRepository->removeMember($usersList->id, $user->id);
     }
 
-    // public function subscribe(UsersList $usersList)
-    // {
-    //     return $this->usersListRepository->subscribe(Auth::id(), $usersList->id);
-    // }
+    public function subscribe(UsersList $usersList)
+    {
+        return $this->usersListRepository->subscribe($usersList->id, Auth::id());
+    }
 
-    // public function unsubscribe(UsersList $usersList)
-    // {
-    //     return $this->usersListRepository->unsubscribe(Auth::id(), $usersList->id);
-    // }
+    public function unsubscribe(UsersList $usersList)
+    {
+        return $this->usersListRepository->unsubscribe($usersList->id, Auth::id());
+    }
 
     protected function createDTO(UsersListRequest $usersListRequest): UsersListDTO
     {
