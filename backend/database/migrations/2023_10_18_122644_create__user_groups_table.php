@@ -16,6 +16,7 @@ return new class extends Migration
             $table->unsignedBigInteger(USER_ID);
             $table->string(NAME);
             $table->string(DESCRIPTION)->nullable();
+            $table->integer('members_count')->default(0);
             $table->timestamps();
 
             $table->foreign(USER_ID)->references('id')->on('users')->onDelete('cascade');
