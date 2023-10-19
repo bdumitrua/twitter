@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,8 +20,13 @@ class UsersListFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::all()->random();
+
         return [
-            //
+            NAME => fake()->words(3, true),
+            USER_ID => $user->id,
+            'bg_image' => fake()->imageUrl(),
+            'is_private' => fake()->boolean(50),
         ];
     }
 }

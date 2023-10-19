@@ -13,6 +13,6 @@ class UserGroupTableSeeder extends Seeder
      */
     public function run(): void
     {
-        UserGroup::factory(20)->create();
+        UserGroup::factory(100)->create();
     }
 }
