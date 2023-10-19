@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListMember;
@@ -28,5 +29,17 @@ class UsersListMemberFactory extends Factory
             USER_ID => $user->id,
             'users_list_id' => $usersList->id,
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (UsersListMember $usersListMember) {
+            event(new UsersListMembersUpdateEvent($usersListMember));
+        });
     }
 }

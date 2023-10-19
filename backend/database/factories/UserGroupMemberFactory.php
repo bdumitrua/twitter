@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Modules\User\Events\UserGroupMembersUpdateEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
@@ -28,5 +29,17 @@ class UserGroupMemberFactory extends Factory
             USER_ID => $user->id,
             USER_GROUP_ID => $userGroup->id
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (UserGroupMember $userGroupMember) {
+            event(new UserGroupMembersUpdateEvent($userGroupMember));
+        });
     }
 }

@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListSubscribtion;
@@ -28,5 +29,17 @@ class UsersListSubscribtionFactory extends Factory
             USER_ID => $user->id,
             'users_list_id' => $usersList->id,
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (UsersListSubscribtion $usersListSubscribtion) {
+            event(new UsersListSubscribtionEvent($usersListSubscribtion));
+        });
     }
 }
