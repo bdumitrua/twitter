@@ -28,16 +28,16 @@ class UserSubscribtionRepository
         return $this->baseQuery()->with($relations);
     }
 
-    protected function queryByBothIds(int $subscriberId, int $userId): Builder
+    protected function queryByBothIds(int $userId, int $subscriberId): Builder
     {
         return $this->baseQuery()
             ->where(SUBSCRIBER_ID, '=', $subscriberId)
             ->where(USER_ID, '=', $userId);
     }
 
-    protected function subscribtionExist(int $subscriberId, int $userId): bool
+    protected function subscribtionExist(int $userId, int $subscriberId): bool
     {
-        return $this->queryByBothIds($subscriberId, $userId)->exists();
+        return $this->queryByBothIds($userId, $subscriberId)->exists();
     }
 
     public function getSubscriptions(int $userId): Collection
@@ -50,9 +50,9 @@ class UserSubscribtionRepository
         return $this->baseQuery()->where(USER_ID, '=', $userId)->get();
     }
 
-    public function create(int $subscriberId, int $userId): void
+    public function create(int $userId, int $subscriberId): void
     {
-        if (empty($this->subscribtionExist($subscriberId, $userId))) {
+        if (empty($this->subscribtionExist($userId, $subscriberId))) {
             $this->userSubscribtions->create([
                 SUBSCRIBER_ID => $subscriberId,
                 USER_ID => $userId
@@ -60,10 +60,10 @@ class UserSubscribtionRepository
         }
     }
 
-    public function remove(int $subscriberId, int $userId): void
+    public function remove(int $userId, int $subscriberId): void
     {
         /** @var UserSubscribtion */
-        $subscribtion = $this->queryByBothIds($subscriberId, $userId)->first();
+        $subscribtion = $this->queryByBothIds($userId, $subscriberId)->first();
 
         if ($subscribtion) {
             $subscribtion->delete();

@@ -79,7 +79,7 @@ class UsersListRepository
         return $this->queryByUserId($userId, $relations)->get() ?? new Collection();
     }
 
-    public function create(int $userId, UsersListDTO $dto): void
+    public function create(UsersListDTO $dto, int $userId): void
     {
         $this->usersList->create([
             USER_ID => $userId,
