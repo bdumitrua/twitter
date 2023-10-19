@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Modules\User\Events\UserSubscribtionEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserSubscribtion;
 use Elastic\ScoutDriverPlus\Support\Query;
@@ -53,10 +54,12 @@ class UserSubscribtionRepository
     public function create(int $userId, int $subscriberId): void
     {
         if (empty($this->subscribtionExist($userId, $subscriberId))) {
-            $this->userSubscribtions->create([
+            $subscribtion = $this->userSubscribtions->create([
                 SUBSCRIBER_ID => $subscriberId,
                 USER_ID => $userId
             ]);
+
+            event(new UserSubscribtionEvent($subscribtion));
         }
     }
 
@@ -66,6 +69,7 @@ class UserSubscribtionRepository
         $subscribtion = $this->queryByBothIds($userId, $subscriberId)->first();
 
         if ($subscribtion) {
+            event(new UserSubscribtionEvent($subscribtion));
             $subscribtion->delete();
         }
     }

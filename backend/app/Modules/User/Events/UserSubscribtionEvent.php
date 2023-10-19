@@ -2,16 +2,18 @@
 
 namespace App\Modules\User\Events;
 
+use App\Modules\User\Models\UserSubscribtion;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewUserEvent implements ShouldBroadcast
+class UserSubscribtionEvent implements ShouldBroadcast
 {
-    public $user;
+    public $subscription;
 
-    public function __construct($user)
-    {
-        $this->user = $user;
+    public function __construct(
+        UserSubscribtion $subscription,
+    ) {
+        $this->subscription = $subscription;
     }
 
     public function broadcastOn()
