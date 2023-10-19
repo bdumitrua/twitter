@@ -25,11 +25,11 @@ class UsersList extends Model
 
     public function members()
     {
-        return $this->hasMany(UsersListMember::class, 'users_list_id');
+        return $this->hasMany(UsersListMember::class, 'users_list_id')->with('users_data');
     }
 
     public function subscribers()
     {
-        return $this->hasMany(UsersListSubscribtion::class, 'users_list_id');
+        return $this->hasMany(UsersListSubscribtion::class, 'users_list_id')->with('users_data');
     }
 }
