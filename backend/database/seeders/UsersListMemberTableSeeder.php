@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Modules\User\Models\UsersListMember;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +13,6 @@ class UsersListMemberTableSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        UsersListMember::factory(300)->create();
     }
 }

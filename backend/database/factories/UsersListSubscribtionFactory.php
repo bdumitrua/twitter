@@ -2,6 +2,8 @@
 
 namespace Database\Factories;
 
+use App\Modules\User\Models\User;
+use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListSubscribtion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -19,8 +21,12 @@ class UsersListSubscribtionFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::all()->random();
+        $usersList = UsersList::all()->random();
+
         return [
-            //
+            USER_ID => $user->id,
+            'users_list_id' => $usersList->id,
         ];
     }
 }

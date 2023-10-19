@@ -16,7 +16,10 @@ class DatabaseSeeder extends Seeder
             UserTableSeeder::class,
             UserSubscribtionTableSeeder::class,
             UserGroupTableSeeder::class,
-            UserGroupMemberTableSeeder::class
+            UserGroupMemberTableSeeder::class,
+            UsersListTableSeeder::class,
+            UsersListMemberTableSeeder::class,
+            UsersListSubscribtionTableSeeder::class,
         ]);
     }
 }

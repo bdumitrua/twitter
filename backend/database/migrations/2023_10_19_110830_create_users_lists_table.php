@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedBigInteger(USER_ID);
             $table->string('bg_image');
-            $table->bool('is_private');
+            $table->boolean('is_private');
             $table->integer('subsribers_count')->default(0);
             $table->integer('members_count')->default(0);
             $table->timestamps();
