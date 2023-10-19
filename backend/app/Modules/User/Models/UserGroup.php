@@ -14,6 +14,7 @@ class UserGroup extends Model
         USER_ID,
         NAME,
         DESCRIPTION,
+        'members_count'
     ];
 
     protected static function newFactory()
