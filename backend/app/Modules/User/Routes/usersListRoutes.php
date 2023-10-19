@@ -8,6 +8,8 @@ use App\Modules\User\Controllers\UsersListController;
 Route::prefix('users/lists')->middleware(['auth:api'])->controller(UsersListController::class)->group(function () {
     // Получить свои списки
     Route::get('/', 'index');
+    // Посмотреть список
+    Route::get('show/{usersList}', 'show');
     // Создать список
     Route::post('create', 'create');
 
