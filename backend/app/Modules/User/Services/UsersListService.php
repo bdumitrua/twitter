@@ -3,11 +3,10 @@
 namespace App\Modules\User\Services;
 
 use App\Modules\User\DTO\UsersListDTO;
-use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
-use App\Modules\User\Models\UserGroup;
+use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UsersListRepository;
 use App\Modules\User\Requests\UsersListRequest;
 use Illuminate\Support\Facades\Auth;
@@ -24,42 +23,55 @@ class UsersListService
 
     public function index()
     {
-        // 
+        return $this->usersListRepository->getByUserId(Auth::id());
     }
 
     public function create(UsersListRequest $usersListRequest)
     {
         $usersListDTO = $this->createDTO($usersListRequest);
 
-        //
+        return $this->usersListRepository->create(Auth::id(), $usersListDTO);
     }
 
-    public function update(UserGroup $userGroup, UsersListRequest $usersListRequest)
+    public function update(UsersList $usersList, UsersListRequest $usersListRequest)
     {
         $usersListDTO = $this->createDTO($usersListRequest);
 
-        // 
+        return $this->usersListRepository->update($usersList, $usersListDTO);
     }
 
-    public function destroy(UserGroup $userGroup)
+    public function destroy(UsersList $usersList)
     {
-        return $this->usersListRepository->delete($userGroup);
+        return $this->usersListRepository->delete($usersList);
     }
 
-    public function add(UserGroup $userGroup, User $user)
-    {
-        // 
-    }
+    // public function add(UsersList $usersList, User $user)
+    // {
+    //     return $this->usersListRepository->add($usersList->id, $user->id);
+    // }
 
-    public function remove(UserGroup $userGroup, User $user)
-    {
-        // 
-    }
+    // public function remove(UsersList $usersList, User $user)
+    // {
+    //     return $this->usersListRepository->remove($usersList->id, $user->id);
+    // }
+
+    // public function subscribe(UsersList $usersList)
+    // {
+    //     return $this->usersListRepository->subscribe(Auth::id(), $usersList->id);
+    // }
+
+    // public function unsubscribe(UsersList $usersList)
+    // {
+    //     return $this->usersListRepository->unsubscribe(Auth::id(), $usersList->id);
+    // }
 
     protected function createDTO(UsersListRequest $usersListRequest): UsersListDTO
     {
-        // return new UsersListDTO(
-
-        // );
+        return new UsersListDTO(
+            $usersListRequest->name,
+            $usersListRequest->description ?? '',
+            $usersListRequest->bg_image ?? '',
+            $usersListRequest->is_private ?? false,
+        );
     }
 }
