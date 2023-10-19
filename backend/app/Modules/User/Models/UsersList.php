@@ -16,6 +16,8 @@ class UsersList extends Model
         DESCRIPTION,
         'bg_image',
         'is_private',
+        'subsribers_count',
+        'members_count'
     ];
 
     protected static function newFactory()
