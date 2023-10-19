@@ -25,8 +25,7 @@ class UserService
     {
         return $this->userRepository->getByIdWithRelations(
             Auth::id(),
-            ['lists', 'lists_subscribtions'],
-            ['subscribtions', 'subscribers']
+            ['lists', 'lists_subscribtions']
         );
     }
 
@@ -34,8 +33,7 @@ class UserService
     {
         return $this->userRepository->getByIdWithRelations(
             $user->id,
-            ['lists', 'lists_subscribtions'],
-            ['subscribtions', 'subscribers'],
+            ['lists', 'lists_subscribtions']
         );
     }
 
