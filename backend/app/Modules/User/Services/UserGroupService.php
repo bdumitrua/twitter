@@ -34,7 +34,7 @@ class UserGroupService
     {
         $userGroupDTO = $this->createDTO($userGroupRequest);
 
-        return $this->userGroupRepository->create(Auth::id(), $userGroupDTO);
+        return $this->userGroupRepository->create($userGroupDTO, Auth::id());
     }
 
     public function update(UserGroup $userGroup, UserGroupRequest $userGroupRequest)

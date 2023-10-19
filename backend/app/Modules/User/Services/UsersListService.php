@@ -38,7 +38,7 @@ class UsersListService
     {
         $usersListDTO = $this->createDTO($usersListRequest);
 
-        return $this->usersListRepository->create(Auth::id(), $usersListDTO);
+        return $this->usersListRepository->create($usersListDTO, Auth::id());
     }
 
     public function update(UsersList $usersList, UsersListRequest $usersListRequest)
