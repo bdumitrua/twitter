@@ -31,11 +31,11 @@ class UserSubscriptionService
 
     public function add(User $user)
     {
-        return $this->userSubscribtionRepository->create(Auth::id(), $user->id);
+        return $this->userSubscribtionRepository->create($user->id, Auth::id());
     }
 
     public function remove(User $user)
     {
-        $this->userSubscribtionRepository->remove(Auth::id(), $user->id);
+        $this->userSubscribtionRepository->remove($user->id, Auth::id());
     }
 }

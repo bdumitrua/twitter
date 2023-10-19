@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Modules\User\Events\UserSubscribtionEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserSubscribtion;
 use Illuminate\Database\Eloquent\Factories\Factory;
@@ -22,8 +23,20 @@ class UserSubscribtionFactory extends Factory
         $user = User::where('id', '!=', $subscriber->id)->get()->random();
 
         return [
-            SUBSCRIBER_ID => $subscriber->id,
             USER_ID => $user->id,
+            SUBSCRIBER_ID => $subscriber->id,
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (UserSubscribtion $subscribtion) {
+            event(new UserSubscribtionEvent($subscribtion));
+        });
     }
 }

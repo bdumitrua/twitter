@@ -2,16 +2,18 @@
 
 namespace App\Modules\User\Events;
 
+use App\Modules\User\Models\UserGroupMember;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewUserEvent implements ShouldBroadcast
+class UserGroupMembersUpdateEvent implements ShouldBroadcast
 {
-    public $user;
+    public $userGroupMember;
 
-    public function __construct($user)
-    {
-        $this->user = $user;
+    public function __construct(
+        UserGroupMember $userGroupMember,
+    ) {
+        $this->userGroupMember = $userGroupMember;
     }
 
     public function broadcastOn()

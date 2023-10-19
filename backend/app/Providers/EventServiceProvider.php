@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Modules\User\Events\UserGroupMembersUpdateEvent;
+use App\Modules\User\Events\UsersListMembersUpdateEvent;
+use App\Modules\User\Events\UsersListSubscribtionEvent;
+use App\Modules\User\Events\UserSubscribtionEvent;
+use App\Modules\User\Listeners\UpdateGroupMembersCount;
+use App\Modules\User\Listeners\UpdateListMembersCount;
+use App\Modules\User\Listeners\UpdateListSubscribtionCount;
+use App\Modules\User\Listeners\UpdateUserSubscribtionCount;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -17,6 +25,18 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        UserSubscribtionEvent::class => [
+            UpdateUserSubscribtionCount::class,
+        ],
+        UserGroupMembersUpdateEvent::class => [
+            UpdateGroupMembersCount::class,
+        ],
+        UsersListSubscribtionEvent::class => [
+            UpdateListSubscribtionCount::class,
+        ],
+        UsersListMembersUpdateEvent::class => [
+            UpdateListMembersCount::class,
         ],
     ];
 
