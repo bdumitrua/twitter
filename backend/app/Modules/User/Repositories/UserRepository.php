@@ -2,10 +2,13 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Modules\User\DTO\UserUpdateDTO;
 use App\Modules\User\Models\User;
 use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
 
 class UserRepository
 {
@@ -22,30 +25,42 @@ class UserRepository
         return $this->users->newQuery();
     }
 
-    protected function baseQueryWithRelations(array $fullRelations = [], array $countRelations = []): Builder
+    protected function baseQueryWithRelations(array $relations = []): Builder
     {
-        $query = $this->baseQuery()->with($fullRelations);
-
-        foreach ($countRelations as $countRelation) {
-            $query->withCount($countRelation);
-        }
-
-        return $query;
+        return $this->baseQuery()->with($relations);
     }
 
-    protected function queryById(int $id, array $fullRelations = [], array $countRelations = []): Builder
+    protected function queryById(int $id, array $relations = []): Builder
     {
-        return $this->baseQueryWithRelations($fullRelations, $countRelations)->where('id', '=', $id);
+        return $this->baseQueryWithRelations($relations)->where('id', '=', $id);
     }
 
-    public function getByIdWithRelations(int $id, array $fullRelations = [],  array $countRelations = []): ?User
+    public function getByIdWithRelations(int $id, array $relations = []): ?User
     {
-        return $this->queryById($id, $fullRelations, $countRelations)->first() ?? new User();
+        return $this->queryById($id, $relations)->first() ?? new User();
     }
 
     public function getById(int $id): User
     {
         return $this->queryById($id)->first() ?? new User();
+    }
+
+    public function update(int $userId, UserUpdateDTO $dto): void
+    {
+        $user = $this->getById($userId);
+        $dtoProperties = get_object_vars($dto);
+
+        foreach ($dtoProperties as $property => $value) {
+            $property = Str::snake($property);
+
+            if (!empty($value)) {
+                $user->$property = $property === 'password'
+                    ? Hash::make($value)
+                    : $value;
+            }
+        }
+
+        $user->save();
     }
 
     public function search(string $text): Collection

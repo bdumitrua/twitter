@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('user_groups', function (Blueprint $table) {
+        Schema::create('users_list_members', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger(USER_ID);
-            $table->string(NAME);
-            $table->string(DESCRIPTION)->nullable();
-            $table->integer('members_count')->default(0);
+            $table->unsignedBigInteger('users_list_id');
             $table->timestamps();
 
             $table->foreign(USER_ID)->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('users_list_id')->references('id')->on('users_lists')->onDelete('cascade');
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('user_groups');
+        Schema::dropIfExists('users_list_members');
     }
 };

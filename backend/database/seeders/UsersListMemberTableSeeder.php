@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Modules\User\Models\UserGroup;
+use App\Modules\User\Models\UsersListMember;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class UserGroupTableSeeder extends Seeder
+class UsersListMemberTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        UserGroup::factory(100)->create();
+        UsersListMember::factory(300)->create();
     }
 }

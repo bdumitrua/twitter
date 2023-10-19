@@ -15,9 +15,17 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string(NAME);
+            $table->string('link');
             $table->string('email')->unique();
             $table->string('password');
-            $table->string('link');
+            $table->string('bg_image')->nullable();
+            $table->string('avatar')->nullable();
+            $table->string('status_text')->nullable();
+            $table->string('site_url')->nullable();
+            $table->string('address')->nullable();
+            $table->integer('subscribtions_count')->default(0);
+            $table->integer('subscribers_count')->default(0);
+            $table->timestamp('birth_date')->nullable();
             $table->timestamps();
         });
 

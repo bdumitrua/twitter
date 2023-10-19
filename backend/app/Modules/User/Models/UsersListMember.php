@@ -2,22 +2,27 @@
 
 namespace App\Modules\User\Models;
 
-use Database\Factories\UserGroupMemberFactory;
+use Database\Factories\UsersListMemberFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class UserGroupMember extends Model
+class UsersListMember extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        USER_GROUP_ID,
         USER_ID,
+        'users_list_id'
     ];
 
     protected static function newFactory()
     {
-        return UserGroupMemberFactory::new();
+        return UsersListMemberFactory::new();
+    }
+
+    public function lists_data()
+    {
+        return $this->belongsTo(UsersList::class, 'users_list_id');
     }
 
     public function users_data()

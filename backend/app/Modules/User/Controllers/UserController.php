@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Models\User;
 use App\Modules\User\Requests\SearchRequest;
+use App\Modules\User\Requests\UserUpdateRequest;
 use App\Modules\User\Services\UserService;
 
 class UserController extends Controller
@@ -17,19 +18,27 @@ class UserController extends Controller
         $this->userService = $userService;
     }
 
-    // Method realization example
     public function index()
     {
         return $this->handleServiceCall(function () {
             return $this->userService->index();
         });
     }
+
     public function show(User $user)
     {
         return $this->handleServiceCall(function () use ($user) {
             return $this->userService->show($user);
         });
     }
+
+    public function update(UserUpdateRequest $userUpdateRequest)
+    {
+        return $this->handleServiceCall(function () use ($userUpdateRequest) {
+            return $this->userService->update($userUpdateRequest);
+        });
+    }
+
     public function search(SearchRequest $request)
     {
         return $this->handleServiceCall(function () use ($request) {

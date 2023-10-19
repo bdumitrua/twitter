@@ -3,6 +3,7 @@
 namespace App\Modules\User\Repositories;
 
 use App\Modules\User\DTO\UserGroupDTO;
+use App\Modules\User\Events\UserGroupMembersUpdateEvent;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use Illuminate\Database\Eloquent\Builder;
@@ -63,7 +64,7 @@ class UserGroupRepository
         return $this->queryByUserId($userId, $relations)->get() ?? new Collection();
     }
 
-    public function create(int $userId, UserGroupDTO $dto): void
+    public function create(UserGroupDTO $dto, int $userId): void
     {
         $this->userGroup->create([
             USER_ID => $userId,
@@ -88,20 +89,22 @@ class UserGroupRepository
     public function addUser(int $userGroupId, int $userId): void
     {
         if (empty($this->userInGroupExist($userGroupId, $userId))) {
-            $this->userGroupMember->create([
+            $userGroupMember = $this->userGroupMember->create([
                 USER_GROUP_ID => $userGroupId,
                 USER_ID => $userId
             ]);
+            event(new UserGroupMembersUpdateEvent($userGroupMember));
         }
     }
 
     public function removeUser(int $userGroupId, int $userId): void
     {
         /** @var UserGroupMember */
-        $subscribtion = $this->queryByBothIds($userGroupId, $userId)->first();
+        $userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first();
 
-        if ($subscribtion) {
-            $subscribtion->delete();
+        if ($userGroupMember) {
+            event(new UserGroupMembersUpdateEvent($userGroupMember));
+            $userGroupMember->delete();
         }
     }
 }
