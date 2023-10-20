@@ -15,7 +15,7 @@ class TwittRequest extends FormRequest
     {
         return [
             'text' => 'required|string|max:255',
-            'user_group_id' => 'nullable|exists:user_groups,id',
+            'userGroupId' => 'nullable|exists:user_groups,id',
             'isComment' => 'nullable|boolean',
             'commentedTwittId' => 'nullable|exists:twitts,id',
             'isQuoute' => 'nullable|boolean',
@@ -32,7 +32,7 @@ class TwittRequest extends FormRequest
             'text.string' => 'Текст должен быть строкой',
             'text.max' => 'Максимальная длина текста 255 символов',
 
-            'user_group_id.exists' => 'Выбранная группа пользователей не существует',
+            'userGroupId.exists' => 'Выбранная группа пользователей не существует',
 
             'isComment.boolean' => 'Поле "isComment" должно быть булевым',
             'commentedTwittId.exists' => 'Комментируемый твитт не существует',

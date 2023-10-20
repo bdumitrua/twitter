@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\Twitt\Controllers\TwittController;
 
 Route::prefix('twitts')->controller(TwittController::class)->group(function () {
+    // Получить ленту твитов
+    Route::get('index', 'index');
     // Получить по id твита
     Route::get('show/{twitt}', 'show');
     // Получить твиты пользователя

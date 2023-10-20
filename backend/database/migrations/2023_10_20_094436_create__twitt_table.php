@@ -14,18 +14,18 @@ return new class extends Migration
         Schema::create('twitts', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('user_group_id');
+            $table->unsignedBigInteger('user_group_id')->nullable();
             $table->string('text');
-            $table->integer('likes_count');
-            $table->integer('reposts_count');
-            $table->integer('replies_count');
-            $table->integer('favorites_count');
-            $table->boolean('is_comment');
-            $table->unsignedBigInteger('commented_twitt_id');
-            $table->boolean('is_quoute');
-            $table->unsignedBigInteger('quoted_twitt_id');
-            $table->boolean('is_repost');
-            $table->unsignedBigInteger('reposted_twitt_id');
+            $table->integer('likes_count')->default(0);
+            $table->integer('reposts_count')->default(0);
+            $table->integer('replies_count')->default(0);
+            $table->integer('favorites_count')->default(0);
+            $table->boolean('is_comment')->default(false);
+            $table->unsignedBigInteger('commented_twitt_id')->nullable();
+            $table->boolean('is_quoute')->default(false);
+            $table->unsignedBigInteger('quoted_twitt_id')->nullable();
+            $table->boolean('is_repost')->default(false);
+            $table->unsignedBigInteger('reposted_twitt_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
