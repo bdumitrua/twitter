@@ -32,8 +32,8 @@ class UserSubscribtionRepository
     protected function queryByBothIds(int $userId, int $subscriberId): Builder
     {
         return $this->baseQuery()
-            ->where(SUBSCRIBER_ID, '=', $subscriberId)
-            ->where(USER_ID, '=', $userId);
+            ->where('subscriber_id', '=', $subscriberId)
+            ->where('user_id', '=', $userId);
     }
 
     protected function subscribtionExist(int $userId, int $subscriberId): bool
@@ -43,20 +43,20 @@ class UserSubscribtionRepository
 
     public function getSubscriptions(int $userId): Collection
     {
-        return $this->baseQuery()->where(SUBSCRIBER_ID, '=', $userId)->get();
+        return $this->baseQuery()->where('subscriber_id', '=', $userId)->get();
     }
 
     public function getSubscribers(int $userId): Collection
     {
-        return $this->baseQuery()->where(USER_ID, '=', $userId)->get();
+        return $this->baseQuery()->where('user_id', '=', $userId)->get();
     }
 
     public function create(int $userId, int $subscriberId): void
     {
         if (empty($this->subscribtionExist($userId, $subscriberId))) {
             $subscribtion = $this->userSubscribtions->create([
-                SUBSCRIBER_ID => $subscriberId,
-                USER_ID => $userId
+                'subscriber_id' => $subscriberId,
+                'user_id' => $userId
             ]);
 
             event(new UserSubscribtionEvent($subscribtion));

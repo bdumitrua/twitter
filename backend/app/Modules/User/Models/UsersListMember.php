@@ -11,7 +11,7 @@ class UsersListMember extends Model
     use HasFactory;
 
     protected $fillable = [
-        USER_ID,
+        'user_id',
         'users_list_id'
     ];
 
@@ -27,6 +27,6 @@ class UsersListMember extends Model
 
     public function users_data()
     {
-        return $this->belongsTo(User::class, USER_ID);
+        return $this->belongsTo(User::class, 'user_id');
     }
 }

@@ -30,10 +30,6 @@ class AppServiceProvider extends ServiceProvider
 
     private function defineConstants(): void
     {
-        define('USER_ID', 'user_id');
-        define('SUBSCRIBER_ID', 'subscriber_id');
-        define('USER_GROUP_ID', 'user_group_id');
-        define('NAME', 'name');
-        define('DESCRIPTION', 'description');
+        // 
     }
 }

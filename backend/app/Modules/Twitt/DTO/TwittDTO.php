@@ -4,9 +4,12 @@ namespace App\Modules\Twitt\DTO;
 
 class TwittDTO
 {
-    public function __construct(
-        // 
-    ) {
-        // 
-    }
+    public $text;
+    public $userGroupId;
+    public $isComment;
+    public $commentedTwittId;
+    public $isQuoute;
+    public $quotedTwittId;
+    public $isRepost;
+    public $repostedTwittId;
 }
