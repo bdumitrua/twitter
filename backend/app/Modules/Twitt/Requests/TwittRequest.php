@@ -32,7 +32,7 @@ class TwittRequest extends FormRequest
             'text.string' => 'Текст должен быть строкой',
             'text.max' => 'Максимальная длина текста 255 символов',
 
-            'user_group_id' . '.exists' => 'Выбранная группа пользователей не существует',
+            'user_group_id.exists' => 'Выбранная группа пользователей не существует',
 
             'isComment.boolean' => 'Поле "isComment" должно быть булевым',
             'commentedTwittId.exists' => 'Комментируемый твитт не существует',
