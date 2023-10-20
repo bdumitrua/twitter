@@ -26,7 +26,7 @@ class UsersListMemberFactory extends Factory
         $usersList = UsersList::all()->random();
 
         return [
-            USER_ID => $user->id,
+            'user_id' => $user->id,
             'users_list_id' => $usersList->id,
         ];
     }

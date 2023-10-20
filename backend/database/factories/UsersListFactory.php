@@ -23,9 +23,9 @@ class UsersListFactory extends Factory
         $user = User::all()->random();
 
         return [
-            NAME => fake()->words(3, true),
-            DESCRIPTION => fake()->words(15, true),
-            USER_ID => $user->id,
+            'name' => fake()->words(3, true),
+            'description' => fake()->words(15, true),
+            'user_id' => $user->id,
             'bg_image' => fake()->imageUrl(),
             'is_private' => fake()->boolean(50),
         ];
