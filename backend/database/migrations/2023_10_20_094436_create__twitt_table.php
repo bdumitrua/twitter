@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('twitts', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger(USER_ID);
-            $table->unsignedBigInteger(USER_GROUP_ID);
+            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_group_id');
             $table->string('text');
             $table->integer('likes_count');
             $table->integer('reposts_count');
@@ -28,8 +28,8 @@ return new class extends Migration
             $table->unsignedBigInteger('reposted_twitt_id');
             $table->timestamps();
 
-            $table->foreign(USER_ID)->references('id')->on('users')->onDelete('cascade');
-            $table->foreign(USER_GROUP_ID)->references('id')->on('user_groups')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
             $table->foreign('commented_twitt_id')->references('id')->on('twitts')->onDelete('cascade');
             $table->foreign('quoted_twitt_id')->references('id')->on('twitts')->onDelete('cascade');
             $table->foreign('reposted_twitt_id')->references('id')->on('twitts')->onDelete('cascade');

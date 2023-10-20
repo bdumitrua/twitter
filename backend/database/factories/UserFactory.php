@@ -21,7 +21,7 @@ class UserFactory extends Factory
         $link = str_replace(' ', '', $name) . Str::random(10);
 
         return [
-            NAME => $name,
+            'name' => $name,
             'link' => $link,
             'email' => fake()->unique()->email(),
             'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password,
