@@ -22,9 +22,9 @@ class UserGroupFactory extends Factory
         $user = User::all()->random();
 
         return [
-            USER_ID => $user->id,
-            NAME => fake()->words(3, true),
-            DESCRIPTION => fake()->words(10, true)
+            'user_id' => $user->id,
+            'name' => fake()->words(3, true),
+            'description' => fake()->words(10, true)
         ];
     }
 }
