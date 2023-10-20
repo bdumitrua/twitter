@@ -11,8 +11,8 @@ class Twitt extends Model
     use HasFactory;
 
     protected $fillable = [
-        USER_ID,
-        USER_GROUP_ID,
+        'user_id',
+        'user_group_id',
         'text',
         'likes_count',
         'reposts_count',

@@ -74,20 +74,20 @@ class ModuleCreator
 
     protected function createMigration($moduleName): void
     {
-        Artisan::call('make:migration', [NAME => "create_{$moduleName}_table"]);
+        Artisan::call('make:migration', ['name' => "create_{$moduleName}_table"]);
     }
 
     protected function createFactory($moduleName): void
     {
         Artisan::call('make:factory', [
-            NAME => "{$moduleName}Factory",
+            'name' => "{$moduleName}Factory",
             '--model' => "App\\Modules\\{$moduleName}\\Models\\{$moduleName}Model"
         ]);
     }
 
     protected function createSeeder($moduleName): void
     {
-        Artisan::call('make:seeder', [NAME => "{$moduleName}TableSeeder"]);
+        Artisan::call('make:seeder', ['name' => "{$moduleName}TableSeeder"]);
     }
 
     public function moduleExists($moduleName): bool

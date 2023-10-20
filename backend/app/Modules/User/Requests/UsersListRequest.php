@@ -22,8 +22,8 @@ class UsersListRequest extends FormRequest
     public function rules(): array
     {
         return [
-            NAME => 'required|string|max:255',
-            DESCRIPTION => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string|max:255',
             'is_private' => 'nullable|boolean',
             // TODO FILES
             'bg_image' => 'nullable|string|max:255',
@@ -33,12 +33,12 @@ class UsersListRequest extends FormRequest
     public function messages(): array
     {
         return [
-            NAME . '.required' => 'Название списка является обязательным полем.',
-            NAME . '.string'    => 'Название списка должно быть строкой.',
-            NAME . '.max'    => 'Название списка не может быть длиннее 255 символов.',
+            'name' . '.required' => 'Название списка является обязательным полем.',
+            'name' . '.string'    => 'Название списка должно быть строкой.',
+            'name' . '.max'    => 'Название списка не может быть длиннее 255 символов.',
 
-            DESCRIPTION . '.string'    => 'Описание списка должно быть строкой.',
-            DESCRIPTION . '.max'    => 'Описание списка не может быть длиннее 255 символов.',
+            'description' . '.string'    => 'Описание списка должно быть строкой.',
+            'description' . '.max'    => 'Описание списка не может быть длиннее 255 символов.',
 
             'is_private.boolean'    => 'Приватность должна быть типа boolean (true/false).',
         ];
