@@ -11,9 +11,9 @@ class UserGroup extends Model
     use HasFactory;
 
     protected $fillable = [
-        USER_ID,
-        NAME,
-        DESCRIPTION,
+        'user_id',
+        'name',
+        'description',
         'members_count'
     ];
 
@@ -24,6 +24,6 @@ class UserGroup extends Model
 
     public function members()
     {
-        return $this->hasMany(UserGroupMember::class, USER_GROUP_ID)->with('users_data');
+        return $this->hasMany(UserGroupMember::class, 'user_group_id')->with('users_data');
     }
 }

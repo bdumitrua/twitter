@@ -11,9 +11,9 @@ class UsersList extends Model
     use HasFactory;
 
     protected $fillable = [
-        USER_ID,
-        NAME,
-        DESCRIPTION,
+        'user_id',
+        'name',
+        'description',
         'bg_image',
         'is_private',
         'subsribers_count',

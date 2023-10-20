@@ -28,7 +28,7 @@ class MakeModuleFile extends Command
     {
         $moduleName = ucfirst($this->argument('module'));
         $entityFolder = ucfirst($this->argument('type'));
-        $fileName = $this->argument(NAME);
+        $fileName = $this->argument('name');
 
         $moduleCreator = new ModuleCreator();
         $moduleCreator->createModuleContent(

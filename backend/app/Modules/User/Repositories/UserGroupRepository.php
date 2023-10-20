@@ -39,14 +39,14 @@ class UserGroupRepository
 
     protected function queryByUserId(int $id, array $relations = []): Builder
     {
-        return $this->baseQueryWithRelations($relations)->where(USER_ID, '=', $id);
+        return $this->baseQueryWithRelations($relations)->where('user_id', '=', $id);
     }
 
     protected function queryByBothIds(int $userGroupId, int $userId): Builder
     {
         return $this->userGroupMember->newQuery()
-            ->where(USER_GROUP_ID, '=', $userGroupId)
-            ->where(USER_ID, '=', $userId);
+            ->where('user_group_id', '=', $userGroupId)
+            ->where('user_id', '=', $userId);
     }
 
     protected function userInGroupExist(int $userGroupId, int $userId): bool
@@ -67,17 +67,17 @@ class UserGroupRepository
     public function create(UserGroupDTO $dto, int $userId): void
     {
         $this->userGroup->create([
-            USER_ID => $userId,
-            NAME => $dto->name,
-            DESCRIPTION => $dto->description
+            'user_id' => $userId,
+            'name' => $dto->name,
+            'description' => $dto->description
         ]);
     }
 
     public function update(UserGroup $userGroup, UserGroupDTO $dto): void
     {
         $userGroup->update([
-            NAME => $dto->name,
-            DESCRIPTION => $dto->description
+            'name' => $dto->name,
+            'description' => $dto->description
         ]);
     }
 
@@ -90,8 +90,8 @@ class UserGroupRepository
     {
         if (empty($this->userInGroupExist($userGroupId, $userId))) {
             $userGroupMember = $this->userGroupMember->create([
-                USER_GROUP_ID => $userGroupId,
-                USER_ID => $userId
+                'user_group_id' => $userGroupId,
+                'user_id' => $userId
             ]);
             event(new UserGroupMembersUpdateEvent($userGroupMember));
         }

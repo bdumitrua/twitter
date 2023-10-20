@@ -42,14 +42,14 @@ class UsersListRepository
 
     protected function queryByUserId(int $id, array $relations = []): Builder
     {
-        return $this->baseQueryWithRelations($relations)->where(USER_ID, '=', $id);
+        return $this->baseQueryWithRelations($relations)->where('user_id', '=', $id);
     }
 
     protected function queryUserMembership(int $usersListId, int $userId): Builder
     {
         return $this->usersListMember->newQuery()
             ->where('users_list_id', '=', $usersListId)
-            ->where(USER_ID, '=', $userId);
+            ->where('user_id', '=', $userId);
     }
 
     protected function userIsListMember(int $usersListId, int $userId): bool
@@ -61,7 +61,7 @@ class UsersListRepository
     {
         return $this->usersListMember->newQuery()
             ->where('users_list_id', '=', $usersListId)
-            ->where(USER_ID, '=', $userId);
+            ->where('user_id', '=', $userId);
     }
 
     protected function userIsListSubscriber(int $usersListId, int $userId): bool
@@ -82,9 +82,9 @@ class UsersListRepository
     public function create(UsersListDTO $dto, int $userId): void
     {
         $this->usersList->create([
-            USER_ID => $userId,
-            NAME => $dto->name,
-            DESCRIPTION => $dto->description,
+            'user_id' => $userId,
+            'name' => $dto->name,
+            'description' => $dto->description,
             'bg_image' => $dto->bgImage,
             'is_private' => $dto->isPrivate,
             'subsribers_count' => 0,
@@ -95,8 +95,8 @@ class UsersListRepository
     public function update(UsersList $usersList, UsersListDTO $dto): void
     {
         $usersList->update([
-            NAME => $dto->name,
-            DESCRIPTION => $dto->description,
+            'name' => $dto->name,
+            'description' => $dto->description,
             'is_private' => $dto->isPrivate,
             // TODO FILES
             'bg_image' => $dto->bgImage,
@@ -113,7 +113,7 @@ class UsersListRepository
         if (empty($this->userIsListMember($usersListId, $userId))) {
             $this->usersListMember->create([
                 'users_list_id' => $usersListId,
-                USER_ID => $userId
+                'user_id' => $userId
             ]);
         }
     }
@@ -133,7 +133,7 @@ class UsersListRepository
         if (empty($this->userIsListSubscriber($usersListId, $userId))) {
             $this->usersListSubscribtion->create([
                 'users_list_id' => $usersListId,
-                USER_ID => $userId
+                'user_id' => $userId
             ]);
         }
     }

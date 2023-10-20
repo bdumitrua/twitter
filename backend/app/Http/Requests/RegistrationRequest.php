@@ -22,7 +22,7 @@ class RegistrationRequest extends FormRequest
     public function rules(): array
     {
         return array_merge([
-            NAME => 'required|string|max:255',
+            'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8',
         ]);
@@ -31,9 +31,9 @@ class RegistrationRequest extends FormRequest
     public function messages()
     {
         return array_merge(parent::messages(), [
-            NAME . '.required' => 'Имя является обязательным полем.',
-            NAME . '.string'   => 'Имя должно быть строкой.',
-            NAME . '.max'      => 'Имя может быть не длиннее 255 символов.',
+            'name' . '.required' => 'Имя является обязательным полем.',
+            'name' . '.string'   => 'Имя должно быть строкой.',
+            'name' . '.max'      => 'Имя может быть не длиннее 255 символов.',
 
             'email.required'    => 'Почта является обязательным полем.',
             'email.email'   => 'Введена некорректная почта.',
