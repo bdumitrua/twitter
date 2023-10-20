@@ -23,38 +23,47 @@ class TwittService
         $this->twittRepository = $twittRepository;
     }
 
+    public function index()
+    {
+        return $this->twittRepository->getFeedByUserId(Auth::id());
+    }
+
     public function show(Twitt $twitt)
     {
         return $this->twittRepository->getById($twitt->id);
     }
+
     public function user(User $user)
     {
         return $this->twittRepository->getByUserId($user->id);
     }
+
     public function list(UsersList $usersList)
     {
-        return $this->twittRepository->getByUsersListId($usersList->id);
+        return $this->twittRepository->getFeedByUsersListId($usersList->id);
     }
+
     public function create(TwittRequest $twittRequest)
     {
+        $twittDTO = $this->createDTO($twittRequest);
+
         return $this->twittRepository->create($twittDTO, Auth::id());
     }
+
     public function destroy(Twitt $twitt)
     {
-        return $this->twittRepository->destroy($twittDTO, Auth::id());
+        return $this->twittRepository->destroy($twitt);
     }
 
     protected function createDTO(TwittRequest $twittRequest): TwittDTO
     {
         $requestData = $twittRequest->all();
 
-        $filteredData = array_filter($requestData, function ($value) {
-            return $value !== null;
-        });
-
         $twittDTO = new TwittDTO();
-        foreach ($filteredData as $key => $value) {
+        foreach ($requestData as $key => $value) {
             $twittDTO->$key = $value;
         }
+
+        return $twittDTO;
     }
 }
