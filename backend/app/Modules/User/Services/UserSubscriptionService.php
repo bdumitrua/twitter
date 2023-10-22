@@ -7,6 +7,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserSubscribtionRepository;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UserSubscriptionService
@@ -19,22 +20,22 @@ class UserSubscriptionService
         $this->userSubscribtionRepository = $userSubscribtionRepository;
     }
 
-    public function subscriptions(User $user)
+    public function subscriptions(User $user): Collection
     {
         return $this->userSubscribtionRepository->getSubscriptions($user->id);
     }
 
-    public function subscribers(User $user)
+    public function subscribers(User $user): Collection
     {
         return $this->userSubscribtionRepository->getSubscribers($user->id);
     }
 
-    public function add(User $user)
+    public function add(User $user): void
     {
-        return $this->userSubscribtionRepository->create($user->id, Auth::id());
+        $this->userSubscribtionRepository->create($user->id, Auth::id());
     }
 
-    public function remove(User $user)
+    public function remove(User $user): void
     {
         $this->userSubscribtionRepository->remove($user->id, Auth::id());
     }

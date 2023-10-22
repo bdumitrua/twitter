@@ -9,6 +9,7 @@ use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UsersListRepository;
 use App\Modules\User\Requests\UsersListRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UsersListService
@@ -21,12 +22,12 @@ class UsersListService
         $this->usersListRepository = $usersListRepository;
     }
 
-    public function index()
+    public function index(): Collection
     {
         return $this->usersListRepository->getByUserId(Auth::id());
     }
 
-    public function show(UsersList $usersList)
+    public function show(UsersList $usersList): UsersList
     {
         return $this->usersListRepository->getById(
             $usersList->id,
@@ -34,43 +35,43 @@ class UsersListService
         );
     }
 
-    public function create(UsersListRequest $usersListRequest)
+    public function create(UsersListRequest $usersListRequest): void
     {
         $usersListDTO = $this->createDTO($usersListRequest);
 
-        return $this->usersListRepository->create($usersListDTO, Auth::id());
+        $this->usersListRepository->create($usersListDTO, Auth::id());
     }
 
-    public function update(UsersList $usersList, UsersListRequest $usersListRequest)
+    public function update(UsersList $usersList, UsersListRequest $usersListRequest): void
     {
         $usersListDTO = $this->createDTO($usersListRequest);
 
-        return $this->usersListRepository->update($usersList, $usersListDTO);
+        $this->usersListRepository->update($usersList, $usersListDTO);
     }
 
-    public function destroy(UsersList $usersList)
+    public function destroy(UsersList $usersList): void
     {
-        return $this->usersListRepository->delete($usersList);
+        $this->usersListRepository->delete($usersList);
     }
 
-    public function add(UsersList $usersList, User $user)
+    public function add(UsersList $usersList, User $user): void
     {
-        return $this->usersListRepository->addMember($usersList->id, $user->id);
+        $this->usersListRepository->addMember($usersList->id, $user->id);
     }
 
-    public function remove(UsersList $usersList, User $user)
+    public function remove(UsersList $usersList, User $user): void
     {
-        return $this->usersListRepository->removeMember($usersList->id, $user->id);
+        $this->usersListRepository->removeMember($usersList->id, $user->id);
     }
 
-    public function subscribe(UsersList $usersList)
+    public function subscribe(UsersList $usersList): void
     {
-        return $this->usersListRepository->subscribe($usersList->id, Auth::id());
+        $this->usersListRepository->subscribe($usersList->id, Auth::id());
     }
 
-    public function unsubscribe(UsersList $usersList)
+    public function unsubscribe(UsersList $usersList): void
     {
-        return $this->usersListRepository->unsubscribe($usersList->id, Auth::id());
+        $this->usersListRepository->unsubscribe($usersList->id, Auth::id());
     }
 
     protected function createDTO(UsersListRequest $usersListRequest): UsersListDTO

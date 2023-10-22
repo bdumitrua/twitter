@@ -10,6 +10,7 @@ use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Repositories\UserGroupRepository;
 use App\Modules\User\Requests\UserGroupRequest;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UserGroupService
@@ -22,7 +23,7 @@ class UserGroupService
         $this->userGroupRepository = $userGroupRepository;
     }
 
-    public function index()
+    public function index(): Collection
     {
         return $this->userGroupRepository->getByUserId(
             Auth::id(),
@@ -30,33 +31,33 @@ class UserGroupService
         );
     }
 
-    public function create(UserGroupRequest $userGroupRequest)
+    public function create(UserGroupRequest $userGroupRequest): void
     {
         $userGroupDTO = $this->createDTO($userGroupRequest);
 
-        return $this->userGroupRepository->create($userGroupDTO, Auth::id());
+        $this->userGroupRepository->create($userGroupDTO, Auth::id());
     }
 
-    public function update(UserGroup $userGroup, UserGroupRequest $userGroupRequest)
+    public function update(UserGroup $userGroup, UserGroupRequest $userGroupRequest): void
     {
         $userGroupDTO = $this->createDTO($userGroupRequest);
 
-        return $this->userGroupRepository->update($userGroup, $userGroupDTO);
+        $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
 
-    public function destroy(UserGroup $userGroup)
+    public function destroy(UserGroup $userGroup): void
     {
-        return $this->userGroupRepository->delete($userGroup);
+        $this->userGroupRepository->delete($userGroup);
     }
 
-    public function add(UserGroup $userGroup, User $user)
+    public function add(UserGroup $userGroup, User $user): void
     {
-        return $this->userGroupRepository->addUser($userGroup->id, $user->id);
+        $this->userGroupRepository->addUser($userGroup->id, $user->id);
     }
 
-    public function remove(UserGroup $userGroup, User $user)
+    public function remove(UserGroup $userGroup, User $user): void
     {
-        return $this->userGroupRepository->removeUser($userGroup->id, $user->id);
+        $this->userGroupRepository->removeUser($userGroup->id, $user->id);
     }
 
     protected function createDTO(UserGroupRequest $userGroupRequest): UserGroupDTO
