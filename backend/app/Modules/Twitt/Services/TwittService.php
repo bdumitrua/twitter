@@ -13,6 +13,7 @@ use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class TwittService
 {
@@ -26,22 +27,29 @@ class TwittService
 
     public function index(): Collection
     {
-        return $this->twittRepository->getUserFeed(Auth::id());
+        $authorizedUserId = Auth::id();
+        return $this->getCachedData('user_feed:' . $authorizedUserId, function () use ($authorizedUserId) {
+            return $this->twittRepository->getUserFeed($authorizedUserId);
+        }, 1);
+    }
+
+    public function user(User $user): Collection
+    {
+        return $this->getCachedData('user_twitts:' . $user->id, function () use ($user) {
+            return $this->twittRepository->getByUserId($user->id);
+        }, 5);
+    }
+
+    public function list(UsersList $usersList): Collection
+    {
+        return $this->getCachedData('users_list_feed:' . $usersList->id, function () use ($usersList) {
+            return $this->twittRepository->getFeedByUsersList($usersList, Auth::id());
+        }, 1);
     }
 
     public function show(Twitt $twitt): Twitt
     {
         return $this->twittRepository->getById($twitt->id);
-    }
-
-    public function user(User $user): Collection
-    {
-        return $this->twittRepository->getByUserId($user->id);
-    }
-
-    public function list(UsersList $usersList): Collection
-    {
-        return $this->twittRepository->getFeedByUsersList($usersList, Auth::id());
     }
 
     public function create(TwittRequest $twittRequest): void
@@ -66,5 +74,17 @@ class TwittService
         }
 
         return $twittDTO;
+    }
+
+    private function getCachedData(string $key, callable $callback, int $minutes = 1)
+    {
+        if ($cachedData = Cache::get($key)) {
+            return $cachedData;
+        }
+
+        $data = $callback();
+        Cache::put($key, $data, now()->addMinutes($minutes));
+
+        return $data;
     }
 }
