@@ -70,18 +70,18 @@ class TwittRepository
         $this->twitt->save();
 
         if (in_array('reply', $filledGroups)) {
-            event(new TwittReplyEvent($this->twitt->id, true));
+            event(new TwittReplyEvent($this->twitt->replied_twitt_id, true));
         } elseif (in_array('repost', $filledGroups)) {
-            event(new TwittRepostEvent($this->twitt->id, true));
+            event(new TwittRepostEvent($this->twitt->reposted_twitt_id, true));
         }
     }
 
     public function destroy(Twitt $twitt)
     {
         if ($twitt->is_reply) {
-            event(new TwittReplyEvent($twitt->id, false));
+            event(new TwittReplyEvent($twitt->replied_twitt_id, false));
         } elseif ($twitt->is_repost) {
-            event(new TwittRepostEvent($twitt->id, false));
+            event(new TwittRepostEvent($twitt->reposted_twitt_id, false));
         }
 
         $twitt->delete();
