@@ -2,7 +2,9 @@
 
 namespace App\Modules\Twitt\DTO;
 
-class TwittDTO
+use App\Modules\Base\BaseDTO;
+
+class TwittDTO extends BaseDTO
 {
     public ?string $text = null;
     public ?int $userGroupId = null;

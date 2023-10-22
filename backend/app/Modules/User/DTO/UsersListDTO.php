@@ -2,7 +2,9 @@
 
 namespace App\Modules\User\DTO;
 
-class UsersListDTO
+use App\Modules\Base\BaseDTO;
+
+class UsersListDTO extends BaseDTO
 {
     public ?string $name = null;
     public ?string $description = null;

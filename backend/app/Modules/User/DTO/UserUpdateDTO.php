@@ -2,7 +2,9 @@
 
 namespace App\Modules\User\DTO;
 
-class UserUpdateDTO
+use App\Modules\Base\BaseDTO;
+
+class UserUpdateDTO extends BaseDTO
 {
     public ?string $name = null;
     public ?string $link = null;
