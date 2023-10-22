@@ -12,6 +12,6 @@ class UserGroupMemberTableSeeder extends Seeder
      */
     public function run(): void
     {
-        UserGroupMember::factory(300)->create();
+        UserGroupMember::factory(30)->create();
     }
 }
