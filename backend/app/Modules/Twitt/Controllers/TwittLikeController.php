@@ -5,11 +5,7 @@ namespace App\Modules\Twitt\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Twitt\Models\Twitt;
-use App\Modules\Twitt\Requests\TwittRequest;
 use App\Modules\Twitt\Services\TwittLikeService;
-use App\Modules\Twitt\Services\TwittService;
-use App\Modules\User\Models\User;
-use App\Modules\User\Models\UsersList;
 use Illuminate\Http\JsonResponse;
 
 class TwittLikeController extends Controller
@@ -28,10 +24,17 @@ class TwittLikeController extends Controller
         });
     }
 
-    public function show(Twitt $twitt): JsonResponse
+    public function add(Twitt $twitt): JsonResponse
     {
         return $this->handleServiceCall(function () use ($twitt) {
-            return $this->twittLikeService->show($twitt);
+            return $this->twittLikeService->add($twitt);
+        });
+    }
+
+    public function remove(Twitt $twitt): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($twitt) {
+            return $this->twittLikeService->remove($twitt);
         });
     }
 }

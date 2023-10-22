@@ -23,4 +23,19 @@ class TwittFavoriteService
     ) {
         $this->twittFavoriteRepository = $twittFavoriteRepository;
     }
+
+    public function index(): Collection
+    {
+        return $this->twittFavoriteRepository->getByUserId(Auth::id());
+    }
+
+    public function add(Twitt $twitt): void
+    {
+        $this->twittFavoriteRepository->add($twitt->id, Auth::id());
+    }
+
+    public function remove(Twitt $twitt): void
+    {
+        $this->twittFavoriteRepository->remove($twitt->id, Auth::id());
+    }
 }
