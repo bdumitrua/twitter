@@ -24,7 +24,7 @@ class TwittService
         $this->twittRepository = $twittRepository;
     }
 
-    public function index()
+    public function index(): Collection
     {
         return $this->twittRepository->getUserFeed(Auth::id());
     }
@@ -39,7 +39,7 @@ class TwittService
         return $this->twittRepository->getByUserId($user->id);
     }
 
-    public function list(UsersList $usersList)
+    public function list(UsersList $usersList): Collection
     {
         return $this->twittRepository->getFeedByUsersList($usersList, Auth::id());
     }

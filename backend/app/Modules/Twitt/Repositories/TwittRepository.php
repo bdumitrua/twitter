@@ -41,7 +41,7 @@ class TwittRepository
             ->where('user_id', '=', $userId)->get() ?? new Twitt();
     }
 
-    public function getUserFeed(int $userId)
+    public function getUserFeed(int $userId): Collection
     {
         $user = $this->getUserWithRelations($userId, ['subscribtions', 'groups_member']);
         $subscribedUserIds = $this->pluckIds($user->subscribtions);
@@ -50,7 +50,7 @@ class TwittRepository
         return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get();
     }
 
-    public function getFeedByUsersList(UsersList $usersList, ?int $userId)
+    public function getFeedByUsersList(UsersList $usersList, ?int $userId): Collection
     {
         $userGroupIds = [];
         if (!empty($userId)) {
@@ -63,7 +63,7 @@ class TwittRepository
         return $this->getFeedQuery($membersIds, $userGroupIds)->get();
     }
 
-    public function create(TwittDTO $twittDTO, int $userId)
+    public function create(TwittDTO $twittDTO, int $userId): void
     {
         $filledGroups = $this->validateFilledGroups($twittDTO);
         $this->fillTwittFields($twittDTO, $userId, $filledGroups);
@@ -76,7 +76,7 @@ class TwittRepository
         }
     }
 
-    public function destroy(Twitt $twitt)
+    public function destroy(Twitt $twitt): void
     {
         if ($twitt->is_reply) {
             event(new TwittReplyEvent($twitt->replied_twitt_id, false));
@@ -87,7 +87,7 @@ class TwittRepository
         $twitt->delete();
     }
 
-    private function getFeedQuery(array $userIds, ?array $groupIds = null)
+    private function getFeedQuery(array $userIds, ?array $groupIds = null): Builder
     {
         $query = $this->twitt
             ->whereIn('user_id', $userIds)
@@ -107,17 +107,17 @@ class TwittRepository
         return $query;
     }
 
-    private function getUserWithRelations(int $userId, array $relations = [])
+    private function getUserWithRelations(int $userId, array $relations = []): User
     {
         return $this->userRepository->getByIdWithRelations($userId, $relations);
     }
 
-    private function pluckIds($relation)
+    private function pluckIds($relation): array
     {
         return $relation->pluck('id')->toArray();
     }
 
-    protected function validateFilledGroups(TwittDTO $twittDTO)
+    protected function validateFilledGroups(TwittDTO $twittDTO): array
     {
         $filledGroups = [];
 
