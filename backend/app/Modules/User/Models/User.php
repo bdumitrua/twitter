@@ -8,6 +8,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Elastic\ScoutDriverPlus\Searchable;
+use Illuminate\Support\Facades\Cache;
 
 class User extends Authenticatable implements JWTSubject
 {
@@ -60,6 +61,13 @@ class User extends Authenticatable implements JWTSubject
     protected static function newFactory()
     {
         return UserFactory::new();
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return Cache::remember("user_base_{$value}", 60, function () use ($value, $field) {
+            return parent::resolveRouteBinding($value, $field);
+        });
     }
 
     public function searchableAs()

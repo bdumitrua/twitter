@@ -30,17 +30,22 @@ class UserService
     public function index(): User
     {
         $authorizedUserId = Auth::id();
-        return $this->getCachedData('user_base_data:' . $authorizedUserId, function () use ($authorizedUserId) {
+        return $this->getCachedData('auth_user_data:' . $authorizedUserId, function () use ($authorizedUserId) {
             return $this->userRepository->getByIdWithRelations(
                 $authorizedUserId,
                 ['lists', 'lists_subscribtions']
             );
-        }, null);
+        }, 3600);
     }
 
     public function show(User $user): User
     {
-        return $user;
+        $userId = $user->id;
+        return $this->getCachedData('user_base_data:' . $userId, function () use ($userId) {
+            return $this->userRepository->getByIdWithRelations(
+                $userId,
+            );
+        }, 3600);
     }
 
     public function update(UserUpdateRequest $userUpdateRequest): void

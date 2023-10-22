@@ -5,6 +5,7 @@ namespace App\Modules\User\Models;
 use Database\Factories\UserGroupFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class UserGroup extends Model
 {
@@ -20,6 +21,13 @@ class UserGroup extends Model
     protected static function newFactory()
     {
         return UserGroupFactory::new();
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return Cache::remember("group_base_{$value}", 60, function () use ($value, $field) {
+            return parent::resolveRouteBinding($value, $field);
+        });
     }
 
     public function members()

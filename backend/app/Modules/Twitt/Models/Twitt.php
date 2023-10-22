@@ -6,6 +6,7 @@ use App\Modules\User\Models\User;
 use Database\Factories\TwittFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Cache;
 
 class Twitt extends Model
 {
@@ -30,6 +31,13 @@ class Twitt extends Model
     protected static function newFactory()
     {
         return TwittFactory::new();
+    }
+
+    public function resolveRouteBinding($value, $field = null)
+    {
+        return Cache::remember("twitt_base_{$value}", 60, function () use ($value, $field) {
+            return parent::resolveRouteBinding($value, $field);
+        });
     }
 
     public function author()
