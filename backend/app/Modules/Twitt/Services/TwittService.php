@@ -64,12 +64,15 @@ class TwittService
         $this->twittRepository->destroy($twitt);
     }
 
-    protected function createDTO(TwittRequest $twittRequest): TwittDTO
+    protected function createDTO(Request $request): TwittDTO
     {
-        $requestData = $twittRequest->all();
+        $filteredRequestData = array_filter($request->all());
+        if (empty($filteredRequestData)) {
+            throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be filled');
+        }
 
         $twittDTO = new TwittDTO();
-        foreach ($requestData as $key => $value) {
+        foreach ($filteredRequestData as $key => $value) {
             $twittDTO->$key = $value;
         }
 
