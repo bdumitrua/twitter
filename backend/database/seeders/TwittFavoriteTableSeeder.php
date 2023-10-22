@@ -13,6 +13,6 @@ class TwittFavoriteTableSeeder extends Seeder
      */
     public function run(): void
     {
-        TwittFavorite::factory(3000)->create();
+        TwittFavorite::factory(300)->create();
     }
 }

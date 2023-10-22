@@ -14,7 +14,7 @@ class UserSubscribtionTableSeeder extends Seeder
     {
         $start = microtime(true);
 
-        UserSubscribtion::factory(50)->create();
+        UserSubscribtion::factory(500)->create();
         $end = microtime(true);
         $time = $end - $start;
         echo "Seeding time: {$time} seconds";
