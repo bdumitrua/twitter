@@ -33,29 +33,6 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     });
 });
 
-// Действия производимые с твитами
-Route::prefix('twitts/actions')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
-    // Лайки
-    Route::prefix('likes')->group(function () {
-        // Получить свои лайки
-        Route::get('/', 'index');
-        // Лайкнуть
-        Route::post('add/{twitt}', 'add');
-        // Убрать лайк
-        Route::post('remove/{twitt}', 'remove');
-    });
-
-    // Избранное (т.е. закладки)
-    Route::prefix('favorites')->group(function () {
-        // Получить свои избранные
-        Route::get('/', 'index');
-        // Добавить в избранное
-        Route::post('add/{twitt}', 'add');
-        // Удалить из избранного
-        Route::post('remove/{twitt}', 'remove');
-    });
-});
-
 // Опросы
 Route::prefix('polls')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
     // Создать опрос

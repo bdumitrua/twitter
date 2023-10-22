@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Modules\Twitt\Models\Twitt;
+use App\Modules\Twitt\Models\TwittFavorite;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class TwittTableSeeder extends Seeder
+class TwittFavoriteTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        Twitt::factory(500)->create();
+        TwittFavorite::factory(3000);
     }
 }
