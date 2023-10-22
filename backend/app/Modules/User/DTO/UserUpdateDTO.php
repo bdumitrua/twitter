@@ -4,14 +4,14 @@ namespace App\Modules\User\DTO;
 
 class UserUpdateDTO
 {
-    public $name;
-    public $link;
-    public $email;
-    public $password;
-    public $bgImage;
-    public $avatar;
-    public $statusText;
-    public $siteUrl;
-    public $address;
-    public $birthDate;
+    public ?string $name = null;
+    public ?string $link = null;
+    public ?string $email = null;
+    public ?string $password = null;
+    public ?string $bgImage = null;
+    public ?string $avatar = null;
+    public ?string $statusText = null;
+    public ?string $siteUrl = null;
+    public ?string $address = null;
+    public ?string $birthDate = null;
 }

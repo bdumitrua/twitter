@@ -76,8 +76,8 @@ class UserGroupRepository
     public function update(UserGroup $userGroup, UserGroupDTO $dto): void
     {
         $userGroup->update([
-            'name' => $dto->name,
-            'description' => $dto->description
+            'name' => $dto->name ?? $userGroup->name,
+            'description' => $dto->description ?? $userGroup->description
         ]);
     }
 

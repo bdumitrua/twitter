@@ -10,7 +10,6 @@ use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UsersListRepository;
 use App\Modules\User\Requests\CreateUsersListRequest;
 use App\Modules\User\Requests\UpdateUsersListRequest;
-use App\Modules\User\Requests\UsersListRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -79,11 +78,17 @@ class UsersListService
 
     protected function createDTO(Request $usersListRequest): UsersListDTO
     {
-        return new UsersListDTO(
-            $usersListRequest->name,
-            $usersListRequest->description ?? '',
-            $usersListRequest->bg_image ?? '',
-            $usersListRequest->is_private ?? false,
-        );
+        $filteredRequestData = array_filter($usersListRequest->all());
+
+        if (empty($filteredRequestData)) {
+            throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be filled');
+        }
+
+        $usersListDTO = new UsersListDTO();
+        foreach ($filteredRequestData as $key => $value) {
+            $usersListDTO->$key = $value;
+        }
+
+        return $usersListDTO;
     }
 }

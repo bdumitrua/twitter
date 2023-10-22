@@ -62,11 +62,18 @@ class UserGroupService
         $this->userGroupRepository->removeUser($userGroup->id, $user->id);
     }
 
-    protected function createDTO(UserGroupRequest $userGroupRequest): UserGroupDTO
+    protected function createDTO(Request $userGroupRequest): UserGroupDTO
     {
-        return new UserGroupDTO(
-            $userGroupRequest->name,
-            $userGroupRequest->description,
-        );
+        $filteredRequestData = array_filter($userGroupRequest->all());
+        if (empty($filteredRequestData)) {
+            throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be filled');
+        }
+
+        $userGroupDTO = new UserGroupDTO();
+        foreach ($filteredRequestData as $key => $value) {
+            $userGroupDTO->$key = $value;
+        }
+
+        return $userGroupDTO;
     }
 }

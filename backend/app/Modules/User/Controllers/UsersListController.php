@@ -6,7 +6,9 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
+use App\Modules\User\Requests\CreateUsersListRequest;
 use App\Modules\User\Requests\SearchRequest;
+use App\Modules\User\Requests\UpdateUsersListRequest;
 use App\Modules\User\Requests\UsersListRequest;
 use App\Modules\User\Services\UsersListService;
 use Illuminate\Http\JsonResponse;
@@ -34,17 +36,17 @@ class UsersListController extends Controller
         });
     }
 
-    public function create(UsersListRequest $usersListRequest): JsonResponse
+    public function create(CreateUsersListRequest $createUsersListRequest): JsonResponse
     {
-        return $this->handleServiceCall(function () use ($usersListRequest) {
-            return $this->usersListService->create($usersListRequest);
+        return $this->handleServiceCall(function () use ($createUsersListRequest) {
+            return $this->usersListService->create($createUsersListRequest);
         });
     }
 
-    public function update(UsersList $usersList, UsersListRequest $usersListRequest): JsonResponse
+    public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest): JsonResponse
     {
-        return $this->handleServiceCall(function () use ($usersList, $usersListRequest) {
-            return $this->usersListService->update($usersList, $usersListRequest);
+        return $this->handleServiceCall(function () use ($usersList, $updateUsersListRequest) {
+            return $this->usersListService->update($usersList, $updateUsersListRequest);
         });
     }
 
