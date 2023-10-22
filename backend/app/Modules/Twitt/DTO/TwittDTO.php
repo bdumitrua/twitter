@@ -8,8 +8,8 @@ class TwittDTO
     public $userGroupId;
     public $isComment;
     public $commentedTwittId;
-    public $isQuoute;
-    public $quotedTwittId;
+    public $isReply;
+    public $repliedTwittId;
     public $isRepost;
     public $repostedTwittId;
 }

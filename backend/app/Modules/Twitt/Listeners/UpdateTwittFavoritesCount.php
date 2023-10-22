@@ -15,9 +15,14 @@ class UpdateTwittFavoritesCount
     {
         /** @var TwittFavorite */
         $twittFavorite = $event->twittFavorite;
+        $add = $event->add;
 
         $twitt = Twitt::find($twittFavorite->twitt_id);
-        $twitt->favorites_count = TwittFavorite::where('twitt_id', $twitt->id)->count();
+        if (!empty($add)) {
+            $twitt->favorites_count = $twitt->favorites_count + 1;
+        } else {
+            $twitt->favorites_count = $twitt->favorites_count - 1;
+        }
         $twitt->save();
     }
 }

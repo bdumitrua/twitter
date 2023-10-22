@@ -8,14 +8,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class TwittRepostEvent implements ShouldBroadcast
 {
-    public $twitt;
+    public $twittId;
     public $add;
 
     public function __construct(
-        Twitt $twitt,
+        int $twittId,
         bool $add,
     ) {
-        $this->twitt = $twitt;
+        $this->twittId = $twittId;
         $this->add = $add;
     }
 
