@@ -39,7 +39,7 @@ class UserGroupMemberFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (UserGroupMember $userGroupMember) {
-            event(new UserGroupMembersUpdateEvent($userGroupMember));
+            event(new UserGroupMembersUpdateEvent($userGroupMember, true));
         });
     }
 }

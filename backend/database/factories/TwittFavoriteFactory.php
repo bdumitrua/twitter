@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Modules\Twitt\Models\Twitt;
 use App\Modules\Twitt\Models\TwittFavorite;
+use App\Modules\User\Events\TwittFavoriteEvent;
 use App\Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
@@ -28,5 +29,17 @@ class TwittFavoriteFactory extends Factory
             'user_id' => $user->id,
             'twitt_id' => $twitt->id
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     *
+     * @return $this
+     */
+    public function configure()
+    {
+        return $this->afterCreating(function (TwittFavorite $twittFavorite) {
+            event(new TwittFavoriteEvent($twittFavorite, true));
+        });
     }
 }

@@ -39,7 +39,7 @@ class UsersListMemberFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (UsersListMember $usersListMember) {
-            event(new UsersListMembersUpdateEvent($usersListMember));
+            event(new UsersListMembersUpdateEvent($usersListMember, true));
         });
     }
 }

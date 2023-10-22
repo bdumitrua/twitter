@@ -39,7 +39,7 @@ class UsersListSubscribtionFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (UsersListSubscribtion $usersListSubscribtion) {
-            event(new UsersListSubscribtionEvent($usersListSubscribtion));
+            event(new UsersListSubscribtionEvent($usersListSubscribtion, true));
         });
     }
 }
