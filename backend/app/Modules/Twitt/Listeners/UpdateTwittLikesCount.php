@@ -9,7 +9,7 @@ use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use App\Modules\User\Models\UserSubscribtion;
 
-class UpdateGroupMembersCount
+class UpdateTwittLikesCount
 {
     public function handle($event)
     {
@@ -17,7 +17,7 @@ class UpdateGroupMembersCount
         $twittLike = $event->twittLike;
 
         $twitt = Twitt::find($twittLike->twitt_id);
-        $twitt->favorites_count = TwittLike::where('twitt_id', $twitt->id)->count();
+        $twitt->likes_count = TwittLike::where('twitt_id', $twitt->id)->count();
         $twitt->save();
     }
 }

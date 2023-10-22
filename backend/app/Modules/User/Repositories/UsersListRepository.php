@@ -3,6 +3,8 @@
 namespace App\Modules\User\Repositories;
 
 use App\Modules\User\DTO\UsersListDTO;
+use App\Modules\User\Events\UsersListMembersUpdateEvent;
+use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListMember;
 use App\Modules\User\Models\UsersListSubscribtion;
@@ -111,40 +113,46 @@ class UsersListRepository
     public function addMember(int $usersListId, int $userId): void
     {
         if (empty($this->userIsListMember($usersListId, $userId))) {
-            $this->usersListMember->create([
+            $usersListMember = $this->usersListMember->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
             ]);
+
+            event(new UsersListMembersUpdateEvent($usersListMember, true));
         }
     }
 
     public function removeMember(int $usersListId, int $userId): void
     {
         /** @var UsersListMember */
-        $membership = $this->queryUserMembership($usersListId, $userId)->first();
+        $usersListMember = $this->queryUserMembership($usersListId, $userId)->first();
 
-        if ($membership) {
-            $membership->delete();
+        if ($usersListMember) {
+            event(new UsersListMembersUpdateEvent($usersListMember, false));
+            $usersListMember->delete();
         }
     }
 
     public function subscribe(int $usersListId, int $userId): void
     {
         if (empty($this->userIsListSubscriber($usersListId, $userId))) {
-            $this->usersListSubscribtion->create([
+            $usersListSubscribtion = $this->usersListSubscribtion->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
             ]);
+
+            event(new UsersListSubscribtionEvent($usersListSubscribtion, true));
         }
     }
 
     public function unsubscribe(int $usersListId, int $userId): void
     {
         /** @var UsersListSubscribtion */
-        $subscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first();
+        $usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first();
 
-        if ($subscribtion) {
-            $subscribtion->delete();
+        if ($usersListSubscribtion) {
+            event(new UsersListSubscribtionEvent($usersListSubscribtion, false));
+            $usersListSubscribtion->delete();
         }
     }
 }

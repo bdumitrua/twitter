@@ -9,7 +9,7 @@ use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use App\Modules\User\Models\UserSubscribtion;
 
-class UpdateGroupMembersCount
+class UpdateTwittFavoritesCount
 {
     public function handle($event)
     {

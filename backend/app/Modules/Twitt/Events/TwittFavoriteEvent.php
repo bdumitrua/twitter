@@ -9,11 +9,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class TwittFavoriteEvent implements ShouldBroadcast
 {
     public $twittFavorite;
+    public $add;
 
     public function __construct(
         TwittFavorite $twittFavorite,
+        bool $add
     ) {
         $this->twittFavorite = $twittFavorite;
+        $this->add = $add;
     }
 
     public function broadcastOn()

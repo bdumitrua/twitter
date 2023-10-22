@@ -10,11 +10,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class UsersListSubscribtionEvent implements ShouldBroadcast
 {
     public $usersListSubscribtion;
+    public $add;
 
     public function __construct(
         UsersListSubscribtion $usersListSubscribtion,
+        bool $add
     ) {
         $this->usersListSubscribtion = $usersListSubscribtion;
+        $this->add = $add;
     }
 
     public function broadcastOn()

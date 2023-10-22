@@ -11,10 +11,16 @@ class UpdateListMembersCount
     {
         /** @var UsersListMember */
         $usersListMember = $event->usersListMember;
+        $add = $event->add;
+        $usersList = UsersList::find($usersListMember->users_list_id);
+
+        if (!empty($add)) {
+            $usersList->members_count = $usersList->members_count + 1;
+        } else {
+            $usersList->members_count = $usersList->members_count - 1;
+        }
 
         // Обновляем счётчик количества пользователей в группе
-        $usersList = UsersList::find($usersListMember->users_list_id);
-        $usersList->members_count = UsersListMember::where('users_list_id', $usersList->id)->count();
         $usersList->save();
     }
 }
