@@ -2,7 +2,7 @@
 
 namespace App\Modules\User\Services;
 
-use App\Modules\User\DTO\UserUpdateDTO;
+use App\Modules\User\DTO\UserDTO;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -10,13 +10,15 @@ use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserRepository;
 use App\Modules\User\Requests\SearchRequest;
 use App\Modules\User\Requests\UserUpdateRequest;
-use Elastic\Elasticsearch\Client as ElasticSearch;
-use Http\Client\Exception\HttpException as ExceptionHttpException;
+use App\Traits\CreateDTO;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
+    use CreateDTO, GetCachedData;
+
     protected $userRepository;
 
     public function __construct(
@@ -27,40 +29,27 @@ class UserService
 
     public function index(): User
     {
-        return $this->userRepository->getByIdWithRelations(
-            Auth::id(),
-            ['lists', 'lists_subscribtions']
-        );
+        $authorizedUserId = Auth::id();
+        return $this->getCachedData('user_base_data:' . $authorizedUserId, function () use ($authorizedUserId) {
+            return $this->userRepository->getByIdWithRelations(
+                $authorizedUserId,
+                ['lists', 'lists_subscribtions']
+            );
+        }, null);
     }
 
     public function show(User $user): User
     {
-        return $this->userRepository->getByIdWithRelations(
-            $user->id,
-            ['lists', 'lists_subscribtions']
-        );
+        return $user;
     }
 
     public function update(UserUpdateRequest $userUpdateRequest): void
     {
-        $requestData = $userUpdateRequest->all();
-
-        $filteredData = array_filter($requestData, function ($value) {
-            return $value !== null;
-        });
-
-        if (empty($filteredData)) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be updated');
-        }
-
-        $userUpdateDTO = new UserUpdateDTO();
-        foreach ($filteredData as $key => $value) {
-            $userUpdateDTO->$key = $value;
-        }
+        $userDTO = $this->createDTO($userUpdateRequest, UserDTO::class);
 
         $this->userRepository->update(
             Auth::id(),
-            $userUpdateDTO
+            $userDTO
         );
     }
 

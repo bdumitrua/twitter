@@ -15,9 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->unsignedBigInteger('user_id');
-            $table->string('description');
-            $table->string('bg_image');
-            $table->boolean('is_private');
+            $table->string('description')->nullable();
+            $table->string('bg_image')->nullable();
+            $table->boolean('is_private')->default(false);
             $table->integer('subsribers_count')->default(0);
             $table->integer('members_count')->default(0);
             $table->timestamps();

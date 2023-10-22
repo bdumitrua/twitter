@@ -6,6 +6,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
+use App\Modules\User\Requests\CreateUserGroupRequest;
+use App\Modules\User\Requests\UpdateUserGroupRequest;
 use App\Modules\User\Requests\UserGroupRequest;
 use App\Modules\User\Services\UserGroupService;
 use Illuminate\Http\JsonResponse;
@@ -25,16 +27,16 @@ class UserGroupController extends Controller
             return $this->userGroupService->index();
         });
     }
-    public function create(UserGroupRequest $userGroupRequest): JsonResponse
+    public function create(CreateUserGroupRequest $createUserGroupRequest): JsonResponse
     {
-        return $this->handleServiceCall(function () use ($userGroupRequest) {
-            return $this->userGroupService->create($userGroupRequest);
+        return $this->handleServiceCall(function () use ($createUserGroupRequest) {
+            return $this->userGroupService->create($createUserGroupRequest);
         });
     }
-    public function update(UserGroup $userGroup, UserGroupRequest $userGroupRequest): JsonResponse
+    public function update(UserGroup $userGroup, UpdateUserGroupRequest $updateUserGroupRequest): JsonResponse
     {
-        return $this->handleServiceCall(function () use ($userGroup, $userGroupRequest) {
-            return $this->userGroupService->update($userGroup, $userGroupRequest);
+        return $this->handleServiceCall(function () use ($userGroup, $updateUserGroupRequest) {
+            return $this->userGroupService->update($userGroup, $updateUserGroupRequest);
         });
     }
     public function destroy(UserGroup $userGroup): JsonResponse

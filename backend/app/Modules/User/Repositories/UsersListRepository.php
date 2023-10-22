@@ -97,11 +97,11 @@ class UsersListRepository
     public function update(UsersList $usersList, UsersListDTO $dto): void
     {
         $usersList->update([
-            'name' => $dto->name,
-            'description' => $dto->description,
-            'is_private' => $dto->isPrivate,
+            'name' => $dto->name ?? $usersList->name,
+            'description' => $dto->description ?? $usersList->description,
+            'is_private' => $dto->isPrivate ?? $usersList->isPrivate,
             // TODO FILES
-            'bg_image' => $dto->bgImage,
+            'bg_image' => $dto->bgImage ?? $usersList->bgImage,
         ]);
     }
 

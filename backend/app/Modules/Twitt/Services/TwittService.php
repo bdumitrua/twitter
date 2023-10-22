@@ -11,11 +11,16 @@ use App\Modules\Twitt\Repositories\TwittRepository;
 use App\Modules\Twitt\Requests\TwittRequest;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
+use App\Traits\CreateDTO;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class TwittService
 {
+    use CreateDTO, GetCachedData;
+
     private $twittRepository;
 
     public function __construct(
@@ -24,9 +29,26 @@ class TwittService
         $this->twittRepository = $twittRepository;
     }
 
-    public function index()
+    public function index(): Collection
     {
-        return $this->twittRepository->getUserFeed(Auth::id());
+        $authorizedUserId = Auth::id();
+        return $this->getCachedData('user_feed:' . $authorizedUserId, function () use ($authorizedUserId) {
+            return $this->twittRepository->getUserFeed($authorizedUserId);
+        }, 60);
+    }
+
+    public function user(User $user): Collection
+    {
+        return $this->getCachedData('user_twitts:' . $user->id, function () use ($user) {
+            return $this->twittRepository->getByUserId($user->id);
+        }, 300);
+    }
+
+    public function list(UsersList $usersList): Collection
+    {
+        return $this->getCachedData('users_list_feed:' . $usersList->id, function () use ($usersList) {
+            return $this->twittRepository->getFeedByUsersList($usersList, Auth::id());
+        }, 60);
     }
 
     public function show(Twitt $twitt): Twitt
@@ -34,19 +56,9 @@ class TwittService
         return $this->twittRepository->getById($twitt->id);
     }
 
-    public function user(User $user): Collection
-    {
-        return $this->twittRepository->getByUserId($user->id);
-    }
-
-    public function list(UsersList $usersList)
-    {
-        return $this->twittRepository->getFeedByUsersList($usersList, Auth::id());
-    }
-
     public function create(TwittRequest $twittRequest): void
     {
-        $twittDTO = $this->createDTO($twittRequest);
+        $twittDTO = $this->createDTO($twittRequest, TwittDTO::class);
 
         $this->twittRepository->create($twittDTO, Auth::id());
     }
@@ -54,17 +66,5 @@ class TwittService
     public function destroy(Twitt $twitt): void
     {
         $this->twittRepository->destroy($twitt);
-    }
-
-    protected function createDTO(TwittRequest $twittRequest): TwittDTO
-    {
-        $requestData = $twittRequest->all();
-
-        $twittDTO = new TwittDTO();
-        foreach ($requestData as $key => $value) {
-            $twittDTO->$key = $value;
-        }
-
-        return $twittDTO;
     }
 }

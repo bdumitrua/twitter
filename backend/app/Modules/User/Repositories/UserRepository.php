@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Modules\User\DTO\UserDTO;
 use App\Modules\User\DTO\UserUpdateDTO;
 use App\Modules\User\Models\User;
 use Elastic\ScoutDriverPlus\Support\Query;
@@ -45,7 +46,7 @@ class UserRepository
         return $this->queryById($id)->first() ?? new User();
     }
 
-    public function update(int $userId, UserUpdateDTO $dto): void
+    public function update(int $userId, UserDTO $dto): void
     {
         $user = $this->getById($userId);
         $dtoProperties = get_object_vars($dto);
