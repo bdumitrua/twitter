@@ -93,7 +93,7 @@ class UserGroupRepository
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId
             ]);
-            event(new UserGroupMembersUpdateEvent($userGroupMember));
+            event(new UserGroupMembersUpdateEvent($userGroupMember, true));
         }
     }
 
@@ -103,7 +103,7 @@ class UserGroupRepository
         $userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first();
 
         if ($userGroupMember) {
-            event(new UserGroupMembersUpdateEvent($userGroupMember));
+            event(new UserGroupMembersUpdateEvent($userGroupMember, false));
             $userGroupMember->delete();
         }
     }

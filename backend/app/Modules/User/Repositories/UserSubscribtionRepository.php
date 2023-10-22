@@ -59,7 +59,7 @@ class UserSubscribtionRepository
                 'user_id' => $userId
             ]);
 
-            event(new UserSubscribtionEvent($subscribtion));
+            event(new UserSubscribtionEvent($subscribtion, true));
         }
     }
 
@@ -69,7 +69,7 @@ class UserSubscribtionRepository
         $subscribtion = $this->queryByBothIds($userId, $subscriberId)->first();
 
         if ($subscribtion) {
-            event(new UserSubscribtionEvent($subscribtion));
+            event(new UserSubscribtionEvent($subscribtion, false));
             $subscribtion->delete();
         }
     }

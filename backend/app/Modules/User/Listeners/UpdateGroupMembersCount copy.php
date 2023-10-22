@@ -13,10 +13,16 @@ class UpdateGroupMembersCount
     {
         /** @var UserGroupMember */
         $userGroupMember = $event->userGroupMember;
+        $add = $event->add;
+        $group = UserGroup::find($userGroupMember->user_group_id);
+
+        if (!empty($add)) {
+            $group->members_count = $group->members_count + 1;
+        } else {
+            $group->members_count = $group->members_count - 1;
+        }
 
         // Обновляем счётчик количества пользователей в группе
-        $group = UserGroup::find($userGroupMember->user_group_id);
-        $group->members_count = UserGroupMember::where('user_group_id', $group->id)->count();
         $group->save();
     }
 }

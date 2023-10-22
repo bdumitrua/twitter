@@ -5,6 +5,7 @@ namespace App\Modules\Twitt\Repositories;
 use App\Modules\Twitt\Models\Twitt;
 use App\Modules\Twitt\Models\TwittFavorite;
 use App\Modules\Twitt\Models\TwittLike;
+use App\Modules\User\Events\TwittLikeEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,11 +23,10 @@ class TwittLikeRepository
 
     protected function queryByBothIds(int $twittId, int $userId): Builder
     {
-        return $this->twittLike->newQuery()
-            ->where([
-                'twitt_id' => $twittId,
-                'user_id' => $userId,
-            ]);
+        return $this->twittLike->newQuery()->where([
+            'twitt_id' => $twittId,
+            'user_id' => $userId,
+        ]);
     }
 
     public function getByUserId(int $userId): Collection
@@ -36,20 +36,26 @@ class TwittLikeRepository
 
     public function add(int $twittId, int $userId): void
     {
-        if (empty($this->queryByBothIds($twittId, $userId)->first()))
-            $this->twittLike->create([
+        if (empty($this->queryByBothIds($twittId, $userId)->first())) {
+            $twittLike = $this->twittLike->create([
                 'twitt_id' => $twittId,
                 'user_id' => $userId,
             ]);
+
+            event(new TwittLikeEvent($twittLike, true));
+        }
     }
 
     public function remove(int $twittId, int $userId): void
     {
-        $this->twittLike
-            ->where([
-                'twitt_id' => $twittId,
-                'user_id' => $userId,
-            ])
-            ->delete();
+        $twittLike = $this->twittLike->where([
+            'twitt_id' => $twittId,
+            'user_id' => $userId,
+        ])->first();
+
+        if (!empty($twittLike)) {
+            event(new TwittLikeEvent($twittLike, false));
+            $twittLike->delete();
+        }
     }
 }

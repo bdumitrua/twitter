@@ -9,11 +9,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class TwittReplyEvent implements ShouldBroadcast
 {
     public $twitt;
+    public $add;
 
     public function __construct(
         Twitt $twitt,
+        bool $add,
     ) {
         $this->twitt = $twitt;
+        $this->add = $add;
     }
 
     public function broadcastOn()
