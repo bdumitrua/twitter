@@ -15,9 +15,14 @@ class UpdateTwittLikesCount
     {
         /** @var TwittLike */
         $twittLike = $event->twittLike;
+        $add = $event->add;
 
         $twitt = Twitt::find($twittLike->twitt_id);
-        $twitt->likes_count = TwittLike::where('twitt_id', $twitt->id)->count();
+        if (!empty($add)) {
+            $twitt->likes_count = $twitt->likes_count + 1;
+        } else {
+            $twitt->likes_count = $twitt->likes_count - 1;
+        }
         $twitt->save();
     }
 }

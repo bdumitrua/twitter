@@ -4,6 +4,8 @@ namespace App\Modules\Twitt\Repositories;
 
 use App\Modules\Twitt\DTO\TwittDTO;
 use App\Modules\Twitt\Models\Twitt;
+use App\Modules\User\Events\TwittReplyEvent;
+use App\Modules\User\Events\TwittRepostEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
@@ -66,10 +68,22 @@ class TwittRepository
         $filledGroups = $this->validateFilledGroups($twittDTO);
         $this->fillTwittFields($twittDTO, $userId, $filledGroups);
         $this->twitt->save();
+
+        if (in_array('reply', $filledGroups)) {
+            event(new TwittReplyEvent($this->twitt->id, true));
+        } elseif (in_array('repost', $filledGroups)) {
+            event(new TwittRepostEvent($this->twitt->id, true));
+        }
     }
 
     public function destroy(Twitt $twitt)
     {
+        if ($twitt->is_reply) {
+            event(new TwittReplyEvent($twitt->id, false));
+        } elseif ($twitt->is_repost) {
+            event(new TwittRepostEvent($twitt->id, false));
+        }
+
         $twitt->delete();
     }
 
@@ -109,7 +123,7 @@ class TwittRepository
 
         $groups = [
             'comment' => [$twittDTO->isComment, $twittDTO->commentedTwittId],
-            'quote' => [$twittDTO->isQuoute, $twittDTO->quotedTwittId],
+            'reply' => [$twittDTO->isReply, $twittDTO->repliedTwittId],
             'repost' => [$twittDTO->isRepost, $twittDTO->repostedTwittId],
         ];
 

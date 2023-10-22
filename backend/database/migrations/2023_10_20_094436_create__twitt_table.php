@@ -23,7 +23,7 @@ return new class extends Migration
             $table->boolean('is_comment')->default(false);
             $table->unsignedBigInteger('commented_twitt_id')->nullable();
             $table->boolean('is_quoute')->default(false);
-            $table->unsignedBigInteger('quoted_twitt_id')->nullable();
+            $table->unsignedBigInteger('replied_twitt_id')->nullable();
             $table->boolean('is_repost')->default(false);
             $table->unsignedBigInteger('reposted_twitt_id')->nullable();
             $table->timestamps();
@@ -31,7 +31,7 @@ return new class extends Migration
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
             $table->foreign('commented_twitt_id')->references('id')->on('twitts')->onDelete('cascade');
-            $table->foreign('quoted_twitt_id')->references('id')->on('twitts')->onDelete('cascade');
+            $table->foreign('replied_twitt_id')->references('id')->on('twitts')->onDelete('cascade');
             $table->foreign('reposted_twitt_id')->references('id')->on('twitts')->onDelete('cascade');
         });
     }

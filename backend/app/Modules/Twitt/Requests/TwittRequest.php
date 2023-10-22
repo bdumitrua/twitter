@@ -18,8 +18,8 @@ class TwittRequest extends FormRequest
             'userGroupId' => 'nullable|exists:user_groups,id',
             'isComment' => 'nullable|boolean',
             'commentedTwittId' => 'nullable|exists:twitts,id',
-            'isQuoute' => 'nullable|boolean',
-            'quotedTwittId' => 'nullable|exists:twitts,id',
+            'isReply' => 'nullable|boolean',
+            'repliedTwittId' => 'nullable|exists:twitts,id',
             'isRepost' => 'nullable|boolean',
             'repostedTwittId' => 'nullable|exists:twitts,id',
         ];
@@ -37,8 +37,8 @@ class TwittRequest extends FormRequest
             'isComment.boolean' => 'Поле "isComment" должно быть булевым',
             'commentedTwittId.exists' => 'Комментируемый твитт не существует',
 
-            'isQuoute.boolean' => 'Поле "isQuoute" должно быть булевым',
-            'quotedTwittId.exists' => 'Цитируемый твитт не существует',
+            'isReply.boolean' => 'Поле "isReply" должно быть булевым',
+            'repliedTwittId.exists' => 'Цитируемый твитт не существует',
 
             'isRepost.boolean' => 'Поле "isRepost" должно быть булевым',
             'repostedTwittId.exists' => 'Репостнутый твитт не существует',

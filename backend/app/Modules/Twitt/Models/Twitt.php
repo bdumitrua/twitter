@@ -21,8 +21,8 @@ class Twitt extends Model
         'favorites_count',
         'is_comment',
         'commented_twitt_id',
-        'is_quoute',
-        'quoted_twitt_id',
+        'is_reply',
+        'replied_twitt_id',
         'is_repost',
         'reposted_twitt_id',
     ];
