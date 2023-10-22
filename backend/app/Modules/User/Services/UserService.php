@@ -11,12 +11,13 @@ use App\Modules\User\Repositories\UserRepository;
 use App\Modules\User\Requests\SearchRequest;
 use App\Modules\User\Requests\UserUpdateRequest;
 use App\Traits\CreateDTO;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UserService
 {
-    use CreateDTO;
+    use CreateDTO, GetCachedData;
 
     protected $userRepository;
 
@@ -28,18 +29,18 @@ class UserService
 
     public function index(): User
     {
-        return $this->userRepository->getByIdWithRelations(
-            Auth::id(),
-            ['lists', 'lists_subscribtions']
-        );
+        $authorizedUserId = Auth::id();
+        return $this->getCachedData('user_base_data:' . $authorizedUserId, function () use ($authorizedUserId) {
+            return $this->userRepository->getByIdWithRelations(
+                $authorizedUserId,
+                ['lists', 'lists_subscribtions']
+            );
+        }, null);
     }
 
     public function show(User $user): User
     {
-        return $this->userRepository->getByIdWithRelations(
-            $user->id,
-            ['lists', 'lists_subscribtions']
-        );
+        return $user;
     }
 
     public function update(UserUpdateRequest $userUpdateRequest): void

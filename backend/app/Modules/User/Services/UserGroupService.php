@@ -13,12 +13,13 @@ use App\Modules\User\Requests\CreateUserGroupRequest;
 use App\Modules\User\Requests\UpdateUserGroupRequest;
 use App\Modules\User\Requests\UserGroupRequest;
 use App\Traits\CreateDTO;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UserGroupService
 {
-    use CreateDTO;
+    use CreateDTO, GetCachedData;
 
     protected $userGroupRepository;
 
@@ -30,10 +31,10 @@ class UserGroupService
 
     public function index(): Collection
     {
-        return $this->userGroupRepository->getByUserId(
-            Auth::id(),
-            ['members']
-        );
+        $authorizedUserId = Auth::id();
+        return $this->getCachedData('user_groups:' . $authorizedUserId, function () use ($authorizedUserId) {
+            return $this->userGroupRepository->getByUserId($authorizedUserId);
+        }, null);
     }
 
     public function create(CreateUserGroupRequest $createUserGroupRequest): void

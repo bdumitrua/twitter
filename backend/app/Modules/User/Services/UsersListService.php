@@ -11,13 +11,14 @@ use App\Modules\User\Repositories\UsersListRepository;
 use App\Modules\User\Requests\CreateUsersListRequest;
 use App\Modules\User\Requests\UpdateUsersListRequest;
 use App\Traits\CreateDTO;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UsersListService
 {
-    use CreateDTO;
+    use CreateDTO, GetCachedData;
 
     protected $usersListRepository;
 
@@ -29,15 +30,21 @@ class UsersListService
 
     public function index(): Collection
     {
-        return $this->usersListRepository->getByUserId(Auth::id());
+        $authorizedUserId = Auth::id();
+        return $this->getCachedData('user_lists:' . $authorizedUserId, function () use ($authorizedUserId) {
+            return $this->usersListRepository->getByUserId($authorizedUserId);
+        }, null);
     }
 
     public function show(UsersList $usersList): UsersList
     {
-        return $this->usersListRepository->getById(
-            $usersList->id,
-            ['members', 'subscribers']
-        );
+        $usersListId = $usersList->id;
+        return $this->getCachedData('users_list_data:' . $usersListId, function () use ($usersListId) {
+            return $this->usersListRepository->getById(
+                $usersListId,
+                ['members', 'subscribers']
+            );
+        }, 300);
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
