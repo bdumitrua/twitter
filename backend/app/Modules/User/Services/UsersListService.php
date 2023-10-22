@@ -8,8 +8,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UsersListRepository;
+use App\Modules\User\Requests\CreateUsersListRequest;
+use App\Modules\User\Requests\UpdateUsersListRequest;
 use App\Modules\User\Requests\UsersListRequest;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UsersListService
@@ -35,16 +38,16 @@ class UsersListService
         );
     }
 
-    public function create(UsersListRequest $usersListRequest): void
+    public function create(CreateUsersListRequest $createUsersListRequest): void
     {
-        $usersListDTO = $this->createDTO($usersListRequest);
+        $usersListDTO = $this->createDTO($createUsersListRequest);
 
         $this->usersListRepository->create($usersListDTO, Auth::id());
     }
 
-    public function update(UsersList $usersList, UsersListRequest $usersListRequest): void
+    public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest): void
     {
-        $usersListDTO = $this->createDTO($usersListRequest);
+        $usersListDTO = $this->createDTO($updateUsersListRequest);
 
         $this->usersListRepository->update($usersList, $usersListDTO);
     }
@@ -74,7 +77,7 @@ class UsersListService
         $this->usersListRepository->unsubscribe($usersList->id, Auth::id());
     }
 
-    protected function createDTO(UsersListRequest $usersListRequest): UsersListDTO
+    protected function createDTO(Request $usersListRequest): UsersListDTO
     {
         return new UsersListDTO(
             $usersListRequest->name,

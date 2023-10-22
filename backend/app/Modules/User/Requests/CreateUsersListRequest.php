@@ -4,7 +4,7 @@ namespace App\Modules\User\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class UsersListRequest extends FormRequest
+class CreateUsersListRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
