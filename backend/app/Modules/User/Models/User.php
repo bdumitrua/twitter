@@ -77,9 +77,14 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(UserSubscribtion::class, 'user_id')->with('subscribers_data');
     }
 
-    public function groups()
+    public function groups_creator()
     {
         return $this->hasMany(UserGroup::class, 'user_id');
+    }
+
+    public function groups_member()
+    {
+        return $this->hasMany(UserGroupMember::class, 'user_id');
     }
 
     public function lists()

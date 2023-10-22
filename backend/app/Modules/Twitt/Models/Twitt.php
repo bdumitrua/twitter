@@ -2,6 +2,7 @@
 
 namespace App\Modules\Twitt\Models;
 
+use App\Modules\User\Models\User;
 use Database\Factories\TwittFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,5 +30,10 @@ class Twitt extends Model
     protected static function newFactory()
     {
         return TwittFactory::new();
+    }
+
+    public function author()
+    {
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 }
