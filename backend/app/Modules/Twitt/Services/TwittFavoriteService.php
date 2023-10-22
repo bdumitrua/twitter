@@ -7,11 +7,14 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Twitt\Models\Twitt;
 use App\Modules\Twitt\Repositories\TwittFavoriteRepository;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class TwittFavoriteService
 {
+    use GetCachedData;
+
     private $twittFavoriteRepository;
 
     public function __construct(
@@ -22,7 +25,10 @@ class TwittFavoriteService
 
     public function index(): Collection
     {
-        return $this->twittFavoriteRepository->getByUserId(Auth::id());
+        $authorizedUserId = Auth::id();
+        return $this->getCachedData('user_favorites:' . $authorizedUserId, function () use ($authorizedUserId) {
+            return $this->twittFavoriteRepository->getByUserId($authorizedUserId);
+        }, 300);
     }
 
     public function add(Twitt $twitt): void
