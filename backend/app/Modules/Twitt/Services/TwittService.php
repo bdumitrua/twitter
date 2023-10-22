@@ -34,21 +34,21 @@ class TwittService
         $authorizedUserId = Auth::id();
         return $this->getCachedData('user_feed:' . $authorizedUserId, function () use ($authorizedUserId) {
             return $this->twittRepository->getUserFeed($authorizedUserId);
-        }, 1);
+        }, 60);
     }
 
     public function user(User $user): Collection
     {
         return $this->getCachedData('user_twitts:' . $user->id, function () use ($user) {
             return $this->twittRepository->getByUserId($user->id);
-        }, 5);
+        }, 300);
     }
 
     public function list(UsersList $usersList): Collection
     {
         return $this->getCachedData('users_list_feed:' . $usersList->id, function () use ($usersList) {
             return $this->twittRepository->getFeedByUsersList($usersList, Auth::id());
-        }, 1);
+        }, 60);
     }
 
     public function show(Twitt $twitt): Twitt
