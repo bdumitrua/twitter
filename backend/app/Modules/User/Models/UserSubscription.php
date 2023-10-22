@@ -11,8 +11,8 @@ class UserSubscribtion extends Model
     use HasFactory;
 
     protected $fillable = [
-        USER_ID,
-        SUBSCRIBER_ID,
+        'user_id',
+        'subscriber_id',
     ];
 
     protected static function newFactory()
@@ -22,11 +22,11 @@ class UserSubscribtion extends Model
 
     public function subscribers_data()
     {
-        return $this->belongsTo(User::class, USER_ID);
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function subscribtions_data()
     {
-        return $this->belongsTo(User::class, SUBSCRIBER_ID);
+        return $this->belongsTo(User::class, 'subscriber_id');
     }
 }

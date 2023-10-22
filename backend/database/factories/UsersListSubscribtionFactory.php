@@ -26,7 +26,7 @@ class UsersListSubscribtionFactory extends Factory
         $usersList = UsersList::all()->random();
 
         return [
-            USER_ID => $user->id,
+            'user_id' => $user->id,
             'users_list_id' => $usersList->id,
         ];
     }
@@ -39,7 +39,7 @@ class UsersListSubscribtionFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (UsersListSubscribtion $usersListSubscribtion) {
-            event(new UsersListSubscribtionEvent($usersListSubscribtion));
+            event(new UsersListSubscribtionEvent($usersListSubscribtion, true));
         });
     }
 }

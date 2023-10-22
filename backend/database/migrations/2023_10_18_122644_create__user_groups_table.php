@@ -13,13 +13,13 @@ return new class extends Migration
     {
         Schema::create('user_groups', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger(USER_ID);
-            $table->string(NAME);
-            $table->string(DESCRIPTION)->nullable();
+            $table->unsignedBigInteger('user_id');
+            $table->string('name');
+            $table->string('description')->nullable();
             $table->integer('members_count')->default(0);
             $table->timestamps();
 
-            $table->foreign(USER_ID)->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

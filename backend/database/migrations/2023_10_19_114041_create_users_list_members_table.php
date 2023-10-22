@@ -13,11 +13,11 @@ return new class extends Migration
     {
         Schema::create('users_list_members', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger(USER_ID);
+            $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('users_list_id');
             $table->timestamps();
 
-            $table->foreign(USER_ID)->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('users_list_id')->references('id')->on('users_lists')->onDelete('cascade');
         });
     }

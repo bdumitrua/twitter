@@ -14,12 +14,12 @@ class User extends Authenticatable implements JWTSubject
     use HasFactory, Notifiable, Searchable;
 
     protected $searchable = [
-        NAME,
+        'name',
         'link',
     ];
 
     protected $fillable = [
-        NAME,
+        'name',
         'email',
         'password',
         'link',
@@ -69,31 +69,36 @@ class User extends Authenticatable implements JWTSubject
 
     public function subscribtions()
     {
-        return $this->hasMany(UserSubscribtion::class, SUBSCRIBER_ID)->with('subscribtions_data');
+        return $this->hasMany(UserSubscribtion::class, 'subscriber_id')->with('subscribtions_data');
     }
 
     public function subscribers()
     {
-        return $this->hasMany(UserSubscribtion::class, USER_ID)->with('subscribers_data');
+        return $this->hasMany(UserSubscribtion::class, 'user_id')->with('subscribers_data');
     }
 
-    public function groups()
+    public function groups_creator()
     {
-        return $this->hasMany(UserGroup::class, USER_ID);
+        return $this->hasMany(UserGroup::class, 'user_id');
+    }
+
+    public function groups_member()
+    {
+        return $this->hasMany(UserGroupMember::class, 'user_id');
     }
 
     public function lists()
     {
-        return $this->hasMany(UsersList::class, USER_ID);
+        return $this->hasMany(UsersList::class, 'user_id');
     }
 
     public function lists_memberships()
     {
-        return $this->hasMany(UsersListMember::class, USER_ID)->with('lists_data');
+        return $this->hasMany(UsersListMember::class, 'user_id')->with('lists_data');
     }
 
     public function lists_subscribtions()
     {
-        return $this->hasMany(UsersListSubscribtion::class, USER_ID)->with('lists_data');
+        return $this->hasMany(UsersListSubscribtion::class, 'user_id')->with('lists_data');
     }
 }

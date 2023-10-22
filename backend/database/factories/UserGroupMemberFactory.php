@@ -26,8 +26,8 @@ class UserGroupMemberFactory extends Factory
         $userGroup = UserGroup::all()->random();
 
         return [
-            USER_ID => $user->id,
-            USER_GROUP_ID => $userGroup->id
+            'user_id' => $user->id,
+            'user_group_id' => $userGroup->id
         ];
     }
 
@@ -39,7 +39,7 @@ class UserGroupMemberFactory extends Factory
     public function configure()
     {
         return $this->afterCreating(function (UserGroupMember $userGroupMember) {
-            event(new UserGroupMembersUpdateEvent($userGroupMember));
+            event(new UserGroupMembersUpdateEvent($userGroupMember, true));
         });
     }
 }

@@ -33,48 +33,6 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     });
 });
 
-// Работа с твитами
-Route::prefix('twitts')->controller(Controller::class)->group(function () {
-    // Получить по id твита
-    Route::get('show/{twitt}', 'show');
-    // Получить твиты пользователя
-    Route::get('user/{user}', 'show');
-    // Получить твиты списка
-    Route::get('list/{userslist}', 'show');
-
-    Route::middleware(['auth:api'])->group(function () {
-        // Создать твит
-        Route::post('create', 'create');
-        // Удалить твит
-        Route::middleware(['checkRights:twitt'])->group(function () {
-            Route::delete('destroy/{twitt}', 'destroy');
-        });
-    });
-});
-
-// Действия производимые с твитами
-Route::prefix('twitts/actions')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
-    // Лайки
-    Route::prefix('likes')->group(function () {
-        // Получить свои лайки
-        Route::get('/', 'index');
-        // Лайкнуть
-        Route::post('add/{twitt}', 'add');
-        // Убрать лайк
-        Route::post('remove/{twitt}', 'remove');
-    });
-
-    // Избранное (т.е. закладки)
-    Route::prefix('favorites')->group(function () {
-        // Получить свои избранные
-        Route::get('/', 'index');
-        // Добавить в избранное
-        Route::post('add/{twitt}', 'add');
-        // Удалить из избранного
-        Route::post('remove/{twitt}', 'remove');
-    });
-});
-
 // Опросы
 Route::prefix('polls')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
     // Создать опрос
