@@ -27,87 +27,38 @@ class TwittRepository
         $this->userRepository = $userRepository;
     }
 
-    protected function baseQuery(): Builder
-    {
-        return $this->twitt->newQuery();
-    }
-
-    protected function baseQueryWithRelations(array $relations = []): Builder
-    {
-        return $this->baseQuery()->with($relations);
-    }
-
-    protected function queryById(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('id', '=', $id);
-    }
-
-    protected function queryByUserId(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('user_id', '=', $id);
-    }
-
-    protected function queryFeedByUsersIds(array $usersIds = [])
-    {
-        // 
-    }
-
     public function getById(int $id, array $relations = []): Twitt
     {
-        return $this->queryById($id, $relations)->first() ?? new Twitt();
+        return $this->twitt->with($relations)
+            ->where('id', '=', $id)->first() ?? new Twitt();
     }
 
     public function getByUserId(int $userId, array $relations = []): Collection
     {
-        return $this->queryByUserId($userId, $relations)->get() ?? new Collection();
+        return $this->twitt->with($relations)
+            ->where('user_id', '=', $userId)->get() ?? new Twitt();
     }
 
     public function getUserFeed(int $userId)
     {
-        $user = $this->userRepository->getByIdWithRelations(
-            $userId,
-            ['subscribtions', 'groups_member']
-        );
+        $user = $this->getUserWithRelations($userId, ['subscribtions', 'groups_member']);
+        $subscribedUserIds = $this->pluckIds($user->subscribtions);
+        $userGroupIds = $this->pluckIds($user->groups_member);
 
-        $subscribedUserIds = $user->subscribtions->pluck('id')->toArray();
-        $userGroupIds = $user->groups_member->pluck('id')->toArray();
-
-        return $this->baseQuery()
-            ->whereIn('user_id', $subscribedUserIds)
-            ->where(function (Builder $query) use ($userGroupIds) {
-                // Твиты без группы
-                $query->whereNull('user_group_id')
-                    // или твиты из групп, в которых состоит пользователь
-                    ->orWhereIn('user_group_id', $userGroupIds);
-            })
-            ->orderBy('created_at', 'desc')
-            ->with('author')
-            ->take(20)
-            ->get();
+        return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get();
     }
 
-    public function getFeedByUsersList(UsersList $usersList, int $userId)
+    public function getFeedByUsersList(UsersList $usersList, ?int $userId)
     {
-        $user = $this->userRepository->getByIdWithRelations(
-            $userId,
-            ['groups_member']
-        );
+        $userGroupIds = [];
+        if (!empty($userId)) {
+            $user = $this->getUserWithRelations($userId, ['groups_member']);
+            $userGroupIds = $this->pluckIds($user->groups_member);
+        }
 
-        $userGroupIds = $user->groups_member->pluck('id')->toArray();
-        $membersIds = $usersList->members()->pluck('id')->toArray();
+        $membersIds = $this->pluckIds($usersList->members());
 
-        return $this->baseQuery()
-            ->whereIn('user_id', $membersIds)
-            ->where(function (Builder $query) use ($userGroupIds) {
-                // Твиты без группы
-                $query->whereNull('user_group_id')
-                    // или твиты из групп, в которых состоит пользователь
-                    ->orWhereIn('user_group_id', $userGroupIds);
-            })
-            ->orderBy('created_at', 'desc')
-            ->with('author')
-            ->take(20)
-            ->get();
+        return $this->getFeedQuery($membersIds, $userGroupIds)->get();
     }
 
     public function create(TwittDTO $twittDTO, int $userId)
@@ -115,6 +66,41 @@ class TwittRepository
         $filledGroups = $this->validateFilledGroups($twittDTO);
         $this->fillTwittFields($twittDTO, $userId, $filledGroups);
         $this->twitt->save();
+    }
+
+    public function destroy(Twitt $twitt)
+    {
+        $twitt->delete();
+    }
+
+    private function getFeedQuery(array $userIds, ?array $groupIds = null)
+    {
+        $query = $this->twitt
+            ->whereIn('user_id', $userIds)
+            ->orderBy('created_at', 'desc')
+            ->with('author')
+            ->take(20);
+
+        if ($groupIds !== null) {
+            $query->where(function (Builder $query) use ($groupIds) {
+                $query->whereNull('user_group_id')
+                    ->orWhereIn('user_group_id', $groupIds);
+            });
+        } else {
+            $query->whereNull('user_group_id');
+        }
+
+        return $query;
+    }
+
+    private function getUserWithRelations(int $userId, array $relations = [])
+    {
+        return $this->userRepository->getByIdWithRelations($userId, $relations);
+    }
+
+    private function pluckIds($relation)
+    {
+        return $relation->pluck('id')->toArray();
     }
 
     protected function validateFilledGroups(TwittDTO $twittDTO)
@@ -156,10 +142,5 @@ class TwittRepository
             $this->twitt->{"is_{$group}"} = true;
             $this->twitt->{"{$group}ed_twitt_id"} = $twittDTO->{"{$group}edTwittId"};
         }
-    }
-
-    public function destroy(Twitt $twitt)
-    {
-        $twitt->delete();
     }
 }
