@@ -9,6 +9,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Repositories\UserGroupRepository;
+use App\Modules\User\Requests\CreateUserGroupRequest;
+use App\Modules\User\Requests\UpdateUserGroupRequest;
 use App\Modules\User\Requests\UserGroupRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
@@ -31,16 +33,16 @@ class UserGroupService
         );
     }
 
-    public function create(UserGroupRequest $userGroupRequest): void
+    public function create(CreateUserGroupRequest $createUserGroupRequest): void
     {
-        $userGroupDTO = $this->createDTO($userGroupRequest);
+        $userGroupDTO = $this->createDTO($createUserGroupRequest);
 
         $this->userGroupRepository->create($userGroupDTO, Auth::id());
     }
 
-    public function update(UserGroup $userGroup, UserGroupRequest $userGroupRequest): void
+    public function update(UserGroup $userGroup, UpdateUserGroupRequest $updateUserGroupRequest): void
     {
-        $userGroupDTO = $this->createDTO($userGroupRequest);
+        $userGroupDTO = $this->createDTO($updateUserGroupRequest);
 
         $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
