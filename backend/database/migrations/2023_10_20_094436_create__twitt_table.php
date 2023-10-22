@@ -22,7 +22,7 @@ return new class extends Migration
             $table->integer('favorites_count')->default(0);
             $table->boolean('is_comment')->default(false);
             $table->unsignedBigInteger('commented_twitt_id')->nullable();
-            $table->boolean('is_quoute')->default(false);
+            $table->boolean('is_reply')->default(false);
             $table->unsignedBigInteger('replied_twitt_id')->nullable();
             $table->boolean('is_repost')->default(false);
             $table->unsignedBigInteger('reposted_twitt_id')->nullable();

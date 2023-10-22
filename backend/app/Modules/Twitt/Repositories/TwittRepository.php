@@ -152,8 +152,14 @@ class TwittRepository
             $this->twitt->user_group_id = $twittDTO->userGroupId;
         }
 
+        $groupMultipleName = [
+            'reply' => 'repli',
+        ];
+
         foreach ($filledGroups as $group) {
             $this->twitt->{"is_{$group}"} = true;
+
+            $group = $groupMultipleName[$group] ?? $group;
             $this->twitt->{"{$group}ed_twitt_id"} = $twittDTO->{"{$group}edTwittId"};
         }
     }
