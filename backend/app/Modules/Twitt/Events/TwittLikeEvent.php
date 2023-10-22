@@ -1,17 +1,20 @@
 <?php
 
-namespace App\Modules\Twitt\Events;
+namespace App\Modules\User\Events;
 
+use App\Modules\Twitt\Models\TwittLike;
+use App\Modules\User\Models\UserSubscribtion;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewTwittEvent implements ShouldBroadcast
+class TwittLikeEvent implements ShouldBroadcast
 {
-    public $twitt;
+    public $twittLike;
 
-    public function __construct($twitt)
-    {
-        $this->twitt = $twitt;
+    public function __construct(
+        TwittLike $twittLike,
+    ) {
+        $this->twittLike = $twittLike;
     }
 
     public function broadcastOn()

@@ -26,6 +26,8 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
+
+        // Users
         UserSubscribtionEvent::class => [
             UpdateUserSubscribtionCount::class,
         ],
@@ -37,6 +39,20 @@ class EventServiceProvider extends ServiceProvider
         ],
         UsersListMembersUpdateEvent::class => [
             UpdateListMembersCount::class,
+        ],
+
+        // Twitts
+        TwittFavoriteEvent::class => [
+            UpdateTwittFavoritesCount::class,
+        ],
+        TwittLikeEvent::class => [
+            UpdateTwittLikesCount::class,
+        ],
+        TwittReplyEvent::class => [
+            UpdateTwittRepliesCount::class,
+        ],
+        TwittRepostEvent::class => [
+            UpdateTwittRepostsCount::class,
         ],
     ];
 
