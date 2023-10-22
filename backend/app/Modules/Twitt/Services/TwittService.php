@@ -11,6 +11,7 @@ use App\Modules\Twitt\Repositories\TwittRepository;
 use App\Modules\Twitt\Requests\TwittRequest;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class TwittService
@@ -23,36 +24,36 @@ class TwittService
         $this->twittRepository = $twittRepository;
     }
 
-    public function index()
+    public function index(): Collection
     {
         return $this->twittRepository->getFeedByUserId(Auth::id());
     }
 
-    public function show(Twitt $twitt)
+    public function show(Twitt $twitt): Twitt
     {
         return $this->twittRepository->getById($twitt->id);
     }
 
-    public function user(User $user)
+    public function user(User $user): Collection
     {
         return $this->twittRepository->getByUserId($user->id);
     }
 
-    public function list(UsersList $usersList)
+    public function list(UsersList $usersList): Collection
     {
         return $this->twittRepository->getFeedByUsersListId($usersList->id);
     }
 
-    public function create(TwittRequest $twittRequest)
+    public function create(TwittRequest $twittRequest): void
     {
         $twittDTO = $this->createDTO($twittRequest);
 
-        return $this->twittRepository->create($twittDTO, Auth::id());
+        $this->twittRepository->create($twittDTO, Auth::id());
     }
 
-    public function destroy(Twitt $twitt)
+    public function destroy(Twitt $twitt): void
     {
-        return $this->twittRepository->destroy($twitt);
+        $this->twittRepository->destroy($twitt);
     }
 
     protected function createDTO(TwittRequest $twittRequest): TwittDTO

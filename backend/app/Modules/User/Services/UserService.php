@@ -12,6 +12,7 @@ use App\Modules\User\Requests\SearchRequest;
 use App\Modules\User\Requests\UserUpdateRequest;
 use Elastic\Elasticsearch\Client as ElasticSearch;
 use Http\Client\Exception\HttpException as ExceptionHttpException;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UserService
@@ -24,7 +25,7 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function index()
+    public function index(): User
     {
         return $this->userRepository->getByIdWithRelations(
             Auth::id(),
@@ -32,7 +33,7 @@ class UserService
         );
     }
 
-    public function show(User $user)
+    public function show(User $user): User
     {
         return $this->userRepository->getByIdWithRelations(
             $user->id,
@@ -40,7 +41,7 @@ class UserService
         );
     }
 
-    public function update(UserUpdateRequest $userUpdateRequest)
+    public function update(UserUpdateRequest $userUpdateRequest): void
     {
         $requestData = $userUpdateRequest->all();
 
@@ -63,7 +64,7 @@ class UserService
         );
     }
 
-    public function search(SearchRequest $request)
+    public function search(SearchRequest $request): Collection
     {
         return $this->userRepository->search($request->search);
     }
