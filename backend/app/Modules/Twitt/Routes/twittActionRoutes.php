@@ -3,11 +3,13 @@
 namespace App\Modules\Twitt\Routes;
 
 use App\Modules\Twitt\Controllers\TwittActionController;
+use App\Modules\Twitt\Controllers\TwittFavoriteController;
+use App\Modules\Twitt\Controllers\TwittLikeController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('twitts/actions')->middleware(['auth:api'])->controller(TwittActionController::class)->group(function () {
+Route::prefix('twitts/actions')->middleware(['auth:api'])->group(function () {
     // Лайки
-    Route::prefix('likes')->group(function () {
+    Route::prefix('likes')->controller(TwittLikeController::class)->group(function () {
         // Получить свои лайки
         Route::get('/', 'index');
         // Лайкнуть
@@ -17,7 +19,7 @@ Route::prefix('twitts/actions')->middleware(['auth:api'])->controller(TwittActio
     });
 
     // Избранное (т.е. закладки)
-    Route::prefix('favorites')->group(function () {
+    Route::prefix('favorites')->controller(TwittFavoriteController::class)->group(function () {
         // Получить свои избранные
         Route::get('/', 'index');
         // Добавить в избранное
