@@ -76,9 +76,9 @@ class UsersListService
         $this->usersListRepository->unsubscribe($usersList->id, Auth::id());
     }
 
-    protected function createDTO(Request $usersListRequest): UsersListDTO
+    protected function createDTO(Request $request): UsersListDTO
     {
-        $filteredRequestData = array_filter($usersListRequest->all());
+        $filteredRequestData = array_filter($request->all());
 
         if (empty($filteredRequestData)) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be filled');
