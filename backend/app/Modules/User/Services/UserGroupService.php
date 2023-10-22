@@ -12,11 +12,14 @@ use App\Modules\User\Repositories\UserGroupRepository;
 use App\Modules\User\Requests\CreateUserGroupRequest;
 use App\Modules\User\Requests\UpdateUserGroupRequest;
 use App\Modules\User\Requests\UserGroupRequest;
+use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
 class UserGroupService
 {
+    use CreateDTO;
+
     protected $userGroupRepository;
 
     public function __construct(
@@ -35,14 +38,14 @@ class UserGroupService
 
     public function create(CreateUserGroupRequest $createUserGroupRequest): void
     {
-        $userGroupDTO = $this->createDTO($createUserGroupRequest);
+        $userGroupDTO = $this->createDTO($createUserGroupRequest, UserGroupDTO::class);
 
         $this->userGroupRepository->create($userGroupDTO, Auth::id());
     }
 
     public function update(UserGroup $userGroup, UpdateUserGroupRequest $updateUserGroupRequest): void
     {
-        $userGroupDTO = $this->createDTO($updateUserGroupRequest);
+        $userGroupDTO = $this->createDTO($updateUserGroupRequest, UserGroupDTO::class);
 
         $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
@@ -60,20 +63,5 @@ class UserGroupService
     public function remove(UserGroup $userGroup, User $user): void
     {
         $this->userGroupRepository->removeUser($userGroup->id, $user->id);
-    }
-
-    protected function createDTO(Request $request): UserGroupDTO
-    {
-        $filteredRequestData = array_filter($request->all());
-        if (empty($filteredRequestData)) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be filled');
-        }
-
-        $userGroupDTO = new UserGroupDTO();
-        foreach ($filteredRequestData as $key => $value) {
-            $userGroupDTO->$key = $value;
-        }
-
-        return $userGroupDTO;
     }
 }

@@ -10,12 +10,15 @@ use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UsersListRepository;
 use App\Modules\User\Requests\CreateUsersListRequest;
 use App\Modules\User\Requests\UpdateUsersListRequest;
+use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class UsersListService
 {
+    use CreateDTO;
+
     protected $usersListRepository;
 
     public function __construct(
@@ -39,14 +42,14 @@ class UsersListService
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
     {
-        $usersListDTO = $this->createDTO($createUsersListRequest);
+        $usersListDTO = $this->createDTO($createUsersListRequest, UsersListDTO::class);
 
         $this->usersListRepository->create($usersListDTO, Auth::id());
     }
 
     public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest): void
     {
-        $usersListDTO = $this->createDTO($updateUsersListRequest);
+        $usersListDTO = $this->createDTO($updateUsersListRequest, UsersListDTO::class);
 
         $this->usersListRepository->update($usersList, $usersListDTO);
     }
@@ -74,21 +77,5 @@ class UsersListService
     public function unsubscribe(UsersList $usersList): void
     {
         $this->usersListRepository->unsubscribe($usersList->id, Auth::id());
-    }
-
-    protected function createDTO(Request $request): UsersListDTO
-    {
-        $filteredRequestData = array_filter($request->all());
-
-        if (empty($filteredRequestData)) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be filled');
-        }
-
-        $usersListDTO = new UsersListDTO();
-        foreach ($filteredRequestData as $key => $value) {
-            $usersListDTO->$key = $value;
-        }
-
-        return $usersListDTO;
     }
 }

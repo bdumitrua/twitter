@@ -11,12 +11,15 @@ use App\Modules\Twitt\Repositories\TwittRepository;
 use App\Modules\Twitt\Requests\TwittRequest;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
+use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class TwittService
 {
+    use CreateDTO;
+
     private $twittRepository;
 
     public function __construct(
@@ -54,7 +57,7 @@ class TwittService
 
     public function create(TwittRequest $twittRequest): void
     {
-        $twittDTO = $this->createDTO($twittRequest);
+        $twittDTO = $this->createDTO($twittRequest, TwittDTO::class);
 
         $this->twittRepository->create($twittDTO, Auth::id());
     }
@@ -62,21 +65,6 @@ class TwittService
     public function destroy(Twitt $twitt): void
     {
         $this->twittRepository->destroy($twitt);
-    }
-
-    protected function createDTO(Request $request): TwittDTO
-    {
-        $filteredRequestData = array_filter($request->all());
-        if (empty($filteredRequestData)) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be filled');
-        }
-
-        $twittDTO = new TwittDTO();
-        foreach ($filteredRequestData as $key => $value) {
-            $twittDTO->$key = $value;
-        }
-
-        return $twittDTO;
     }
 
     private function getCachedData(string $key, callable $callback, int $minutes = 1)
