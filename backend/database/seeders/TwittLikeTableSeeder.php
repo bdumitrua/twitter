@@ -13,6 +13,6 @@ class TwittLikeTableSeeder extends Seeder
      */
     public function run(): void
     {
-        TwittLike::factory(3000);
+        TwittLike::factory(3000)->create();
     }
 }
