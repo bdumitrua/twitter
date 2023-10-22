@@ -28,10 +28,17 @@ class TwittFavoriteController extends Controller
         });
     }
 
-    public function show(Twitt $twitt): JsonResponse
+    public function add(Twitt $twitt): JsonResponse
     {
         return $this->handleServiceCall(function () use ($twitt) {
-            return $this->twittFavoriteService->show($twitt);
+            return $this->twittFavoriteService->add($twitt);
+        });
+    }
+
+    public function remove(Twitt $twitt): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($twitt) {
+            return $this->twittFavoriteService->remove($twitt);
         });
     }
 }

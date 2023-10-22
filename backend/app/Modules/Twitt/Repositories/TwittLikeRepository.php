@@ -19,4 +19,37 @@ class TwittLikeRepository
     ) {
         $this->twittLike = $twittLike;
     }
+
+    protected function queryByBothIds(int $twittId, int $userId): Builder
+    {
+        return $this->twittLike->newQuery()
+            ->where([
+                'twitt_id' => $twittId,
+                'user_id' => $userId,
+            ]);
+    }
+
+    public function getByUserId(int $userId): Collection
+    {
+        return $this->twittLike->where('user_id', '=', $userId)->get();
+    }
+
+    public function add(int $twittId, int $userId): void
+    {
+        if (empty($this->queryByBothIds($twittId, $userId)->first()))
+            $this->twittLike->create([
+                'twitt_id' => $twittId,
+                'user_id' => $userId,
+            ]);
+    }
+
+    public function remove(int $twittId, int $userId): void
+    {
+        $this->twittLike
+            ->where([
+                'twitt_id' => $twittId,
+                'user_id' => $userId,
+            ])
+            ->delete();
+    }
 }

@@ -23,4 +23,19 @@ class TwittLikeService
     ) {
         $this->twittLikeRepository = $twittLikeRepository;
     }
+
+    public function index(): Collection
+    {
+        return $this->twittLikeRepository->getByUserId(Auth::id());
+    }
+
+    public function add(Twitt $twitt): void
+    {
+        $this->twittLikeRepository->add($twitt->id, Auth::id());
+    }
+
+    public function remove(Twitt $twitt): void
+    {
+        $this->twittLikeRepository->remove($twitt->id, Auth::id());
+    }
 }
