@@ -12,13 +12,14 @@ use App\Modules\Twitt\Requests\TwittRequest;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Traits\CreateDTO;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class TwittService
 {
-    use CreateDTO;
+    use CreateDTO, GetCachedData;
 
     private $twittRepository;
 
@@ -65,17 +66,5 @@ class TwittService
     public function destroy(Twitt $twitt): void
     {
         $this->twittRepository->destroy($twitt);
-    }
-
-    private function getCachedData(string $key, callable $callback, int $minutes = 1)
-    {
-        if ($cachedData = Cache::get($key)) {
-            return $cachedData;
-        }
-
-        $data = $callback();
-        Cache::put($key, $data, now()->addMinutes($minutes));
-
-        return $data;
     }
 }
