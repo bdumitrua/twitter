@@ -10,16 +10,13 @@ use Illuminate\Database\Eloquent\Collection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
-class TwittActionRepository
+class TwittLikeRepository
 {
     protected $twittLike;
-    protected $twittFavorite;
 
     public function __construct(
         TwittLike $twittLike,
-        TwittFavorite $twittFavorite,
     ) {
         $this->twittLike = $twittLike;
-        $this->twittFavorite = $twittFavorite;
     }
 }

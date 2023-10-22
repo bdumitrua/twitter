@@ -7,20 +7,20 @@ use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Twitt\Models\Twitt;
-use App\Modules\Twitt\Repositories\TwittActionRepository;
+use App\Modules\Twitt\Repositories\TwittLikeRepository;
 use App\Modules\Twitt\Requests\TwittRequest;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
-class TwittActionService
+class TwittLikeService
 {
-    private $twittActionRepository;
+    private $twittLikeRepository;
 
     public function __construct(
-        TwittActionRepository $twittActionRepository
+        TwittLikeRepository $twittLikeRepository
     ) {
-        $this->twittActionRepository = $twittActionRepository;
+        $this->twittLikeRepository = $twittLikeRepository;
     }
 }
