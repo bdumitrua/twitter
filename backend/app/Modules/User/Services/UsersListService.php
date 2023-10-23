@@ -31,7 +31,9 @@ class UsersListService
     public function index(): Collection
     {
         $authorizedUserId = Auth::id();
-        return Cache::rememberForever('user_lists:' . $authorizedUserId, function () use ($authorizedUserId) {
+        // TODO HOT 
+        // Сделать чтобы приходили и те, на которые подписан
+        return Cache::rememberForever(KEY_USER_LISTS . $authorizedUserId, function () use ($authorizedUserId) {
             return $this->usersListRepository->getByUserId($authorizedUserId);
         });
     }
@@ -39,7 +41,7 @@ class UsersListService
     public function show(UsersList $usersList): UsersList
     {
         $usersListId = $usersList->id;
-        return Cache::remember('users_list_data:' . $usersListId, now()->addMinutes(5), function () use ($usersListId) {
+        return Cache::remember(KEY_USERS_LIST_DATA . $usersListId, now()->addMinutes(5), function () use ($usersListId) {
             return $this->usersListRepository->getById(
                 $usersListId,
                 ['members', 'subscribers']

@@ -24,7 +24,7 @@ class TwittLikeService
     public function index(): Collection
     {
         $authorizedUserId = Auth::id();
-        return Cache::remember('user_likes:' . $authorizedUserId, now()->addMinutes(5), function () use ($authorizedUserId) {
+        return Cache::remember(KEY_USER_LIKES . $authorizedUserId, now()->addMinutes(5), function () use ($authorizedUserId) {
             return $this->twittLikeRepository->getByUserId($authorizedUserId);
         });
     }

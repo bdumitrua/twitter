@@ -31,21 +31,21 @@ class TwittService
     public function index(): Collection
     {
         $authorizedUserId = Auth::id();
-        return Cache::remember('user_feed:' . $authorizedUserId, now()->addMinutes(1), function () use ($authorizedUserId) {
+        return Cache::remember(KEY_AUTH_USER_FEED . $authorizedUserId, now()->addMinutes(1), function () use ($authorizedUserId) {
             return $this->twittRepository->getUserFeed($authorizedUserId);
         });
     }
 
     public function user(User $user): Collection
     {
-        return Cache::remember('user_twitts:' . $user->id, now()->addMinutes(5), function () use ($user) {
+        return Cache::remember(KEY_USER_TWITTS . $user->id, now()->addMinutes(5), function () use ($user) {
             return $this->twittRepository->getByUserId($user->id);
         });
     }
 
     public function list(UsersList $usersList): Collection
     {
-        return Cache::remember('users_list_feed:' . $usersList->id, now()->addMinutes(1), function () use ($usersList) {
+        return Cache::remember(KEY_USERS_LIST_FEED . $usersList->id, now()->addMinutes(1), function () use ($usersList) {
             return $this->twittRepository->getFeedByUsersList($usersList, Auth::id());
         });
     }

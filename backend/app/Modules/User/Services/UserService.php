@@ -30,7 +30,7 @@ class UserService
     public function index(): User
     {
         $authorizedUserId = Auth::id();
-        return Cache::remember('auth_user_data:' . $authorizedUserId, now()->addMinutes(1), function () use ($authorizedUserId) {
+        return Cache::remember(KEY_AUTH_USER_DATA . $authorizedUserId, now()->addMinutes(1), function () use ($authorizedUserId) {
             return $this->userRepository->getByIdWithRelations(
                 $authorizedUserId,
                 ['lists', 'lists_subscribtions']
@@ -41,7 +41,7 @@ class UserService
     public function show(User $user): User
     {
         $userId = $user->id;
-        return Cache::remember('user_base_data:' . $userId, now()->addMinutes(1), function () use ($userId) {
+        return Cache::remember(KEY_USER_DATA . $userId, now()->addMinutes(1), function () use ($userId) {
             return $this->userRepository->getByIdWithRelations(
                 $userId,
             );
