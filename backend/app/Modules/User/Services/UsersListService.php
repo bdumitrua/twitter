@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Services;
 
+use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -41,7 +42,7 @@ class UsersListService
     public function show(UsersList $usersList): UsersList
     {
         $usersListId = $usersList->id;
-        return Cache::remember(KEY_USERS_LIST_DATA . $usersListId, now()->addMinutes(5), function () use ($usersListId) {
+        return Cache::remember(KEY_USERS_LIST_DATA . $usersListId, TimeHelper::getMinutes(5), function () use ($usersListId) {
             return $this->usersListRepository->getById(
                 $usersListId,
                 ['members', 'subscribers']

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Twitt\Services;
 
+use App\Helpers\TimeHelper;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -24,7 +25,7 @@ class TwittFavoriteService
     public function index(): Collection
     {
         $authorizedUserId = Auth::id();
-        return Cache::remember(KEY_USER_FAVORITES . $authorizedUserId, now()->addMinutes(5), function () use ($authorizedUserId) {
+        return Cache::remember(KEY_USER_FAVORITES . $authorizedUserId, TimeHelper::getMinutes(5), function () use ($authorizedUserId) {
             return $this->twittFavoriteRepository->getByUserId($authorizedUserId);
         });
     }

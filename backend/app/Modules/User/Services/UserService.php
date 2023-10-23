@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Services;
 
+use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UserDTO;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -30,7 +31,7 @@ class UserService
     public function index(): User
     {
         $authorizedUserId = Auth::id();
-        return Cache::remember(KEY_AUTH_USER_DATA . $authorizedUserId, now()->addMinutes(1), function () use ($authorizedUserId) {
+        return Cache::remember(KEY_AUTH_USER_DATA . $authorizedUserId, TimeHelper::getMinutes(1), function () use ($authorizedUserId) {
             return $this->userRepository->getByIdWithRelations(
                 $authorizedUserId,
                 ['lists', 'lists_subscribtions']
@@ -41,7 +42,7 @@ class UserService
     public function show(User $user): User
     {
         $userId = $user->id;
-        return Cache::remember(KEY_USER_DATA . $userId, now()->addMinutes(1), function () use ($userId) {
+        return Cache::remember(KEY_USER_DATA . $userId, TimeHelper::getMinutes(1), function () use ($userId) {
             return $this->userRepository->getByIdWithRelations(
                 $userId,
             );
