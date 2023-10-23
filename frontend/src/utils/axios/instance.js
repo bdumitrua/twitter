@@ -28,7 +28,10 @@ axiosInstance.interceptors.response.use(null, async (error) => {
 				);
 
 				// Обновляем токен в хранилище
-				localStorage.setItem("access_token", response.data.access_token);
+				localStorage.setItem(
+					"access_token",
+					response.data.access_token
+				);
 
 				// Обновляем токен в заголовке авторизации
 				axiosInstance.defaults.headers.common["Authorization"] =
