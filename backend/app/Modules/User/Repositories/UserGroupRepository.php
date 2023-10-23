@@ -43,26 +43,28 @@ class UserGroupRepository
             ->get();
     }
 
-    public function create(UserGroupDTO $dto, int $userId): void
+    public function create(UserGroupDTO $dto, int $userId): UserGroup
     {
-        $this->userGroup->create([
+        $createdUserGroup = $this->userGroup->create([
             'user_id' => $userId,
             'name' => $dto->name,
             'description' => $dto->description
         ]);
+
+        return $createdUserGroup;
     }
 
-    public function update(UserGroup $userGroup, UserGroupDTO $dto): void
+    public function update(UserGroup $userGroup, UserGroupDTO $dto): bool
     {
-        $userGroup->update([
+        return $userGroup->update([
             'name' => $dto->name ?? $userGroup->name,
             'description' => $dto->description ?? $userGroup->description
         ]);
     }
 
-    public function delete(UserGroup $userGroup): void
+    public function delete(UserGroup $userGroup): bool
     {
-        $userGroup->delete();
+        return $userGroup->delete() ?? false;
     }
 
     public function addUser(int $userGroupId, int $userId): void

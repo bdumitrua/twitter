@@ -38,21 +38,34 @@ class UserGroupService
 
     public function create(CreateUserGroupRequest $createUserGroupRequest): void
     {
+        $authorizedUserId = Auth::id();
         $userGroupDTO = $this->createDTO($createUserGroupRequest, UserGroupDTO::class);
 
-        $this->userGroupRepository->create($userGroupDTO, Auth::id());
+        $createdUserGroup = $this->userGroupRepository->create($userGroupDTO, $authorizedUserId);
+
+        if (!empty($createdUserGroup)) {
+            $this->cacheGroupsForever($authorizedUserId);
+        }
     }
 
     public function update(UserGroup $userGroup, UpdateUserGroupRequest $updateUserGroupRequest): void
     {
         $userGroupDTO = $this->createDTO($updateUserGroupRequest, UserGroupDTO::class);
 
-        $this->userGroupRepository->update($userGroup, $userGroupDTO);
+        $userGroupUpdateStatus = $this->userGroupRepository->update($userGroup, $userGroupDTO);
+
+        if (!empty($userGroupUpdateStatus)) {
+            $this->cacheGroupsForever($userGroup->user_id);
+        }
     }
 
     public function destroy(UserGroup $userGroup): void
     {
-        $this->userGroupRepository->delete($userGroup);
+        $userGroupDeleteStatus = $this->userGroupRepository->delete($userGroup);
+
+        if (!empty($userGroupDeleteStatus)) {
+            $this->cacheGroupsForever($userGroup->user_id);
+        }
     }
 
     public function add(UserGroup $userGroup, User $user): void
@@ -63,5 +76,12 @@ class UserGroupService
     public function remove(UserGroup $userGroup, User $user): void
     {
         $this->userGroupRepository->removeUser($userGroup->id, $user->id);
+    }
+
+    private function cacheGroupsForever(int $userId)
+    {
+        Cache::forever(KEY_USER_GROUPS . $userId, function () use ($userId) {
+            return $this->userGroupRepository->getByUserId($userId);
+        });
     }
 }
