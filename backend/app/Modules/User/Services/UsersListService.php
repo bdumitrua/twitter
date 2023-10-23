@@ -50,9 +50,14 @@ class UsersListService
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
     {
+        $authorizedUserId = Auth::id();
         $usersListDTO = $this->createDTO($createUsersListRequest, UsersListDTO::class);
 
-        $this->usersListRepository->create($usersListDTO, Auth::id());
+        $createdUsersList = $this->usersListRepository->create($usersListDTO, $authorizedUserId);
+
+        if (!empty($createdUsersList)) {
+            $this->recacheUserListsForever($authorizedUserId);
+        }
     }
 
     public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest): void
@@ -60,11 +65,27 @@ class UsersListService
         $usersListDTO = $this->createDTO($updateUsersListRequest, UsersListDTO::class);
 
         $this->usersListRepository->update($usersList, $usersListDTO);
+
+        // TODO QUEUE
+        // Сделать добавление в очередь задач на изменение кэша массива списков для каждого подписчика
+        // if (!empty($createdUsersList)) {
+        //     $this->recacheUserListsForever($usersList->user_id);
+        // }
     }
 
     public function destroy(UsersList $usersList): void
     {
         $this->usersListRepository->delete($usersList);
+
+        // TODO QUEUE
+        // Сделать добавление в очередь задач на изменение кэша массива списков для каждого подписчика
+        // Минус - перекэш при каждом изменении
+        // Плюс - экономия запросов, т.к. изменяются списки (именно данные), не так часто,
+        // а запрашиваться могут хоть каждые 5-10 секунд
+
+        // if (!empty($createdUsersList)) {
+        //     $this->recacheUserListsForever($usersList->user_id);
+        // }
     }
 
     public function add(UsersList $usersList, User $user): void
@@ -79,11 +100,28 @@ class UsersListService
 
     public function subscribe(UsersList $usersList): void
     {
-        $this->usersListRepository->subscribe($usersList->id, Auth::id());
+        $authorizedUserId = Auth::id();
+        $subscribtionStatus = $this->usersListRepository->subscribe($usersList->id, $authorizedUserId);
+
+        if (!empty($subscribtionStatus)) {
+            $this->recacheUserListsForever($authorizedUserId);
+        }
     }
 
     public function unsubscribe(UsersList $usersList): void
     {
-        $this->usersListRepository->unsubscribe($usersList->id, Auth::id());
+        $authorizedUserId = Auth::id();
+        $unsubscribtionStatus = $this->usersListRepository->unsubscribe($usersList->id, $authorizedUserId);
+
+        if (!empty($unsubscribtionStatus)) {
+            $this->recacheUserListsForever($authorizedUserId);
+        }
+    }
+
+    private function recacheUserListsForever(int $userId)
+    {
+        Cache::forever(KEY_USER_LISTS . $userId, function () use ($userId) {
+            return $this->usersListRepository->getByUserId($userId);
+        });
     }
 }

@@ -61,9 +61,9 @@ class UsersListRepository
         return $whereIsCreator->merge($whereIsSubscriber)->unique('id');
     }
 
-    public function create(UsersListDTO $dto, int $userId): void
+    public function create(UsersListDTO $dto, int $userId): UsersList
     {
-        $this->usersList->create([
+        $createdUsersList = $this->usersList->create([
             'user_id' => $userId,
             'name' => $dto->name,
             'description' => $dto->description,
@@ -72,6 +72,8 @@ class UsersListRepository
             'subsribers_count' => 0,
             'members_count' => 0,
         ]);
+
+        return $createdUsersList;
     }
 
     public function update(UsersList $usersList, UsersListDTO $dto): void
@@ -110,7 +112,7 @@ class UsersListRepository
         }
     }
 
-    public function subscribe(int $usersListId, int $userId): void
+    public function subscribe(int $usersListId, int $userId): bool
     {
         if (empty($this->queryUserSubscribtion($usersListId, $userId)->exists())) {
             $usersListSubscribtion = $this->usersListSubscribtion->create([
@@ -119,14 +121,20 @@ class UsersListRepository
             ]);
 
             event(new UsersListSubscribtionEvent($usersListSubscribtion, true));
+            return true;
         }
+
+        return false;
     }
 
-    public function unsubscribe(int $usersListId, int $userId): void
+    public function unsubscribe(int $usersListId, int $userId): bool
     {
         if (!empty($usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first())) {
             event(new UsersListSubscribtionEvent($usersListSubscribtion, false));
             $usersListSubscribtion->delete();
+            return true;
         }
+
+        return false;
     }
 }

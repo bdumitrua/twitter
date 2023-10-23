@@ -44,7 +44,7 @@ class UserGroupService
         $createdUserGroup = $this->userGroupRepository->create($userGroupDTO, $authorizedUserId);
 
         if (!empty($createdUserGroup)) {
-            $this->cacheGroupsForever($authorizedUserId);
+            $this->recacheGroupsForever($authorizedUserId);
         }
     }
 
@@ -55,7 +55,7 @@ class UserGroupService
         $userGroupUpdateStatus = $this->userGroupRepository->update($userGroup, $userGroupDTO);
 
         if (!empty($userGroupUpdateStatus)) {
-            $this->cacheGroupsForever($userGroup->user_id);
+            $this->recacheGroupsForever($userGroup->user_id);
         }
     }
 
@@ -64,7 +64,7 @@ class UserGroupService
         $userGroupDeleteStatus = $this->userGroupRepository->delete($userGroup);
 
         if (!empty($userGroupDeleteStatus)) {
-            $this->cacheGroupsForever($userGroup->user_id);
+            $this->recacheGroupsForever($userGroup->user_id);
         }
     }
 
@@ -78,7 +78,7 @@ class UserGroupService
         $this->userGroupRepository->removeUser($userGroup->id, $user->id);
     }
 
-    private function cacheGroupsForever(int $userId)
+    private function recacheGroupsForever(int $userId)
     {
         Cache::forever(KEY_USER_GROUPS . $userId, function () use ($userId) {
             return $this->userGroupRepository->getByUserId($userId);
