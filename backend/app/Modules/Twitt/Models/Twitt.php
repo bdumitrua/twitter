@@ -33,12 +33,12 @@ class Twitt extends Model
         return TwittFactory::new();
     }
 
-    public function resolveRouteBinding($value, $field = null)
-    {
-        return Cache::remember("twitt_base_{$value}", 60, function () use ($value, $field) {
-            return parent::resolveRouteBinding($value, $field);
-        });
-    }
+    // public function resolveRouteBinding($value, $field = null)
+    // {
+    //     return Cache::remember("twitt_base_{$value}", 60, function () use ($value, $field) {
+    //         return parent::resolveRouteBinding($value, $field);
+    //     });
+    // }
 
     public function author()
     {
