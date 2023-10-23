@@ -32,8 +32,6 @@ class UsersListService
     public function index(): Collection
     {
         $authorizedUserId = Auth::id();
-        // TODO HOT 
-        // Сделать чтобы приходили и те, на которые подписан
         return Cache::rememberForever(KEY_USER_LISTS . $authorizedUserId, function () use ($authorizedUserId) {
             return $this->usersListRepository->getByUserId($authorizedUserId);
         });

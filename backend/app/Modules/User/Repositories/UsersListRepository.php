@@ -50,9 +50,15 @@ class UsersListRepository
 
     public function getByUserId(int $userId, array $relations = []): Collection
     {
-        return $this->usersList->with($relations)
+        $whereIsCreator = $this->usersList->with($relations)
             ->where('user_id', '=', $userId)
             ->get();
+
+        $whereIsSubscriber = $this->usersListSubscribtion->with($relations)
+            ->where('user_id', '=', $userId)
+            ->get();
+
+        return $whereIsCreator->merge($whereIsSubscriber)->unique('id');
     }
 
     public function create(UsersListDTO $dto, int $userId): void
