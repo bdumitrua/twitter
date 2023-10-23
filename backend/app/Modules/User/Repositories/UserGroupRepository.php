@@ -22,26 +22,6 @@ class UserGroupRepository
         $this->userGroupMember = $userGroupMember;
     }
 
-    protected function baseQuery(): Builder
-    {
-        return $this->userGroup->newQuery();
-    }
-
-    protected function baseQueryWithRelations(array $relations = []): Builder
-    {
-        return $this->baseQuery()->with($relations);
-    }
-
-    protected function queryById(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('id', '=', $id);
-    }
-
-    protected function queryByUserId(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('user_id', '=', $id);
-    }
-
     protected function queryByBothIds(int $userGroupId, int $userId): Builder
     {
         return $this->userGroupMember->newQuery()
@@ -49,19 +29,18 @@ class UserGroupRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function userInGroupExist(int $userGroupId, int $userId): bool
-    {
-        return $this->queryByBothIds($userGroupId, $userId)->exists();
-    }
-
     public function getById(int $id, array $relations = []): UserGroup
     {
-        return $this->queryById($id, $relations)->first() ?? new UserGroup();
+        return $this->userGroup->with($relations)
+            ->where('id', '=', $id)
+            ->first() ?? new UserGroup();
     }
 
     public function getByUserId(int $userId, array $relations = []): Collection
     {
-        return $this->queryByUserId($userId, $relations)->get() ?? new Collection();
+        return $this->userGroup->with($relations)
+            ->where('user_id', '=', $userId)
+            ->get();
     }
 
     public function create(UserGroupDTO $dto, int $userId): void
@@ -88,7 +67,7 @@ class UserGroupRepository
 
     public function addUser(int $userGroupId, int $userId): void
     {
-        if (empty($this->userInGroupExist($userGroupId, $userId))) {
+        if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
             $userGroupMember = $this->userGroupMember->create([
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId

@@ -32,7 +32,7 @@ class UserService
     {
         $authorizedUserId = Auth::id();
         return Cache::remember(KEY_AUTH_USER_DATA . $authorizedUserId, TimeHelper::getMinutes(1), function () use ($authorizedUserId) {
-            return $this->userRepository->getByIdWithRelations(
+            return $this->userRepository->getById(
                 $authorizedUserId,
                 ['lists', 'lists_subscribtions']
             );
@@ -43,7 +43,7 @@ class UserService
     {
         $userId = $user->id;
         return Cache::remember(KEY_USER_DATA . $userId, TimeHelper::getMinutes(1), function () use ($userId) {
-            return $this->userRepository->getByIdWithRelations(
+            return $this->userRepository->getById(
                 $userId,
             );
         });

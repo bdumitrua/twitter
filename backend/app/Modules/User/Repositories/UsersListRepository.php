@@ -27,36 +27,11 @@ class UsersListRepository
         $this->usersListSubscribtion = $usersListSubscribtion;
     }
 
-    protected function baseQuery(): Builder
-    {
-        return $this->usersList->newQuery();
-    }
-
-    protected function baseQueryWithRelations(array $relations = []): Builder
-    {
-        return $this->baseQuery()->with($relations);
-    }
-
-    protected function queryById(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('id', '=', $id);
-    }
-
-    protected function queryByUserId(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('user_id', '=', $id);
-    }
-
     protected function queryUserMembership(int $usersListId, int $userId): Builder
     {
         return $this->usersListMember->newQuery()
             ->where('users_list_id', '=', $usersListId)
             ->where('user_id', '=', $userId);
-    }
-
-    protected function userIsListMember(int $usersListId, int $userId): bool
-    {
-        return $this->queryUserMembership($usersListId, $userId)->exists();
     }
 
     protected function queryUserSubscribtion(int $usersListId, int $userId): Builder
@@ -66,19 +41,18 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function userIsListSubscriber(int $usersListId, int $userId): bool
-    {
-        return $this->queryUserSubscribtion($usersListId, $userId)->exists();
-    }
-
     public function getById(int $id, array $relations = []): UsersList
     {
-        return $this->queryById($id, $relations)->first() ?? new UsersList();
+        return $this->usersList->with($relations)
+            ->where('id', '=', $id)
+            ->first() ?? new UsersList();
     }
 
     public function getByUserId(int $userId, array $relations = []): Collection
     {
-        return $this->queryByUserId($userId, $relations)->get() ?? new Collection();
+        return $this->usersList->with($relations)
+            ->where('user_id', '=', $userId)
+            ->get();
     }
 
     public function create(UsersListDTO $dto, int $userId): void
@@ -112,7 +86,7 @@ class UsersListRepository
 
     public function addMember(int $usersListId, int $userId): void
     {
-        if (empty($this->userIsListMember($usersListId, $userId))) {
+        if (empty($this->queryUserMembership($usersListId, $userId)->exists())) {
             $usersListMember = $this->usersListMember->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
@@ -124,10 +98,7 @@ class UsersListRepository
 
     public function removeMember(int $usersListId, int $userId): void
     {
-        /** @var UsersListMember */
-        $usersListMember = $this->queryUserMembership($usersListId, $userId)->first();
-
-        if ($usersListMember) {
+        if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
             event(new UsersListMembersUpdateEvent($usersListMember, false));
             $usersListMember->delete();
         }
@@ -135,7 +106,7 @@ class UsersListRepository
 
     public function subscribe(int $usersListId, int $userId): void
     {
-        if (empty($this->userIsListSubscriber($usersListId, $userId))) {
+        if (empty($this->queryUserSubscribtion($usersListId, $userId)->exists())) {
             $usersListSubscribtion = $this->usersListSubscribtion->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
@@ -147,10 +118,7 @@ class UsersListRepository
 
     public function unsubscribe(int $usersListId, int $userId): void
     {
-        /** @var UsersListSubscribtion */
-        $usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first();
-
-        if ($usersListSubscribtion) {
+        if (!empty($usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first())) {
             event(new UsersListSubscribtionEvent($usersListSubscribtion, false));
             $usersListSubscribtion->delete();
         }

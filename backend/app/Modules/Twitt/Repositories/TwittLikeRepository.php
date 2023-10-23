@@ -2,8 +2,6 @@
 
 namespace App\Modules\Twitt\Repositories;
 
-use App\Modules\Twitt\Models\Twitt;
-use App\Modules\Twitt\Models\TwittFavorite;
 use App\Modules\Twitt\Models\TwittLike;
 use App\Modules\User\Events\TwittLikeEvent;
 use Illuminate\Database\Eloquent\Builder;
@@ -31,7 +29,9 @@ class TwittLikeRepository
 
     public function getByUserId(int $userId): Collection
     {
-        return $this->twittLike->where('user_id', '=', $userId)->get();
+        return $this->twittLike
+            ->where('user_id', '=', $userId)
+            ->get();
     }
 
     public function add(int $twittId, int $userId): void

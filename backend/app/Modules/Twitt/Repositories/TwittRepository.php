@@ -7,8 +7,6 @@ use App\Modules\Twitt\Models\Twitt;
 use App\Modules\User\Events\TwittReplyEvent;
 use App\Modules\User\Events\TwittRepostEvent;
 use App\Modules\User\Models\User;
-use App\Modules\User\Models\UserGroup;
-use App\Modules\User\Models\UserGroupMember;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
 use Illuminate\Database\Eloquent\Builder;
@@ -109,7 +107,7 @@ class TwittRepository
 
     private function getUserWithRelations(int $userId, array $relations = []): User
     {
-        return $this->userRepository->getByIdWithRelations($userId, $relations);
+        return $this->userRepository->getById($userId, $relations);
     }
 
     private function pluckIds($relation): array
