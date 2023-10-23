@@ -11,14 +11,14 @@ use App\Modules\User\Repositories\UsersListRepository;
 use App\Modules\User\Requests\CreateUsersListRequest;
 use App\Modules\User\Requests\UpdateUsersListRequest;
 use App\Traits\CreateDTO;
-use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class UsersListService
 {
-    use CreateDTO, GetCachedData;
+    use CreateDTO;
 
     protected $usersListRepository;
 
@@ -31,20 +31,20 @@ class UsersListService
     public function index(): Collection
     {
         $authorizedUserId = Auth::id();
-        return $this->getCachedData('user_lists:' . $authorizedUserId, function () use ($authorizedUserId) {
+        return Cache::rememberForever('user_lists:' . $authorizedUserId, function () use ($authorizedUserId) {
             return $this->usersListRepository->getByUserId($authorizedUserId);
-        }, null);
+        });
     }
 
     public function show(UsersList $usersList): UsersList
     {
         $usersListId = $usersList->id;
-        return $this->getCachedData('users_list_data:' . $usersListId, function () use ($usersListId) {
+        return Cache::remember('users_list_data:' . $usersListId, now()->addMinutes(5), function () use ($usersListId) {
             return $this->usersListRepository->getById(
                 $usersListId,
                 ['members', 'subscribers']
             );
-        }, 300);
+        });
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void

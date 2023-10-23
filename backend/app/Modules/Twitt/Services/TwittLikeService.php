@@ -7,14 +7,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Twitt\Models\Twitt;
 use App\Modules\Twitt\Repositories\TwittLikeRepository;
-use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 class TwittLikeService
 {
-    use GetCachedData;
-
     private $twittLikeRepository;
 
     public function __construct(
@@ -26,9 +24,9 @@ class TwittLikeService
     public function index(): Collection
     {
         $authorizedUserId = Auth::id();
-        return $this->getCachedData('user_likes:' . $authorizedUserId, function () use ($authorizedUserId) {
+        return Cache::remember('user_likes:' . $authorizedUserId, now()->addMinutes(5), function () use ($authorizedUserId) {
             return $this->twittLikeRepository->getByUserId($authorizedUserId);
-        }, 300);
+        });
     }
 
     public function add(Twitt $twitt): void

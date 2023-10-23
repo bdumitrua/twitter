@@ -12,14 +12,13 @@ use App\Modules\Twitt\Requests\TwittRequest;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Traits\CreateDTO;
-use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
 class TwittService
 {
-    use CreateDTO, GetCachedData;
+    use CreateDTO;
 
     private $twittRepository;
 
@@ -32,23 +31,23 @@ class TwittService
     public function index(): Collection
     {
         $authorizedUserId = Auth::id();
-        return $this->getCachedData('user_feed:' . $authorizedUserId, function () use ($authorizedUserId) {
+        return Cache::remember('user_feed:' . $authorizedUserId, now()->addMinutes(1), function () use ($authorizedUserId) {
             return $this->twittRepository->getUserFeed($authorizedUserId);
-        }, 60);
+        });
     }
 
     public function user(User $user): Collection
     {
-        return $this->getCachedData('user_twitts:' . $user->id, function () use ($user) {
+        return Cache::remember('user_twitts:' . $user->id, now()->addMinutes(5), function () use ($user) {
             return $this->twittRepository->getByUserId($user->id);
-        }, 300);
+        });
     }
 
     public function list(UsersList $usersList): Collection
     {
-        return $this->getCachedData('users_list_feed:' . $usersList->id, function () use ($usersList) {
+        return Cache::remember('users_list_feed:' . $usersList->id, now()->addMinutes(1), function () use ($usersList) {
             return $this->twittRepository->getFeedByUsersList($usersList, Auth::id());
-        }, 60);
+        });
     }
 
     public function show(Twitt $twitt): Twitt
