@@ -32,17 +32,17 @@ class UserGroupRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function queryByUserId(int $userId, array $relations = []): Builder
+    protected function queryByUserId(int $userId): Builder
     {
         return $this->userGroup->newQuery()
-            ->with($relations)
             ->where('user_id', '=', $userId);
     }
 
-    public function getById(int $id, array $relations = []): UserGroup
+    public function getById(int $id): UserGroup
     {
-        $userGroup = $this->userGroup->with($relations)
+        $userGroup = $this->userGroup
             ->withCount(['members'])
+            ->with(['members_data'])
             ->where('id', '=', $id)
             ->first();
 
@@ -53,17 +53,17 @@ class UserGroupRepository
         return $userGroup;
     }
 
-    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false): Collection
+    public function getByUserId(int $userId, bool $updateCache = false): Collection
     {
-        $cacheKey = KEY_USER_GROUPS . $userId . KEY_WITH_RELATIONS . implode(',', $relations);
+        $cacheKey = KEY_USER_GROUPS . $userId;
 
         if ($updateCache) {
-            $userGroups = $this->queryByUserId($userId, $relations)->get();
+            $userGroups = $this->queryByUserId($userId)->get();
             Cache::forever($cacheKey, $userGroups);
         }
 
-        return Cache::rememberForever($cacheKey, function () use ($userId, $relations) {
-            return $this->queryByUserId($userId, $relations)->get();
+        return Cache::rememberForever($cacheKey, function () use ($userId) {
+            return $this->queryByUserId($userId)->get();
         });
     }
 
@@ -101,8 +101,6 @@ class UserGroupRepository
         }
     }
 
-    // TODO HOT
-    // Добавить кэширование на каунт
     public function addUser(int $userGroupId, int $userId): void
     {
         if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
@@ -117,8 +115,6 @@ class UserGroupRepository
         }
     }
 
-    // TODO HOT
-    // Добавить кэширование на каунт
     public function removeUser(int $userGroupId, int $userId): void
     {
         if ($userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first()) {
@@ -133,6 +129,6 @@ class UserGroupRepository
 
     private function recacheUserGroups(int $userId)
     {
-        $this->getByUserId($userId, [], true);
+        $this->getByUserId($userId, true);
     }
 }
