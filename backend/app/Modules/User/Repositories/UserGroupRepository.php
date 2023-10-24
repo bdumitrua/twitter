@@ -34,12 +34,14 @@ class UserGroupRepository
     {
         return $this->userGroup->newQuery()
             ->with($relations)
+            ->withCount(['members'])
             ->where('user_id', '=', $userId);
     }
 
     public function getById(int $id, array $relations = []): UserGroup
     {
         return $this->userGroup->with($relations)
+            ->withCount(['members'])
             ->where('id', '=', $id)
             ->first() ?? new UserGroup();
     }
@@ -92,6 +94,8 @@ class UserGroupRepository
         }
     }
 
+    // TODO HOT
+    // Добавить кэширование на каунт
     public function addUser(int $userGroupId, int $userId): void
     {
         if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
@@ -106,6 +110,8 @@ class UserGroupRepository
         }
     }
 
+    // TODO HOT
+    // Добавить кэширование на каунт
     public function removeUser(int $userGroupId, int $userId): void
     {
         if ($userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first()) {
