@@ -42,7 +42,7 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function queryByUserId(int $userId, array $relations = [])
+    protected function queryByUserId(int $userId, array $relations = []): Builder
     {
         $whereIsCreator = $this->usersList
             ->where('user_id', '=', $userId)
@@ -71,7 +71,7 @@ class UsersListRepository
             ->first() ?? new UsersList();
     }
 
-    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false)
+    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false): Collection
     {
         $cacheKey = KEY_USER_LISTS . $userId . KEY_WITH_RELATIONS . implode(',', $relations);
 
@@ -168,7 +168,7 @@ class UsersListRepository
         }
     }
 
-    public function unsubscribe(int $usersListId, int $userId)
+    public function unsubscribe(int $usersListId, int $userId): void
     {
         if (!empty($usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first())) {
             $usersListId = $usersListSubscribtion->users_list_id;
@@ -181,7 +181,7 @@ class UsersListRepository
         }
     }
 
-    private function recacheUserLists(int $userId)
+    private function recacheUserLists(int $userId): void
     {
         $this->getByUserId($userId, [], true);
     }

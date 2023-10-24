@@ -29,7 +29,7 @@ class UsersListService
         $this->usersListRepository = $usersListRepository;
     }
 
-    public function index()
+    public function index(): Collection
     {
         return $this->usersListRepository->getByUserId(Auth::id());
     }
@@ -75,7 +75,7 @@ class UsersListService
         $this->usersListRepository->subscribe($usersList->id, $authorizedUserId);
     }
 
-    public function unsubscribe(UsersList $usersList)
+    public function unsubscribe(UsersList $usersList): void
     {
         $authorizedUserId = Auth::id();
         $this->usersListRepository->unsubscribe($usersList->id, $authorizedUserId);
