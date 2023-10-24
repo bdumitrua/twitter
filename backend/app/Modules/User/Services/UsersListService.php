@@ -43,7 +43,6 @@ class UsersListService
         return Cache::remember(KEY_USERS_LIST_DATA . $usersListId, TimeHelper::getMinutes(5), function () use ($usersListId) {
             return $this->usersListRepository->getById(
                 $usersListId,
-                ['members', 'subscribers']
             );
         });
     }

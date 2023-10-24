@@ -33,8 +33,7 @@ class UserService
         $authorizedUserId = Auth::id();
         return Cache::remember(KEY_AUTH_USER_DATA . $authorizedUserId, TimeHelper::getMinutes(1), function () use ($authorizedUserId) {
             return $this->userRepository->getById(
-                $authorizedUserId,
-                ['lists', 'lists_subscribtions']
+                $authorizedUserId
             );
         });
     }
