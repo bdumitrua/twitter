@@ -50,7 +50,7 @@ class AppServiceProvider extends ServiceProvider
         define('KEY_USER_DATA', 'user_data:');
 
         // Массив твиттов пользователя
-        define('KEY_USER_TWITTS', 'user_twitts:');
+        define('KEY_USER_TWEETS', 'user_tweets:');
 
         // Массив групп пользователя
         define('KEY_USER_GROUPS', 'user_groups:');
