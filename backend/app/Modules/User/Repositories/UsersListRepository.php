@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
@@ -42,7 +43,7 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function queryByUserId(int $userId, array $relations = []): Builder
+    protected function queryByUserId(int $userId): Builder
     {
         $whereIsCreator = $this->usersList
             ->where('user_id', '=', $userId)
@@ -59,29 +60,32 @@ class UsersListRepository
         $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
 
         return $this->usersList->newQuery()
-            ->whereIn('id', $listsIds)
-            ->with($relations);
+            ->whereIn('id', $listsIds);
     }
 
-    public function getById(int $id, array $relations = []): UsersList
+    public function getById(int $id): UsersList
     {
-        return $this->usersList->with($relations)
-            ->withCount(['members', 'subscribers'])
-            ->where('id', '=', $id)
-            ->first() ?? new UsersList();
+        $cacheKey = KEY_USERS_LIST_DATA . $id;
+
+        return Cache::remember($cacheKey, TimeHelper::getMinutes(5), function () use ($id) {
+            $this->usersList
+                ->withCount(['members', 'subscribers'])
+                ->where('id', '=', $id)
+                ->first() ?? new UsersList();
+        });
     }
 
-    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false): Collection
+    public function getByUserId(int $userId, bool $updateCache = false): Collection
     {
-        $cacheKey = KEY_USER_LISTS . $userId . KEY_WITH_RELATIONS . implode(',', $relations);
+        $cacheKey = KEY_USER_LISTS . $userId;
 
         if ($updateCache) {
-            $userGroups = $this->queryByUserId($userId, $relations)->get();
+            $userGroups = $this->queryByUserId($userId)->get();
             Cache::forever($cacheKey, $userGroups);
         }
 
-        return Cache::rememberForever($cacheKey, function () use ($userId, $relations) {
-            return $this->queryByUserId($userId, $relations)->get();
+        return Cache::rememberForever($cacheKey, function () use ($userId) {
+            return $this->queryByUserId($userId)->get();
         });
     }
 
@@ -183,6 +187,6 @@ class UsersListRepository
 
     private function recacheUserLists(int $userId): void
     {
-        $this->getByUserId($userId, [], true);
+        $this->getByUserId($userId, true);
     }
 }
