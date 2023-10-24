@@ -37,7 +37,7 @@ class EventServiceProvider extends ServiceProvider
 
         // Users
         UserSubscribtionEvent::class => [
-            UpdateUserSubscribtionCount::class,
+            // 
         ],
         UserGroupMembersUpdateEvent::class => [
             UpdateGroupMembersCount::class,

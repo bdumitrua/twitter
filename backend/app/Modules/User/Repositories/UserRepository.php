@@ -24,6 +24,7 @@ class UserRepository
     {
         return $this->users->with($relations)
             ->where('id', '=', $id)
+            ->withCount(['subscribtions', 'subscribers'])
             ->first() ?? new User();
     }
 

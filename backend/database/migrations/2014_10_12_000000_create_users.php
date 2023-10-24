@@ -23,8 +23,6 @@ return new class extends Migration
             $table->string('status_text')->nullable();
             $table->string('site_url')->nullable();
             $table->string('address')->nullable();
-            $table->integer('subscribtions_count')->default(0);
-            $table->integer('subscribers_count')->default(0);
             $table->timestamp('birth_date')->nullable();
             $table->timestamps();
         });
