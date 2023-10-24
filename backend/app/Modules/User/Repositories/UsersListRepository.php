@@ -3,6 +3,7 @@
 namespace App\Modules\User\Repositories;
 
 use App\Helpers\TimeHelper;
+use App\Jobs\RecalculateUsersLists;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
@@ -63,14 +64,15 @@ class UsersListRepository
             ->whereIn('id', $listsIds);
     }
 
-    public function getById(int $id): UsersList
+    public function getById(int $usersListId): UsersList
     {
-        $cacheKey = KEY_USERS_LIST_DATA . $id;
+        $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
 
-        return Cache::remember($cacheKey, TimeHelper::getMinutes(5), function () use ($id) {
-            $this->usersList
+        return Cache::remember($cacheKey, TimeHelper::getMinutes(5), function () use ($usersListId) {
+            return $this->usersList
                 ->withCount(['members', 'subscribers'])
-                ->where('id', '=', $id)
+                ->with(['subscribers_data'])
+                ->where('id', '=', $usersListId)
                 ->first() ?? new UsersList();
         });
     }
@@ -105,9 +107,9 @@ class UsersListRepository
         }
     }
 
-    public function update(UsersList $usersList, UsersListDTO $dto): void
+    public function update(UsersList $usersList, UsersListDTO $dto)
     {
-        $usersList->update([
+        $updatingStatus = $usersList->update([
             'name' => $dto->name ?? $usersList->name,
             'description' => $dto->description ?? $usersList->description,
             'is_private' => $dto->isPrivate ?? $usersList->isPrivate,
@@ -115,26 +117,22 @@ class UsersListRepository
             'bg_image' => $dto->bgImage ?? $usersList->bgImage,
         ]);
 
-        // if (!empty($updatingStatus)) {
-        // TODO QUEUE
-        // Сделать добавление в очередь задач на изменение кэша массива списков для каждого подписчика
-        // Минус - перекэш при каждом изменении
-        // Плюс - экономия запросов, т.к. изменяются списки (именно данные), не так часто,
-        // а запрашиваться могут хоть каждые 5-10 секунд
-        // }
+
+        if (!empty($updatingStatus)) {
+            $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
+            dispatch(new RecalculateUsersLists($listSubscribers));
+        }
     }
 
     public function delete(UsersList $usersList): void
     {
-        $usersList->delete();
+        $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
+        $deletingStatus = $usersList->delete();
 
-        // if (!empty($deletingStatus)) {
-        // TODO QUEUE
-        // Сделать добавление в очередь задач на изменение кэша массива списков для каждого подписчика
-        // Минус - перекэш при каждом изменении
-        // Плюс - экономия запросов, т.к. изменяются списки (именно данные), не так часто,
-        // а запрашиваться могут хоть каждые 5-10 секунд
-        // }
+        if (!empty($deletingStatus)) {
+            dispatch(new RecalculateUsersLists($listSubscribers));
+            // RecalculateUsersLists::dispatch($listSubscribers);
+        }
     }
 
     public function addMember(int $usersListId, int $userId): void
@@ -185,7 +183,7 @@ class UsersListRepository
         }
     }
 
-    private function recacheUserLists(int $userId): void
+    public function recacheUserLists(int $userId): void
     {
         $this->getByUserId($userId, true);
     }
