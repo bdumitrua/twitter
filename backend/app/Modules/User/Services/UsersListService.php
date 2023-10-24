@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Services;
 
+use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -28,30 +29,27 @@ class UsersListService
         $this->usersListRepository = $usersListRepository;
     }
 
-    public function index(): Collection
+    public function index()
     {
-        $authorizedUserId = Auth::id();
-        return Cache::rememberForever('user_lists:' . $authorizedUserId, function () use ($authorizedUserId) {
-            return $this->usersListRepository->getByUserId($authorizedUserId);
-        });
+        return $this->usersListRepository->getByUserId(Auth::id());
     }
 
     public function show(UsersList $usersList): UsersList
     {
         $usersListId = $usersList->id;
-        return Cache::remember('users_list_data:' . $usersListId, now()->addMinutes(5), function () use ($usersListId) {
+        return Cache::remember(KEY_USERS_LIST_DATA . $usersListId, TimeHelper::getMinutes(5), function () use ($usersListId) {
             return $this->usersListRepository->getById(
                 $usersListId,
-                ['members', 'subscribers']
             );
         });
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
     {
+        $authorizedUserId = Auth::id();
         $usersListDTO = $this->createDTO($createUsersListRequest, UsersListDTO::class);
 
-        $this->usersListRepository->create($usersListDTO, Auth::id());
+        $this->usersListRepository->create($usersListDTO, $authorizedUserId);
     }
 
     public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest): void
@@ -78,11 +76,13 @@ class UsersListService
 
     public function subscribe(UsersList $usersList): void
     {
-        $this->usersListRepository->subscribe($usersList->id, Auth::id());
+        $authorizedUserId = Auth::id();
+        $this->usersListRepository->subscribe($usersList->id, $authorizedUserId);
     }
 
-    public function unsubscribe(UsersList $usersList): void
+    public function unsubscribe(UsersList $usersList)
     {
-        $this->usersListRepository->unsubscribe($usersList->id, Auth::id());
+        $authorizedUserId = Auth::id();
+        $this->usersListRepository->unsubscribe($usersList->id, $authorizedUserId);
     }
 }

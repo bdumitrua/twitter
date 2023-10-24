@@ -8,14 +8,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class UserGroupMembersUpdateEvent implements ShouldBroadcast
 {
-    public $userGroupMember;
+    public $userGroupId;
     public $add;
 
     public function __construct(
-        UserGroupMember $userGroupMember,
+        int $userGroupId,
         bool $add,
     ) {
-        $this->userGroupMember = $userGroupMember;
+        $this->userGroupId = $userGroupId;
         $this->add = $add;
     }
 

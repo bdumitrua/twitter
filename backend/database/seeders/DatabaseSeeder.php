@@ -20,9 +20,9 @@ class DatabaseSeeder extends Seeder
             UsersListTableSeeder::class,
             UsersListMemberTableSeeder::class,
             UsersListSubscribtionTableSeeder::class,
-            TwittTableSeeder::class,
-            TwittLikeTableSeeder::class,
-            TwittFavoriteTableSeeder::class,
+            TweetTableSeeder::class,
+            TweetLikeTableSeeder::class,
+            TweetFavoriteTableSeeder::class,
         ]);
     }
 }

@@ -10,6 +10,7 @@ use App\Modules\User\Models\UsersListMember;
 use App\Modules\User\Models\UsersListSubscribtion;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class UsersListRepository
 {
@@ -27,26 +28,6 @@ class UsersListRepository
         $this->usersListSubscribtion = $usersListSubscribtion;
     }
 
-    protected function baseQuery(): Builder
-    {
-        return $this->usersList->newQuery();
-    }
-
-    protected function baseQueryWithRelations(array $relations = []): Builder
-    {
-        return $this->baseQuery()->with($relations);
-    }
-
-    protected function queryById(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('id', '=', $id);
-    }
-
-    protected function queryByUserId(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('user_id', '=', $id);
-    }
-
     protected function queryUserMembership(int $usersListId, int $userId): Builder
     {
         return $this->usersListMember->newQuery()
@@ -54,36 +35,56 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function userIsListMember(int $usersListId, int $userId): bool
-    {
-        return $this->queryUserMembership($usersListId, $userId)->exists();
-    }
-
     protected function queryUserSubscribtion(int $usersListId, int $userId): Builder
     {
-        return $this->usersListMember->newQuery()
+        return $this->usersListSubscribtion->newQuery()
             ->where('users_list_id', '=', $usersListId)
             ->where('user_id', '=', $userId);
     }
 
-    protected function userIsListSubscriber(int $usersListId, int $userId): bool
+    protected function queryByUserId(int $userId, array $relations = [])
     {
-        return $this->queryUserSubscribtion($usersListId, $userId)->exists();
+        $whereIsCreator = $this->usersList
+            ->where('user_id', '=', $userId)
+            ->get(['id'])
+            ->pluck('id')
+            ->toArray();
+
+        $whereIsSubscriber = $this->usersListSubscribtion
+            ->where('user_id', '=', $userId)
+            ->get(['users_list_id'])
+            ->pluck('users_list_id')
+            ->toArray();
+
+        $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
+
+        return $this->usersList->newQuery()->whereIn('id', $listsIds)->with($relations);
     }
 
     public function getById(int $id, array $relations = []): UsersList
     {
-        return $this->queryById($id, $relations)->first() ?? new UsersList();
+        return $this->usersList->with($relations)
+            ->where('id', '=', $id)
+            ->first() ?? new UsersList();
     }
 
-    public function getByUserId(int $userId, array $relations = []): Collection
+    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false)
     {
-        return $this->queryByUserId($userId, $relations)->get() ?? new Collection();
+        $cacheKey = KEY_USER_LISTS . $userId . KEY_WITH_RELATIONS . implode(',', $relations);
+
+        if ($updateCache) {
+            $userGroups = $this->queryByUserId($userId, $relations)->get();
+            Cache::forever($cacheKey, $userGroups);
+        }
+
+        return Cache::rememberForever($cacheKey, function () use ($userId, $relations) {
+            return $this->queryByUserId($userId, $relations)->get();
+        });
     }
 
     public function create(UsersListDTO $dto, int $userId): void
     {
-        $this->usersList->create([
+        $createdUsersList = $this->usersList->create([
             'user_id' => $userId,
             'name' => $dto->name,
             'description' => $dto->description,
@@ -92,6 +93,10 @@ class UsersListRepository
             'subsribers_count' => 0,
             'members_count' => 0,
         ]);
+
+        if (!empty($createdUsersList)) {
+            $this->recacheUserLists($userId);
+        }
     }
 
     public function update(UsersList $usersList, UsersListDTO $dto): void
@@ -103,16 +108,32 @@ class UsersListRepository
             // TODO FILES
             'bg_image' => $dto->bgImage ?? $usersList->bgImage,
         ]);
+
+        // if (!empty($updatingStatus)) {
+        // TODO QUEUE
+        // Сделать добавление в очередь задач на изменение кэша массива списков для каждого подписчика
+        // Минус - перекэш при каждом изменении
+        // Плюс - экономия запросов, т.к. изменяются списки (именно данные), не так часто,
+        // а запрашиваться могут хоть каждые 5-10 секунд
+        // }
     }
 
     public function delete(UsersList $usersList): void
     {
         $usersList->delete();
+
+        // if (!empty($deletingStatus)) {
+        // TODO QUEUE
+        // Сделать добавление в очередь задач на изменение кэша массива списков для каждого подписчика
+        // Минус - перекэш при каждом изменении
+        // Плюс - экономия запросов, т.к. изменяются списки (именно данные), не так часто,
+        // а запрашиваться могут хоть каждые 5-10 секунд
+        // }
     }
 
     public function addMember(int $usersListId, int $userId): void
     {
-        if (empty($this->userIsListMember($usersListId, $userId))) {
+        if (empty($this->queryUserMembership($usersListId, $userId)->exists())) {
             $usersListMember = $this->usersListMember->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
@@ -124,10 +145,7 @@ class UsersListRepository
 
     public function removeMember(int $usersListId, int $userId): void
     {
-        /** @var UsersListMember */
-        $usersListMember = $this->queryUserMembership($usersListId, $userId)->first();
-
-        if ($usersListMember) {
+        if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
             event(new UsersListMembersUpdateEvent($usersListMember, false));
             $usersListMember->delete();
         }
@@ -135,24 +153,34 @@ class UsersListRepository
 
     public function subscribe(int $usersListId, int $userId): void
     {
-        if (empty($this->userIsListSubscriber($usersListId, $userId))) {
+        if (empty($this->queryUserSubscribtion($usersListId, $userId)->exists())) {
             $usersListSubscribtion = $this->usersListSubscribtion->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
             ]);
 
-            event(new UsersListSubscribtionEvent($usersListSubscribtion, true));
+            if (!empty($usersListSubscribtion)) {
+                event(new UsersListSubscribtionEvent($usersListId, true));
+                $this->recacheUserLists($userId);
+            }
         }
     }
 
-    public function unsubscribe(int $usersListId, int $userId): void
+    public function unsubscribe(int $usersListId, int $userId)
     {
-        /** @var UsersListSubscribtion */
-        $usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first();
+        if (!empty($usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first())) {
+            $usersListId = $usersListSubscribtion->users_list_id;
+            $deletingStatus = $usersListSubscribtion->delete();
 
-        if ($usersListSubscribtion) {
-            event(new UsersListSubscribtionEvent($usersListSubscribtion, false));
-            $usersListSubscribtion->delete();
+            if (!empty($deletingStatus)) {
+                event(new UsersListSubscribtionEvent($usersListId, false));
+                $this->recacheUserLists($userId);
+            }
         }
+    }
+
+    private function recacheUserLists(int $userId)
+    {
+        $this->getByUserId($userId, [], true);
     }
 }

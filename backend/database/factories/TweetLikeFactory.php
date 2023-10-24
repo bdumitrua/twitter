@@ -2,18 +2,18 @@
 
 namespace Database\Factories;
 
-use App\Modules\User\Events\UsersListSubscribtionEvent;
+use App\Modules\Tweet\Models\Tweet;
+use App\Modules\Tweet\Models\TweetLike;
+use App\Modules\User\Events\TweetLikeEvent;
 use App\Modules\User\Models\User;
-use App\Modules\User\Models\UsersList;
-use App\Modules\User\Models\UsersListSubscribtion;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
  * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Model>
  */
-class UsersListSubscribtionFactory extends Factory
+class TweetLikeFactory extends Factory
 {
-    protected $model = UsersListSubscribtion::class;
+    protected $model = TweetLike::class;
 
     /**
      * Define the model's default state.
@@ -23,11 +23,11 @@ class UsersListSubscribtionFactory extends Factory
     public function definition(): array
     {
         $user = User::all()->random();
-        $usersList = UsersList::all()->random();
+        $tweet = Tweet::all()->random();
 
         return [
             'user_id' => $user->id,
-            'users_list_id' => $usersList->id,
+            'tweet_id' => $tweet->id
         ];
     }
 
@@ -38,8 +38,8 @@ class UsersListSubscribtionFactory extends Factory
      */
     public function configure()
     {
-        return $this->afterCreating(function (UsersListSubscribtion $usersListSubscribtion) {
-            event(new UsersListSubscribtionEvent($usersListSubscribtion->users_list_id, true));
+        return $this->afterCreating(function (TweetLike $tweetLike) {
+            event(new TweetLikeEvent($tweetLike, true));
         });
     }
 }

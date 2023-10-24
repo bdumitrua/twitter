@@ -8,6 +8,7 @@ use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class UserGroupRepository
 {
@@ -22,26 +23,6 @@ class UserGroupRepository
         $this->userGroupMember = $userGroupMember;
     }
 
-    protected function baseQuery(): Builder
-    {
-        return $this->userGroup->newQuery();
-    }
-
-    protected function baseQueryWithRelations(array $relations = []): Builder
-    {
-        return $this->baseQuery()->with($relations);
-    }
-
-    protected function queryById(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('id', '=', $id);
-    }
-
-    protected function queryByUserId(int $id, array $relations = []): Builder
-    {
-        return $this->baseQueryWithRelations($relations)->where('user_id', '=', $id);
-    }
-
     protected function queryByBothIds(int $userGroupId, int $userId): Builder
     {
         return $this->userGroupMember->newQuery()
@@ -49,62 +30,96 @@ class UserGroupRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function userInGroupExist(int $userGroupId, int $userId): bool
+    protected function queryByUserId(int $userId, array $relations = []): Builder
     {
-        return $this->queryByBothIds($userGroupId, $userId)->exists();
+        return $this->userGroup->newQuery()
+            ->with($relations)
+            ->where('user_id', '=', $userId);
     }
 
     public function getById(int $id, array $relations = []): UserGroup
     {
-        return $this->queryById($id, $relations)->first() ?? new UserGroup();
+        return $this->userGroup->with($relations)
+            ->where('id', '=', $id)
+            ->first() ?? new UserGroup();
     }
 
-    public function getByUserId(int $userId, array $relations = []): Collection
+    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false): Collection
     {
-        return $this->queryByUserId($userId, $relations)->get() ?? new Collection();
+        $cacheKey = KEY_USER_GROUPS . $userId . KEY_WITH_RELATIONS . implode(',', $relations);
+
+        if ($updateCache) {
+            $userGroups = $this->queryByUserId($userId, $relations)->get();
+            Cache::forever($cacheKey, $userGroups);
+        }
+
+        return Cache::rememberForever($cacheKey, function () use ($userId, $relations) {
+            return $this->queryByUserId($userId, $relations)->get();
+        });
     }
 
     public function create(UserGroupDTO $dto, int $userId): void
     {
-        $this->userGroup->create([
+        $createdUserGroup = $this->userGroup->create([
             'user_id' => $userId,
             'name' => $dto->name,
             'description' => $dto->description
         ]);
+
+        if (!empty($createdUserGroup)) {
+            $this->recacheUserGroups($userId);
+        }
     }
 
     public function update(UserGroup $userGroup, UserGroupDTO $dto): void
     {
-        $userGroup->update([
+        $updatingStatus = $userGroup->update([
             'name' => $dto->name ?? $userGroup->name,
             'description' => $dto->description ?? $userGroup->description
         ]);
+
+        if (!empty($updatingStatus)) {
+            $this->recacheUserGroups($userGroup->user_id);
+        }
     }
 
     public function delete(UserGroup $userGroup): void
     {
-        $userGroup->delete();
+        $deletingStatus = $userGroup->delete();
+
+        if (!empty($deletingStatus)) {
+            $this->recacheUserGroups($userGroup->user_id);
+        }
     }
 
     public function addUser(int $userGroupId, int $userId): void
     {
-        if (empty($this->userInGroupExist($userGroupId, $userId))) {
-            $userGroupMember = $this->userGroupMember->create([
+        if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
+            $addingStatus = $this->userGroupMember->create([
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId
             ]);
-            event(new UserGroupMembersUpdateEvent($userGroupMember, true));
+
+            if (!empty($addingStatus)) {
+                event(new UserGroupMembersUpdateEvent($userGroupId, true));
+            }
         }
     }
 
     public function removeUser(int $userGroupId, int $userId): void
     {
-        /** @var UserGroupMember */
-        $userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first();
+        if ($userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first()) {
+            $userGroupId = $userGroupMember->user_group_id;
+            $removingStatus = $userGroupMember->delete();
 
-        if ($userGroupMember) {
-            event(new UserGroupMembersUpdateEvent($userGroupMember, false));
-            $userGroupMember->delete();
+            if (!empty($removingStatus)) {
+                event(new UserGroupMembersUpdateEvent($userGroupId, false));
+            }
         }
+    }
+
+    private function recacheUserGroups(int $userId)
+    {
+        $this->getByUserId($userId, [], true);
     }
 }

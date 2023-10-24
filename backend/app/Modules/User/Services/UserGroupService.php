@@ -30,10 +30,7 @@ class UserGroupService
 
     public function index(): Collection
     {
-        $authorizedUserId = Auth::id();
-        return Cache::rememberForever('user_groups:' . $authorizedUserId, function () use ($authorizedUserId) {
-            return $this->userGroupRepository->getByUserId($authorizedUserId);
-        });
+        return $this->userGroupRepository->getByUserId(Auth::id());
     }
 
     public function create(CreateUserGroupRequest $createUserGroupRequest): void

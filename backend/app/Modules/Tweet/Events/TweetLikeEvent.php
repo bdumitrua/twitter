@@ -2,21 +2,21 @@
 
 namespace App\Modules\User\Events;
 
-use App\Modules\User\Models\UsersListSubscribtion;
+use App\Modules\Tweet\Models\TweetLike;
 use App\Modules\User\Models\UserSubscribtion;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UsersListSubscribtionEvent implements ShouldBroadcast
+class TweetLikeEvent implements ShouldBroadcast
 {
-    public $usersListId;
+    public $tweetLike;
     public $add;
 
     public function __construct(
-        int $usersListId,
-        bool $add
+        TweetLike $tweetLike,
+        bool $add,
     ) {
-        $this->usersListId = $usersListId;
+        $this->tweetLike = $tweetLike;
         $this->add = $add;
     }
 

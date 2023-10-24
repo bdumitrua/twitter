@@ -2,21 +2,20 @@
 
 namespace App\Modules\User\Events;
 
-use App\Modules\User\Models\UsersListSubscribtion;
-use App\Modules\User\Models\UserSubscribtion;
+use App\Modules\Tweet\Models\TweetFavorite;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UsersListSubscribtionEvent implements ShouldBroadcast
+class TweetFavoriteEvent implements ShouldBroadcast
 {
-    public $usersListId;
+    public $tweetFavorite;
     public $add;
 
     public function __construct(
-        int $usersListId,
+        TweetFavorite $tweetFavorite,
         bool $add
     ) {
-        $this->usersListId = $usersListId;
+        $this->tweetFavorite = $tweetFavorite;
         $this->add = $add;
     }
 

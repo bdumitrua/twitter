@@ -63,12 +63,12 @@ class User extends Authenticatable implements JWTSubject
         return UserFactory::new();
     }
 
-    public function resolveRouteBinding($value, $field = null)
-    {
-        return Cache::remember("user_base_{$value}", 60, function () use ($value, $field) {
-            return parent::resolveRouteBinding($value, $field);
-        });
-    }
+    // public function resolveRouteBinding($value, $field = null)
+    // {
+    //     return Cache::remember("user_base_{$value}", 60, function () use ($value, $field) {
+    //         return parent::resolveRouteBinding($value, $field);
+    //     });
+    // }
 
     public function searchableAs()
     {
