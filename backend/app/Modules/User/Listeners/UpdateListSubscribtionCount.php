@@ -9,18 +9,14 @@ class UpdateListSubscribtionCount
 {
     public function handle($event)
     {
-        /** @var UsersListSubscribtion */
-        $usersListSubscribtion = $event->usersListSubscribtion;
-        $add = $event->add;
-        $usersList = UsersList::find($usersListSubscribtion->users_list_id);
+        $usersList = UsersList::find($event->usersListId);
 
-        if (!empty($add)) {
+        if (!empty($event->add)) {
             $usersList->subsribers_count = $usersList->subsribers_count + 1;
         } else {
             $usersList->subsribers_count = $usersList->subsribers_count - 1;
         }
 
-        // Обновляем счётчик количества пользователей в группе
         $usersList->save();
     }
 }

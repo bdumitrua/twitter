@@ -37,12 +37,12 @@ class UsersListRepository
 
     protected function queryUserSubscribtion(int $usersListId, int $userId): Builder
     {
-        return $this->usersListMember->newQuery()
+        return $this->usersListSubscribtion->newQuery()
             ->where('users_list_id', '=', $usersListId)
             ->where('user_id', '=', $userId);
     }
 
-    protected function queryByUserId(int $userId, array $relations = []): Builder
+    protected function queryByUserId(int $userId, array $relations = [])
     {
         $whereIsCreator = $this->usersList
             ->where('user_id', '=', $userId)
@@ -52,11 +52,11 @@ class UsersListRepository
 
         $whereIsSubscriber = $this->usersListSubscribtion
             ->where('user_id', '=', $userId)
-            ->get(['id'])
-            ->pluck('id')
+            ->get(['users_list_id'])
+            ->pluck('users_list_id')
             ->toArray();
 
-        $listsIds = array_merge($whereIsCreator, $whereIsSubscriber);
+        $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
 
         return $this->usersList->newQuery()->whereIn('id', $listsIds)->with($relations);
     }
@@ -68,7 +68,7 @@ class UsersListRepository
             ->first() ?? new UsersList();
     }
 
-    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false): Collection
+    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false)
     {
         $cacheKey = KEY_USER_LISTS . $userId . KEY_WITH_RELATIONS . implode(',', $relations);
 
@@ -160,19 +160,20 @@ class UsersListRepository
             ]);
 
             if (!empty($usersListSubscribtion)) {
-                event(new UsersListSubscribtionEvent($usersListSubscribtion, true));
+                event(new UsersListSubscribtionEvent($usersListId, true));
                 $this->recacheUserLists($userId);
             }
         }
     }
 
-    public function unsubscribe(int $usersListId, int $userId): void
+    public function unsubscribe(int $usersListId, int $userId)
     {
         if (!empty($usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first())) {
-            event(new UsersListSubscribtionEvent($usersListSubscribtion, false));
+            $usersListId = $usersListSubscribtion->users_list_id;
             $deletingStatus = $usersListSubscribtion->delete();
 
             if (!empty($deletingStatus)) {
+                event(new UsersListSubscribtionEvent($usersListId, false));
                 $this->recacheUserLists($userId);
             }
         }

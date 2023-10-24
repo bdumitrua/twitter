@@ -9,14 +9,14 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class UsersListSubscribtionEvent implements ShouldBroadcast
 {
-    public $usersListSubscribtion;
+    public $usersListId;
     public $add;
 
     public function __construct(
-        UsersListSubscribtion $usersListSubscribtion,
+        int $usersListId,
         bool $add
     ) {
-        $this->usersListSubscribtion = $usersListSubscribtion;
+        $this->usersListId = $usersListId;
         $this->add = $add;
     }
 
