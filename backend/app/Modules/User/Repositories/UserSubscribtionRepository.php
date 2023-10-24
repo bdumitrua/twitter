@@ -25,7 +25,7 @@ class UserSubscribtionRepository
             ->where('user_id', '=', $userId);
     }
 
-    public function getSubscriptions(int $userId): Collection
+    public function getSubscribtions(int $userId): Collection
     {
         return $this->userSubscribtions
             ->where('subscriber_id', '=', $userId)

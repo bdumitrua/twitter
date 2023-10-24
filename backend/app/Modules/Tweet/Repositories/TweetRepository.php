@@ -41,7 +41,7 @@ class TweetRepository
 
     public function getUserFeed(int $userId): Collection
     {
-        $user = $this->getUserWithRelations($userId, ['subscribtions', 'groups_member']);
+        $user = $this->getUserWithRelations($userId, ['subscribtions_data', 'groups_member']);
         $subscribedUserIds = $this->pluckIds($user->subscribtions);
         $userGroupIds = $this->pluckIds($user->groups_member);
 
