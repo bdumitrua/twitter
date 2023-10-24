@@ -34,7 +34,6 @@ class UserGroupRepository
     {
         return $this->userGroup->newQuery()
             ->with($relations)
-            ->withCount(['members'])
             ->where('user_id', '=', $userId);
     }
 

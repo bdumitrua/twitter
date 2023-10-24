@@ -33,6 +33,9 @@ class UserGroupService
         return $this->userGroupRepository->getByUserId(Auth::id());
     }
 
+    // TODO HOT
+    // Добавить запрос на получение данных конкретной группы
+
     public function create(CreateUserGroupRequest $createUserGroupRequest): void
     {
         $userGroupDTO = $this->createDTO($createUserGroupRequest, UserGroupDTO::class);

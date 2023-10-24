@@ -58,12 +58,15 @@ class UsersListRepository
 
         $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
 
-        return $this->usersList->newQuery()->whereIn('id', $listsIds)->with($relations);
+        return $this->usersList->newQuery()
+            ->whereIn('id', $listsIds)
+            ->with($relations);
     }
 
     public function getById(int $id, array $relations = []): UsersList
     {
         return $this->usersList->with($relations)
+            ->withCount(['members', 'subscribers'])
             ->where('id', '=', $id)
             ->first() ?? new UsersList();
     }
@@ -88,10 +91,9 @@ class UsersListRepository
             'user_id' => $userId,
             'name' => $dto->name,
             'description' => $dto->description,
-            'bg_image' => $dto->bgImage,
             'is_private' => $dto->isPrivate,
-            'subsribers_count' => 0,
-            'members_count' => 0,
+            // TODO FILES
+            'bg_image' => $dto->bgImage,
         ]);
 
         if (!empty($createdUsersList)) {

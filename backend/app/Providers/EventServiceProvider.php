@@ -43,10 +43,10 @@ class EventServiceProvider extends ServiceProvider
             // 
         ],
         UsersListSubscribtionEvent::class => [
-            UpdateListSubscribtionCount::class,
+            // 
         ],
         UsersListMembersUpdateEvent::class => [
-            UpdateListMembersCount::class,
+            // 
         ],
 
         // Tweets
