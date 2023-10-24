@@ -8,6 +8,7 @@ use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 
 class UserGroupRepository
 {
@@ -29,6 +30,13 @@ class UserGroupRepository
             ->where('user_id', '=', $userId);
     }
 
+    protected function queryByUserId(int $userId, array $relations = []): Builder
+    {
+        return $this->userGroup->newQuery()
+            ->with($relations)
+            ->where('user_id', '=', $userId);
+    }
+
     public function getById(int $id, array $relations = []): UserGroup
     {
         return $this->userGroup->with($relations)
@@ -36,14 +44,21 @@ class UserGroupRepository
             ->first() ?? new UserGroup();
     }
 
-    public function getByUserId(int $userId, array $relations = []): Collection
+    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false): Collection
     {
-        return $this->userGroup->with($relations)
-            ->where('user_id', '=', $userId)
-            ->get();
+        $cacheKey = KEY_USER_GROUPS . $userId . KEY_WITH_RELATIONS . implode(',', $relations);
+
+        if ($updateCache) {
+            $userGroups = $this->queryByUserId($userId, $relations)->get();
+            Cache::forever($cacheKey, $userGroups);
+        }
+
+        return Cache::rememberForever($cacheKey, function () use ($userId, $relations) {
+            return $this->queryByUserId($userId, $relations)->get();
+        });
     }
 
-    public function create(UserGroupDTO $dto, int $userId): UserGroup
+    public function create(UserGroupDTO $dto, int $userId): void
     {
         $createdUserGroup = $this->userGroup->create([
             'user_id' => $userId,
@@ -51,20 +66,30 @@ class UserGroupRepository
             'description' => $dto->description
         ]);
 
-        return $createdUserGroup;
+        if (!empty($createdUserGroup)) {
+            $this->recacheUserGroups($userId);
+        }
     }
 
-    public function update(UserGroup $userGroup, UserGroupDTO $dto): bool
+    public function update(UserGroup $userGroup, UserGroupDTO $dto): void
     {
-        return $userGroup->update([
+        $updatingStatus = $userGroup->update([
             'name' => $dto->name ?? $userGroup->name,
             'description' => $dto->description ?? $userGroup->description
         ]);
+
+        if (!empty($updatingStatus)) {
+            $this->recacheUserGroups($userGroup->user_id);
+        }
     }
 
-    public function delete(UserGroup $userGroup): bool
+    public function delete(UserGroup $userGroup): void
     {
-        return $userGroup->delete() ?? false;
+        $deletingStatus = $userGroup->delete() ?? false;
+
+        if (!empty($deletingStatus)) {
+            $this->recacheUserGroups($userGroup->user_id);
+        }
     }
 
     public function addUser(int $userGroupId, int $userId): void
@@ -87,5 +112,10 @@ class UserGroupRepository
             event(new UserGroupMembersUpdateEvent($userGroupMember, false));
             $userGroupMember->delete();
         }
+    }
+
+    private function recacheUserGroups(int $userId)
+    {
+        $this->getByUserId($userId, [], true);
     }
 }

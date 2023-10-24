@@ -30,42 +30,26 @@ class UserGroupService
 
     public function index(): Collection
     {
-        $authorizedUserId = Auth::id();
-        return Cache::rememberForever(KEY_USER_GROUPS . $authorizedUserId, function () use ($authorizedUserId) {
-            return $this->userGroupRepository->getByUserId($authorizedUserId);
-        });
+        return $this->userGroupRepository->getByUserId(Auth::id());
     }
 
     public function create(CreateUserGroupRequest $createUserGroupRequest): void
     {
-        $authorizedUserId = Auth::id();
         $userGroupDTO = $this->createDTO($createUserGroupRequest, UserGroupDTO::class);
 
-        $createdUserGroup = $this->userGroupRepository->create($userGroupDTO, $authorizedUserId);
-
-        if (!empty($createdUserGroup)) {
-            $this->recacheGroupsForever($authorizedUserId);
-        }
+        $this->userGroupRepository->create($userGroupDTO, Auth::id());
     }
 
     public function update(UserGroup $userGroup, UpdateUserGroupRequest $updateUserGroupRequest): void
     {
         $userGroupDTO = $this->createDTO($updateUserGroupRequest, UserGroupDTO::class);
 
-        $userGroupUpdateStatus = $this->userGroupRepository->update($userGroup, $userGroupDTO);
-
-        if (!empty($userGroupUpdateStatus)) {
-            $this->recacheGroupsForever($userGroup->user_id);
-        }
+        $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
 
     public function destroy(UserGroup $userGroup): void
     {
-        $userGroupDeleteStatus = $this->userGroupRepository->delete($userGroup);
-
-        if (!empty($userGroupDeleteStatus)) {
-            $this->recacheGroupsForever($userGroup->user_id);
-        }
+        $this->userGroupRepository->delete($userGroup);
     }
 
     public function add(UserGroup $userGroup, User $user): void
@@ -76,12 +60,5 @@ class UserGroupService
     public function remove(UserGroup $userGroup, User $user): void
     {
         $this->userGroupRepository->removeUser($userGroup->id, $user->id);
-    }
-
-    private function recacheGroupsForever(int $userId)
-    {
-        Cache::forever(KEY_USER_GROUPS . $userId, function () use ($userId) {
-            return $this->userGroupRepository->getByUserId($userId);
-        });
     }
 }

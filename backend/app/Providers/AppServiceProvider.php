@@ -31,6 +31,12 @@ class AppServiceProvider extends ServiceProvider
     private function defineCacheKeysConstants(): void
     {
         /*
+        *   Общие ключи
+        */
+
+        define('KEY_WITH_RELATIONS', 'with_relations:');
+
+        /*
         *   Ключи связанные напрямую с авторизованным пользователем
         */
 
