@@ -85,7 +85,7 @@ class UserGroupRepository
 
     public function delete(UserGroup $userGroup): void
     {
-        $deletingStatus = $userGroup->delete() ?? false;
+        $deletingStatus = $userGroup->delete();
 
         if (!empty($deletingStatus)) {
             $this->recacheUserGroups($userGroup->user_id);
@@ -95,23 +95,26 @@ class UserGroupRepository
     public function addUser(int $userGroupId, int $userId): void
     {
         if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
-            $this->userGroupMember->create([
+            $addingStatus = $this->userGroupMember->create([
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId
             ]);
-            event(new UserGroupMembersUpdateEvent($userGroupId, true));
+
+            if (!empty($addingStatus)) {
+                event(new UserGroupMembersUpdateEvent($userGroupId, true));
+            }
         }
     }
 
     public function removeUser(int $userGroupId, int $userId): void
     {
-        /** @var UserGroupMember */
-        $userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first();
-
-        if ($userGroupMember) {
+        if ($userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first()) {
             $userGroupId = $userGroupMember->user_group_id;
-            $userGroupMember->delete();
-            event(new UserGroupMembersUpdateEvent($userGroupId, false));
+            $removingStatus = $userGroupMember->delete();
+
+            if (!empty($removingStatus)) {
+                event(new UserGroupMembersUpdateEvent($userGroupId, false));
+            }
         }
     }
 
