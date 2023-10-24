@@ -30,18 +30,22 @@ class TweetRepository
     public function getById(int $id, array $relations = []): Tweet
     {
         return $this->tweet->with($relations)
+            ->with('author')
+            ->withCount(['likes', 'favorites', 'comments', 'reposts', 'replies'])
             ->where('id', '=', $id)->first() ?? new Tweet();
     }
 
     public function getByUserId(int $userId, array $relations = []): Collection
     {
         return $this->tweet->with($relations)
+            ->with('author')
+            ->withCount(['likes', 'favorites', 'comments', 'reposts', 'replies'])
             ->where('user_id', '=', $userId)->get() ?? new Tweet();
     }
 
     public function getUserFeed(int $userId): Collection
     {
-        $user = $this->getUserWithRelations($userId, ['subscribtions', 'groups_member']);
+        $user = $this->getUserWithRelations($userId, ['subscribtions_data', 'groups_member']);
         $subscribedUserIds = $this->pluckIds($user->subscribtions);
         $userGroupIds = $this->pluckIds($user->groups_member);
 
@@ -66,22 +70,10 @@ class TweetRepository
         $filledGroups = $this->validateFilledGroups($tweetDTO);
         $this->fillTweetFields($tweetDTO, $userId, $filledGroups);
         $this->tweet->save();
-
-        if (in_array('reply', $filledGroups)) {
-            event(new TweetReplyEvent($this->tweet->replied_tweet_id, true));
-        } elseif (in_array('repost', $filledGroups)) {
-            event(new TweetRepostEvent($this->tweet->reposted_tweet_id, true));
-        }
     }
 
     public function destroy(Tweet $tweet): void
     {
-        if ($tweet->is_reply) {
-            event(new TweetReplyEvent($tweet->replied_tweet_id, false));
-        } elseif ($tweet->is_repost) {
-            event(new TweetRepostEvent($tweet->reposted_tweet_id, false));
-        }
-
         $tweet->delete();
     }
 
@@ -90,6 +82,7 @@ class TweetRepository
         $query = $this->tweet
             ->whereIn('user_id', $userIds)
             ->orderBy('created_at', 'desc')
+            ->withCount(['likes', 'favorites', 'comments', 'reposts', 'replies'])
             ->with('author')
             ->take(20);
 

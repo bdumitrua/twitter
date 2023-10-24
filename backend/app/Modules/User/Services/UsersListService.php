@@ -36,12 +36,7 @@ class UsersListService
 
     public function show(UsersList $usersList): UsersList
     {
-        $usersListId = $usersList->id;
-        return Cache::remember(KEY_USERS_LIST_DATA . $usersListId, TimeHelper::getMinutes(5), function () use ($usersListId) {
-            return $this->usersListRepository->getById(
-                $usersListId,
-            );
-        });
+        return $this->usersListRepository->getById($usersList->id);
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void

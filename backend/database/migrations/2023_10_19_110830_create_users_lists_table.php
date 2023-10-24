@@ -18,8 +18,6 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->string('bg_image')->nullable();
             $table->boolean('is_private')->default(false);
-            $table->integer('subsribers_count')->default(0);
-            $table->integer('members_count')->default(0);
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

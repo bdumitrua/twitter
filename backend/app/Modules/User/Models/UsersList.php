@@ -17,8 +17,6 @@ class UsersList extends Model
         'description',
         'bg_image',
         'is_private',
-        'subsribers_count',
-        'members_count'
     ];
 
     protected static function newFactory()
@@ -35,11 +33,21 @@ class UsersList extends Model
 
     public function members()
     {
-        return $this->hasMany(UsersListMember::class, 'users_list_id')->with('users_data');
+        return $this->hasMany(UsersListMember::class, 'users_list_id');
     }
 
     public function subscribers()
     {
-        return $this->hasMany(UsersListSubscribtion::class, 'users_list_id')->with('users_data');
+        return $this->hasMany(UsersListSubscribtion::class, 'users_list_id');
+    }
+
+    public function members_data()
+    {
+        return $this->members()->with('users_data');
+    }
+
+    public function subscribers_data()
+    {
+        return $this->subscribers()->with('users_data');
     }
 }

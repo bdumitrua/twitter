@@ -29,8 +29,6 @@ class User extends Authenticatable implements JWTSubject
         'status_text',
         'site_url',
         'address',
-        'subscribtions_count',
-        'subscribers_count',
         'birth_date',
     ];
 
@@ -77,12 +75,22 @@ class User extends Authenticatable implements JWTSubject
 
     public function subscribtions()
     {
-        return $this->hasMany(UserSubscribtion::class, 'subscriber_id')->with('subscribtions_data');
+        return $this->hasMany(UserSubscribtion::class, 'subscriber_id');
     }
 
     public function subscribers()
     {
-        return $this->hasMany(UserSubscribtion::class, 'user_id')->with('subscribers_data');
+        return $this->hasMany(UserSubscribtion::class, 'user_id');
+    }
+
+    public function subscribtions_data()
+    {
+        return $this->subscribtions()->with('subscribtions_data');
+    }
+
+    public function subscribers_data()
+    {
+        return $this->subscribers()->with('subscribers_data');
     }
 
     public function groups_creator()

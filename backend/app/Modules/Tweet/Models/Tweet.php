@@ -16,10 +16,6 @@ class Tweet extends Model
         'user_id',
         'user_group_id',
         'text',
-        'likes_count',
-        'reposts_count',
-        'replies_count',
-        'favorites_count',
         'is_comment',
         'commented_tweet_id',
         'is_reply',
@@ -43,5 +39,30 @@ class Tweet extends Model
     public function author()
     {
         return $this->hasOne(User::class, 'id', 'user_id');
+    }
+
+    public function likes()
+    {
+        return $this->hasMany(TweetLike::class, 'tweet_id', 'id');
+    }
+
+    public function favorites()
+    {
+        return $this->hasMany(TweetFavorite::class, 'tweet_id', 'id');
+    }
+
+    public function replies()
+    {
+        return $this->hasMany(Tweet::class, 'replied_tweet_id', 'id');
+    }
+
+    public function reposts()
+    {
+        return $this->hasMany(Tweet::class, 'reposted_tweet_id', 'id');
+    }
+
+    public function comments()
+    {
+        return $this->hasMany(Tweet::class, 'commented_tweet_id', 'id');
     }
 }

@@ -39,7 +39,7 @@ class TweetService
 
     public function user(User $user): Collection
     {
-        return Cache::remember(KEY_USER_tweetS . $user->id, TimeHelper::getMinutes(5), function () use ($user) {
+        return Cache::remember(KEY_USER_TWEETS . $user->id, TimeHelper::getMinutes(5), function () use ($user) {
             return $this->tweetRepository->getByUserId($user->id);
         });
     }

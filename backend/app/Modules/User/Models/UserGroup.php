@@ -15,7 +15,6 @@ class UserGroup extends Model
         'user_id',
         'name',
         'description',
-        'members_count'
     ];
 
     protected static function newFactory()
@@ -32,6 +31,11 @@ class UserGroup extends Model
 
     public function members()
     {
-        return $this->hasMany(UserGroupMember::class, 'user_group_id')->with('users_data');
+        return $this->hasMany(UserGroupMember::class, 'user_group_id');
+    }
+
+    public function members_data()
+    {
+        return $this->members()->with('users_data');
     }
 }

@@ -10,7 +10,7 @@ use App\Modules\User\Repositories\UserSubscribtionRepository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 
-class UserSubscriptionService
+class UserSubscribtionService
 {
     protected $userSubscribtionRepository;
 
@@ -20,9 +20,9 @@ class UserSubscriptionService
         $this->userSubscribtionRepository = $userSubscribtionRepository;
     }
 
-    public function subscriptions(User $user): Collection
+    public function subscribtions(User $user): Collection
     {
-        return $this->userSubscribtionRepository->getSubscriptions($user->id);
+        return $this->userSubscribtionRepository->getSubscribtions($user->id);
     }
 
     public function subscribers(User $user): Collection

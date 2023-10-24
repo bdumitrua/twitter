@@ -10,14 +10,6 @@ use App\Modules\User\Events\UserGroupMembersUpdateEvent;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Events\UserSubscribtionEvent;
-use App\Modules\User\Listeners\UpdateGroupMembersCount;
-use App\Modules\User\Listeners\UpdateListMembersCount;
-use App\Modules\User\Listeners\UpdateListSubscribtionCount;
-use App\Modules\User\Listeners\UpdateTweetFavoritesCount;
-use App\Modules\User\Listeners\UpdateTweetLikesCount;
-use App\Modules\User\Listeners\UpdateTweetRepliesCount;
-use App\Modules\User\Listeners\UpdateTweetRepostsCount;
-use App\Modules\User\Listeners\UpdateUserSubscribtionCount;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -37,30 +29,30 @@ class EventServiceProvider extends ServiceProvider
 
         // Users
         UserSubscribtionEvent::class => [
-            UpdateUserSubscribtionCount::class,
+            // 
         ],
         UserGroupMembersUpdateEvent::class => [
-            UpdateGroupMembersCount::class,
+            // 
         ],
         UsersListSubscribtionEvent::class => [
-            UpdateListSubscribtionCount::class,
+            // 
         ],
         UsersListMembersUpdateEvent::class => [
-            UpdateListMembersCount::class,
+            // 
         ],
 
         // Tweets
         TweetLikeEvent::class => [
-            UpdateTweetLikesCount::class,
+            // 
         ],
         TweetFavoriteEvent::class => [
-            UpdateTweetFavoritesCount::class,
+            // 
         ],
         TweetReplyEvent::class => [
-            UpdateTweetRepliesCount::class,
+            // 
         ],
         TweetRepostEvent::class => [
-            UpdateTweetRepostsCount::class,
+            // 
         ],
     ];
 

@@ -9,14 +9,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class UserGroupMembersUpdateEvent implements ShouldBroadcast
 {
     public $userGroupId;
-    public $add;
 
     public function __construct(
         int $userGroupId,
-        bool $add,
     ) {
         $this->userGroupId = $userGroupId;
-        $this->add = $add;
     }
 
     public function broadcastOn()
