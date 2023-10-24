@@ -11,12 +11,9 @@ class UpdateGroupMembersCount
 {
     public function handle($event)
     {
-        /** @var UserGroupMember */
-        $userGroupMember = $event->userGroupMember;
-        $add = $event->add;
-        $group = UserGroup::find($userGroupMember->user_group_id);
+        $group = UserGroup::find($event->userGroupId);
 
-        if (!empty($add)) {
+        if (!empty($event->add)) {
             $group->members_count = $group->members_count + 1;
         } else {
             $group->members_count = $group->members_count - 1;

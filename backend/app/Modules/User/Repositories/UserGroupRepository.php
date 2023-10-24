@@ -95,11 +95,11 @@ class UserGroupRepository
     public function addUser(int $userGroupId, int $userId): void
     {
         if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
-            $userGroupMember = $this->userGroupMember->create([
+            $this->userGroupMember->create([
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId
             ]);
-            event(new UserGroupMembersUpdateEvent($userGroupMember, true));
+            event(new UserGroupMembersUpdateEvent($userGroupId, true));
         }
     }
 
@@ -109,8 +109,9 @@ class UserGroupRepository
         $userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first();
 
         if ($userGroupMember) {
-            event(new UserGroupMembersUpdateEvent($userGroupMember, false));
+            $userGroupId = $userGroupMember->user_group_id;
             $userGroupMember->delete();
+            event(new UserGroupMembersUpdateEvent($userGroupId, false));
         }
     }
 
