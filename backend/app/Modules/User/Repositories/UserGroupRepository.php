@@ -8,7 +8,9 @@ use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserGroupRepository
 {
@@ -39,10 +41,16 @@ class UserGroupRepository
 
     public function getById(int $id, array $relations = []): UserGroup
     {
-        return $this->userGroup->with($relations)
+        $userGroup = $this->userGroup->with($relations)
             ->withCount(['members'])
             ->where('id', '=', $id)
-            ->first() ?? new UserGroup();
+            ->first();
+
+        if (empty($userGroup)) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, 'Group not found');
+        }
+
+        return $userGroup;
     }
 
     public function getByUserId(int $userId, array $relations = [], bool $updateCache = false): Collection

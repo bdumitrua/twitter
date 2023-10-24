@@ -9,9 +9,11 @@ Route::prefix('users/groups')->middleware(['auth:api'])->controller(UserGroupCon
     Route::get('/', 'index');
     // Создать группу
     Route::post('create', 'create');
-    // Изменить группу
 
     Route::middleware(['checkRights:userGroup'])->group(function () {
+        // Получить мои группы 
+        Route::get('show/{userGroup}', 'show');
+        // Изменить данные группы
         Route::patch('update/{userGroup}', 'update');
         // Удалить группу
         Route::delete('destroy/{userGroup}', 'destroy');

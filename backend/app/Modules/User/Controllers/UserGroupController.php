@@ -27,6 +27,12 @@ class UserGroupController extends Controller
             return $this->userGroupService->index();
         });
     }
+    public function show(UserGroup $userGroup): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($userGroup) {
+            return $this->userGroupService->show($userGroup);
+        });
+    }
     public function create(CreateUserGroupRequest $createUserGroupRequest): JsonResponse
     {
         return $this->handleServiceCall(function () use ($createUserGroupRequest) {

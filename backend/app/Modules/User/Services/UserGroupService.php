@@ -33,8 +33,10 @@ class UserGroupService
         return $this->userGroupRepository->getByUserId(Auth::id());
     }
 
-    // TODO HOT
-    // Добавить запрос на получение данных конкретной группы
+    public function show(UserGroup $userGroup): UserGroup
+    {
+        return $this->userGroupRepository->getById($userGroup->id);
+    }
 
     public function create(CreateUserGroupRequest $createUserGroupRequest): void
     {
