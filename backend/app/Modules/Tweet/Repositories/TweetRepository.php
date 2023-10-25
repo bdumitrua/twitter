@@ -3,6 +3,7 @@
 namespace App\Modules\Tweet\Repositories;
 
 use App\Helpers\TimeHelper;
+use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\User\Models\User;
@@ -53,9 +54,7 @@ class TweetRepository
         $cacheKey = KEY_TWEET_DATA . $tweetId;
         $userGroupIds = [];
 
-        // TODO HOT
-        // Динамический расчёт времени кэша
-        $tweet = $this->getCachedData($cacheKey, 15, function () use ($tweetId) {
+        $tweet = $this->getCachedData($cacheKey, TweetAgeHelper::getTweetAge(Tweet::findOrFail($tweetId)), function () use ($tweetId) {
             return $this->queryById($tweetId)->first();
         });
 
