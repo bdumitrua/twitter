@@ -55,8 +55,8 @@ class TweetFavoriteRepository
         ])->first();
 
         if (!empty($tweetFavorite)) {
-            event(new TweetFavoriteEvent($tweetFavorite, false));
             $tweetFavorite->delete();
+            event(new TweetFavoriteEvent($tweetFavorite, false));
         }
     }
 }
