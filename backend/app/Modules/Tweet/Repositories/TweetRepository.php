@@ -105,6 +105,12 @@ class TweetRepository
 
     public function getFeedByUsersList(UsersList $usersList, ?int $authorizedUserId, bool $updateCache = false): Collection
     {
+        if ($usersList->is_private) {
+            if (!in_array($authorizedUserId, $this->pluckKey($usersList->subscribers(), 'user_id'))) {
+                throw new HttpException(Response::HTTP_FORBIDDEN, 'You don\'t have acces to this list');
+            }
+        }
+
         $cacheKey = KEY_USERS_LIST_FEED . $usersList->id;
         $userGroupIds = [];
 

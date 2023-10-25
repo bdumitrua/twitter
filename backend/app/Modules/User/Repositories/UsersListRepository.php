@@ -11,7 +11,9 @@ use App\Modules\User\Models\UsersListMember;
 use App\Modules\User\Models\UsersListSubscribtion;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UsersListRepository
 {
@@ -63,17 +65,25 @@ class UsersListRepository
             ->whereIn('id', $listsIds);
     }
 
-    public function getById(int $usersListId): UsersList
+    public function getById(int $usersListId, ?int $authorizedUserId): UsersList
     {
         $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
 
-        return Cache::remember($cacheKey, TimeHelper::getMinutes(5), function () use ($usersListId) {
+        $usersList = Cache::remember($cacheKey, TimeHelper::getMinutes(5), function () use ($usersListId) {
             return $this->usersList
                 ->withCount(['members', 'subscribers'])
                 ->with(['subscribers_data'])
                 ->where('id', '=', $usersListId)
                 ->first() ?? new UsersList();
         });
+
+        if ($usersList->is_private) {
+            if (!in_array($authorizedUserId, $usersList->subscribers()->pluck('user_id')->toArray())) {
+                throw new HttpException(Response::HTTP_FORBIDDEN, 'You don\'t have acces to this list');
+            }
+        }
+
+        return $usersList;
     }
 
     public function getByUserId(int $userId, bool $updateCache = false): Collection

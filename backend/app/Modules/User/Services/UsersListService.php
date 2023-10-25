@@ -36,7 +36,7 @@ class UsersListService
 
     public function show(UsersList $usersList): UsersList
     {
-        return $this->usersListRepository->getById($usersList->id);
+        return $this->usersListRepository->getById($usersList->id, Auth::id());
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
