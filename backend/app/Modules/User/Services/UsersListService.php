@@ -47,11 +47,11 @@ class UsersListService
         $this->usersListRepository->create($usersListDTO, $authorizedUserId);
     }
 
-    public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest)
+    public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest): void
     {
         $usersListDTO = $this->createDTO($updateUsersListRequest, UsersListDTO::class);
 
-        return $this->usersListRepository->update($usersList, $usersListDTO);
+        $this->usersListRepository->update($usersList, $usersListDTO);
     }
 
     public function destroy(UsersList $usersList): void

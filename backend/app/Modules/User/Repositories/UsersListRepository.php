@@ -3,7 +3,6 @@
 namespace App\Modules\User\Repositories;
 
 use App\Helpers\TimeHelper;
-use App\Jobs\RecalculateUsersLists;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
@@ -107,7 +106,7 @@ class UsersListRepository
         }
     }
 
-    public function update(UsersList $usersList, UsersListDTO $dto)
+    public function update(UsersList $usersList, UsersListDTO $dto): void
     {
         $updatingStatus = $usersList->update([
             'name' => $dto->name ?? $usersList->name,
@@ -118,9 +117,10 @@ class UsersListRepository
         ]);
 
 
+        // TODO QUEUE
         if (!empty($updatingStatus)) {
             $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
-            dispatch(new RecalculateUsersLists($listSubscribers));
+            // dispatch(new RecalculateUsersLists($listSubscribers));
         }
     }
 
@@ -129,9 +129,9 @@ class UsersListRepository
         $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
         $deletingStatus = $usersList->delete();
 
+        // TODO QUEUE
         if (!empty($deletingStatus)) {
-            dispatch(new RecalculateUsersLists($listSubscribers));
-            // RecalculateUsersLists::dispatch($listSubscribers);
+            // dispatch(new RecalculateUsersLists($listSubscribers));
         }
     }
 
