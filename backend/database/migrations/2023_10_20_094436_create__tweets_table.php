@@ -29,6 +29,8 @@ return new class extends Migration
             $table->foreign('commented_tweet_id')->references('id')->on('tweets')->onDelete('cascade');
             $table->foreign('replied_tweet_id')->references('id')->on('tweets')->onDelete('cascade');
             $table->foreign('reposted_tweet_id')->references('id')->on('tweets')->onDelete('cascade');
+
+            $table->softDeletes();
         });
     }
 

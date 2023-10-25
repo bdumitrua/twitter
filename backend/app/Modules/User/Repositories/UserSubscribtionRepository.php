@@ -46,18 +46,17 @@ class UserSubscribtionRepository
                 'user_id' => $userId
             ]);
 
-            event(new UserSubscribtionEvent($subscribtion, true));
+            if (!empty($subscribtion)) {
+                event(new UserSubscribtionEvent($subscribtion, true));
+            }
         }
     }
 
     public function remove(int $userId, int $subscriberId): void
     {
-        /** @var UserSubscribtion */
-        $subscribtion = $this->queryByBothIds($userId, $subscriberId)->first();
-
-        if ($subscribtion) {
-            event(new UserSubscribtionEvent($subscribtion, false));
+        if ($subscribtion = $this->queryByBothIds($userId, $subscriberId)->first()) {
             $subscribtion->delete();
+            event(new UserSubscribtionEvent($subscribtion, false));
         }
     }
 }

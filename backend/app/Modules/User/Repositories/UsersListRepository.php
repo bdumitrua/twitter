@@ -157,15 +157,20 @@ class UsersListRepository
                 'user_id' => $userId
             ]);
 
-            event(new UsersListMembersUpdateEvent($usersListMember, true));
+            if (!empty($usersListMember)) {
+                event(new UsersListMembersUpdateEvent($usersListMember, true));
+            }
         }
     }
 
     public function removeMember(int $usersListId, int $userId): void
     {
         if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
-            event(new UsersListMembersUpdateEvent($usersListMember, false));
-            $usersListMember->delete();
+            $deletingStatus = $usersListMember->delete();
+
+            if ($deletingStatus) {
+                event(new UsersListMembersUpdateEvent($usersListMember, false));
+            }
         }
     }
 
