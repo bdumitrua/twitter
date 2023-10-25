@@ -24,10 +24,7 @@ class TweetFavoriteService
 
     public function index(): Collection
     {
-        $authorizedUserId = Auth::id();
-        return Cache::remember(KEY_USER_FAVORITES . $authorizedUserId, TimeHelper::getMinutes(5), function () use ($authorizedUserId) {
-            return $this->tweetFavoriteRepository->getByUserId($authorizedUserId);
-        });
+        return $this->tweetFavoriteRepository->getByUserId(Auth::id());
     }
 
     public function add(Tweet $tweet): void
