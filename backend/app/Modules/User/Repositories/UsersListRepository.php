@@ -9,6 +9,7 @@ use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListMember;
 use App\Modules\User\Models\UsersListSubscribtion;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
@@ -17,6 +18,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UsersListRepository
 {
+    use GetCachedData;
+
     protected $usersList;
     protected $usersListMember;
     protected $usersListSubscribtion;
@@ -65,20 +68,24 @@ class UsersListRepository
             ->whereIn('id', $listsIds);
     }
 
-    public function getById(int $usersListId, ?int $authorizedUserId): UsersList
+    public function getById(int $usersListId, ?int $authorizedUserId, bool $updateCache = false): UsersList
     {
         $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
 
-        $usersList = Cache::remember($cacheKey, TimeHelper::getMinutes(5), function () use ($usersListId) {
+        $usersList = $this->getCachedData($cacheKey, 5 * 60, function () use ($usersListId) {
             return $this->usersList
                 ->withCount(['members', 'subscribers'])
-                ->with(['subscribers_data'])
+                ->with(['subscribers'])
                 ->where('id', '=', $usersListId)
-                ->first() ?? new UsersList();
-        });
+                ->first();
+        }, $updateCache);
+
+        if (empty($usersList)) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, 'List not found');
+        }
 
         if ($usersList->is_private) {
-            if (!in_array($authorizedUserId, $usersList->subscribers()->pluck('user_id')->toArray())) {
+            if (!in_array($authorizedUserId, $usersList->subscribers->pluck('user_id')->toArray())) {
                 throw new HttpException(Response::HTTP_FORBIDDEN, 'You don\'t have acces to this list');
             }
         }
@@ -90,14 +97,9 @@ class UsersListRepository
     {
         $cacheKey = KEY_USER_LISTS . $userId;
 
-        if ($updateCache) {
-            $userGroups = $this->queryByUserId($userId)->get();
-            Cache::forever($cacheKey, $userGroups);
-        }
-
-        return Cache::rememberForever($cacheKey, function () use ($userId) {
+        return $this->getCachedData($cacheKey, null, function () use ($userId) {
             return $this->queryByUserId($userId)->get();
-        });
+        }, $updateCache);
     }
 
     public function create(UsersListDTO $dto, int $userId): void
@@ -129,18 +131,20 @@ class UsersListRepository
 
         // TODO QUEUE
         if (!empty($updatingStatus)) {
-            $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
+            $this->getById($usersList->id, null, true);
+            // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
             // dispatch(new RecalculateUsersLists($listSubscribers));
         }
     }
 
     public function delete(UsersList $usersList): void
     {
-        $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
         $deletingStatus = $usersList->delete();
 
         // TODO QUEUE
         if (!empty($deletingStatus)) {
+            $this->getById($usersList->id, null, true);
+            // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
             // dispatch(new RecalculateUsersLists($listSubscribers));
         }
     }
