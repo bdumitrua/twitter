@@ -1,6 +1,6 @@
 <?php
 
-use App\Jobs\TestRabbitMQJob;
+use App\Jobs\NewJob;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,5 +15,5 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return 'Home route!';
+    // 
 });

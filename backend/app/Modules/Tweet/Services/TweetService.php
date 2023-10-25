@@ -29,31 +29,32 @@ class TweetService
         $this->tweetRepository = $tweetRepository;
     }
 
+    /**
+     * Для пользователя - кэш на 5 минут, при создании - рекэш на 30 мин
+     * 
+     * Для списков - кэш на 15 сек
+     * 
+     * Для ленты - кэш на 15 сек
+     */
+
     public function index(): Collection
     {
-        $authorizedUserId = Auth::id();
-        return Cache::remember(KEY_AUTH_USER_FEED . $authorizedUserId, TimeHelper::getMinutes(1), function () use ($authorizedUserId) {
-            return $this->tweetRepository->getUserFeed($authorizedUserId);
-        });
+        return $this->tweetRepository->getUserFeed(Auth::id());
     }
 
     public function user(User $user): Collection
     {
-        return Cache::remember(KEY_USER_TWEETS . $user->id, TimeHelper::getMinutes(5), function () use ($user) {
-            return $this->tweetRepository->getByUserId($user->id);
-        });
+        return $this->tweetRepository->getByUserId($user->id, Auth::id());
     }
 
     public function list(UsersList $usersList): Collection
     {
-        return Cache::remember(KEY_USERS_LIST_FEED . $usersList->id, TimeHelper::getMinutes(1), function () use ($usersList) {
-            return $this->tweetRepository->getFeedByUsersList($usersList, Auth::id());
-        });
+        return $this->tweetRepository->getFeedByUsersList($usersList, Auth::id());
     }
 
     public function show(Tweet $tweet): Tweet
     {
-        return $this->tweetRepository->getById($tweet->id);
+        return $this->tweetRepository->getById($tweet->id, Auth::id());
     }
 
     public function create(TweetRequest $tweetRequest): void

@@ -30,22 +30,12 @@ class UserService
 
     public function index(): User
     {
-        $authorizedUserId = Auth::id();
-        return Cache::remember(KEY_AUTH_USER_DATA . $authorizedUserId, TimeHelper::getMinutes(1), function () use ($authorizedUserId) {
-            return $this->userRepository->getById(
-                $authorizedUserId
-            );
-        });
+        return $this->userRepository->getAuthUser(Auth::id());
     }
 
     public function show(User $user): User
     {
-        $userId = $user->id;
-        return Cache::remember(KEY_USER_DATA . $userId, TimeHelper::getMinutes(1), function () use ($userId) {
-            return $this->userRepository->getById(
-                $userId,
-            );
-        });
+        return $this->userRepository->getById($user->id);
     }
 
     public function update(UserUpdateRequest $userUpdateRequest): void

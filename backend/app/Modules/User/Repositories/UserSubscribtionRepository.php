@@ -4,7 +4,6 @@ namespace App\Modules\User\Repositories;
 
 use App\Modules\User\Events\UserSubscribtionEvent;
 use App\Modules\User\Models\UserSubscribtion;
-use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 

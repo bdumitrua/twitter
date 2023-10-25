@@ -29,14 +29,14 @@ class UsersListService
         $this->usersListRepository = $usersListRepository;
     }
 
-    public function index()
+    public function index(): Collection
     {
         return $this->usersListRepository->getByUserId(Auth::id());
     }
 
     public function show(UsersList $usersList): UsersList
     {
-        return $this->usersListRepository->getById($usersList->id);
+        return $this->usersListRepository->getById($usersList->id, Auth::id());
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
@@ -75,7 +75,7 @@ class UsersListService
         $this->usersListRepository->subscribe($usersList->id, $authorizedUserId);
     }
 
-    public function unsubscribe(UsersList $usersList)
+    public function unsubscribe(UsersList $usersList): void
     {
         $authorizedUserId = Auth::id();
         $this->usersListRepository->unsubscribe($usersList->id, $authorizedUserId);

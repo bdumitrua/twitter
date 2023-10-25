@@ -2,18 +2,24 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListMember;
 use App\Modules\User\Models\UsersListSubscribtion;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UsersListRepository
 {
+    use GetCachedData;
+
     protected $usersList;
     protected $usersListMember;
     protected $usersListSubscribtion;
@@ -42,7 +48,7 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function queryByUserId(int $userId, array $relations = [])
+    protected function queryByUserId(int $userId): Builder
     {
         $whereIsCreator = $this->usersList
             ->where('user_id', '=', $userId)
@@ -59,30 +65,41 @@ class UsersListRepository
         $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
 
         return $this->usersList->newQuery()
-            ->whereIn('id', $listsIds)
-            ->with($relations);
+            ->whereIn('id', $listsIds);
     }
 
-    public function getById(int $id, array $relations = []): UsersList
+    public function getById(int $usersListId, ?int $authorizedUserId, bool $updateCache = false): UsersList
     {
-        return $this->usersList->with($relations)
-            ->withCount(['members', 'subscribers'])
-            ->where('id', '=', $id)
-            ->first() ?? new UsersList();
-    }
+        $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
 
-    public function getByUserId(int $userId, array $relations = [], bool $updateCache = false)
-    {
-        $cacheKey = KEY_USER_LISTS . $userId . KEY_WITH_RELATIONS . implode(',', $relations);
+        $usersList = $this->getCachedData($cacheKey, 5 * 60, function () use ($usersListId) {
+            return $this->usersList
+                ->withCount(['members', 'subscribers'])
+                ->with(['subscribers'])
+                ->where('id', '=', $usersListId)
+                ->first();
+        }, $updateCache);
 
-        if ($updateCache) {
-            $userGroups = $this->queryByUserId($userId, $relations)->get();
-            Cache::forever($cacheKey, $userGroups);
+        if (empty($usersList)) {
+            throw new HttpException(Response::HTTP_NOT_FOUND, 'List not found');
         }
 
-        return Cache::rememberForever($cacheKey, function () use ($userId, $relations) {
-            return $this->queryByUserId($userId, $relations)->get();
-        });
+        if ($usersList->is_private) {
+            if (!in_array($authorizedUserId, $usersList->subscribers->pluck('user_id')->toArray())) {
+                throw new HttpException(Response::HTTP_FORBIDDEN, 'You don\'t have acces to this list');
+            }
+        }
+
+        return $usersList;
+    }
+
+    public function getByUserId(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_LISTS . $userId;
+
+        return $this->getCachedData($cacheKey, null, function () use ($userId) {
+            return $this->queryByUserId($userId)->get();
+        }, $updateCache);
     }
 
     public function create(UsersListDTO $dto, int $userId): void
@@ -103,7 +120,7 @@ class UsersListRepository
 
     public function update(UsersList $usersList, UsersListDTO $dto): void
     {
-        $usersList->update([
+        $updatingStatus = $usersList->update([
             'name' => $dto->name ?? $usersList->name,
             'description' => $dto->description ?? $usersList->description,
             'is_private' => $dto->isPrivate ?? $usersList->isPrivate,
@@ -111,26 +128,25 @@ class UsersListRepository
             'bg_image' => $dto->bgImage ?? $usersList->bgImage,
         ]);
 
-        // if (!empty($updatingStatus)) {
+
         // TODO QUEUE
-        // Сделать добавление в очередь задач на изменение кэша массива списков для каждого подписчика
-        // Минус - перекэш при каждом изменении
-        // Плюс - экономия запросов, т.к. изменяются списки (именно данные), не так часто,
-        // а запрашиваться могут хоть каждые 5-10 секунд
-        // }
+        if (!empty($updatingStatus)) {
+            $this->getById($usersList->id, null, true);
+            // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
+            // dispatch(new RecalculateUsersLists($listSubscribers));
+        }
     }
 
     public function delete(UsersList $usersList): void
     {
-        $usersList->delete();
+        $deletingStatus = $usersList->delete();
 
-        // if (!empty($deletingStatus)) {
         // TODO QUEUE
-        // Сделать добавление в очередь задач на изменение кэша массива списков для каждого подписчика
-        // Минус - перекэш при каждом изменении
-        // Плюс - экономия запросов, т.к. изменяются списки (именно данные), не так часто,
-        // а запрашиваться могут хоть каждые 5-10 секунд
-        // }
+        if (!empty($deletingStatus)) {
+            $this->getById($usersList->id, null, true);
+            // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
+            // dispatch(new RecalculateUsersLists($listSubscribers));
+        }
     }
 
     public function addMember(int $usersListId, int $userId): void
@@ -168,7 +184,7 @@ class UsersListRepository
         }
     }
 
-    public function unsubscribe(int $usersListId, int $userId)
+    public function unsubscribe(int $usersListId, int $userId): void
     {
         if (!empty($usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first())) {
             $usersListId = $usersListSubscribtion->users_list_id;
@@ -181,8 +197,8 @@ class UsersListRepository
         }
     }
 
-    private function recacheUserLists(int $userId)
+    public function recacheUserLists(int $userId): void
     {
-        $this->getByUserId($userId, [], true);
+        $this->getByUserId($userId, true);
     }
 }

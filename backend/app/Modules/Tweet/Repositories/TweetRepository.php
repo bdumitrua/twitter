@@ -2,20 +2,24 @@
 
 namespace App\Modules\Tweet\Repositories;
 
+use App\Helpers\TimeHelper;
+use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
-use App\Modules\User\Events\TweetReplyEvent;
-use App\Modules\User\Events\TweetRepostEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Cache;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TweetRepository
 {
+    use GetCachedData;
+
     protected $tweet;
     protected $userRepository;
 
@@ -27,42 +31,98 @@ class TweetRepository
         $this->userRepository = $userRepository;
     }
 
-    public function getById(int $id, array $relations = []): Tweet
+    protected function baseQuery(): Builder
     {
-        return $this->tweet->with($relations)
+        return $this->tweet->newQuery()
             ->with('author')
             ->withCount(['likes', 'favorites', 'comments', 'reposts', 'replies'])
-            ->where('id', '=', $id)->first() ?? new Tweet();
+            ->orderBy('created_at', 'desc');
     }
 
-    public function getByUserId(int $userId, array $relations = []): Collection
+    protected function queryById($tweetId): Builder
     {
-        return $this->tweet->with($relations)
-            ->with('author')
-            ->withCount(['likes', 'favorites', 'comments', 'reposts', 'replies'])
-            ->where('user_id', '=', $userId)->get() ?? new Tweet();
+        return $this->baseQuery()->where('id', '=', $tweetId);
     }
 
-    public function getUserFeed(int $userId): Collection
+    protected function queryByUserId($userId): Builder
     {
-        $user = $this->getUserWithRelations($userId, ['subscribtions_data', 'groups_member']);
-        $subscribedUserIds = $this->pluckIds($user->subscribtions);
-        $userGroupIds = $this->pluckIds($user->groups_member);
-
-        return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get();
+        return $this->baseQuery()->where('user_id', '=', $userId);
     }
 
-    public function getFeedByUsersList(UsersList $usersList, ?int $userId): Collection
+    public function getById(int $tweetId, ?int $authorizedUserId): Tweet
     {
+        $cacheKey = KEY_TWEET_DATA . $tweetId;
         $userGroupIds = [];
-        if (!empty($userId)) {
-            $user = $this->getUserWithRelations($userId, ['groups_member']);
-            $userGroupIds = $this->pluckIds($user->groups_member);
+
+        $tweet = $this->getCachedData($cacheKey, TweetAgeHelper::getTweetAge(Tweet::findOrFail($tweetId)), function () use ($tweetId) {
+            return $this->queryById($tweetId)->first();
+        });
+
+        if ($authorizedUserId) {
+            $userGroupIds = $this->getUserGroupIds($authorizedUserId);
         }
 
-        $membersIds = $this->pluckIds($usersList->members());
+        if (
+            $tweet->user_group_id
+            && !in_array($tweet->user_group_id, $userGroupIds, true)
+        ) {
+            throw new HttpException(Response::HTTP_FORBIDDEN, 'Tweet not found');
+        }
 
-        return $this->getFeedQuery($membersIds, $userGroupIds)->get();
+        return $tweet;
+    }
+
+    public function getUserFeed(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_AUTH_USER_FEED . $userId;
+
+        return $this->getCachedData($cacheKey, 15, function () use ($userId) {
+            $user = $this->getUser($userId);
+            $subscribedUserIds = $this->pluckKey($user->subscribtions(), 'user_id');
+            $userGroupIds = $this->pluckKey($user->groups_member(), 'id');
+
+            return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get();
+        }, $updateCache);
+    }
+
+    public function getByUserId(int $userId, ?int $authorizedUserId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_TWEETS . $userId;
+        $userGroupIds = [];
+
+        /** @var Collection */
+        $userTweets = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryByUserId($userId)->get();
+        }, $updateCache);
+
+        if ($authorizedUserId) {
+            $userGroupIds = $this->getUserGroupIds($authorizedUserId);
+        }
+
+        return $this->filterTweetsByGroup($userTweets, $userGroupIds);
+    }
+
+    public function getFeedByUsersList(UsersList $usersList, ?int $authorizedUserId, bool $updateCache = false): Collection
+    {
+        if ($usersList->is_private) {
+            if (!in_array($authorizedUserId, $this->pluckKey($usersList->subscribers(), 'user_id'))) {
+                throw new HttpException(Response::HTTP_FORBIDDEN, 'You don\'t have acces to this list');
+            }
+        }
+
+        $cacheKey = KEY_USERS_LIST_FEED . $usersList->id;
+        $userGroupIds = [];
+
+        $usersListFeed = $this->getCachedData($cacheKey, 15, function () use ($usersList, $authorizedUserId) {
+            $membersIds = $this->pluckKey($usersList->members(), 'id');
+            return $this->getFeedQuery($membersIds, null)->get();
+        }, $updateCache);
+
+        if ($authorizedUserId) {
+            $userGroupIds = $this->getUserGroupIds($authorizedUserId);
+        }
+
+        return $this->filterTweetsByGroup($usersListFeed, $userGroupIds);
     }
 
     public function create(TweetDTO $tweetDTO, int $userId): void
@@ -77,13 +137,16 @@ class TweetRepository
         $tweet->delete();
     }
 
+    public function recacheUserTweets(int $userId): void
+    {
+        $this->getByUserId($userId, null, true);
+    }
+
     private function getFeedQuery(array $userIds, ?array $groupIds = null): Builder
     {
-        $query = $this->tweet
+        $query = $this->baseQuery()
             ->whereIn('user_id', $userIds)
             ->orderBy('created_at', 'desc')
-            ->withCount(['likes', 'favorites', 'comments', 'reposts', 'replies'])
-            ->with('author')
             ->take(20);
 
         if ($groupIds !== null) {
@@ -98,14 +161,27 @@ class TweetRepository
         return $query;
     }
 
-    private function getUserWithRelations(int $userId, array $relations = []): User
+    private function getUser(int $userId): User
     {
-        return $this->userRepository->getById($userId, $relations);
+        return $this->userRepository->getById($userId);
     }
 
-    private function pluckIds($relation): array
+    private function pluckKey($relation, string $key): array
     {
-        return $relation->pluck('id')->toArray();
+        return $relation->pluck($key)->toArray();
+    }
+
+    protected function getUserGroupIds(int $userId): array
+    {
+        $user = $this->getUser($userId);
+        return $this->pluckKey($user->groups_member, 'id');
+    }
+
+    protected function filterTweetsByGroup(Collection $tweets, array $groupIds): Collection
+    {
+        return $tweets->filter(function ($tweet) use ($groupIds) {
+            return is_null($tweet->user_group_id) || in_array($tweet->user_group_id, $groupIds);
+        })->values();
     }
 
     protected function validateFilledGroups(TweetDTO $tweetDTO): array

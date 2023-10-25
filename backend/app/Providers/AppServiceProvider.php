@@ -36,6 +36,8 @@ class AppServiceProvider extends ServiceProvider
 
         define('KEY_WITH_RELATIONS', 'with_relations:');
 
+        define('KEY_TWEET_DATA', 'tweet_data:');
+
         /*
         *   Ключи связанные напрямую с авторизованным пользователем
         */
