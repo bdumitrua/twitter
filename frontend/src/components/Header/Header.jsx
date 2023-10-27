@@ -1,17 +1,40 @@
 import React from "react";
-import s from "../../assets/styles/components/Header.module.scss"
-import header__accountImage from "../../assets/images/Header/Account.svg"
-import header__twitterLogo from "../../assets/images/Header/Twitter Logo.svg"
-import header__somthingIcon from "../../assets/images/Header/Feature stroke icon.svg"
+import styles from "../../assets/styles/components/Header.module.scss";
+import accountImage from "../../assets/images/Header/accountImage.svg";
+import twitterLogo from "../../assets/images/Header/twitterLogo.svg";
+import somthingIcon from "../../assets/images/Header/somethingIcon.svg";
+import notificationСircle from "../../assets/images/Header/notificationСircle.svg";
 
+// addTweetNotifications
+const TweetNotifications = () => {
+    return (
+        <img
+            className={styles["header__notification-circle"]}
+            src={notificationСircle}
+            alt=""
+        />
+    );
+};
+const haveNotifications = true;
+const addTweetNotifications = () => {
+    return haveNotifications && <TweetNotifications />;
+};
+//
 const Header = () => {
-  return (
-    <div className={s.header}>
-      <div> <img src={header__accountImage} alt="asasas" /></div>
-      <div> <img src={header__twitterLogo} alt="" /></div>
-      <div> <img src={header__somthingIcon} alt="" /></div>
-    </div>
-  );
-}
+    return (
+        <div className={styles["header"]}>
+            <div className={styles["header__account-images"]}>
+                <img src={accountImage} alt="" />
+                {addTweetNotifications()}
+            </div>
+            <div>
+                <img src={twitterLogo} alt="" />
+            </div>
+            <div>
+                <img src={somthingIcon} alt="" />
+            </div>
+        </div>
+    );
+};
 
 export default Header;

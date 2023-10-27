@@ -1,8 +1,14 @@
 .header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 7px 20px 5px 20px;
-  border-bottom: 1px solid #BDC5CD;
-  ;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 7px 20px 5px 20px;
+    border-bottom: 1px solid $gray-color;
+    &__account-images {
+        position: relative;
+    }
+    &__notification-circle {
+        position: absolute;
+        left: 25px;
+    }
 }

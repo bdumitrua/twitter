@@ -1,0 +1,73 @@
+.wrapper {
+    border-bottom: 1px solid $gray-color;
+}
+
+.tweet {
+    padding: 0px 20px 4px 20px;
+
+    &__wrapper {
+        display: flex;
+        margin-bottom: 2px;
+    }
+
+    &__image {
+        min-width: 55px;
+        margin-right: 8px;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__big-user {
+        display: block;
+        margin-bottom: 5px;
+    }
+
+    &__line {
+        width: 2px;
+        height: 100%;
+        background-color: $gray-color;
+        border-radius: 1px;
+    }
+
+    &__user-info {
+        margin-bottom: 2px;
+    }
+
+    &__username {
+        font-weight: 700;
+    }
+
+    &__nickname {
+        font-size: 16px;
+        color: $dark-gray-color;
+    }
+
+    &__hours {
+        color: $dark-gray-color;
+    }
+
+    &__tweet-body {
+        margin-bottom: 10px;
+    }
+
+    &__text {
+        max-width: 302px;
+    }
+
+    &__hashtag {
+        color: $blue-color;
+    }
+
+    &__counters {
+        display: flex;
+        justify-content: space-between;
+        max-width: 260px;
+    }
+
+    &__counter {
+        display: flex;
+        color: $dark-gray-color;
+        gap: 4px;
+    }
+}

@@ -1,0 +1,15 @@
+.tweet {
+    &__thread {
+        padding-left: 9px;
+        display: flex;
+        align-items: center;
+    }
+    &__small-user {
+        width: 37px;
+        height: 37px;
+        margin-right: 17px;
+    }
+    &__show-thread {
+        color: $blue-color;
+    }
+}
