@@ -1,13 +1,13 @@
 .tweet {
     &__thread {
-        padding-left: 9px;
+        padding-left: 10px;
         display: flex;
         align-items: center;
+        gap: 16px;
     }
     &__small-user {
-        width: 37px;
-        height: 37px;
-        margin-right: 17px;
+        width: 36px;
+        height: 36px;
     }
     &__show-thread {
         color: $blue-color;

@@ -12,9 +12,6 @@ const TweetLine = () => {
     return <div className={styles["tweet__line"]}></div>;
 };
 const haveThread = true;
-const addTweetLine = () => {
-    return haveThread && <TweetLine />;
-};
 //
 // parseHashtags
 let tweetText =
@@ -52,7 +49,7 @@ const Tweet = () => {
                             src={userPhoto}
                             alt=""
                         />
-                        {addTweetLine()}
+                        {haveThread && <TweetLine />}
                     </div>
                     <div className={styles["tweet__content"]}>
                         <div className={styles["tweet__user-info"]}>

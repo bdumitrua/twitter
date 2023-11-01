@@ -3,29 +3,19 @@ import styles from "../../assets/styles/components/Header.module.scss";
 import accountImage from "../../assets/images/Header/accountImage.svg";
 import twitterLogo from "../../assets/images/Header/twitterLogo.svg";
 import somthingIcon from "../../assets/images/Header/somethingIcon.svg";
-import notificationСircle from "../../assets/images/Header/notificationСircle.svg";
 
-// addTweetNotifications
-const TweetNotifications = () => {
-    return (
-        <img
-            className={styles["header__notification-circle"]}
-            src={notificationСircle}
-            alt=""
-        />
-    );
+// addTweetUnwatched
+const TweetUnwatched = () => {
+    return <div className={styles["header__unwatched-circle"]}></div>;
 };
-const haveNotifications = true;
-const addTweetNotifications = () => {
-    return haveNotifications && <TweetNotifications />;
-};
+const haveUnwatched = true;
 //
 const Header = () => {
     return (
         <div className={styles["header"]}>
             <div className={styles["header__account-images"]}>
                 <img src={accountImage} alt="" />
-                {addTweetNotifications()}
+                {haveUnwatched && <TweetUnwatched />}
             </div>
             <div>
                 <img src={twitterLogo} alt="" />
