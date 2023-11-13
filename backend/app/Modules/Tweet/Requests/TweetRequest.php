@@ -14,34 +14,24 @@ class TweetRequest extends FormRequest
     public function rules()
     {
         return [
-            'text' => 'required|string|max:255',
+            'text' => 'nullable|string|max:255',
             'userGroupId' => 'nullable|exists:user_groups,id',
-            'isComment' => 'nullable|boolean',
-            'commentedTweetId' => 'nullable|exists:tweets,id',
-            'isReply' => 'nullable|boolean',
-            'repliedTweetId' => 'nullable|exists:tweets,id',
-            'isRepost' => 'nullable|boolean',
-            'repostedTweetId' => 'nullable|exists:tweets,id',
+            'type' => 'nullable|in:repost,reply,quote',
+            'linkedTweetId' => 'nullable|exists:tweets,id',
         ];
     }
 
     public function messages()
     {
         return [
-            'text.required' => 'Текст твитта обязателен',
             'text.string' => 'Текст должен быть строкой',
             'text.max' => 'Максимальная длина текста 255 символов',
 
             'userGroupId.exists' => 'Выбранная группа пользователей не существует',
 
-            'isComment.boolean' => 'Поле "isComment" должно быть булевым',
-            'commentedTweetId.exists' => 'Комментируемый твитт не существует',
+            'type.in' => 'Недействительный тип твитта',
 
-            'isReply.boolean' => 'Поле "isReply" должно быть булевым',
-            'repliedTweetId.exists' => 'Цитируемый твитт не существует',
-
-            'isRepost.boolean' => 'Поле "isRepost" должно быть булевым',
-            'repostedTweetId.exists' => 'Репостнутый твитт не существует',
+            'linkedTweetId.exists' => 'Привязанный твит не существует',
         ];
     }
 }

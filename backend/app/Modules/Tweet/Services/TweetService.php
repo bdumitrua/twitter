@@ -59,6 +59,7 @@ class TweetService
 
     public function create(TweetRequest $tweetRequest): void
     {
+        $this->validateTweetTypeData($tweetRequest);
         $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
 
         $this->tweetRepository->create($tweetDTO, Auth::id());
@@ -67,5 +68,12 @@ class TweetService
     public function destroy(Tweet $tweet): void
     {
         $this->tweetRepository->destroy($tweet);
+    }
+
+    private function validateTweetTypeData(TweetRequest $tweetRequest): void
+    {
+        if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
+            throw new HttpException(Response::HTTP_BAD_REQUEST, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
+        }
     }
 }
