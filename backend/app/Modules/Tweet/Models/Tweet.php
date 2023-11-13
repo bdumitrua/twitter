@@ -16,12 +16,8 @@ class Tweet extends Model
         'user_id',
         'user_group_id',
         'text',
-        'is_comment',
-        'commented_tweet_id',
-        'is_reply',
-        'replied_tweet_id',
-        'is_repost',
-        'reposted_tweet_id',
+        'type',
+        'linked_tweet_id'
     ];
 
     protected static function newFactory()
@@ -53,16 +49,19 @@ class Tweet extends Model
 
     public function replies()
     {
-        return $this->hasMany(Tweet::class, 'replied_tweet_id', 'id');
+        return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
+            ->where('type', 'reply');
     }
 
     public function reposts()
     {
-        return $this->hasMany(Tweet::class, 'reposted_tweet_id', 'id');
+        return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
+            ->where('type', 'repost');
     }
 
-    public function comments()
+    public function quotes()
     {
-        return $this->hasMany(Tweet::class, 'commented_tweet_id', 'id');
+        return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
+            ->where('type', 'quote');
     }
 }
