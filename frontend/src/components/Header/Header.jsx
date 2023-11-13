@@ -4,14 +4,12 @@ import somthingIcon from "../../assets/images/Header/somethingIcon.svg";
 import twitterLogo from "../../assets/images/Header/twitterLogo.svg";
 import styles from "../../assets/styles/components/Header.module.scss";
 
-const haveUnwatched = true;
-
-const Header = () => {
+const Header = (props) => {
 	return (
 		<div className={styles["header"]}>
 			<div className={styles["header__burger-icon"]}>
 				<img src={accountImage} alt="" />
-				{haveUnwatched && (
+				{props.haveUnwatched && (
 					<div className={styles["header__unwatched-circle"]}></div>
 				)}
 			</div>

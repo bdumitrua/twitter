@@ -8,8 +8,6 @@ import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 import TweetAdditional from "./TweetAdditional";
 import TweetThread from "./TweetThread";
 
-const haveThread = true;
-
 // parseHashtags
 let tweetText =
 	"UXR/UX: You can only bring one item to a remote island to assist your research of native use of tools and usability. What do you bring? #TellMeAboutYou";
@@ -34,7 +32,7 @@ function parseHashtags(text) {
 	return parts;
 }
 //
-const Tweet = () => {
+const Tweet = (props) => {
 	return (
 		<div className={styles["wrapper"]}>
 			<div className={styles["tweet"]}>
@@ -46,7 +44,7 @@ const Tweet = () => {
 							src={userPhoto}
 							alt=""
 						/>
-						{haveThread && <div className={styles["tweet__line"]}></div>}
+						{props.haveThread && <div className={styles["tweet__line"]}></div>}
 					</div>
 					<div className={styles["tweet__content"]}>
 						<div className={styles["tweet__user-info"]}>
