@@ -1,14 +1,12 @@
 .tweet__additional {
-    display: flex;
-    align-items: center;
-    margin-bottom: 2px;
-    padding-top: 6px;
-    padding-left: 42px;
-    font-size: 16px;
-    font-weight: 400;
-    color: $dark-gray-color;
+	@include text-dark-gray(16px, 400);
+	display: flex;
+	align-items: center;
+	margin-bottom: 2px;
+	padding-top: 6px;
+	padding-left: 42px;
 }
 
 .tweet__shaded-like {
-    margin-right: 9px;
+	margin-right: 9px;
 }

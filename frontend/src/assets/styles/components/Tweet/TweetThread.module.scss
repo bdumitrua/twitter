@@ -1,15 +1,15 @@
 .tweet {
-    &__thread {
-        padding-left: 10px;
-        display: flex;
-        align-items: center;
-        gap: 16px;
-    }
-    &__small-user {
-        width: 36px;
-        height: 36px;
-    }
-    &__show-thread {
-        color: $blue-color;
-    }
+	&__thread {
+		display: flex;
+		align-items: center;
+		gap: 16px;
+		padding-left: 10px;
+	}
+	&__small-user {
+		width: 36px;
+		height: 36px;
+	}
+	&__show-thread {
+		@include text-activity(16px, 400);
+	}
 }

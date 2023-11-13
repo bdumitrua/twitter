@@ -1,76 +1,68 @@
 .wrapper {
-    border-bottom: 1px solid $gray-color;
+	border-bottom: 1px solid $gray;
 }
 
 .tweet {
-    padding: 4px 20px;
+	padding: 4px 20px;
 
-    &__wrapper {
-        display: flex;
-        margin-bottom: 4px;
-    }
+	&__wrapper {
+		display: flex;
+		margin-bottom: 4px;
+	}
 
-    &__image {
-        min-width: 55px;
-        margin-right: 8px;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+	&__image {
+		min-width: 55px;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+		margin-right: 8px;
+	}
 
-    &__big-user {
-        display: block;
-        width: 55px;
-        height: 55px;
-        margin-bottom: 4px;
-    }
+	&__big-user {
+		width: 55px;
+		height: 55px;
+		display: block;
+		margin-bottom: 4px;
+	}
 
-    &__line {
-        width: 2px;
-        height: 100%;
-        background-color: $gray-color;
-        border-radius: 1px;
-    }
+	&__line {
+		width: 2px;
+		height: 100%;
+		background-color: $gray;
+		border-radius: 1px;
+	}
 
-    &__user-info {
-        display: flex;
-        gap: 4px;
-    }
+	&__user-info {
+		display: flex;
+		gap: 4px;
+	}
 
-    &__username {
-        font-weight: 700;
-    }
+	&__username {
+		@include text-black(16px, 700);
+	}
 
-    &__nickname {
-        font-size: 16px;
-        color: $dark-gray-color;
-    }
+	&__nickname,
+	&__hours {
+		@include text-dark-gray(16px, 400);
+	}
 
-    &__hours {
-        color: $dark-gray-color;
-    }
+	&__tweet-body {
+		margin-bottom: 10px;
+	}
 
-    &__tweet-body {
-        margin-bottom: 10px;
-    }
+	&__hashtag {
+		@include text-activity(16px, 400);
+	}
 
-    &__text {
-        max-width: 302px;
-    }
+	&__counters {
+		max-width: 260px;
+		display: flex;
+		justify-content: space-between;
+	}
 
-    &__hashtag {
-        color: $blue-color;
-    }
-
-    &__counters {
-        display: flex;
-        justify-content: space-between;
-        max-width: 260px;
-    }
-
-    &__counter {
-        display: flex;
-        color: $dark-gray-color;
-        gap: 4px;
-    }
+	&__counter {
+		display: flex;
+		gap: 4px;
+		color: $dark-gray;
+	}
 }
