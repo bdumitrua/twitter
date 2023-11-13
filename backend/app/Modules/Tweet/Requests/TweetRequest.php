@@ -24,20 +24,14 @@ class TweetRequest extends FormRequest
     public function messages()
     {
         return [
-            'text.required' => 'Текст твитта обязателен',
             'text.string' => 'Текст должен быть строкой',
             'text.max' => 'Максимальная длина текста 255 символов',
 
             'userGroupId.exists' => 'Выбранная группа пользователей не существует',
 
-            'isComment.boolean' => 'Поле "isComment" должно быть булевым',
-            'commentedTweetId.exists' => 'Комментируемый твитт не существует',
+            'type.in' => 'Недействительный тип твитта',
 
-            'isReply.boolean' => 'Поле "isReply" должно быть булевым',
-            'repliedTweetId.exists' => 'Цитируемый твитт не существует',
-
-            'isRepost.boolean' => 'Поле "isRepost" должно быть булевым',
-            'repostedTweetId.exists' => 'Репостнутый твитт не существует',
+            'linkedTweetId.exists' => 'Привязанный твит не существует',
         ];
     }
 }
