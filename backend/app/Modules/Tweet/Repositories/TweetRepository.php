@@ -109,21 +109,20 @@ class TweetRepository
 
     private function getFeedQuery(array $userIds, ?array $groupIds = null): Builder
     {
-        $query = $this->baseQuery()
+        return $this->baseQuery()
             ->whereIn('user_id', $userIds)
+            ->where(function (Builder $query) use ($groupIds) {
+                if ($groupIds) {
+                    $query->where(function (Builder $query) use ($groupIds) {
+                        $query->whereNull('user_group_id')
+                            ->orWhereIn('user_group_id', $groupIds);
+                    });
+                } else {
+                    $query->whereNull('user_group_id');
+                }
+            })
             ->orderBy('created_at', 'desc')
             ->take(20);
-
-        if ($groupIds !== null) {
-            $query->where(function (Builder $query) use ($groupIds) {
-                $query->whereNull('user_group_id')
-                    ->orWhereIn('user_group_id', $groupIds);
-            });
-        } else {
-            $query->whereNull('user_group_id');
-        }
-
-        return $query;
     }
 
     private function getUser(int $userId): User
