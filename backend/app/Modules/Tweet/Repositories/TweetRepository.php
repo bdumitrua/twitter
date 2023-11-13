@@ -35,7 +35,7 @@ class TweetRepository
     {
         return $this->tweet->newQuery()
             ->with('author')
-            ->withCount(['likes', 'favorites', 'comments', 'reposts', 'replies'])
+            ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
             ->orderBy('created_at', 'desc');
     }
 
@@ -127,8 +127,13 @@ class TweetRepository
 
     public function create(TweetDTO $tweetDTO, int $userId): void
     {
-        $filledGroups = $this->validateFilledGroups($tweetDTO);
-        $this->fillTweetFields($tweetDTO, $userId, $filledGroups);
+        $this->tweet->user_id = $userId;
+        foreach ($tweetDTO as $property => $value) {
+            if (property_exists($this->tweet, $property)) {
+                $this->tweet->{$property} = $value;
+            }
+        }
+
         $this->tweet->save();
     }
 
@@ -182,52 +187,5 @@ class TweetRepository
         return $tweets->filter(function ($tweet) use ($groupIds) {
             return is_null($tweet->user_group_id) || in_array($tweet->user_group_id, $groupIds);
         })->values();
-    }
-
-    protected function validateFilledGroups(TweetDTO $tweetDTO): array
-    {
-        $filledGroups = [];
-
-        $groups = [
-            'comment' => [$tweetDTO->isComment, $tweetDTO->commentedTweetId],
-            'reply' => [$tweetDTO->isReply, $tweetDTO->repliedTweetId],
-            'repost' => [$tweetDTO->isRepost, $tweetDTO->repostedTweetId],
-        ];
-
-        foreach ($groups as $key => [$isFlag, $id]) {
-            if ($isFlag !== null && $id !== null) {
-                $filledGroups[] = $key;
-            }
-        }
-
-        if (count($filledGroups) > 1) {
-            throw new HttpException(
-                Response::HTTP_BAD_REQUEST,
-                'Только одна из групп полей (Комментарий, Цитата, Репост) может быть заполнена'
-            );
-        }
-
-        return $filledGroups;
-    }
-
-    protected function fillTweetFields(TweetDTO $tweetDTO, int $userId, array $filledGroups): void
-    {
-        $this->tweet->text = $tweetDTO->text;
-        $this->tweet->user_id = $userId;
-
-        if (!empty($tweetDTO->userGroupId)) {
-            $this->tweet->user_group_id = $tweetDTO->userGroupId;
-        }
-
-        $groupMultipleName = [
-            'reply' => 'repli',
-        ];
-
-        foreach ($filledGroups as $group) {
-            $this->tweet->{"is_{$group}"} = true;
-
-            $group = $groupMultipleName[$group] ?? $group;
-            $this->tweet->{"{$group}ed_tweet_id"} = $tweetDTO->{"{$group}edTweetId"};
-        }
     }
 }
