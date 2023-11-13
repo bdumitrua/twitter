@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('user_group_id')->nullable();
-            $table->string('text');
+            $table->string('text')->nullable();
             $table->string('type')->default('default');
             $table->unsignedBigInteger('linked_tweet_id')->nullable();
             $table->timestamps();

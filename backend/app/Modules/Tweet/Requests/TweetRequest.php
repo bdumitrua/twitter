@@ -14,14 +14,10 @@ class TweetRequest extends FormRequest
     public function rules()
     {
         return [
-            'text' => 'required|string|max:255',
+            'text' => 'nullable|string|max:255',
             'userGroupId' => 'nullable|exists:user_groups,id',
-            'isComment' => 'nullable|boolean',
-            'commentedTweetId' => 'nullable|exists:tweets,id',
-            'isReply' => 'nullable|boolean',
-            'repliedTweetId' => 'nullable|exists:tweets,id',
-            'isRepost' => 'nullable|boolean',
-            'repostedTweetId' => 'nullable|exists:tweets,id',
+            'type' => 'in:default,repost,reply,quote',
+            'linkedTweetId' => 'nullable|exists:tweets,id',
         ];
     }
 
