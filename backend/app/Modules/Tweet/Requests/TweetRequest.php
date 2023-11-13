@@ -16,7 +16,7 @@ class TweetRequest extends FormRequest
         return [
             'text' => 'nullable|string|max:255',
             'userGroupId' => 'nullable|exists:user_groups,id',
-            'type' => 'in:default,repost,reply,quote',
+            'type' => 'nullable|in:repost,reply,quote',
             'linkedTweetId' => 'nullable|exists:tweets,id',
         ];
     }
