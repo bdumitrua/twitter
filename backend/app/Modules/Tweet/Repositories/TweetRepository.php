@@ -59,30 +59,36 @@ class TweetRepository
     public function getUserFeed(int $userId, bool $updateCache = false): Collection
     {
         $cacheKey = KEY_AUTH_USER_FEED . $userId;
-        return $this->getCachedData($cacheKey, 15, function () use ($userId) {
+        $userFeedTweetsIds = $this->getCachedData($cacheKey, 15, function () use ($userId) {
             $user = $this->getUser($userId);
             $subscribedUserIds = $this->pluckKey($user->subscribtions(), 'user_id');
             $userGroupIds = $this->pluckKey($user->groups_member(), 'id');
 
-            return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get();
+            return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get('id');
         }, $updateCache);
+
+        return $this->getTweetsData($userFeedTweetsIds);
     }
 
     public function getByUserId(int $userId, bool $updateCache = false): Collection
     {
         $cacheKey = KEY_USER_TWEETS . $userId;
-        return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
-            return $this->queryByUserId($userId)->get();
+        $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryByUserId($userId)->get('id');
         }, $updateCache);
+
+        return $this->getTweetsData($userTweetsIds);
     }
 
     public function getFeedByUsersList(UsersList $usersList, bool $updateCache = false): Collection
     {
         $cacheKey = KEY_USERS_LIST_FEED . $usersList->id;
-        return $this->getCachedData($cacheKey, 15, function () use ($usersList) {
+        $usersListTweets = $this->getCachedData($cacheKey, 15, function () use ($usersList) {
             $membersIds = $this->pluckKey($usersList->members(), 'id');
             return $this->getFeedQuery($membersIds, null)->get();
         }, $updateCache);
+
+        return $this->getTweetsData($usersListTweets);
     }
 
     public function create(TweetDTO $tweetDTO, int $userId): void
@@ -123,6 +129,13 @@ class TweetRepository
             })
             ->orderBy('created_at', 'desc')
             ->take(20);
+    }
+
+    private function getTweetsData(array $tweetsIds)
+    {
+        return new Collection(array_map(function ($tweetId) {
+            return $this->getById($tweetId);
+        }, $tweetsIds));
     }
 
     private function getUser(int $userId): User
