@@ -52,7 +52,7 @@ class TweetService
         return $this->tweetRepository->getFeedByUsersList($usersList, Auth::id());
     }
 
-    public function show(Tweet $tweet): Tweet
+    public function show(Tweet $tweet): Collection
     {
         return $this->tweetRepository->getById($tweet->id, Auth::id());
     }
