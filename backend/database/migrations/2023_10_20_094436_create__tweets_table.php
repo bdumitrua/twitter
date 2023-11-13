@@ -16,19 +16,13 @@ return new class extends Migration
             $table->unsignedBigInteger('user_id');
             $table->unsignedBigInteger('user_group_id')->nullable();
             $table->string('text');
-            $table->boolean('is_comment')->default(false);
-            $table->unsignedBigInteger('commented_tweet_id')->nullable();
-            $table->boolean('is_reply')->default(false);
-            $table->unsignedBigInteger('replied_tweet_id')->nullable();
-            $table->boolean('is_repost')->default(false);
-            $table->unsignedBigInteger('reposted_tweet_id')->nullable();
+            $table->string('type')->default('default');
+            $table->unsignedBigInteger('linked_tweet_id')->nullable();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('user_group_id')->references('id')->on('user_groups')->onDelete('cascade');
-            $table->foreign('commented_tweet_id')->references('id')->on('tweets')->onDelete('cascade');
-            $table->foreign('replied_tweet_id')->references('id')->on('tweets')->onDelete('cascade');
-            $table->foreign('reposted_tweet_id')->references('id')->on('tweets')->onDelete('cascade');
+            $table->foreign('linked_tweet_id')->references('id')->on('tweets')->onDelete('cascade');
 
             $table->softDeletes();
         });
