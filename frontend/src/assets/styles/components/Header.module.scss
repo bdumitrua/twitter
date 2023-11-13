@@ -1,0 +1,25 @@
+.header {
+	background-color: $white;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 5px 20px;
+	border-bottom: 1px solid $gray;
+	position: sticky;
+	top: 0;
+
+	&__burger-icon {
+		display: flex;
+		position: relative;
+	}
+
+	&__unwatched-circle {
+		width: 8px;
+		height: 8px;
+		background-color: $blue;
+		border: 1px solid $white;
+		border-radius: 50%;
+		position: absolute;
+		right: 0px;
+	}
+}

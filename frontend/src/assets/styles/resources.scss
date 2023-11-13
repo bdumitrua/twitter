@@ -1,0 +1,40 @@
+$gray: #bdc5cd;
+$dark-gray: #687684;
+$blue: #4c9eeb;
+$white: #fff;
+$bold-text: #141619;
+
+@mixin flex-between() {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+
+@mixin flex-center() {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+@mixin flex-column() {
+	display: flex;
+	flex-direction: column;
+}
+
+@mixin text-dark-gray($text-size, $text-weight) {
+	font-size: $text-size;
+	font-weight: $text-weight;
+	color: $dark-gray;
+}
+
+@mixin text-black($text-size, $text-weight) {
+	font-size: $text-size;
+	font-weight: $text-weight;
+	color: $bold-text;
+}
+
+@mixin text-activity($text-size, $text-weight) {
+	font-size: $text-size;
+	font-weight: $text-weight;
+	color: $blue;
+}

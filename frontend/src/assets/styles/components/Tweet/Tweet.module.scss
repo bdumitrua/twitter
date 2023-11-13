@@ -1,0 +1,67 @@
+.wrapper {
+	border-bottom: 1px solid $gray;
+}
+
+.tweet {
+	padding: 4px 20px;
+
+	&__wrapper {
+		display: flex;
+		gap: 8px;
+		margin-bottom: 4px;
+	}
+
+	&__image {
+		min-width: 54px;
+		display: flex;
+		align-items: center;
+		flex-direction: column;
+	}
+
+	&__user-avatar {
+		width: 54px;
+		height: 54px;
+		display: block;
+		margin-bottom: 4px;
+	}
+
+	&__line {
+		width: 2px;
+		height: 100%;
+		background-color: $gray;
+		border-radius: 1px;
+	}
+
+	&__user-info {
+		display: flex;
+		gap: 5px;
+	}
+
+	&__username {
+		@include text-black(16px, 700);
+	}
+
+	&__nickname,
+	&__hours {
+		@include text-dark-gray(16px, 400);
+	}
+
+	&__tweet-body {
+		padding-bottom: 8px;
+	}
+
+	&__hashtag {
+		@include text-activity(16px, 400);
+	}
+
+	&__counters {
+		display: flex;
+		gap: 44px;
+	}
+
+	&__counter {
+		display: flex;
+		gap: 4px;
+		color: $dark-gray;
+	}
+}
