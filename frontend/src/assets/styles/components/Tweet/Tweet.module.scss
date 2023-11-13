@@ -7,20 +7,20 @@
 
 	&__wrapper {
 		display: flex;
+		gap: 8px;
 		margin-bottom: 4px;
 	}
 
 	&__image {
-		min-width: 55px;
+		min-width: 54px;
 		display: flex;
 		align-items: center;
 		flex-direction: column;
-		margin-right: 8px;
 	}
 
-	&__big-user {
-		width: 55px;
-		height: 55px;
+	&__user-avatar {
+		width: 54px;
+		height: 54px;
 		display: block;
 		margin-bottom: 4px;
 	}
@@ -34,7 +34,7 @@
 
 	&__user-info {
 		display: flex;
-		gap: 4px;
+		gap: 5px;
 	}
 
 	&__username {
@@ -47,7 +47,7 @@
 	}
 
 	&__tweet-body {
-		margin-bottom: 10px;
+		padding-bottom: 8px;
 	}
 
 	&__hashtag {
@@ -55,9 +55,8 @@
 	}
 
 	&__counters {
-		max-width: 260px;
 		display: flex;
-		justify-content: space-between;
+		gap: 44px;
 	}
 
 	&__counter {
