@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Models;
 
+use App\Modules\Notification\Models\Notification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -123,5 +124,10 @@ class User extends Authenticatable implements JWTSubject
     public function lists_subscribtions()
     {
         return $this->hasMany(UsersListSubscribtion::class, 'user_id')->with('lists_data');
+    }
+
+    public function notifications()
+    {
+        return $this->hasMany(Notification::class, 'user_id', 'id');
     }
 }

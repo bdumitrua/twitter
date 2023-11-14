@@ -4,9 +4,8 @@ namespace App\Modules\Notification\DTO;
 
 class NotificationDTO
 {
-    public function __construct(
-        // 
-    ) {
-        // 
-    }
+    public ?int $userId = null;
+    public ?string $type = null;
+    public ?int $relatedId = null;
+    public ?string $status = 'unread';
 }
