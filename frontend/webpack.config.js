@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const Dotenv = require("dotenv-webpack");
+const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
 	mode: "development",
@@ -35,8 +36,19 @@ module.exports = {
 				},
 			},
 			{
+				test: /\.(ts|tsx)$/,
+				use: {
+					loader: "ts-loader",
+					options: {
+						transpileOnly: true,
+						experimentalWatchApi: true,
+					},
+				},
+				exclude: /node_modules/,
+			},
+			{
 				test: /\.css$/, // для всех CSS файлов
-				use: ["style-loader", "css-loader"], // использование загрузчиков в указанном порядке
+				use: ["style-loader", "css-loader"],
 			},
 			{
 				test: /\.(png|jpg|gif|jpeg|svg)$/, // для изображений
@@ -45,7 +57,7 @@ module.exports = {
 						loader: "url-loader",
 						options: {
 							limit: 8192, // файлы меньше 8kb будут преобразованы в Data URLs
-							fallback: "file-loader", // для файлов больше 8kb используйте file-loader
+							fallback: "file-loader", // для файлов больше 8kb
 							name: "images/[name].[ext]", // куда помещать изображения
 						},
 					},
@@ -58,6 +70,8 @@ module.exports = {
 					filename: "fonts/[name][ext][query]",
 				},
 			},
+
+			// Сборка scss стилей. Порядок важен ибо именно в таком проядке сброщик будет выполнять сборку.
 			{
 				test: /\.scss$/,
 				use: [
@@ -69,8 +83,7 @@ module.exports = {
 						options: {
 							importLoaders: 2,
 							modules: {
-								localIdentName:
-									"[name]__[local]___[hash:base64:5]",
+								localIdentName: "[name]__[local]___[hash:base64:5]", // Преобразовывает имя класса
 							},
 						},
 					},
@@ -81,8 +94,7 @@ module.exports = {
 						loader: "sass-loader",
 						options: {
 							sourceMap: true,
-							additionalData:
-								'@import "./src/assets/styles/resources.scss";',
+							additionalData: '@import "./src/assets/styles/resources.scss";',
 						},
 					},
 					{
@@ -92,14 +104,13 @@ module.exports = {
 							resources: "./src/assets/styles/resources.scss", // Путь к главному SCSS или файлам ресурсов
 						},
 					},
+
+					// Автоматически добавляет стили для кроссбразурности в bundle
 					{
 						loader: "postcss-loader",
 						options: {
 							postcssOptions: {
-								plugins: [
-									require("autoprefixer"),
-									require("cssnano"),
-								],
+								plugins: [require("autoprefixer"), require("cssnano")],
 								sourceMap: true,
 							},
 						},
@@ -109,7 +120,7 @@ module.exports = {
 		],
 	},
 	resolve: {
-		extensions: [".js", ".jsx"],
+		extensions: [".js", ".jsx", ".ts", ".tsx"],
 		alias: {
 			"@": path.resolve(__dirname, "src"),
 		},
@@ -142,6 +153,7 @@ module.exports = {
 			filename: "[name].css",
 			chunkFilename: "[id].css",
 		}),
+		new ForkTsCheckerWebpackPlugin(),
 		new Dotenv(),
 	],
 };
