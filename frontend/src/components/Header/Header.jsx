@@ -9,35 +9,37 @@ import leftArrowIcon from "../../assets/images/Header/leftArrowIcon.svg";
 import styles from "../../assets/styles/components/Header.module.scss";
 
 const Header = (props) => {
-  const location = useLocation();
+	const location = useLocation();
 
-  return (
-    <div className={styles["header"]}>
-      {location.pathname === "/tweet" ? (
-        <>
-          <Link to="/">
-            <img src={leftArrowIcon} alt="" />
-          </Link>
-          <span className={styles["header__title"]}>Tweet</span>
-        </>
-      ) : (
-        <>
-          <div className={styles["header__burger-icon"]}>
-            <img src={accountImage} alt="" />
-            {props.haveUnwatched && (
-              <div className={styles["header__unwatched-circle"]}></div>
-            )}
-          </div>
-          <div>
-            <img src={twitterLogo} alt="" />
-          </div>
-          <div>
-            <img src={somthingIcon} alt="" />
-          </div>
-        </>
-      )}
-    </div>
-  );
+	return (
+		<div className={styles["header"]}>
+			{location.pathname === "/tweet" ? (
+				<>
+					<Link to="/">
+						<img src={leftArrowIcon} alt="" />
+					</Link>
+					<span className={styles["header__title"]}>Tweet</span>
+				</>
+			) : (
+				<>
+					<div className={styles["header__burger-icon"]}>
+						<img src={accountImage} alt="" />
+						{props.haveUnwatched && (
+							<div
+								className={styles["header__unwatched-circle"]}
+							></div>
+						)}
+					</div>
+					<div>
+						<img src={twitterLogo} alt="" />
+					</div>
+					<div>
+						<img src={somthingIcon} alt="" />
+					</div>
+				</>
+			)}
+		</div>
+	);
 };
 
 export default Header;
