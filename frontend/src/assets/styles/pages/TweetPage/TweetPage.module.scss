@@ -1,11 +1,15 @@
 @import "../../resources.scss";
 
+* {
+  font-family: "SF Pro Display", sans-serif;
+}
+
 .wrapper {
   border-bottom: 1px solid $gray;
 }
 
 .tweet {
-  padding: 4px 20px;
+  padding: 12px 20px;
 
   &__wrapper {
     display: flex;
@@ -34,39 +38,70 @@
     border-radius: 1px;
   }
 
+  &__tweet-body {
+    padding: 24px 10px 35px;
+    font-size: 22px;
+    font-weight: 300;
+  }
+
   &__user-info {
+    display: flex;
+  }
+
+  &__names {
     @include flex-column();
-    gap: 1px;
+    margin-left: 8px;
+    margin-top: 8px;
 
     & span {
-      letter-spacing: -0.5px;
+      letter-spacing: -0.3px;
     }
   }
 
   &__username {
-    @include text-black(16px, 700);
+    @include text-black(16px, 600);
   }
 
   &__nickname {
     @include text-dark-gray(16px, 400);
   }
 
-  &__tweet-body {
-    padding-bottom: 8px;
-  }
-
-  &__hashtag {
-    @include text-activity(16px, 400);
+  &__time-date {
+    display: flex;
+    @include text-dark-gray(16px, 400);
   }
 
   &__counters {
     display: flex;
-    gap: 44px;
+    gap: 8px;
+    border-top: 1px solid $gray;
+    border-bottom: 1px solid $gray;
+    padding: 12px 0;
+    margin: 12px 0;
   }
 
   &__counter {
+    font-weight: 600;
+  }
+
+  &__retweets,
+  &__likes {
     display: flex;
+    align-items: center;
     gap: 4px;
-    color: $dark-gray;
+  }
+
+  &__buttons {
+    @include flex-center();
+    gap: 75px;
+  }
+
+  &__button {
+    @include flex-center();
+
+    img {
+      height: 18px;
+      width: 18px;
+    }
   }
 }
