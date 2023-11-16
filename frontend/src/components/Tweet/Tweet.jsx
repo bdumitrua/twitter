@@ -8,7 +8,6 @@ import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 import TweetAdditional from "./TweetAdditional";
 import TweetThread from "./TweetThread";
 
-// parseHashtags
 let tweetText =
 	"UXR/UX: You can only bring one item to a remote island to assist your research of native use of tools and usability. What do you bring? #TellMeAboutYou";
 

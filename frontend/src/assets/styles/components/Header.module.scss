@@ -4,6 +4,7 @@
 	justify-content: space-between;
 	align-items: center;
 	padding: 5px 20px;
+	height: 44px;
 	border-bottom: 1px solid $gray;
 	position: sticky;
 	top: 0;
@@ -21,5 +22,13 @@
 		border-radius: 50%;
 		position: absolute;
 		right: 0px;
+	}
+
+	&__title {
+		font-family: "SF Pro Display", serif;
+		font-size: 17px;
+		font-weight: 800;
+		letter-spacing: -0.5px;
+		margin: auto;
 	}
 }

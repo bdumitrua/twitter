@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom"
 import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 import styles from "../../assets/styles/components/Tweet/TweetThread.module.scss";
 
@@ -9,9 +10,9 @@ const TweetThread = () => {
 				src={userPhoto}
 				alt=""
 			/>
-			<a className={styles["tweet__show-thread"]} href=" ">
+			<Link to="/tweet" className={styles["tweet__show-thread"]} href=" ">
 				Show this Thread
-			</a>
+			</Link>
 		</div>
 	);
 };
