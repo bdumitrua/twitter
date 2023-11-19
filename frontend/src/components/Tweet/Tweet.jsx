@@ -30,7 +30,7 @@ function parseHashtags(text) {
 
 	return parts;
 }
-//
+
 const Tweet = (props) => {
 	return (
 		<div className={styles["wrapper"]}>

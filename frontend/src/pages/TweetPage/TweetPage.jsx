@@ -2,13 +2,35 @@ import React from "react";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
+import retweetWithComment from "../../assets/images/Tweet/retweetWithComment.svg";
 import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
 import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 import styles from "../../assets/styles/pages/TweetPage/TweetPage.module.scss";
 import Header from "../../components/Header/Header";
 import TweetAdditional from "../../components/Tweet/TweetAdditional";
+import Tweet from "../../components/Tweet/Tweet";
+
+const RetweetModal = ({ onClose, showModal }) => (
+	<div className={`${styles["modal"]} ${showModal && styles["modal__open"]}`}>
+		<div className={styles["modal__wrapper"]}>
+			<button className={styles["modal__button"]} onClick={onClose}>
+				<img src={retweet} alt="" />
+				<span>Retweet</span>
+			</button>
+			<button className={styles["modal__button"]} onClick={onClose}>
+				<img src={retweetWithComment} alt="" />
+				<span>Retweet with comment</span>
+			</button>
+			<button className={styles["modal__cancel"]} onClick={onClose}>
+				Cancel
+			</button>
+		</div>
+	</div>
+);
 
 const TweetPage = () => {
+	const [showModal, setShowModal] = React.useState(false);
+
 	return (
 		<>
 			<Header />
@@ -26,7 +48,6 @@ const TweetPage = () => {
 									/>
 								</div>
 								<div className={styles["tweet__names"]}>
-									{" "}
 									<span className={styles["tweet__username"]}>
 										Martha Craig
 									</span>
@@ -67,7 +88,10 @@ const TweetPage = () => {
 								<div className={styles["tweet__button"]}>
 									<img src={comment} alt="" />
 								</div>
-								<div className={styles["tweet__button"]}>
+								<div
+									className={styles["tweet__button"]}
+									onClick={() => setShowModal(true)}
+								>
 									<img src={retweet} alt="" />
 								</div>
 								<div className={styles["tweet__button"]}>
@@ -81,6 +105,13 @@ const TweetPage = () => {
 					</div>
 				</div>
 			</div>
+			<Tweet />
+			<Tweet />
+
+			<RetweetModal
+				onClose={() => setShowModal(false)}
+				showModal={showModal}
+			/>
 		</>
 	);
 };
