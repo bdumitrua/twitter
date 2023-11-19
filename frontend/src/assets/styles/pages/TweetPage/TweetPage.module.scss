@@ -66,6 +66,19 @@
 		@include text-dark-gray(16px, 400);
 	}
 
+	&__picture-wrapper {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+		gap: 8px;
+	}
+
+	&__picture {
+		width: 100%;
+		margin-top: 12px;
+		border-radius: 12px;
+		object-fit: cover;
+	}
+
 	&__time-date {
 		@include text-dark-gray(16px, 400);
 		display: flex;
@@ -89,6 +102,10 @@
 		display: flex;
 		align-items: center;
 		gap: 4px;
+
+		span {
+			@include text-dark-gray(16px, 400);
+		}
 	}
 
 	&__buttons {
