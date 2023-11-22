@@ -1,8 +1,10 @@
 $gray: #bdc5cd;
 $dark-gray: #687684;
+$light-gray: #e7ecf0;
 $blue: #4c9eeb;
 $white: #fff;
 $bold-text: #141619;
+$overlay: rgba(0, 0, 0, 0.5);
 
 @mixin flex-between() {
 	display: flex;

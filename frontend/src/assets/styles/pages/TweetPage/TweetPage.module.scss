@@ -1,0 +1,127 @@
+.tweet {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+	padding: 12px 20px;
+
+	&__line {
+		width: 2px;
+		height: 100%;
+		background-color: $gray;
+		border-radius: 1px;
+	}
+
+	&__text {
+		@include text-black(22px, 300);
+	}
+
+	&__upper {
+		@include flex-between();
+		flex-direction: row;
+	}
+
+	&__user {
+		display: flex;
+		align-items: center;
+		gap: 8px;
+	}
+
+	&__names {
+		@include flex-column();
+
+		& span {
+			letter-spacing: -0.3px;
+		}
+	}
+
+	&__username {
+		@include text-black(16px, 600);
+	}
+
+	&__nickname {
+		@include text-dark-gray(16px, 400);
+	}
+
+	&__arrow {
+		img {
+			height: 7px;
+			align-self: center;
+		}
+	}
+
+	&__picture-wrapper {
+		display: grid;
+		gap: 8px;
+		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+	}
+
+	&__picture {
+		width: 100%;
+		border-radius: 12px;
+		object-fit: cover;
+	}
+
+	&__time-date {
+		@include text-dark-gray(16px, 400);
+		display: flex;
+		padding-top: 24px;
+	}
+
+	&__counters {
+		display: flex;
+		gap: 16px;
+		padding-top: 12px;
+		border-top: 0.33px solid $gray;
+	}
+
+	&__counter {
+		font-weight: 600;
+	}
+
+	&__retweets,
+	&__likes {
+		display: flex;
+		align-items: center;
+		gap: 4px;
+
+		span {
+			@include text-dark-gray(16px, 400);
+		}
+	}
+
+	&__actions {
+		@include flex-center();
+		gap: 72px;
+		padding-top: 12px;
+		border-top: 0.33px solid $gray;
+	}
+
+	&__action {
+		@include flex-center();
+
+		img {
+			height: 18px;
+		}
+	}
+
+	&__like-icon {
+		width: 20px;
+		transition: transform 0.3s;
+	}
+
+	&__animate-like {
+		animation: scale-like-icon 0.6s;
+	}
+}
+
+@keyframes scale-like-icon {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
+	}
+}
