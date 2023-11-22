@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Enqueue\RdKafka\RdKafkaConnectionFactory;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -50,5 +52,23 @@ class Controller extends BaseController
                 'code' => Response::HTTP_BAD_GATEWAY
             ]);
         }
+    }
+
+    public function handleKafka()
+    {
+        $connectionFactory = new RdKafkaConnectionFactory([
+            'global' => [
+                'metadata.broker.list' => config('kafka.broker_list'),
+            ],
+        ]);
+
+        $context = $connectionFactory->createContext();
+        $topic = $context->createTopic('user_created');
+        $message = $context->createMessage(json_encode([
+            "name" => "username",
+            "email" => "user email",
+        ]));
+
+        $context->createProducer()->send($topic, $message);
     }
 }

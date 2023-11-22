@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Kafka\KafkaConsumer;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
 use Illuminate\Support\ServiceProvider;

@@ -42,3 +42,8 @@ Route::prefix('polls')->middleware(['auth:api'])->controller(Controller::class)-
     // Убрать голос в опросе
     Route::post('vote/remove/{poll}', 'remove');
 });
+
+
+Route::prefix('kafka')->controller(Controller::class)->group(function () {
+    Route::get('create', 'handleKafka');
+});
