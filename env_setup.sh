@@ -9,6 +9,7 @@ rm -f ./backend/.env
 
 # Создание копии .env.example
 cp ./backend/.env.example ./backend/.env
+chmod 644 ./backend/.env
 
 # Экранирование специальных символов для APP_KEY
 ESCAPED_APP_KEY=$(printf '%s\n' "$APP_KEY" | sed -e 's/[\/&]/\\&/g')
