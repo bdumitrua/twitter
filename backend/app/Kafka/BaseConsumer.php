@@ -8,9 +8,11 @@ use Interop\Queue\Context;
 abstract class BaseConsumer
 {
     protected $consumer;
+    protected string $topicName;
 
     public function __construct(string $topicName)
     {
+        $this->topicName = $topicName;
         $connectionFactory = new RdKafkaConnectionFactory([
             'global' => [
                 'metadata.broker.list' => config('kafka.broker_list'),
@@ -18,8 +20,7 @@ abstract class BaseConsumer
         ]);
 
         $context = $connectionFactory->createContext();
-
-        $topic = $context->createTopic($topicName);
+        $topic = $context->createTopic($this->topicName);
 
         $this->consumer = $context->createConsumer($topic);
     }

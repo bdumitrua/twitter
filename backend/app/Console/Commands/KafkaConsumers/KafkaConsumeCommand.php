@@ -19,7 +19,7 @@ class KafkaConsumeCommand extends Command
     {
         try {
             $topic = $this->argument('topic');
-            $this->info("Starting " . $topic . " topic consumer...");
+            $this->info("Starting {$topic} topic consumer...");
 
             $consumer = new UserCreatedConsumer($topic);
             $consumer->consume();
