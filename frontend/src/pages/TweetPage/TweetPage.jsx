@@ -10,6 +10,7 @@ import Footer from "../../components/Footer/Footer";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import RetweetModal from "./RetweetModal";
 
+import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
@@ -29,7 +30,7 @@ const TweetPage = () => {
 				<TweetAdditional />
 				<div className={styles["tweet__upper"]}>
 					<div className={styles["tweet__user"]}>
-						<UserAvatar />
+						<UserAvatar userPhoto={userPhoto} link="/profile" />
 						<div className={styles["tweet__names"]}>
 							<span className={styles["tweet__username"]}>
 								Martha Craig
