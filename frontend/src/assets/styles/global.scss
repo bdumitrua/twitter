@@ -4,3 +4,12 @@ body {
 
 a {
 }
+
+.hashtag {
+	&__home {
+		@include text-activity(16px, 400);
+	}
+	&__tweet-page {
+		@include text-activity(22px, 300);
+	}
+}

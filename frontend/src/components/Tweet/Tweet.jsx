@@ -1,4 +1,6 @@
 import React from "react";
+
+import { parseHashtags } from "../../utils/functions/parseHashtags";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
@@ -10,26 +12,6 @@ import TweetThread from "./TweetThread";
 
 let tweetText =
 	"UXR/UX: You can only bring one item to a remote island to assist your research of native use of tools and usability. What do you bring? #TellMeAboutYou";
-
-function parseHashtags(text) {
-	const hashtagRegex = /#(\w+)/g;
-	const parts = [];
-	let lastIndex = 0;
-
-	text.replace(hashtagRegex, (match, tag, index) => {
-		parts.push(text.slice(lastIndex, index));
-		parts.push(
-			<a className={styles["tweet__hashtag"]} href={tag} key={index}>
-				#{tag}
-			</a>
-		);
-		lastIndex = index + match.length;
-	});
-
-	parts.push(text.slice(lastIndex));
-
-	return parts;
-}
 
 const Tweet = (props) => {
 	return (
@@ -53,7 +35,7 @@ const Tweet = (props) => {
 						</div>
 						<div className={styles["tweet__tweet-body"]}>
 							<span className={styles["tweet__text"]}>
-								{parseHashtags(tweetText)}
+								{parseHashtags(tweetText, 'home')}
 							</span>
 						</div>
 						<div className={styles["tweet__counters"]}>

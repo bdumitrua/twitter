@@ -1,5 +1,7 @@
 import React from "react";
 
+import {parseHashtags} from "../../utils/functions/parseHashtags";
+
 import styles from "../../assets/styles/pages/TweetPage/TweetPage.module.scss";
 import Header from "../../components/Header/Header";
 import TweetAdditional from "../../components/Tweet/TweetAdditional";
@@ -15,25 +17,7 @@ import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
 import pictureExample from "../../assets/images/Tweet/pictureExample.jpg";
 import arrow from "../../assets/images/Tweet/arrow.svg";
 
-function parseHashtags(text) {
-	const hashtagRegex = /#(\w+)/g;
-	const parts = [];
-	let lastIndex = 0;
 
-	text.replace(hashtagRegex, (match, tag, index) => {
-		parts.push(text.slice(lastIndex, index));
-		parts.push(
-			<a className={styles["tweet__hashtag"]} href={tag} key={index}>
-				#{tag}
-			</a>
-		);
-		lastIndex = index + match.length;
-	});
-
-	parts.push(text.slice(lastIndex));
-
-	return parts;
-}
 
 const TweetPage = () => {
 	const [showModal, setShowModal] = React.useState(false);
@@ -61,7 +45,7 @@ const TweetPage = () => {
 				</div>
 				<div className={styles["tweet__text"]}>
 					{parseHashtags(
-						" ~~ hiring for a UX Lead in Sydney - who should I talk to? #TellMeAboutYou"
+						" ~~ hiring for a UX Lead in Sydney - who should I talk to? #TellMeAboutYou", 'tweet-page'
 					)}
 				</div>
 				<div className={styles["tweet__picture-wrapper"]}>

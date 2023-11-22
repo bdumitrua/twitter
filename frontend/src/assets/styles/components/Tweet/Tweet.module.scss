@@ -50,10 +50,6 @@
 		padding-bottom: 8px;
 	}
 
-	&__hashtag {
-		@include text-activity(16px, 400);
-	}
-
 	&__counters {
 		display: flex;
 		gap: 44px;
