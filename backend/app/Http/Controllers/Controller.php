@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Kafka\KafkaProducer;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
@@ -15,6 +16,8 @@ class Controller extends BaseController
 
     protected function responseToJSON($response): JsonResponse
     {
+        // TODO
+        // 'bugtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 7)
         try {
             if (isset($response['error'])) {
                 return response()->json(['error' => $response['error']], $response['code']);
@@ -50,5 +53,12 @@ class Controller extends BaseController
                 'code' => Response::HTTP_BAD_GATEWAY
             ]);
         }
+    }
+
+    public function handleKafka()
+    {
+        new KafkaProducer('user_created', [
+            "name" => "username"
+        ]);
     }
 }

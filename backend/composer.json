@@ -12,6 +12,7 @@
         "babenkoivan/elastic-scout-driver": "^3.1",
         "babenkoivan/elastic-scout-driver-plus": "^4.6",
         "elasticsearch/elasticsearch": "^8.10",
+        "enqueue/rdkafka": "^0.10.19",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
