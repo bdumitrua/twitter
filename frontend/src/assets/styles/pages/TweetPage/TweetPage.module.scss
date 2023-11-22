@@ -97,7 +97,7 @@
 		@include flex-center();
 		gap: 75px;
 		padding-top: 12px;
-		border-top: 1px solid $gray;
+		border-top: 0.33px solid $gray;
 	}
 
 	&__action {
