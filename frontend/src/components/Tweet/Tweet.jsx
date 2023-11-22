@@ -1,4 +1,3 @@
-import React from "react";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
