@@ -1,4 +1,5 @@
 import styles from "../../assets/styles/global.scss";
+import { Link } from "react-router-dom";
 
 export function parseHashtags(text, page) {
 	const hashtagRegex = /#(\w+)/g;
@@ -8,9 +9,13 @@ export function parseHashtags(text, page) {
 	text.replace(hashtagRegex, (match, tag, index) => {
 		parts.push(text.slice(lastIndex, index));
 		parts.push(
-			<a className={styles[`hashtag__${page}`]} href={tag} key={index}>
+			<Link
+				to={`${tag}`}
+				className={styles[`hashtag__${page}`]}
+				key={index}
+			>
 				#{tag}
-			</a>
+			</Link>
 		);
 		lastIndex = index + match.length;
 	});
