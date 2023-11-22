@@ -1,21 +1,10 @@
 @import "../../resources.scss";
 
-* {
-	font-family: "SF Pro Display", sans-serif;
-}
-
-.wrapper {
-	border-bottom: 1px solid $gray;
-}
-
 .tweet {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
 	padding: 12px 20px;
-
-	&__wrapper {
-		display: flex;
-		gap: 8px;
-		margin-bottom: 4px;
-	}
 
 	&__line {
 		width: 2px;
@@ -24,20 +13,25 @@
 		border-radius: 1px;
 	}
 
-	&__tweet-body {
-		padding: 24px 10px 35px;
-		font-size: 22px;
-		font-weight: 300;
+	&__text {
+		@include text-black(22px, 300);
 	}
 
-	&__user-info {
+	&__upper {
 		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+	}
+
+	&__user {
+		display: flex;
+		align-items: center;
+		gap: 8px;
 	}
 
 	&__names {
 		@include flex-column();
-		margin-top: 8px;
-		margin-left: 8px;
 
 		& span {
 			letter-spacing: -0.3px;
@@ -52,15 +46,22 @@
 		@include text-dark-gray(16px, 400);
 	}
 
+	&__arrow {
+		img {
+			width: 11px;
+			height: 7px;
+			align-self: center;
+		}
+	}
+
 	&__picture-wrapper {
 		display: grid;
-		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 		gap: 8px;
+		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
 	}
 
 	&__picture {
 		width: 100%;
-		margin-top: 12px;
 		border-radius: 12px;
 		object-fit: cover;
 	}
@@ -68,15 +69,14 @@
 	&__time-date {
 		@include text-dark-gray(16px, 400);
 		display: flex;
+		padding-top: 24px;
 	}
 
 	&__counters {
 		display: flex;
-		gap: 8px;
-		margin: 12px 0;
-		padding: 12px 0;
-		border-top: 1px solid $gray;
-		border-bottom: 1px solid $gray;
+		gap: 16px;
+		padding-top: 12px;
+		border-top: 0.33px solid $gray;
 	}
 
 	&__counter {
@@ -94,12 +94,14 @@
 		}
 	}
 
-	&__buttons {
+	&__actions {
 		@include flex-center();
 		gap: 75px;
+		padding-top: 12px;
+		border-top: 1px solid $gray;
 	}
 
-	&__button {
+	&__action {
 		@include flex-center();
 
 		img {
