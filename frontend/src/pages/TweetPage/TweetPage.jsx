@@ -5,13 +5,13 @@ import Header from "../../components/Header/Header";
 import TweetAdditional from "../../components/Tweet/TweetAdditional";
 import Tweet from "../../components/Tweet/Tweet";
 import Footer from "../../components/Footer/Footer";
+import UserAvatar from "../../components/UserAvatar/UserAvatar";
 
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
 import retweetWithComment from "../../assets/images/Tweet/retweetWithComment.svg";
 import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
-import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 import pictureExample from "../../assets/images/Tweet/pictureExample.jpg";
 
 const RetweetModal = ({ onClose, showModal }) => (
@@ -44,13 +44,7 @@ const TweetPage = () => {
 						<div className={styles["tweet__content"]}>
 							<TweetAdditional />
 							<div className={styles["tweet__user-info"]}>
-								<div className={styles["tweet__image"]}>
-									<img
-										className={styles["tweet__user-avatar"]}
-										src={userPhoto}
-										alt=""
-									/>
-								</div>
+								<UserAvatar />
 								<div className={styles["tweet__names"]}>
 									<span className={styles["tweet__username"]}>
 										Martha Craig
