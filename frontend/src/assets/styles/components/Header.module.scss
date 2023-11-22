@@ -1,8 +1,8 @@
+@import "../resources.scss";
+
 .header {
+	@include flex-between();
 	background-color: $white;
-	display: flex;
-	justify-content: space-between;
-	align-items: center;
 	padding: 5px 20px;
 	height: 44px;
 	border-bottom: 1px solid $gray;
@@ -25,9 +25,7 @@
 	}
 
 	&__title {
-		font-family: "SF Pro Display", serif;
-		font-size: 17px;
-		font-weight: 800;
+		@include text-black(17px, 800);
 		letter-spacing: -0.5px;
 		margin: auto;
 	}
