@@ -21,15 +21,17 @@ import arrow from "../../assets/images/Tweet/arrow.svg";
 const TweetPage = () => {
 	const [showModal, setShowModal] = React.useState(false);
 	const [likeSrc, setLikeSrc] = React.useState(unpaintedLike);
+	const [likeActive, setLikeActive] = React.useState(false);
 
 	const onClickLike = () => {
 		if (likeSrc === unpaintedLike) {
 			setLikeSrc(shadedLike);
+			setLikeActive(true);
 		} else {
 			setLikeSrc(unpaintedLike);
+			setLikeActive(false);
 		}
 	};
-
 	return (
 		<>
 			<Header />
@@ -105,7 +107,9 @@ const TweetPage = () => {
 						}}
 					>
 						<img
-							className={styles["tweet__like-icon"]}
+							className={`${styles["tweet__like-icon"]} ${
+								likeActive ? styles["tweet__animate-like"] : ""
+							}`}
 							src={likeSrc}
 							alt=""
 						/>

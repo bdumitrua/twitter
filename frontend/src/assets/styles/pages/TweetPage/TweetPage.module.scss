@@ -106,5 +106,22 @@
 
 	&__like-icon {
 		width: 20px;
+		transition: transform 0.3s;
+	}
+
+	&__animate-like {
+		animation: scale-like-icon 0.6s;
+	}
+}
+
+@keyframes scale-like-icon {
+	0% {
+		transform: scale(1);
+	}
+	50% {
+		transform: scale(1.2);
+	}
+	100% {
+		transform: scale(1);
 	}
 }
