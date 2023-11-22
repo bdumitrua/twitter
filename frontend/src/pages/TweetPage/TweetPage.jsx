@@ -1,13 +1,12 @@
 import React from "react";
 
-import {parseHashtags} from "../../utils/functions/parseHashtags";
-
 import styles from "../../assets/styles/pages/TweetPage/TweetPage.module.scss";
 import Header from "../../components/Header/Header";
 import TweetAdditional from "../../components/Tweet/TweetAdditional";
 import Tweet from "../../components/Tweet/Tweet";
 import Footer from "../../components/Footer/Footer";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import { parseHashtags } from "../../utils/functions/parseHashtags";
 import RetweetModal from "./RetweetModal";
 
 import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
@@ -15,13 +14,21 @@ import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
 import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
+import shadedLike from "../../assets/images/Tweet/shadedLike.svg";
 import pictureExample from "../../assets/images/Tweet/pictureExample.jpg";
 import arrow from "../../assets/images/Tweet/arrow.svg";
 
-
-
 const TweetPage = () => {
 	const [showModal, setShowModal] = React.useState(false);
+	const [likeSrc, setLikeSrc] = React.useState(unpaintedLike);
+
+	const onClickLike = () => {
+		if (likeSrc === unpaintedLike) {
+			setLikeSrc(shadedLike);
+		} else {
+			setLikeSrc(unpaintedLike);
+		}
+	};
 
 	return (
 		<>
@@ -46,7 +53,8 @@ const TweetPage = () => {
 				</div>
 				<div className={styles["tweet__text"]}>
 					{parseHashtags(
-						" ~~ hiring for a UX Lead in Sydney - who should I talk to? #TellMeAboutYou", 'tweet-page'
+						" ~~ hiring for a UX Lead in Sydney - who should I talk to? #TellMeAboutYou",
+						"tweet-page"
 					)}
 				</div>
 				<div className={styles["tweet__picture-wrapper"]}>
@@ -90,9 +98,18 @@ const TweetPage = () => {
 					>
 						<img src={retweet} alt="" />
 					</div>
-					<div className={styles["tweet__action"]}>
-						<img src={unpaintedLike} alt="" />
-					</div>
+					<button
+						className={styles["tweet__action"]}
+						onClick={() => {
+							onClickLike();
+						}}
+					>
+						<img
+							className={styles["tweet__like-icon"]}
+							src={likeSrc}
+							alt=""
+						/>
+					</button>
 					<div className={styles["tweet__action"]}>
 						<img src={makeRepost} alt="" />
 					</div>
