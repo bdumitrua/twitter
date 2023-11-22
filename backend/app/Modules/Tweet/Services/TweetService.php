@@ -69,7 +69,7 @@ class TweetService
     public function show(Tweet $tweet): Collection
     {
         $tweet = $this->tweetRepository->getById($tweet->id);
-        $tweetAfterFiltering = $this->filterTweetsByGroup(new Collection($tweet), $this->authorizedUserId);
+        $tweetAfterFiltering = $this->filterTweetsByGroup(new Collection([$tweet]), $this->authorizedUserId);
 
         if (empty($tweetAfterFiltering)) {
             throw new HttpException(Response::HTTP_NOT_FOUND, 'Tweet not found');
@@ -106,8 +106,8 @@ class TweetService
         }
 
         return $tweets->filter(function ($tweet) use ($groupIds) {
-            return is_null($tweet->user_group_id) || in_array($tweet->user_group_id, $groupIds);
-        })->values();
+            return is_object($tweet) && (is_null($tweet->user_group_id) || in_array($tweet->user_group_id, $groupIds));
+        });
     }
 
     protected function getUserGroupIds(int $userId): array

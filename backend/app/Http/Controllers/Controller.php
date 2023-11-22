@@ -16,6 +16,8 @@ class Controller extends BaseController
 
     protected function responseToJSON($response): JsonResponse
     {
+        // TODO
+        // 'bugtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 7)
         try {
             if (isset($response['error'])) {
                 return response()->json(['error' => $response['error']], $response['code']);
