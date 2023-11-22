@@ -1,5 +1,6 @@
 import React from "react";
 
+import UserAvatar from "../UserAvatar/UserAvatar";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
@@ -20,22 +21,24 @@ const Tweet = (props) => {
 				<TweetAdditional />
 				<div className={styles["tweet__wrapper"]}>
 					<div className={styles["tweet__image"]}>
-						<img
-							className={styles["tweet__user-avatar"]}
-							src={userPhoto}
-							alt=""
-						/>
-						{props.haveThread && <div className={styles["tweet__line"]}></div>}
+						<UserAvatar userPhoto={userPhoto} link="/profile" />
+						{props.haveThread && (
+							<div className={styles["tweet__line"]}></div>
+						)}
 					</div>
 					<div className={styles["tweet__content"]}>
 						<div className={styles["tweet__user-info"]}>
-							<span className={styles["tweet__username"]}>Martha Craig</span>
-							<span className={styles["tweet__nickname"]}>@craig_love</span>
+							<span className={styles["tweet__username"]}>
+								Martha Craig
+							</span>
+							<span className={styles["tweet__nickname"]}>
+								@craig_love
+							</span>
 							<span className={styles["tweet__hours"]}>·12h</span>
 						</div>
 						<div className={styles["tweet__tweet-body"]}>
 							<span className={styles["tweet__text"]}>
-								{parseHashtags(tweetText, 'home')}
+								{parseHashtags(tweetText, "home")}
 							</span>
 						</div>
 						<div className={styles["tweet__counters"]}>
