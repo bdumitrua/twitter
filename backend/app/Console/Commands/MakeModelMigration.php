@@ -26,7 +26,6 @@ class MakeModelMigration extends Command
      */
     public function handle()
     {
-        // UserGroup
         $model = $this->argument('model');
         $model_snake_case = $this->pascalToSnake($model);
         Artisan::call('make:migration', ['name' => "create_{$model_snake_case}s_table"]);

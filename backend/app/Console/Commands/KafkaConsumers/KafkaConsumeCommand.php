@@ -7,8 +7,8 @@ use Illuminate\Console\Command;
 
 class KafkaConsumeCommand extends Command
 {
-    protected $signature = 'kafka:consume:user_created';
-    protected $description = 'Consume messages from user_created topic';
+    protected $signature = 'kafka:consume {topic}';
+    protected $description = 'Consume messages from your topic';
 
     public function __construct()
     {
@@ -17,9 +17,14 @@ class KafkaConsumeCommand extends Command
 
     public function handle()
     {
-        $this->info("Starting user_created consumer...");
+        try {
+            $topic = $this->argument('topic');
+            $this->info("Starting " . $topic . " topic consumer...");
 
-        $consumer = new UserCreatedConsumer('user_created');
-        $consumer->consume();
+            $consumer = new UserCreatedConsumer($topic);
+            $consumer->consume();
+        } catch (\LogicException $e) {
+            $this->error($e->getMessage());
+        }
     }
 }
