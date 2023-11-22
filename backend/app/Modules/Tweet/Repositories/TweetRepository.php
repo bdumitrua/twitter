@@ -12,6 +12,7 @@ use App\Modules\User\Repositories\UserRepository;
 use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Collection as IlluminateCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -64,7 +65,7 @@ class TweetRepository
             $subscribedUserIds = $this->pluckKey($user->subscribtions(), 'user_id');
             $userGroupIds = $this->pluckKey($user->groups_member(), 'id');
 
-            return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get('id');
+            return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get()->pluck('id')->toArray();
         }, $updateCache);
 
         return $this->getTweetsData($userFeedTweetsIds);
@@ -74,7 +75,7 @@ class TweetRepository
     {
         $cacheKey = KEY_USER_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
-            return $this->queryByUserId($userId)->get('id');
+            return $this->queryByUserId($userId)->get()->pluck('id')->toArray();
         }, $updateCache);
 
         return $this->getTweetsData($userTweetsIds);
@@ -85,7 +86,7 @@ class TweetRepository
         $cacheKey = KEY_USERS_LIST_FEED . $usersList->id;
         $usersListTweets = $this->getCachedData($cacheKey, 15, function () use ($usersList) {
             $membersIds = $this->pluckKey($usersList->members(), 'id');
-            return $this->getFeedQuery($membersIds, null)->get();
+            return $this->getFeedQuery($membersIds, null)->get()->pluck('id')->toArray();
         }, $updateCache);
 
         return $this->getTweetsData($usersListTweets);
@@ -131,7 +132,7 @@ class TweetRepository
             ->take(20);
     }
 
-    private function getTweetsData(array $tweetsIds)
+    private function getTweetsData(array $tweetsIds): Collection
     {
         return new Collection(array_map(function ($tweetId) {
             return $this->getById($tweetId);
