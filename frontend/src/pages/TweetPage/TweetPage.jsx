@@ -6,56 +6,14 @@ import TweetAdditional from "../../components/Tweet/TweetAdditional";
 import Tweet from "../../components/Tweet/Tweet";
 import Footer from "../../components/Footer/Footer";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import RetweetModal from "./RetweetModal";
 
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
-import retweetWithComment from "../../assets/images/Tweet/retweetWithComment.svg";
 import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
 import pictureExample from "../../assets/images/Tweet/pictureExample.jpg";
 import arrow from "../../assets/images/Tweet/arrow.svg";
-import rectangle from "../../assets/images/Tweet/rectangle.svg";
-
-const RetweetModal = ({ onClose, showModal }) => (
-	<>
-		{showModal && (
-			<div className={styles["overlay"]} onClick={onClose}></div>
-		)}
-		<div
-			className={`${styles["modal"]} ${
-				showModal && styles["modal__open"]
-			}`}
-		>
-			<div className={styles["modal__wrapper"]}>
-				<img
-					className={styles["modal__rectangle"]}
-					src={rectangle}
-					alt=""
-					style={{height: '5px'}}
-				/>
-				<button className={styles["modal__button"]} onClick={onClose}>
-					<img
-						className={styles["modal__retweet-icon"]}
-						src={retweet}
-						alt=""
-					/>
-					<span>Retweet</span>
-				</button>
-				<button className={styles["modal__button"]} onClick={onClose}>
-					<img
-						className={styles["modal__pen-icon"]}
-						src={retweetWithComment}
-						alt=""
-					/>
-					<span>Retweet with comment</span>
-				</button>
-				<button className={styles["modal__cancel"]} onClick={onClose}>
-					Cancel
-				</button>
-			</div>
-		</div>
-	</>
-);
 
 function parseHashtags(text) {
 	const hashtagRegex = /#(\w+)/g;
