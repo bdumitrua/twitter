@@ -12,8 +12,7 @@
 	background: white;
 	padding: 8px 8px 32px 8px;
 	border-radius: 12px;
-	font-size: 19px;
-	font-weight: 400;
+	@include text-black(19px, 400);
 	position: fixed;
 	bottom: -235px;
 	transition: bottom 0.5s ease;
