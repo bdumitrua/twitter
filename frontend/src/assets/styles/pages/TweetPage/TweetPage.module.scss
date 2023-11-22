@@ -48,7 +48,6 @@
 
 	&__arrow {
 		img {
-			width: 11px;
 			height: 7px;
 			align-self: center;
 		}
@@ -105,7 +104,6 @@
 		@include flex-center();
 
 		img {
-			width: 18px;
 			height: 18px;
 		}
 	}
