@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import TweetPage from "../pages/TweetPage/TweetPage";
+import Profile from "../pages/Profile/Profile";
 
 const router = createBrowserRouter([
   {
@@ -11,6 +12,10 @@ const router = createBrowserRouter([
     path: "/tweet",
     element: <TweetPage />,
   },
+  {
+    path: "/profile",
+    element: <Profile />,
+  }
 ]);
 
 export default router;
