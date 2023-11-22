@@ -32,6 +32,26 @@ const RetweetModal = ({ onClose, showModal }) => (
 	</div>
 );
 
+function parseHashtags(text) {
+	const hashtagRegex = /#(\w+)/g;
+	const parts = [];
+	let lastIndex = 0;
+
+	text.replace(hashtagRegex, (match, tag, index) => {
+		parts.push(text.slice(lastIndex, index));
+		parts.push(
+			<a className={styles["tweet__hashtag"]} href={tag} key={index}>
+				#{tag}
+			</a>
+		);
+		lastIndex = index + match.length;
+	});
+
+	parts.push(text.slice(lastIndex));
+
+	return parts;
+}
+
 const TweetPage = () => {
 	const [showModal, setShowModal] = React.useState(false);
 
@@ -55,10 +75,11 @@ const TweetPage = () => {
 								</div>
 							</div>
 							<div className={styles["tweet__tweet-body"]}>
-								<span className={styles["tweet__text"]}>
-									~~ hiring for a UX Lead in Sydney - who
-									should I talk to?
-								</span>
+								<div className={styles["tweet__text"]}>
+									{parseHashtags(
+										" ~~ hiring for a UX Lead in Sydney - who should I talk to? #TellMeAboutYou"
+									)}
+								</div>
 								<div
 									className={styles["tweet__picture-wrapper"]}
 								>
