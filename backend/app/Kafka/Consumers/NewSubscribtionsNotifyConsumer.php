@@ -4,7 +4,7 @@ namespace App\Kafka\Consumers;
 
 use App\Kafka\BaseConsumer;
 
-class TweetLikesConsumer extends BaseConsumer
+class NewSubscribtionsNotifyConsumer extends BaseConsumer
 {
     public function consume(): void
     {

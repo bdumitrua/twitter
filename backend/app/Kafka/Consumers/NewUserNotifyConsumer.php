@@ -5,7 +5,7 @@ namespace App\Kafka\Consumers;
 use App\Kafka\BaseConsumer;
 use Enqueue\RdKafka\RdKafkaConnectionFactory;
 
-class UserCreatedConsumer extends BaseConsumer
+class NewUserNotifyConsumer extends BaseConsumer
 {
     public function consume(): void
     {

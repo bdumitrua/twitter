@@ -10,12 +10,17 @@ abstract class BaseConsumer
     protected $consumer;
     protected string $topicName;
 
-    public function __construct(string $topicName)
+    public function __construct(string $topicName, string $consumerGroup)
     {
         $this->topicName = $topicName;
         $connectionFactory = new RdKafkaConnectionFactory([
             'global' => [
                 'metadata.broker.list' => config('kafka.broker_list'),
+                'group.id' => $consumerGroup,
+                'enable.auto.commit' => 'true',
+            ],
+            'topic' => [
+                'auto.offset.reset' => 'earliest',
             ],
         ]);
 

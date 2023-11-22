@@ -2,12 +2,12 @@
 
 namespace App\Console\Commands\KafkaConsumers;
 
-use App\Kafka\Consumers\UserCreatedConsumer;
+use App\Kafka\Consumers\NewUserNotifyConsumer;
 use Illuminate\Console\Command;
 
 class KafkaConsumeCommand extends Command
 {
-    protected $signature = 'kafka:consume {topic}';
+    protected $signature = 'kafka:consume:new_user_notify';
     protected $description = 'Consume messages from your topic';
 
     public function __construct()
@@ -18,10 +18,9 @@ class KafkaConsumeCommand extends Command
     public function handle()
     {
         try {
-            $topic = $this->argument('topic');
-            $this->info("Starting {$topic} topic consumer...");
+            $this->info("Starting " . NewUserNotifyConsumer::class . "...");
 
-            $consumer = new UserCreatedConsumer($topic);
+            $consumer = new NewUserNotifyConsumer('created_users', NewUserNotifyConsumer::class);
             $consumer->consume();
         } catch (\LogicException $e) {
             $this->error($e->getMessage());
