@@ -1,10 +1,10 @@
 import React from "react";
-import Home from "./pages/Home/Home";
+import DefaultLayout from "./pages/DefaultLayout";
 
 const App = () => {
 	return (
 		<div>
-			<Home />
+			<DefaultLayout />
 		</div>
 	);
 };
