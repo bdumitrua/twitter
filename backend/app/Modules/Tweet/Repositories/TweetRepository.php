@@ -12,7 +12,6 @@ use App\Modules\User\Repositories\UserRepository;
 use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Collection as IlluminateCollection;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -35,6 +34,20 @@ class TweetRepository
     {
         return $this->tweet->newQuery()
             ->with('author')
+            ->with(['replies' => function ($query) {
+                $query->orderBy('type', 'desc') // Сначала 'thread', потом 'comment'
+                    ->where(function ($q) {
+                        $q->where('type', 'comment')
+                            ->orWhere('type', 'thread');
+                    });
+            }])->where(function ($query) {
+                $query->where('type', 'default')
+                    ->orWhere(function ($q) {
+                        $q->where('type', 'comment')
+                            ->orWhere('type', 'thread');
+                    });
+            })->whereNull('linked_tweet_id')
+            ->orderBy('type', 'desc') // Сначала 'thread', потом 'comment'
             ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
             ->orderBy('created_at', 'desc');
     }

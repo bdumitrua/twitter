@@ -21,13 +21,25 @@ class TweetFactory extends Factory
      */
     public function definition(): array
     {
+        // 'text' => 'nullable|string|max:255',
+        // 'userGroupId' => 'nullable|exists:user_groups,id',
+        // 'type' => 'nullable|in:repost,reply,quote,thread',
+        // 'linkedTweetId' => 'nullable|exists:tweets,id',
+
+        // $userGroup = fake()->boolean(20) ? UserGroup::all()->random() : null;
+
         $user = User::all()->random();
-        $userGroup = fake()->boolean(20) ? UserGroup::all()->random() : null;
+        $isFirst = empty(Tweet::count());
+        $linkedTweetId = fake()->boolean(70) && !empty($isFirst) ? Tweet::all()->random() : null;
+        $type = empty($linkedTweetId) ? 'default' : 'comment';
 
         return [
             'user_id' => $user->id,
-            'user_group_id' => $userGroup ? $userGroup->id : null,
             'text' => fake()->words(10, true),
+            // 'user_group_id' => $userGroup ? $userGroup->id : null,
+            'user_group_id' => null,
+            'type' => $type,
+            'linked_tweet_id' => $linkedTweetId,
         ];
     }
 }
