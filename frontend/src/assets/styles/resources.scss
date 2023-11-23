@@ -18,6 +18,11 @@ $overlay: rgba(0, 0, 0, 0.5);
 	align-items: center;
 }
 
+@mixin flex-start() {
+	display: flex;
+	align-items: flex-start;
+}
+
 @mixin flex-column() {
 	display: flex;
 	flex-direction: column;

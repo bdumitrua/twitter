@@ -13,7 +13,7 @@ const Header = (props) => {
 
 	return (
 		<div className={styles["header"]}>
-			{location.pathname === "/tweet" ? (
+			{location.pathname === "/tweet" || location.pathname === "/profile" ? (
 				<>
 					<Link to="/">
 						<img src={leftArrowIcon} alt="" />
