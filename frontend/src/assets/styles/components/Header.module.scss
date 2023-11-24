@@ -2,9 +2,9 @@
 
 .header {
 	@include flex-between();
+	height: 44px;
 	background-color: $white;
 	padding: 5px 20px;
-	height: 44px;
 	border-bottom: 1px solid $gray;
 	position: sticky;
 	top: 0;
@@ -26,7 +26,7 @@
 
 	&__title {
 		@include text-black(16px, 800);
-		letter-spacing: -0.5px;
 		margin: auto;
+		letter-spacing: -0.5px;
 	}
 }
