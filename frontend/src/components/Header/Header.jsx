@@ -10,7 +10,6 @@ import styles from "../../assets/styles/components/Header.module.scss";
 const Header = (props) => {
 	const location = useLocation();
 
-	console.log(location.pathname);
 	return (
 		<div className={styles["header"]}>
 			{location.pathname === "/tweet" ||
