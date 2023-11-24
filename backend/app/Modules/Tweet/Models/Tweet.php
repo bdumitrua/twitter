@@ -20,8 +20,6 @@ class Tweet extends Model
         'linked_tweet_id'
     ];
 
-    protected $guarded = [];
-
     protected static function newFactory()
     {
         return TweetFactory::new();
