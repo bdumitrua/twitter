@@ -68,25 +68,100 @@ class TweetRepository
             return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get()->pluck('id')->toArray();
         }, $updateCache);
 
-        return $this->getTweetsData($userFeedTweetsIds);
+        return $this->assembleTweetsCollection($userFeedTweetsIds);
     }
 
-    public function getByUserId(int $userId, bool $updateCache = false)
+    public function getByUserId(int $userId, bool $updateCache = false): Collection
     {
         $cacheKey = KEY_USER_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryByUserId($userId)->get()->pluck('id')->toArray();
-        }, true);
-        $userTweets = $this->getTweetsData($userTweetsIds);
+        }, $updateCache);
+
+        return $this->assembleTweetsCollection($userTweetsIds);
+    }
+
+    public function getFeedByUsersList(UsersList $usersList, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USERS_LIST_FEED . $usersList->id;
+        $usersListTweets = $this->getCachedData($cacheKey, 15, function () use ($usersList) {
+            $membersIds = $this->pluckKey($usersList->members(), 'id');
+            return $this->getFeedQuery($membersIds, null)->get()->pluck('id')->toArray();
+        }, $updateCache);
+
+        return $this->getTweetsData($usersListTweets);
+    }
+
+    public function create(TweetDTO $tweetDTO, int $userId): void
+    {
+        $data = $tweetDTO->toArray();
+        $data['user_id'] = $userId;
+        $data = array_filter($data, fn ($value) => !is_null($value));
+
+        $this->tweet->create($data);
+    }
+
+    public function destroy(Tweet $tweet): void
+    {
+        $tweet->delete();
+    }
+
+    public function recacheUserTweets(int $userId): void
+    {
+        $this->getByUserId($userId, true);
+    }
+
+    private function getFeedQuery(array $userIds, ?array $groupIds = null): Builder
+    {
+        return $this->baseQuery()
+            ->whereIn('user_id', $userIds)
+            ->where(function (Builder $query) use ($groupIds) {
+                if ($groupIds) {
+                    $query->where(function (Builder $query) use ($groupIds) {
+                        $query->whereNull('user_group_id')
+                            ->orWhereIn('user_group_id', $groupIds);
+                    });
+                } else {
+                    $query->whereNull('user_group_id');
+                }
+            })
+            ->orderBy('created_at', 'desc')
+            ->take(20);
+    }
+
+    private function getTweetsData(array $tweetsIds): Collection
+    {
+        return new Collection(array_map(function ($tweetId) {
+            return $this->getById($tweetId);
+        }, $tweetsIds));
+    }
+
+    private function getUser(int $userId): User
+    {
+        return $this->userRepository->getById($userId);
+    }
+
+    private function pluckKey($relation, string $key): array
+    {
+        return $relation->pluck($key)->toArray();
+    }
+
+    /**
+     * Tweets assembling and work with threads
+     */
+
+    private function assembleTweetsCollection(array $tweetsIds): Collection
+    {
+        $tweetsData = $this->getTweetsData($tweetsIds);
 
         $result = new Collection();
         $processedTweetIds = []; // Массив для отслеживания обработанных ID
-        foreach ($userTweetsIds as $tweetId) {
+        foreach ($tweetsIds as $tweetId) {
             if (in_array($tweetId, $processedTweetIds)) {
                 continue; // Пропускаем твит, если он уже был обработан
             }
 
-            $tweet = $userTweets->firstWhere('id', $tweetId);
+            $tweet = $tweetsData->firstWhere('id', $tweetId);
             if ($tweet->type === 'thread') {
                 $threadStartId = $this->findThreadStartId($tweetId);
                 $thread = $this->buildThread($threadStartId);
@@ -175,70 +250,5 @@ class TweetRepository
         if (!empty($thread->thread)) {
             $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread->thread);
         }
-    }
-
-    public function getFeedByUsersList(UsersList $usersList, bool $updateCache = false): Collection
-    {
-        $cacheKey = KEY_USERS_LIST_FEED . $usersList->id;
-        $usersListTweets = $this->getCachedData($cacheKey, 15, function () use ($usersList) {
-            $membersIds = $this->pluckKey($usersList->members(), 'id');
-            return $this->getFeedQuery($membersIds, null)->get()->pluck('id')->toArray();
-        }, $updateCache);
-
-        return $this->getTweetsData($usersListTweets);
-    }
-
-    public function create(TweetDTO $tweetDTO, int $userId): void
-    {
-        $data = $tweetDTO->toArray();
-        $data['user_id'] = $userId;
-        $data = array_filter($data, fn ($value) => !is_null($value));
-
-        $this->tweet->create($data);
-    }
-
-    public function destroy(Tweet $tweet): void
-    {
-        $tweet->delete();
-    }
-
-    public function recacheUserTweets(int $userId): void
-    {
-        $this->getByUserId($userId, true);
-    }
-
-    private function getFeedQuery(array $userIds, ?array $groupIds = null): Builder
-    {
-        return $this->baseQuery()
-            ->whereIn('user_id', $userIds)
-            ->where(function (Builder $query) use ($groupIds) {
-                if ($groupIds) {
-                    $query->where(function (Builder $query) use ($groupIds) {
-                        $query->whereNull('user_group_id')
-                            ->orWhereIn('user_group_id', $groupIds);
-                    });
-                } else {
-                    $query->whereNull('user_group_id');
-                }
-            })
-            ->orderBy('created_at', 'desc')
-            ->take(20);
-    }
-
-    private function getTweetsData(array $tweetsIds): Collection
-    {
-        return new Collection(array_map(function ($tweetId) {
-            return $this->getById($tweetId);
-        }, $tweetsIds));
-    }
-
-    private function getUser(int $userId): User
-    {
-        return $this->userRepository->getById($userId);
-    }
-
-    private function pluckKey($relation, string $key): array
-    {
-        return $relation->pluck($key)->toArray();
     }
 }
