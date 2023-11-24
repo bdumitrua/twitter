@@ -1,12 +1,11 @@
-import React from "react";
-import styles from "../../assets/styles/pages/Home.module.scss";
+import styles from "../../assets/styles/pages/Feed.module.scss";
 import Tweet from "../../components/Tweet/Tweet";
 
-const Home = (props) => {
+const Feed = (props) => {
 	const haveThread = true;
 
 	return (
-		<div className={styles["home__wrapper"]}>
+		<div className={styles["feed__wrapper"]}>
 			<Tweet haveThread={haveThread} />
 			<Tweet />
 			<Tweet />
@@ -19,4 +18,4 @@ const Home = (props) => {
 	);
 };
 
-export default Home;
+export default Feed;

@@ -36,7 +36,7 @@ const Tweet = (props) => {
 						</div>
 						<div className={styles["tweet__tweet-body"]}>
 							<span className={styles["tweet__text"]}>
-								{parseHashtags(tweetText, "home")}
+								{parseHashtags(tweetText, "feed")}
 							</span>
 						</div>
 						<div className={styles["tweet__counters"]}>

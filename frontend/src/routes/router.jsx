@@ -1,9 +1,6 @@
-import {
-	createBrowserRouter,
-	Navigate,
-} from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import DefaultLayout from "../pages/DefaultLayout";
-import Home from "../pages/Home/Home";
+import Feed from "../pages/Feed/Feed";
 import Profile from "../pages/Profile/Profile";
 import TweetPage from "../pages/TweetPage/TweetPage";
 
@@ -14,11 +11,11 @@ const router = createBrowserRouter([
 		children: [
 			{
 				path: "/",
-				element: <Navigate to="/home" />,
+				element: <Navigate to="/feed" />,
 			},
 			{
-				path: "/home",
-				element: <Home />,
+				path: "/feed",
+				element: <Feed />,
 			},
 			{
 				path: "/tweet",
