@@ -12,6 +12,7 @@ use App\Modules\User\Repositories\UserRepository;
 use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -19,8 +20,8 @@ class TweetRepository
 {
     use GetCachedData;
 
-    protected $tweet;
-    protected $userRepository;
+    protected Tweet $tweet;
+    protected UserRepository $userRepository;
 
     public function __construct(
         Tweet $tweet,
@@ -34,20 +35,6 @@ class TweetRepository
     {
         return $this->tweet->newQuery()
             ->with('author')
-            ->with(['replies' => function ($query) {
-                $query->orderBy('type', 'desc') // Сначала 'thread', потом 'comment'
-                    ->where(function ($q) {
-                        $q->where('type', 'comment')
-                            ->orWhere('type', 'thread');
-                    });
-            }])->where(function ($query) {
-                $query->where('type', 'default')
-                    ->orWhere(function ($q) {
-                        $q->where('type', 'comment')
-                            ->orWhere('type', 'thread');
-                    });
-            })->whereNull('linked_tweet_id')
-            ->orderBy('type', 'desc') // Сначала 'thread', потом 'comment'
             ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
             ->orderBy('created_at', 'desc');
     }
@@ -84,14 +71,110 @@ class TweetRepository
         return $this->getTweetsData($userFeedTweetsIds);
     }
 
-    public function getByUserId(int $userId, bool $updateCache = false): Collection
+    public function getByUserId(int $userId, bool $updateCache = false)
     {
         $cacheKey = KEY_USER_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryByUserId($userId)->get()->pluck('id')->toArray();
-        }, $updateCache);
+        }, true);
+        $userTweets = $this->getTweetsData($userTweetsIds);
 
-        return $this->getTweetsData($userTweetsIds);
+        $result = new Collection();
+        $processedTweetIds = []; // Массив для отслеживания обработанных ID
+        foreach ($userTweetsIds as $tweetId) {
+            if (in_array($tweetId, $processedTweetIds)) {
+                continue; // Пропускаем твит, если он уже был обработан
+            }
+
+            $tweet = $userTweets->firstWhere('id', $tweetId);
+            if ($tweet->type === 'thread') {
+                $threadStartId = $this->findThreadStartId($tweetId);
+                $thread = $this->buildThread($threadStartId);
+
+                $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread);
+                $result->push($thread);
+            } else {
+                $result->push($tweet);
+                $processedTweetIds[] = $tweet->id; // Отметить твит как обработанный
+            }
+        }
+
+        return $result;
+    }
+
+    private function findThreadStartId($tweetId)
+    {
+        $tweet = Tweet::find($tweetId);
+        while ($tweet->linked_tweet_id !== null) {
+            $tweet = Tweet::find($tweet->linked_tweet_id);
+        }
+        return $tweet->id;
+    }
+
+    private function buildThread($tweetId): object
+    {
+        /* 
+            Запрос сначала берёт данные конкретного нашего твита, а затем 
+            рекурсивно берёт все твитты, которые ссылаются на данный твит по id
+        */
+        $sql = "
+        WITH RECURSIVE ThreadChain AS (
+            SELECT 
+                id
+            FROM 
+                tweets 
+            WHERE 
+                id = :startTweetId
+        
+            UNION ALL
+        
+            SELECT 
+                t.id
+            FROM 
+                tweets t
+            INNER JOIN ThreadChain tc ON t.linked_tweet_id = tc.id
+            WHERE 
+                t.type = 'thread'
+        )
+        SELECT * FROM ThreadChain;
+        ";
+
+        $sqlData = DB::select($sql, ['startTweetId' => $tweetId]);
+        $tweetIds = array_map(function ($tweet) {
+            return $tweet->id;
+        }, $sqlData);
+        $tweets = $this->getTweetsData($tweetIds);
+        return $this->buildNestedThread($tweets);
+    }
+
+    private function buildNestedThread($tweets)
+    {
+        $tweetsById = [];
+        foreach ($tweets as $tweet) {
+            $tweetsById[$tweet->id] = $tweet;
+            $tweet->thread = [];
+        }
+
+        foreach ($tweets as $tweet) {
+            if ($tweet->linked_tweet_id !== null && isset($tweetsById[$tweet->linked_tweet_id])) {
+                $tweetsById[$tweet->linked_tweet_id]->thread = $tweet;
+            }
+        }
+
+        // Фильтрация для получения только начальных твитов треда
+        $thread = $tweets->filter(function ($tweet) {
+            return $tweet->linked_tweet_id === null;
+        });
+
+        return $thread->first();
+    }
+
+    private function addThreadTweetIdsToProcessed(&$processedTweetIds, $thread)
+    {
+        $processedTweetIds[] = $thread->id;
+        if (!empty($thread->thread)) {
+            $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread->thread);
+        }
     }
 
     public function getFeedByUsersList(UsersList $usersList, bool $updateCache = false): Collection
@@ -107,14 +190,11 @@ class TweetRepository
 
     public function create(TweetDTO $tweetDTO, int $userId): void
     {
-        $this->tweet->user_id = $userId;
-        foreach ($tweetDTO as $property => $value) {
-            if (property_exists($this->tweet, $property)) {
-                $this->tweet->{$property} = $value;
-            }
-        }
+        $data = $tweetDTO->toArray();
+        $data['user_id'] = $userId;
+        $data = array_filter($data, fn ($value) => !is_null($value));
 
-        $this->tweet->save();
+        $this->tweet->create($data);
     }
 
     public function destroy(Tweet $tweet): void

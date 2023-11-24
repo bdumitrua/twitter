@@ -20,6 +20,8 @@ class Tweet extends Model
         'linked_tweet_id'
     ];
 
+    protected $guarded = [];
+
     protected static function newFactory()
     {
         return TweetFactory::new();
@@ -50,6 +52,12 @@ class Tweet extends Model
     public function parent()
     {
         return $this->belongsTo(Tweet::class, 'linked_tweet_id');
+    }
+
+    public function child()
+    {
+        return $this->hasOne(Tweet::class, 'linked_tweet_id', 'id')
+            ->where('type', 'thread');
     }
 
     public function replies()

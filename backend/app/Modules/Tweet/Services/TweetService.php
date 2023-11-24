@@ -48,9 +48,10 @@ class TweetService
         return $this->tweetRepository->getUserFeed(Auth::id());
     }
 
-    public function user(User $user): Collection
+    public function user(User $user)
     {
         $userTweets = $this->tweetRepository->getByUserId($user->id);
+        return $userTweets;
         return $this->filterTweetsByGroup($userTweets, $this->authorizedUserId);
     }
 
@@ -93,7 +94,7 @@ class TweetService
 
     private function validateTweetTypeData(TweetRequest $tweetRequest): void
     {
-        if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
+        if (!empty($tweetRequest->type) && $tweetRequest->type !== "thread" && empty($tweetRequest->linkedTweetId)) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
         }
     }
