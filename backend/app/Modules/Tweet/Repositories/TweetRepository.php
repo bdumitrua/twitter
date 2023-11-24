@@ -177,7 +177,7 @@ class TweetRepository
         return $result;
     }
 
-    private function findThreadStartId($tweetId)
+    private function findThreadStartId(int $tweetId)
     {
         $tweet = Tweet::find($tweetId);
         while ($tweet->linked_tweet_id !== null) {
@@ -186,7 +186,7 @@ class TweetRepository
         return $tweet->id;
     }
 
-    private function buildThread($tweetId): object
+    private function buildThread(int $tweetId): Tweet
     {
         /* 
             Запрос сначала берёт данные конкретного нашего твита, а затем 
@@ -222,7 +222,7 @@ class TweetRepository
         return $this->buildNestedThread($tweets);
     }
 
-    private function buildNestedThread($tweets)
+    private function buildNestedThread(Collection $tweets): Tweet
     {
         $tweetsById = [];
         foreach ($tweets as $tweet) {
@@ -244,7 +244,7 @@ class TweetRepository
         return $thread->first();
     }
 
-    private function addThreadTweetIdsToProcessed(&$processedTweetIds, $thread)
+    private function addThreadTweetIdsToProcessed(array &$processedTweetIds, Tweet $thread): void
     {
         $processedTweetIds[] = $thread->id;
         if (!empty($thread->thread)) {
