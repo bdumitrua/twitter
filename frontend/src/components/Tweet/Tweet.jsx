@@ -1,13 +1,11 @@
-import React from "react";
-
-import UserAvatar from "../UserAvatar/UserAvatar";
-import { parseHashtags } from "../../utils/functions/parseHashtags";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
 import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
 import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
+import { parseHashtags } from "../../utils/functions/parseHashtags";
+import UserAvatar from "../UserAvatar/UserAvatar";
 import TweetAdditional from "./TweetAdditional";
 import TweetThread from "./TweetThread";
 

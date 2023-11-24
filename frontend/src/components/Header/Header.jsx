@@ -1,11 +1,10 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import accountImage from "../../assets/images/Header/accountImage.svg";
+import leftArrowIcon from "../../assets/images/Header/leftArrowIcon.svg";
 import somthingIcon from "../../assets/images/Header/somethingIcon.svg";
 import twitterLogo from "../../assets/images/Header/twitterLogo.svg";
-import leftArrowIcon from "../../assets/images/Header/leftArrowIcon.svg";
 import styles from "../../assets/styles/components/Header.module.scss";
 
 const Header = (props) => {
@@ -13,7 +12,8 @@ const Header = (props) => {
 
 	return (
 		<div className={styles["header"]}>
-			{location.pathname === "/tweet" || location.pathname === "/profile" ? (
+			{location.pathname === "/tweet" ||
+			location.pathname === "/profile" ? (
 				<>
 					<Link to="/">
 						<img src={leftArrowIcon} alt="" />
