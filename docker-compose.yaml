@@ -107,5 +107,4 @@ networks:
 volumes:
     node_modules:
     vendor:
-    .dbdata:
     .env:

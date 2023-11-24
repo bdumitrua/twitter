@@ -10,11 +10,13 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetRepository;
 use App\Modules\Tweet\Requests\TweetRequest;
+use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -43,18 +45,20 @@ class TweetService
      * Для ленты - кэш на 15 сек
      */
 
-    public function index(): Collection
+    public function index(): JsonResource
     {
-        return $this->tweetRepository->getUserFeed(Auth::id());
+        return TweetResource::collection($this->tweetRepository->getUserFeed(Auth::id()));
     }
 
-    public function user(User $user): Collection
+    public function user(User $user): JsonResource
     {
         $userTweets = $this->tweetRepository->getByUserId($user->id);
-        return $this->filterTweetsByGroup($userTweets, $this->authorizedUserId);
+        $userTweets = $this->filterTweetsByGroup($userTweets, $this->authorizedUserId);
+
+        return TweetResource::collection($userTweets);
     }
 
-    public function list(UsersList $usersList): Collection
+    public function list(UsersList $usersList): JsonResource
     {
         if ($usersList->is_private) {
             if (!in_array($this->authorizedUserId, $this->pluckKey($usersList->subscribers(), 'user_id'))) {
@@ -63,10 +67,12 @@ class TweetService
         }
 
         $usersListFeed = $this->tweetRepository->getFeedByUsersList($usersList);
-        return $this->filterTweetsByGroup($usersListFeed, $this->authorizedUserId);
+        $tweets = $this->filterTweetsByGroup($usersListFeed, $this->authorizedUserId);
+
+        return TweetResource::collection($tweets);
     }
 
-    public function show(Tweet $tweet): Collection
+    public function show(Tweet $tweet): JsonResource
     {
         $tweet = $this->tweetRepository->getById($tweet->id);
         $tweetAfterFiltering = $this->filterTweetsByGroup(new Collection([$tweet]), $this->authorizedUserId);
@@ -75,7 +81,7 @@ class TweetService
             throw new HttpException(Response::HTTP_NOT_FOUND, 'Tweet not found');
         }
 
-        return $tweetAfterFiltering;
+        return new TweetResource($tweetAfterFiltering->first());
     }
 
     public function create(TweetRequest $tweetRequest): void
@@ -93,7 +99,7 @@ class TweetService
 
     private function validateTweetTypeData(TweetRequest $tweetRequest): void
     {
-        if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
+        if (!empty($tweetRequest->type) && $tweetRequest->type !== "thread" && empty($tweetRequest->linkedTweetId)) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
         }
     }

@@ -22,11 +22,9 @@ class TweetFactory extends Factory
     public function definition(): array
     {
         $user = User::all()->random();
-        $userGroup = fake()->boolean(20) ? UserGroup::all()->random() : null;
 
         return [
             'user_id' => $user->id,
-            'user_group_id' => $userGroup ? $userGroup->id : null,
             'text' => fake()->words(10, true),
         ];
     }

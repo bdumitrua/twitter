@@ -23,13 +23,6 @@ class UserGroup extends Model
         return UserGroupFactory::new();
     }
 
-    // public function resolveRouteBinding($value, $field = null)
-    // {
-    //     return Cache::remember("group_base_{$value}", 60, function () use ($value, $field) {
-    //         return parent::resolveRouteBinding($value, $field);
-    //     });
-    // }
-
     public function members()
     {
         return $this->hasMany(UserGroupMember::class, 'user_group_id');
