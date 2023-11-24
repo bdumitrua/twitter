@@ -15,7 +15,15 @@ class TweetResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $author = $this->whenLoaded('author', function () {
+            return new UserResource($this->author);
+        });
+
         $thread = $this->thread ? new TweetResource($this->thread) : [];
+
+        $replies = $this->whenLoaded('replies', function () {
+            return TweetResource::collection($this->replies);
+        });
 
         return [
             'id' => $this->id,
@@ -30,8 +38,9 @@ class TweetResource extends JsonResource
             'reposts_count' => $this->reposts_count,
             'replies_count' => $this->replies_count,
             'quotes_count' => $this->quotes_count,
-            'author' => new UserResource($this->whenLoaded('author')),
-            'thread' => $thread
+            'author' => $author,
+            'thread' => $thread,
+            'replies' => $replies
         ];
     }
 }

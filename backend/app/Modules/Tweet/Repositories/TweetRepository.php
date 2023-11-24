@@ -2,7 +2,6 @@
 
 namespace App\Modules\Tweet\Repositories;
 
-use App\Helpers\TimeHelper;
 use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
@@ -51,10 +50,9 @@ class TweetRepository
 
     public function getById(int $tweetId): Tweet
     {
-        $cacheKey = KEY_TWEET_DATA . $tweetId;
-        return $this->getCachedData($cacheKey, TweetAgeHelper::getTweetAge(Tweet::findOrFail($tweetId)), function () use ($tweetId) {
-            return $this->queryById($tweetId)->first();
-        });
+        $tweet = $this->getTweetData($tweetId);
+
+        return $this->assembleTweetReplies($tweet);
     }
 
     public function getUserFeed(int $userId, bool $updateCache = false): Collection
@@ -106,9 +104,19 @@ class TweetRepository
         $tweet->delete();
     }
 
-    public function recacheUserTweets(int $userId): void
+    protected function getTweetsData(array $tweetsIds): Collection
     {
-        $this->getByUserId($userId, true);
+        return new Collection(array_map(function ($tweetId) {
+            return $this->getTweetData($tweetId);
+        }, $tweetsIds));
+    }
+
+    protected function getTweetData(int $tweetId): Tweet
+    {
+        $cacheKey = KEY_TWEET_DATA . $tweetId;
+        return $this->getCachedData($cacheKey, TweetAgeHelper::getTweetAge(Tweet::findOrFail($tweetId)), function () use ($tweetId) {
+            return $this->queryById($tweetId)->first();
+        });
     }
 
     private function getFeedQuery(array $userIds, ?array $groupIds = null): Builder
@@ -127,13 +135,6 @@ class TweetRepository
             })
             ->orderBy('created_at', 'desc')
             ->take(20);
-    }
-
-    private function getTweetsData(array $tweetsIds): Collection
-    {
-        return new Collection(array_map(function ($tweetId) {
-            return $this->getById($tweetId);
-        }, $tweetsIds));
     }
 
     private function getUser(int $userId): User
@@ -177,6 +178,20 @@ class TweetRepository
         return $result;
     }
 
+    private function assembleTweetReplies(Tweet $tweet): Tweet
+    {
+        if ($tweet->type === 'thread') {
+            $threadStartId = $this->findThreadStartId($tweet->id);
+            $tweet->thread = $this->buildThread($threadStartId, $tweet->id);
+        }
+
+        $tweet->load(['replies' => function ($query) {
+            $query->take(15)->get();
+        }]);
+
+        return $tweet;
+    }
+
     private function findThreadStartId(int $tweetId)
     {
         $tweet = Tweet::find($tweetId);
@@ -186,7 +201,7 @@ class TweetRepository
         return $tweet->id;
     }
 
-    private function buildThread(int $tweetId): Tweet
+    private function buildThread(int $tweetId, int $startTweetId = null): Tweet
     {
         /* 
             Запрос сначала берёт данные конкретного нашего твита, а затем 
@@ -219,10 +234,10 @@ class TweetRepository
             return $tweet->id;
         }, $sqlData);
         $tweets = $this->getTweetsData($tweetIds);
-        return $this->buildNestedThread($tweets);
+        return $this->buildNestedThread($tweets, $startTweetId);
     }
 
-    private function buildNestedThread(Collection $tweets): Tweet
+    private function buildNestedThread(Collection $tweets, int $startTweetId = null): Tweet
     {
         $tweetsById = [];
         foreach ($tweets as $tweet) {
@@ -236,12 +251,16 @@ class TweetRepository
             }
         }
 
-        // Фильтрация для получения только начальных твитов треда
-        $thread = $tweets->filter(function ($tweet) {
-            return $tweet->linked_tweet_id === null;
-        });
+        if (empty($startTweetId)) {
+            $thread = $tweets->filter(function ($tweet) {
+                return $tweet->linked_tweet_id === null;
+            });
 
-        return $thread->first();
+            return $thread->first();
+            return $tweets->whereNull('linked_tweet_id');
+        } else {
+            return $tweets->firstWhere('id', '>', $startTweetId) ?? new Tweet();
+        }
     }
 
     private function addThreadTweetIdsToProcessed(array &$processedTweetIds, Tweet $thread): void
