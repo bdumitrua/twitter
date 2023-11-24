@@ -25,13 +25,6 @@ class UsersList extends Model
         return UsersListFactory::new();
     }
 
-    // public function resolveRouteBinding($value, $field = null)
-    // {
-    //     return Cache::remember("users_list_base_{$value}", 60, function () use ($value, $field) {
-    //         return parent::resolveRouteBinding($value, $field);
-    //     });
-    // }
-
     public function members()
     {
         return $this->hasMany(UsersListMember::class, 'users_list_id');
