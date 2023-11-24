@@ -10,13 +10,14 @@ import styles from "../../assets/styles/components/Header.module.scss";
 const Header = (props) => {
 	const location = useLocation();
 
-	const pathnames = ["tweet", "profile"];
+	const entities = ["tweet", "profile"];
+	const isEntity = entities.some(
+		(entity) => entity === location.pathname.split("/")[1]
+	);
 
 	return (
 		<div className={styles["header"]}>
-			{pathnames.some(
-				(pathname) => pathname === location.pathname.split("/")[1]
-			) ? (
+			{isEntity ? (
 				<>
 					<Link to="/">
 						<img src={leftArrowIcon} alt="" />
