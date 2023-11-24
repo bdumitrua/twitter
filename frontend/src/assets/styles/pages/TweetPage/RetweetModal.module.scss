@@ -5,7 +5,7 @@
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: $el-prior;
+	z-index: $z-overlay;
 }
 
 .modal {
@@ -16,7 +16,7 @@
 	border-radius: 12px;
 	position: fixed;
 	bottom: -235px;
-	z-index: $modal-prior;
+	z-index: $z-modals;
 	transition: bottom 0.5s ease;
 
 	&__open {

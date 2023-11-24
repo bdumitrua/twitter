@@ -6,11 +6,10 @@ $white: #fff;
 $bold-text: #141619;
 $overlay: rgba(0, 0, 0, 0.5);
 
-$def-prior: 1;
-$el-prior: 5;
-$modal-prior: 10;
-$over-modal-prior: 15;
-$highest-prior: 20;
+$z-action-button: 1;
+$z-footer: 1;
+$z-overlay: 2;
+$z-modals: 3;
 
 @mixin flex-between() {
 	display: flex;
