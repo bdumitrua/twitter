@@ -257,7 +257,6 @@ class TweetRepository
             });
 
             return $thread->first();
-            return $tweets->whereNull('linked_tweet_id');
         } else {
             return $tweets->firstWhere('id', '>', $startTweetId) ?? new Tweet();
         }
