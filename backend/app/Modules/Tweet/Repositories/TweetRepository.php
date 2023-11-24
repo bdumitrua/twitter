@@ -89,7 +89,7 @@ class TweetRepository
             return $this->getFeedQuery($membersIds, null)->get()->pluck('id')->toArray();
         }, $updateCache);
 
-        return $this->getTweetsData($usersListTweets);
+        return $this->assembleTweetsCollection($usersListTweets);
     }
 
     public function create(TweetDTO $tweetDTO, int $userId): void
