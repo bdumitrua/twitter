@@ -28,5 +28,9 @@
 		@include text-black(16px, 800);
 		margin: auto;
 		letter-spacing: -0.5px;
+
+		&::first-letter {
+			text-transform: uppercase;
+		}
 	}
 }

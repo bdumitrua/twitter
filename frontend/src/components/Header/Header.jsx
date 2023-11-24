@@ -10,15 +10,20 @@ import styles from "../../assets/styles/components/Header.module.scss";
 const Header = (props) => {
 	const location = useLocation();
 
+	const pathnames = ["tweet", "profile"];
+
 	return (
 		<div className={styles["header"]}>
-			{location.pathname === "/tweet" ||
-			location.pathname === "/profile" ? (
+			{pathnames.some(
+				(pathname) => pathname === location.pathname.split("/")[1]
+			) ? (
 				<>
 					<Link to="/">
 						<img src={leftArrowIcon} alt="" />
 					</Link>
-					<span className={styles["header__title"]}>Tweet</span>
+					<span className={styles["header__title"]}>
+						{location.pathname.split("/")[1]}
+					</span>
 				</>
 			) : (
 				<>
