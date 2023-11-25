@@ -1,24 +1,30 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import accountImage from "../../assets/images/Header/accountImage.svg";
+import leftArrowIcon from "../../assets/images/Header/leftArrowIcon.svg";
 import somthingIcon from "../../assets/images/Header/somethingIcon.svg";
 import twitterLogo from "../../assets/images/Header/twitterLogo.svg";
-import leftArrowIcon from "../../assets/images/Header/leftArrowIcon.svg";
 import styles from "../../assets/styles/components/Header.module.scss";
 
 const Header = (props) => {
 	const location = useLocation();
 
+	const entities = ["tweet", "profile"];
+	const isEntity = entities.some(
+		(entity) => entity === location.pathname.split("/")[1]
+	);
+
 	return (
 		<div className={styles["header"]}>
-			{location.pathname === "/tweet" ? (
+			{isEntity ? (
 				<>
 					<Link to="/">
 						<img src={leftArrowIcon} alt="" />
 					</Link>
-					<span className={styles["header__title"]}>Tweet</span>
+					<span className={styles["header__title"]}>
+						{location.pathname.split("/")[1]}
+					</span>
 				</>
 			) : (
 				<>

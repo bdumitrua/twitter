@@ -1,22 +1,20 @@
 import React from "react";
 
 import styles from "../../assets/styles/pages/TweetPage/TweetPage.module.scss";
-import Header from "../../components/Header/Header";
-import TweetAdditional from "../../components/Tweet/TweetAdditional";
 import Tweet from "../../components/Tweet/Tweet";
-import Footer from "../../components/Footer/Footer";
+import TweetAdditional from "../../components/Tweet/TweetAdditional";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
 import RetweetModal from "./RetweetModal";
 
-import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
+import arrow from "../../assets/images/Tweet/arrow.svg";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
-import retweet from "../../assets/images/Tweet/retweet.svg";
-import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
-import shadedLike from "../../assets/images/Tweet/shadedLike.svg";
 import pictureExample from "../../assets/images/Tweet/pictureExample.jpg";
-import arrow from "../../assets/images/Tweet/arrow.svg";
+import retweet from "../../assets/images/Tweet/retweet.svg";
+import shadedLike from "../../assets/images/Tweet/shadedLike.svg";
+import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
+import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 
 const TweetPage = () => {
 	const [showModal, setShowModal] = React.useState(false);
@@ -34,7 +32,6 @@ const TweetPage = () => {
 	};
 	return (
 		<>
-			<Header />
 			<div className={styles["tweet"]}>
 				<TweetAdditional />
 				<div className={styles["tweet__upper"]}>
@@ -124,7 +121,6 @@ const TweetPage = () => {
 			<Tweet />
 			<Tweet />
 
-			<Footer />
 			<RetweetModal
 				onClose={() => setShowModal(false)}
 				showModal={showModal}

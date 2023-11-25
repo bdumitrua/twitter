@@ -15,6 +15,6 @@
 		"noEmit": true,
 		"jsx": "react-jsx"
 	},
-	"include": ["src/**/*.ts", "src/**/*.tsx", "src/pages/Home/Home.jsx"],
+	"include": ["src/**/*.ts", "src/**/*.tsx", "src/pages/Feed/Feed.jsx"],
 	"exclude": ["node_modules"]
 }

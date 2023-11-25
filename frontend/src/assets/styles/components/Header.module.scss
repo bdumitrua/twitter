@@ -2,12 +2,13 @@
 
 .header {
 	@include flex-between();
+	height: 44px;
 	background-color: $white;
 	padding: 5px 20px;
-	height: 44px;
 	border-bottom: 1px solid $gray;
 	position: sticky;
 	top: 0;
+	z-index: $z-header;
 
 	&__burger-icon {
 		display: flex;
@@ -25,8 +26,12 @@
 	}
 
 	&__title {
-		@include text-black(17px, 800);
-		letter-spacing: -0.5px;
+		@include text-black(16px, 800);
 		margin: auto;
+		letter-spacing: -0.5px;
+
+		&::first-letter {
+			text-transform: uppercase;
+		}
 	}
 }

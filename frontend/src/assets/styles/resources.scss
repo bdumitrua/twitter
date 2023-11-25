@@ -6,6 +6,12 @@ $white: #fff;
 $bold-text: #141619;
 $overlay: rgba(0, 0, 0, 0.5);
 
+$z-action-button: 1;
+$z-footer: 1;
+$z-header: 1;
+$z-overlay: 2;
+$z-modals: 3;
+
 @mixin flex-between() {
 	display: flex;
 	justify-content: space-between;
@@ -16,6 +22,11 @@ $overlay: rgba(0, 0, 0, 0.5);
 	display: flex;
 	justify-content: center;
 	align-items: center;
+}
+
+@mixin flex-start() {
+	display: flex;
+	align-items: flex-start;
 }
 
 @mixin flex-column() {
