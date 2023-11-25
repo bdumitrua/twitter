@@ -33,7 +33,6 @@ class TweetRepository
     protected function baseQuery(): Builder
     {
         return $this->tweet->newQuery()
-            ->with('author')
             ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
             ->orderBy('created_at', 'desc');
     }

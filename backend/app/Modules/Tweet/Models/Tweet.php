@@ -40,6 +40,11 @@ class Tweet extends Model
         return $this->hasMany(TweetFavorite::class, 'tweet_id', 'id');
     }
 
+    public function linkedTweet()
+    {
+        return $this->hasOne(Tweet::class, 'id', 'linked_tweet_id');
+    }
+
     public function replies()
     {
         return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
