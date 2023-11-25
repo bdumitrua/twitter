@@ -1,12 +1,10 @@
 import React from "react";
+import { Outlet } from "react-router-dom";
 
 import styles from "../../assets/styles/pages/Profile/Profile.module.scss";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
-import TweetsTab from "./Tabs/TweetsTab";
-import TweetsAndRepliesTab from "./Tabs/TweetsAndRepliesTab";
-import MediaTab from "./Tabs/MediaTab";
-import LikesTab from "./Tabs/LikesTab";
 
+import { Link } from "react-router-dom";
 import banner from "../../assets/images/Pages/Profile/banner.png";
 import calendarIcon from "../../assets/images/Pages/Profile/calendarIcon.svg";
 import linkIcon from "../../assets/images/Pages/Profile/linkIcon.svg";
@@ -14,12 +12,12 @@ import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
 
 const tabs = [
 	{ name: "Tweets", value: "tweets" },
-	{ name: "Tweets & replies", value: "tweets-and-replies" },
+	{ name: "Tweets & replies", value: "tweets-with-replies" },
 	{ name: "Media", value: "media" },
 	{ name: "Likes", value: "likes" },
 ];
 
-const Profile = () => {
+const Profile = (props) => {
 	const [activeTab, setActiveTab] = React.useState("tweets");
 
 	const handleTabClick = (value) => {
@@ -111,7 +109,8 @@ const Profile = () => {
 				<div className="tabs">
 					<div className={styles["tabs__row"]}>
 						{tabs.map((tab) => (
-							<button
+							<Link
+								to={tab.value}
 								key={tab.value}
 								className={`${styles["tabs__tab"]} ${
 									activeTab === tab.value
@@ -121,15 +120,12 @@ const Profile = () => {
 								onClick={() => handleTabClick(tab.value)}
 							>
 								{tab.name}
-							</button>
+							</Link>
 						))}
 					</div>
 				</div>
 			</div>
-			{activeTab === "tweets" && <TweetsTab />}
-			{activeTab === "tweets-and-replies" && <TweetsAndRepliesTab />}
-			{activeTab === "media" && <MediaTab />}
-			{activeTab === "likes" && <LikesTab />}
+			<Outlet />
 		</>
 	);
 };
