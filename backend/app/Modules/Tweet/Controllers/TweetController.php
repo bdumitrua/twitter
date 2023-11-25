@@ -20,10 +20,10 @@ class TweetController extends Controller
         $this->tweetService = $tweetService;
     }
 
-    public function index(): JsonResponse
+    public function feed(): JsonResponse
     {
         return $this->handleServiceCall(function () {
-            return $this->tweetService->index();
+            return $this->tweetService->feed();
         });
     }
 

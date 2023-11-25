@@ -45,7 +45,7 @@ class TweetService
      * Для ленты - кэш на 15 сек
      */
 
-    public function index(): JsonResource
+    public function feed(): JsonResource
     {
         return TweetResource::collection($this->tweetRepository->getUserFeed(Auth::id()));
     }
