@@ -2,26 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\AuthRegistration;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\ConfirmRegistrationRequest;
+use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\PasswordRequest;
+use App\Http\Requests\RegistrationCodeRequest;
 use App\Http\Requests\RegistrationRequest;
 use App\Modules\User\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class AuthController extends Controller
 {
-    public function register(RegistrationRequest $request)
+    public function start(CreateUserRequest $request)
     {
-        User::create([
+        $registrationData = AuthRegistration::create([
+            // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
+            'code' => '11111',
             'name' => $request->name,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'link' => str_replace(' ', '', $request->name) . Str::random(10),
+            'birth_date' => $request->birth_date,
         ]);
 
-        return response()->json(['message' => 'User created successfully']);
+        return response()->json('Registration id: ' . $registrationData->id);
+    }
+
+    public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request)
+    {
+        if ($request->code !== $authRegistration->code) {
+            throw new HttpException(403, 'Incorrect code');
+        }
+
+        $authRegistration->confirmed = true;
+        $authRegistration->save();
+
+        return response()->json('Registration confirmed successfully');
+    }
+
+    public function register(AuthRegistration $authRegistration, PasswordRequest $request)
+    {
+        if (empty($authRegistration->confirmed)) {
+            throw new HttpException(403, 'Registration code not confirmed');
+        }
+
+        User::create([
+            'password' => Hash::make($request->password),
+            'name' => $authRegistration->name,
+            'link' => $authRegistration->name . Str::random(8),
+            'email' => $authRegistration->email,
+            'birth_date' => $authRegistration->birth_date,
+        ]);
+
+        return response()->json('User created successfully');
     }
 
     public function login(LoginRequest $request)

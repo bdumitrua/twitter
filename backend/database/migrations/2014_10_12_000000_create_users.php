@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('status_text')->nullable();
             $table->string('site_url')->nullable();
             $table->string('address')->nullable();
-            $table->timestamp('birth_date')->nullable();
+            $table->timestamp('birth_date');
             $table->timestamps();
 
             $table->softDeletes();

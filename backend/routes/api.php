@@ -20,8 +20,12 @@ use Illuminate\Support\Facades\Route;
 // checkRights:userGroup
 
 Route::prefix('auth')->controller(AuthController::class)->group(function () {
+    // Начать регистрацию
+    Route::post('start', 'start');
     // Зарегистрироваться
-    Route::post('register', 'register');
+    Route::post('confirm/{authRegistration}', 'confirm');
+    // Зарегистрироваться
+    Route::post('register/{authRegistration}', 'register');
     // Залогиниться
     Route::post('login', 'login')->name('auth.login');
     // Получить новый токен (по уже истёкшему)
