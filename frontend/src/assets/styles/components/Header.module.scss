@@ -8,6 +8,7 @@
 	border-bottom: 1px solid $gray;
 	position: sticky;
 	top: 0;
+	z-index: $z-header;
 
 	&__burger-icon {
 		display: flex;
