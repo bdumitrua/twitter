@@ -5,6 +5,7 @@ namespace App\Modules\Tweet\Repositories;
 use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
+use App\Modules\Tweet\Models\TweetLike;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
@@ -20,20 +21,22 @@ class TweetRepository
     use GetCachedData;
 
     protected Tweet $tweet;
+    protected TweetLike $tweetLike;
     protected UserRepository $userRepository;
 
     public function __construct(
         Tweet $tweet,
+        TweetLike $tweetLike,
         UserRepository $userRepository,
     ) {
         $this->tweet = $tweet;
+        $this->tweetLike = $tweetLike;
         $this->userRepository = $userRepository;
     }
 
     protected function baseQuery(): Builder
     {
         return $this->tweet->newQuery()
-            ->with('author')
             ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
             ->orderBy('created_at', 'desc');
     }
@@ -46,6 +49,13 @@ class TweetRepository
     protected function queryByUserId($userId): Builder
     {
         return $this->baseQuery()->where('user_id', '=', $userId);
+    }
+
+    protected function queryLikedByUserId($userId): Builder
+    {
+        return $this->tweetLike->newQuery()
+            ->where('user_id', '=', $userId)
+            ->orderBy('created_at', 'desc');
     }
 
     public function getById(int $tweetId): Tweet
@@ -74,6 +84,38 @@ class TweetRepository
         $cacheKey = KEY_USER_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryByUserId($userId)->get()->pluck('id')->toArray();
+        }, $updateCache);
+
+        return $this->assembleTweetsCollection($userTweetsIds);
+    }
+
+    public function getUserReplies(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_REPLIES . $userId;
+        $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryByUserId($userId)->where('type', '=', 'reply')->get()->pluck('id')->toArray();
+        }, $updateCache);
+
+        return $this->assembleTweetsCollection($userTweetsIds);
+    }
+
+    // TODO FILES
+    // ! DOESN'T WORK
+    public function getUserTweetsWithMedia(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_MEDIA_TWEETS . $userId;
+        $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryByUserId($userId)->whereNotNull('media')->get()->pluck('id')->toArray();
+        }, $updateCache);
+
+        return $this->assembleTweetsCollection($userTweetsIds);
+    }
+
+    public function getUserLikedTweets(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_LIKED_TWEETS . $userId;
+        $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryLikedByUserId($userId)->get()->pluck('tweet_id', 'id')->toArray();
         }, $updateCache);
 
         return $this->assembleTweetsCollection($userTweetsIds);
@@ -167,9 +209,10 @@ class TweetRepository
                 $threadStartId = $this->findThreadStartId($tweetId);
                 $thread = $this->buildThread($threadStartId);
 
-                $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread);
                 $result->push($thread);
+                $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread);
             } else {
+                $this->loadLinkedTweetData($tweet);
                 $result->push($tweet);
                 $processedTweetIds[] = $tweet->id; // Отметить твит как обработанный
             }
@@ -185,11 +228,29 @@ class TweetRepository
             $tweet->thread = $this->buildThread($threadStartId, $tweet->id);
         }
 
-        $tweet->load(['replies' => function ($query) {
-            $query->take(15)->get();
-        }]);
+        $this->loadLinkedTweetData($tweet);
+        $this->loadRepliesData($tweet);
 
         return $tweet;
+    }
+
+    private function loadLinkedTweetData(Tweet &$tweet): void
+    {
+        $needsLinkedTweet = ['reply', 'repost', 'quote'];
+        if (in_array($tweet->type, $needsLinkedTweet)) {
+            $tweet->load(['linkedTweet' => function ($query) {
+                $query->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
+                    ->first();
+            }]);
+        }
+    }
+
+    private function loadRepliesData(Tweet &$tweet): void
+    {
+        $tweet->load(['replies' => function ($query) {
+            $query->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
+                ->take(15);
+        }]);
     }
 
     private function findThreadStartId(int $tweetId)

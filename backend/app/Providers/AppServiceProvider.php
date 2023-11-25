@@ -61,6 +61,15 @@ class AppServiceProvider extends ServiceProvider
         // Массив твиттов пользователя
         define('KEY_USER_TWEETS', 'user_tweets:');
 
+        // Массив ответов пользователя
+        define('KEY_USER_REPLIES', 'user_replies:');
+
+        // Массив твиттов с медиа пользователя
+        define('KEY_USER_MEDIA_TWEETS', 'user_media_tweets:');
+
+        // Массив твиттов лайкнутых пользователем
+        define('KEY_USER_LIKED_TWEETS', 'user_liked_tweets:');
+
         // Массив групп пользователя
         define('KEY_USER_GROUPS', 'user_groups:');
 

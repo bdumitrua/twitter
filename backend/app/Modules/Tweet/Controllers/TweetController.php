@@ -20,10 +20,10 @@ class TweetController extends Controller
         $this->tweetService = $tweetService;
     }
 
-    public function index(): JsonResponse
+    public function feed(): JsonResponse
     {
         return $this->handleServiceCall(function () {
-            return $this->tweetService->index();
+            return $this->tweetService->feed();
         });
     }
 
@@ -38,6 +38,28 @@ class TweetController extends Controller
     {
         return $this->handleServiceCall(function () use ($user) {
             return $this->tweetService->user($user);
+        });
+    }
+
+    public function replies(User $user): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($user) {
+            return $this->tweetService->replies($user);
+        });
+    }
+
+    // ! DOESN'T WORK
+    public function media(User $user): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($user) {
+            return $this->tweetService->media($user);
+        });
+    }
+
+    public function likes(User $user): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($user) {
+            return $this->tweetService->likes($user);
         });
     }
 
