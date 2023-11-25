@@ -17,16 +17,14 @@ class TweetResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $needsLinkedTweet = ['repost', 'quote'];
-
         $author = new ShortUserResource($this->author);
         $thread = $this->thread ? new TweetResource($this->thread) : [];
         $replies = $this->whenLoaded('replies', function () {
             return TweetResource::collection($this->replies);
         });
-        $linkedTweet = in_array($this->type, $needsLinkedTweet)
-            ? new TweetResource($this->linkedTweet)
-            : [];
+        $linkedTweet = $this->whenLoaded('linkedTweet', function () {
+            return new TweetResource($this->linkedTweet);
+        });
 
         return [
             'id' => $this->id,

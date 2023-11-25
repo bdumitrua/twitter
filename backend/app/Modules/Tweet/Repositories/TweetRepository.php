@@ -166,9 +166,10 @@ class TweetRepository
                 $threadStartId = $this->findThreadStartId($tweetId);
                 $thread = $this->buildThread($threadStartId);
 
-                $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread);
                 $result->push($thread);
+                $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread);
             } else {
+                $this->loadLinkedTweetData($tweet);
                 $result->push($tweet);
                 $processedTweetIds[] = $tweet->id; // Отметить твит как обработанный
             }
@@ -184,11 +185,29 @@ class TweetRepository
             $tweet->thread = $this->buildThread($threadStartId, $tweet->id);
         }
 
-        $tweet->load(['replies' => function ($query) {
-            $query->take(15)->get();
-        }]);
+        $this->loadLinkedTweetData($tweet);
+        $this->loadRepliesData($tweet);
 
         return $tweet;
+    }
+
+    private function loadLinkedTweetData(Tweet &$tweet): void
+    {
+        $needsLinkedTweet = ['reply', 'repost', 'quote'];
+        if (in_array($tweet->type, $needsLinkedTweet)) {
+            $tweet->load(['linkedTweet' => function ($query) {
+                $query->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
+                    ->first();
+            }]);
+        }
+    }
+
+    private function loadRepliesData(Tweet &$tweet): void
+    {
+        $tweet->load(['replies' => function ($query) {
+            $query->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
+                ->take(15);
+        }]);
     }
 
     private function findThreadStartId(int $tweetId)

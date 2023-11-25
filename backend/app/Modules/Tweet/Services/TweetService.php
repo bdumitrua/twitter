@@ -97,13 +97,6 @@ class TweetService
         $this->tweetRepository->destroy($tweet);
     }
 
-    private function validateTweetTypeData(TweetRequest $tweetRequest): void
-    {
-        if (!empty($tweetRequest->type) && $tweetRequest->type !== "thread" && empty($tweetRequest->linkedTweetId)) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
-        }
-    }
-
     protected function filterTweetsByGroup(Collection $tweets): Collection
     {
         $groupIds = [];
@@ -120,6 +113,13 @@ class TweetService
     {
         $user = $this->userRepository->getById($userId);
         return $this->pluckKey($user->groups_member, 'id');
+    }
+
+    private function validateTweetTypeData(TweetRequest $tweetRequest): void
+    {
+        if (!empty($tweetRequest->type) && $tweetRequest->type !== "thread" && empty($tweetRequest->linkedTweetId)) {
+            throw new HttpException(Response::HTTP_BAD_REQUEST, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
+        }
     }
 
     private function pluckKey($relation, string $key): array
