@@ -5,6 +5,7 @@ namespace App\Modules\Tweet\Repositories;
 use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
+use App\Modules\Tweet\Models\TweetLike;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
@@ -20,13 +21,16 @@ class TweetRepository
     use GetCachedData;
 
     protected Tweet $tweet;
+    protected TweetLike $tweetLike;
     protected UserRepository $userRepository;
 
     public function __construct(
         Tweet $tweet,
+        TweetLike $tweetLike,
         UserRepository $userRepository,
     ) {
         $this->tweet = $tweet;
+        $this->tweetLike = $tweetLike;
         $this->userRepository = $userRepository;
     }
 
@@ -45,6 +49,13 @@ class TweetRepository
     protected function queryByUserId($userId): Builder
     {
         return $this->baseQuery()->where('user_id', '=', $userId);
+    }
+
+    protected function queryLikedByUserId($userId): Builder
+    {
+        return $this->tweetLike->newQuery()
+            ->where('user_id', '=', $userId)
+            ->orderBy('created_at', 'desc');
     }
 
     public function getById(int $tweetId): Tweet
@@ -73,6 +84,38 @@ class TweetRepository
         $cacheKey = KEY_USER_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryByUserId($userId)->get()->pluck('id')->toArray();
+        }, $updateCache);
+
+        return $this->assembleTweetsCollection($userTweetsIds);
+    }
+
+    public function getUserReplies(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_REPLIES . $userId;
+        $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryByUserId($userId)->where('type', '=', 'reply')->get()->pluck('id')->toArray();
+        }, $updateCache);
+
+        return $this->assembleTweetsCollection($userTweetsIds);
+    }
+
+    // TODO FILES
+    // ! DOESN'T WORK
+    public function getUserTweetsWithMedia(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_MEDIA_TWEETS . $userId;
+        $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryByUserId($userId)->whereNotNull('media')->get()->pluck('id')->toArray();
+        }, $updateCache);
+
+        return $this->assembleTweetsCollection($userTweetsIds);
+    }
+
+    public function getUserLikedTweets(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_LIKED_TWEETS . $userId;
+        $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryLikedByUserId($userId)->get()->pluck('tweet_id', 'id')->toArray();
         }, $updateCache);
 
         return $this->assembleTweetsCollection($userTweetsIds);

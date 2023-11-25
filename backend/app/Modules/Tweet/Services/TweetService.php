@@ -58,6 +58,33 @@ class TweetService
         return TweetResource::collection($userTweets);
     }
 
+    public function replies(User $user): JsonResource
+    {
+        $userReplies = $this->tweetRepository->getUserReplies($user->id);
+        $userReplies = $this->filterTweetsByGroup($userReplies, $this->authorizedUserId);
+
+        return TweetResource::collection($userReplies);
+    }
+
+    // ! DOESN'T WORK
+    public function media(User $user): JsonResource
+    {
+        throw new HttpException('418', 'Media request doesn\'t work at the moment');
+
+        $userTweetsWithMedia = $this->tweetRepository->getUserTweetsWithMedia($user->id);
+        $userTweetsWithMedia = $this->filterTweetsByGroup($userTweetsWithMedia, $this->authorizedUserId);
+
+        return TweetResource::collection($userTweetsWithMedia);
+    }
+
+    public function likes(User $user): JsonResource
+    {
+        $userLikedTweets = $this->tweetRepository->getUserLikedTweets($user->id);
+        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets, $this->authorizedUserId);
+
+        return TweetResource::collection($userLikedTweets);
+    }
+
     public function list(UsersList $usersList): JsonResource
     {
         if ($usersList->is_private) {
