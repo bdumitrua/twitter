@@ -29,8 +29,14 @@ const router = createBrowserRouter([
 				path: "/profile",
 				element: <Profile />,
 				children: [
-					{ path: "/profile", element: <Navigate to="tweets" /> },
-					{ path: "tweets", element: <TweetsTab /> },
+					{
+						path: "/profile",
+						element: <Navigate to="tweets" />,
+					},
+					{
+						path: "tweets",
+						element: <TweetsTab />,
+					},
 					{
 						path: "tweets-with-replies",
 						element: <TweetsAndRepliesTab />,

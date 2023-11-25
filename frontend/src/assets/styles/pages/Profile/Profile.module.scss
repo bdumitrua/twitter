@@ -33,7 +33,7 @@
 			width: 68px;
 			height: 68px;
 			border: 4px solid $white;
-			border-radius: 68px;
+			border-radius: 50%;
 		}
 	}
 
@@ -140,7 +140,7 @@
 		flex-direction: column;
 		letter-spacing: -0.3px;
 		text-align: center;
-		
+
 		&.active {
 			@include text-activity(16px, 600);
 			border-bottom: 2px solid $blue;
