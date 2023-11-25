@@ -24,7 +24,6 @@ class CreateUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            // TODO DATE
             'birth_date' => [
                 'nullable',
                 'before_or_equal:today',

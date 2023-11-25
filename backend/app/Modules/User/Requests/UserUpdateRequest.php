@@ -31,8 +31,19 @@ class UserUpdateRequest extends FormRequest
             'statusText' => 'nullable|string|max:500',
             'siteUrl' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
-            // TODO DATE
-            'birthDate' => 'nullable|string'
+            'birth_date' => [
+                'nullable',
+                'before_or_equal:today',
+                function ($attribute, $value, $fail) {
+                    // Преобразование даты из JavaScript формата в формат 'Y-m-d'
+                    $date = \DateTime::createFromFormat('D M d Y H:i:s e+', $value);
+                    if (!$date) {
+                        $fail("Неверный формат даты");
+                    }
+
+                    $this->merge(['birth_date' => $date->format('Y-m-d')]);
+                },
+            ],
         ];
     }
 
@@ -69,9 +80,6 @@ class UserUpdateRequest extends FormRequest
 
             'address.string' => 'Адрес должен быть строкой',
             'address.max' => 'Адрес не должен превышать 255 символов',
-
-            // TODO DATE
-            'birthDate.string' => 'Дата рождения должна быть строкой',
         ];
     }
 }
