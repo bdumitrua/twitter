@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Models;
 
+use App\Modules\Notification\Models\DeviceToken;
 use App\Modules\Notification\Models\Notification;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -79,6 +80,11 @@ class User extends Authenticatable implements JWTSubject
     public function searchableAs()
     {
         return 'users';
+    }
+
+    public function deviceTokens()
+    {
+        return $this->hasMany(DeviceToken::class, 'user_id', 'id');
     }
 
     public function subscribtions()
