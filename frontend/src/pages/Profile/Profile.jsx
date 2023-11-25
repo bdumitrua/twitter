@@ -2,6 +2,10 @@ import React from "react";
 
 import styles from "../../assets/styles/pages/Profile/Profile.module.scss";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
+import TweetsTab from "./Tabs/TweetsTab";
+import TweetsAndRepliesTab from "./Tabs/TweetsAndRepliesTab";
+import MediaTab from "./Tabs/MediaTab";
+import LikesTab from "./Tabs/LikesTab";
 
 import banner from "../../assets/images/Pages/Profile/banner.png";
 import calendarIcon from "../../assets/images/Pages/Profile/calendarIcon.svg";
@@ -122,6 +126,10 @@ const Profile = () => {
 					</div>
 				</div>
 			</div>
+			{activeTab === "tweets" && <TweetsTab />}
+			{activeTab === "tweets-and-replies" && <TweetsAndRepliesTab />}
+			{activeTab === "media" && <MediaTab />}
+			{activeTab === "likes" && <LikesTab />}
 		</>
 	);
 };
