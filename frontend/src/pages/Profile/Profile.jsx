@@ -8,8 +8,19 @@ import calendarIcon from "../../assets/images/Pages/Profile/calendarIcon.svg";
 import linkIcon from "../../assets/images/Pages/Profile/linkIcon.svg";
 import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
 
+const tabs = [
+	{ name: "Tweets", value: "tweets" },
+	{ name: "Tweets & replies", value: "tweets-and-replies" },
+	{ name: "Media", value: "media" },
+	{ name: "Likes", value: "likes" },
+];
+
 const Profile = () => {
 	const [activeTab, setActiveTab] = React.useState("tweets");
+
+	const handleTabClick = (value) => {
+		setActiveTab(value);
+	};
 
 	return (
 		<>
@@ -95,40 +106,19 @@ const Profile = () => {
 				</div>
 				<div className="tabs">
 					<div className={styles["tabs__row"]}>
-						<button
-							className={`${styles["tabs__tab"]} ${
-								activeTab === "tweets" ? styles["active"] : ""
-							}`}
-							onClick={() => setActiveTab("tweets")}
-						>
-							Tweets
-						</button>
-						<button
-							className={`${styles["tabs__tab"]} ${
-								activeTab === "tweets-and-replies"
-									? styles["active"]
-									: ""
-							}`}
-							onClick={() => setActiveTab("tweets-and-replies")}
-						>
-							Tweets & replies
-						</button>
-						<button
-							className={`${styles["tabs__tab"]} ${
-								activeTab === "media" ? styles["active"] : ""
-							}`}
-							onClick={() => setActiveTab("media")}
-						>
-							Media
-						</button>
-						<button
-							className={`${styles["tabs__tab"]} ${
-								activeTab === "likes" ? styles["active"] : ""
-							}`}
-							onClick={() => setActiveTab("likes")}
-						>
-							Likes
-						</button>
+						{tabs.map((tab) => (
+							<button
+								key={tab.value}
+								className={`${styles["tabs__tab"]} ${
+									activeTab === tab.value
+										? styles["active"]
+										: ""
+								}`}
+								onClick={() => handleTabClick(tab.value)}
+							>
+								{tab.name}
+							</button>
+						))}
 					</div>
 				</div>
 			</div>
