@@ -5,7 +5,7 @@ namespace App\Modules\User\Listeners;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserSubscribtion;
 
-class NewTweetsListener
+class NewSubscribtionsListener
 {
     public function handle($event)
     {

@@ -10,6 +10,9 @@ use App\Modules\User\Events\UserGroupMembersUpdateEvent;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Events\UserSubscribtionEvent;
+use App\Modules\User\Listeners\NewLikesListener;
+use App\Modules\User\Listeners\NewSubscribtionsListener;
+use App\Modules\User\Listeners\NewUsersListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -24,12 +27,13 @@ class EventServiceProvider extends ServiceProvider
      */
     protected $listen = [
         Registered::class => [
+            NewUsersListener::class
             // SendEmailVerificationNotification::class,
         ],
 
         // Users
         UserSubscribtionEvent::class => [
-            // 
+            NewSubscribtionsListener::class
         ],
         UserGroupMembersUpdateEvent::class => [
             // 
@@ -43,7 +47,7 @@ class EventServiceProvider extends ServiceProvider
 
         // Tweets
         TweetLikeEvent::class => [
-            // 
+            NewLikesListener::class
         ],
         TweetFavoriteEvent::class => [
             // 
