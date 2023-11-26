@@ -15,11 +15,6 @@ class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, Searchable, SoftDeletes;
 
-    protected $searchable = [
-        'name',
-        'link',
-    ];
-
     protected $fillable = [
         'name',
         'email',
@@ -36,6 +31,24 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
     ];
+
+    protected $searchable = [
+        'name',
+        'link',
+    ];
+
+    /**
+     * Get the indexable data array for the model.
+     *
+     * @return array
+     */
+    public function toSearchableArray()
+    {
+        return [
+            'name' => $this->name,
+            'link' => $this->link,
+        ];
+    }
 
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
