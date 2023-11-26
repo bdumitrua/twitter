@@ -2,16 +2,22 @@
 
 namespace App\Providers;
 
+use App\Modules\User\Events\DeletedUsersListEvent;
+use App\Modules\User\Events\NewTweetEvent;
 use App\Modules\User\Events\TweetFavoriteEvent;
 use App\Modules\User\Events\TweetLikeEvent;
 use App\Modules\User\Events\TweetReplyEvent;
 use App\Modules\User\Events\TweetRepostEvent;
 use App\Modules\User\Events\UserGroupMembersUpdateEvent;
+use App\Modules\User\Events\UserNoticeEvent;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Events\UserSubscribtionEvent;
+use App\Modules\User\Listeners\DeletedUsersListsListener;
 use App\Modules\User\Listeners\NewLikesListener;
+use App\Modules\User\Listeners\NewNoticeListener;
 use App\Modules\User\Listeners\NewSubscribtionsListener;
+use App\Modules\User\Listeners\NewTweetsListener;
 use App\Modules\User\Listeners\NewUsersListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -38,6 +44,9 @@ class EventServiceProvider extends ServiceProvider
         UserGroupMembersUpdateEvent::class => [
             // 
         ],
+        DeletedUsersListEvent::class => [
+            DeletedUsersListsListener::class,
+        ],
         UsersListSubscribtionEvent::class => [
             // 
         ],
@@ -46,6 +55,12 @@ class EventServiceProvider extends ServiceProvider
         ],
 
         // Tweets
+        NewTweetEvent::class => [
+            NewTweetsListener::class,
+        ],
+        UserNoticeEvent::class => [
+            NewNoticeListener::class
+        ],
         TweetLikeEvent::class => [
             NewLikesListener::class
         ],
