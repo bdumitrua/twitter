@@ -156,10 +156,6 @@ class UsersListRepository
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
             ]);
-
-            if (!empty($usersListMember)) {
-                event(new UsersListMembersUpdateEvent($usersListMember, true));
-            }
         }
     }
 
@@ -167,10 +163,6 @@ class UsersListRepository
     {
         if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
             $deletingStatus = $usersListMember->delete();
-
-            if ($deletingStatus) {
-                event(new UsersListMembersUpdateEvent($usersListMember, false));
-            }
         }
     }
 
@@ -183,7 +175,6 @@ class UsersListRepository
             ]);
 
             if (!empty($usersListSubscribtion)) {
-                event(new UsersListSubscribtionEvent($usersListId, true));
                 $this->recacheUserLists($userId);
             }
         }
@@ -196,7 +187,6 @@ class UsersListRepository
             $deletingStatus = $usersListSubscribtion->delete();
 
             if (!empty($deletingStatus)) {
-                event(new UsersListSubscribtionEvent($usersListId, false));
                 $this->recacheUserLists($userId);
             }
         }

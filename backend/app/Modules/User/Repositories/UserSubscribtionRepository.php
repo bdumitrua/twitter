@@ -45,10 +45,6 @@ class UserSubscribtionRepository
                 'subscriber_id' => $subscriberId,
                 'user_id' => $userId
             ]);
-
-            if (!empty($subscribtion)) {
-                event(new UserSubscribtionEvent($subscribtion, true));
-            }
         }
     }
 
@@ -56,7 +52,6 @@ class UserSubscribtionRepository
     {
         if ($subscribtion = $this->queryByBothIds($userId, $subscriberId)->first()) {
             $subscribtion->delete();
-            event(new UserSubscribtionEvent($subscribtion, false));
         }
     }
 }

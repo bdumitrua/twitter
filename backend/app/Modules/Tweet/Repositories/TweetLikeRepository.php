@@ -41,8 +41,6 @@ class TweetLikeRepository
                 'tweet_id' => $tweetId,
                 'user_id' => $userId,
             ]);
-
-            event(new TweetLikeEvent($tweetLike, true));
         }
     }
 
@@ -55,7 +53,6 @@ class TweetLikeRepository
 
         if (!empty($tweetLike)) {
             $tweetLike->delete();
-            event(new TweetLikeEvent($tweetLike, false));
         }
     }
 }

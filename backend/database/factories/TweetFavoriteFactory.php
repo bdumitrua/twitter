@@ -36,10 +36,10 @@ class TweetFavoriteFactory extends Factory
      *
      * @return $this
      */
-    public function configure()
-    {
-        return $this->afterCreating(function (TweetFavorite $tweetFavorite) {
-            event(new TweetFavoriteEvent($tweetFavorite, true));
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (TweetFavorite $tweetFavorite) {
+    //         event(new TweetFavoriteEvent($tweetFavorite, true));
+    //     });
+    // }
 }

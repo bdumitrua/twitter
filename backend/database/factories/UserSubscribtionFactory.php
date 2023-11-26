@@ -33,10 +33,10 @@ class UserSubscribtionFactory extends Factory
      *
      * @return $this
      */
-    public function configure()
-    {
-        return $this->afterCreating(function (UserSubscribtion $subscribtion) {
-            event(new UserSubscribtionEvent($subscribtion, true));
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (UserSubscribtion $subscribtion) {
+    //         event(new UserSubscribtionEvent($subscribtion));
+    //     });
+    // }
 }

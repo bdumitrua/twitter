@@ -108,21 +108,13 @@ class UserGroupRepository
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId
             ]);
-
-            if (!empty($addingStatus)) {
-                event(new UserGroupMembersUpdateEvent($userGroupId, true));
-            }
         }
     }
 
     public function removeUser(int $userGroupId, int $userId): void
     {
         if ($userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first()) {
-            $removingStatus = $userGroupMember->delete();
-
-            if ($removingStatus) {
-                event(new UserGroupMembersUpdateEvent($userGroupMember->user_group_id, false));
-            }
+            $userGroupMember->delete();
         }
     }
 

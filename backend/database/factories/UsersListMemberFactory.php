@@ -36,10 +36,10 @@ class UsersListMemberFactory extends Factory
      *
      * @return $this
      */
-    public function configure()
-    {
-        return $this->afterCreating(function (UsersListMember $usersListMember) {
-            event(new UsersListMembersUpdateEvent($usersListMember, true));
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (UsersListMember $usersListMember) {
+    //         event(new UsersListMembersUpdateEvent($usersListMember, true));
+    //     });
+    // }
 }

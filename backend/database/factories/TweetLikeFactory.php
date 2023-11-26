@@ -36,10 +36,10 @@ class TweetLikeFactory extends Factory
      *
      * @return $this
      */
-    public function configure()
-    {
-        return $this->afterCreating(function (TweetLike $tweetLike) {
-            event(new TweetLikeEvent($tweetLike, true));
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (TweetLike $tweetLike) {
+    //         event(new TweetLikeEvent($tweetLike, true));
+    //     });
+    // }
 }

@@ -36,10 +36,10 @@ class UserGroupMemberFactory extends Factory
      *
      * @return $this
      */
-    public function configure()
-    {
-        return $this->afterCreating(function (UserGroupMember $userGroupMember) {
-            event(new UserGroupMembersUpdateEvent($userGroupMember->user_group_id, true));
-        });
-    }
+    // public function configure()
+    // {
+    //     return $this->afterCreating(function (UserGroupMember $userGroupMember) {
+    //         event(new UserGroupMembersUpdateEvent($userGroupMember->user_group_id));
+    //     });
+    // }
 }
