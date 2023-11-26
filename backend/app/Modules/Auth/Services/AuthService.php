@@ -20,7 +20,7 @@ use Illuminate\Support\Str;
 
 class AuthService
 {
-    public function start(CreateUserRequest $request): string
+    public function start(CreateUserRequest $request): array
     {
         $registrationData = AuthRegistration::create([
             // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
@@ -30,7 +30,7 @@ class AuthService
             'birth_date' => $request->birth_date,
         ]);
 
-        return 'Registration id: ' . $registrationData->id;
+        return ['registration_id' => $registrationData->id];
     }
 
     public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): string
