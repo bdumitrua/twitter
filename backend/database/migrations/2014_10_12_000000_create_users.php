@@ -29,30 +29,30 @@ return new class extends Migration
             $table->softDeletes();
         });
 
-        // try {
-        //     $client = ClientBuilder::create()
-        //         ->setHosts([config('services.elasticsearch.host')])
-        //         ->build();
+        try {
+            $client = ClientBuilder::create()
+                ->setHosts([config('services.elasticsearch.host')])
+                ->build();
 
-        //     $params = [
-        //         'index' => 'users',
-        //         'body' => [
-        //             'mappings' => [
-        //                 'properties' => [
-        //                     'name' => [
-        //                         'type' => 'text'
-        //                     ],
-        //                     'link' => [
-        //                         'type' => 'text'
-        //                     ],
-        //                 ]
-        //             ]
-        //         ]
-        //     ];
+            $params = [
+                'index' => 'users',
+                'body' => [
+                    'mappings' => [
+                        'properties' => [
+                            'name' => [
+                                'type' => 'text'
+                            ],
+                            'link' => [
+                                'type' => 'text'
+                            ],
+                        ]
+                    ]
+                ]
+            ];
 
-        //     $client->indices()->create($params);
-        // } catch (\Elastic\Elasticsearch\Exception\ClientResponseException $e) {
-        // }
+            $client->indices()->create($params);
+        } catch (\Elastic\Elasticsearch\Exception\ClientResponseException $e) {
+        }
     }
 
     /**
