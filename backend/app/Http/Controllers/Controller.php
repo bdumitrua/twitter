@@ -57,7 +57,7 @@ class Controller extends BaseController
 
     public function handleKafka()
     {
-        new KafkaProducer('user_created', [
+        new KafkaProducer('new_users', [
             "name" => "username"
         ]);
     }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Kafka\Consumers;
+namespace App\Modules\Notification\Consumers;
 
 use App\Kafka\BaseConsumer;
 use Enqueue\RdKafka\RdKafkaConnectionFactory;
