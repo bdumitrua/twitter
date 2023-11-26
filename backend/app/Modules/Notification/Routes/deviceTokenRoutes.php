@@ -7,7 +7,7 @@ use App\Modules\Notification\Controllers\DeviceTokenController;
 
 Route::prefix('notifications/tokens')->middleware(['auth:api'])->controller(DeviceTokenController::class)->group(function () {
     // Получить девайс токены авторизованного пользователя
-    Route::get('index', 'index');
+    Route::get('/', 'index');
     // Создать девайс токен для пользователя
     Route::post('create', 'create');
 
