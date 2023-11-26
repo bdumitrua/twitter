@@ -24,19 +24,7 @@ class CreateUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'birth_date' => [
-                'nullable',
-                'before_or_equal:today',
-                function ($attribute, $value, $fail) {
-                    // Преобразование даты из JavaScript формата в формат 'Y-m-d'
-                    $date = \DateTime::createFromFormat('D M d Y H:i:s e+', $value);
-                    if (!$date) {
-                        $fail("Неверный формат даты");
-                    }
-
-                    $this->merge(['birth_date' => $date->format('Y-m-d')]);
-                },
-            ],
+            'birth_date' => 'required|date|date_format:Y-m-d',
         ];
     }
 
@@ -51,6 +39,10 @@ class CreateUserRequest extends FormRequest
             'email.email'   => 'Введена некорректная почта.',
             'email.max'     => 'Длина почты может быть не более 255 символов.',
             'email.unique'  => 'Данная почта уже занята.',
+
+            'birth_date.required' => 'Дата обязательна к заполнению.',
+            'birth_date.date' => 'Некорректный формат даты.',
+            'birth_date.date_format' => 'Формат даты должен быть YYYY-MM-DD.',
         ];
     }
 }
