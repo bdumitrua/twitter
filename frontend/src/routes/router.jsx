@@ -7,6 +7,7 @@ import MediaTab from "../pages/Profile/Tabs/MediaTab";
 import TweetsAndRepliesTab from "../pages/Profile/Tabs/TweetsAndRepliesTab";
 import TweetsTab from "../pages/Profile/Tabs/TweetsTab";
 import TweetPage from "../pages/TweetPage/TweetPage";
+import CreateTweet from "../pages/CreateTweet/CreateTweet";
 
 const router = createBrowserRouter([
 	{
@@ -50,6 +51,10 @@ const router = createBrowserRouter([
 						element: <LikesTab />,
 					},
 				],
+			},
+			{
+				path: "/create",
+				element: <CreateTweet />,
 			},
 		],
 	},
