@@ -42,11 +42,13 @@ const CreateTweetBody = ({ placeholder, showCloseButton }) => {
 				></textarea>
 				<div>
 					{showCloseButton && (
-						<img
-							className={styles["body__close-button"]}
-							src={cancelTweetButton}
-							alt="cancel tweet"
-						/>
+						<button>
+							<img
+								className={styles["body__close-button"]}
+								src={cancelTweetButton}
+								alt="cancel tweet"
+							/>
+						</button>
 					)}
 				</div>
 			</div>
