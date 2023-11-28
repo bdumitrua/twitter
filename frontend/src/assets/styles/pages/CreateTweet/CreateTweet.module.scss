@@ -17,6 +17,14 @@
 		align-self: stretch;
 	}
 
+	&__avatar-group {
+		@include flex-column();
+		min-height: 61px;
+		align-items: center;
+		gap: 4px;
+		align-self: stretch;
+	}
+
 	&__avatar {
 		img {
 			width: 37px;
@@ -25,13 +33,21 @@
 		}
 	}
 
+	&__avatar-line {
+		width: 2px;
+		min-height: 20px;
+		flex-grow: 1;
+		background-color: $gray;
+		border-radius: 2px
+	}
+
 	&__input {
 		@include text-black(19px, 400);
 		display: flex;
 		align-items: flex-start;
 		padding-top: 8px;
 		flex-grow: 1;
-		letter-spacing: -0.5px;		
+		letter-spacing: -0.5px;
 		overflow: hidden;
 
 		&::placeholder {
