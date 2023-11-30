@@ -3,7 +3,7 @@ import React from "react";
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweetBody.module.scss";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
-import cancelTweetButton from "../../assets/images/CreateTweet/cancelTweetButton.svg";
+import cancelTweetButton from "../../assets/images/Pages/CreateTweet/cancelTweetButton.svg";
 
 const CreateTweetBody = ({
 	placeholder,

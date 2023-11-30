@@ -4,11 +4,11 @@ import styles from "../../assets/styles/pages/CreateTweet/CreateTweet.module.scs
 import CreateTweetBody from "./CreateTweetBody";
 import TickIcon from "./TickIcon";
 
-import groupIcon from "../../assets/images/CreateTweet/groupIcon.svg";
-import imageIcon from "../../assets/images/CreateTweet/imageIcon.svg";
-import gifIcon from "../../assets/images/CreateTweet/gifIcon.svg";
-import statsIcon from "../../assets/images/CreateTweet/statsIcon.svg";
-import locationIcon from "../../assets/images/CreateTweet/locationIcon.svg";
+import groupIcon from "../../assets/images/Pages/CreateTweet/groupIcon.svg";
+import imageIcon from "../../assets/images/Pages/CreateTweet/imageIcon.svg";
+import gifIcon from "../../assets/images/Pages/CreateTweet/gifIcon.svg";
+import statsIcon from "../../assets/images/Pages/CreateTweet/statsIcon.svg";
+import locationIcon from "../../assets/images/Pages/CreateTweet/locationIcon.svg";
 
 const CreateTweet = () => {
 	const [charCount, setCharCount] = React.useState(0);
