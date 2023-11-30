@@ -6,6 +6,7 @@
 	&__bodies {
 		@include flex-column();
 		gap: 4px;
+		width: 100%;
 	}
 
 	&__bars {
