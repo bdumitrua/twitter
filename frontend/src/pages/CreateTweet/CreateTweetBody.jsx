@@ -9,7 +9,6 @@ const CreateTweetBody = ({
 	placeholder,
 	showCloseButton,
 	onCharCountChange,
-	maxCharCount
 }) => {
 	const [showLine, setShowLine] = React.useState(false);
 	const textareaRef = React.useRef(null);
