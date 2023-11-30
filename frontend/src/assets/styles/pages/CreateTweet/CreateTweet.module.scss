@@ -73,4 +73,10 @@
 		border: 1.5px solid $gray;
 		border-radius: 50%;
 	}
+
+	&__separator {
+		width: 0.35px;
+		height: 26px;
+		background: $gray;
+	}
 }

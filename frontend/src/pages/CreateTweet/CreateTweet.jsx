@@ -66,6 +66,7 @@ const CreateTweet = () => {
 							charCount={charCount}
 							maxCharCount={maxCharCount}
 						/>
+						<div className={styles["create__separator"]} />
 						<button
 							className={styles["create__add-button"]}
 						></button>
