@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import styles from "../../assets/styles/pages/CreateTweet/TickIcon.module.scss";
 
 const CircleProgress = ({ charCount, maxCharCount }) => {
-    const baseRadius = 8.25;
+    const baseRadius = 7.5;
     const fullRadius = 12;
     const isFull = charCount >= maxCharCount;
     const radius = isFull ? fullRadius : baseRadius;
@@ -17,14 +17,14 @@ const CircleProgress = ({ charCount, maxCharCount }) => {
     const overageText = overage > 0 ? `-${overage}` : '';
 
     return (
-        <svg width="50" height="50" viewBox="0 0 50 50">
+        <svg width="26" height="26" viewBox="0 0 26 26">
             <motion.circle
                 className={styles["base-circle"]}
                 initial={{ r: baseRadius }}
                 animate={{ r: radius }}
                 transition={{ duration: 0.5 }}
-                cx="25"
-                cy="25"
+                cx="13"
+                cy="13"
                 fill="none"
                 strokeWidth="1.5"
             />
@@ -33,13 +33,13 @@ const CircleProgress = ({ charCount, maxCharCount }) => {
                 initial={{ r: baseRadius }}
                 animate={{ r: radius }}
                 transition={{ duration: 0.5 }}
-                cx="25"
-                cy="25"
+                cx="13"
+                cy="13"
                 fill="none"
                 strokeWidth="1.5"
                 strokeDasharray={circumference}
                 strokeDashoffset={offset}
-                transform="rotate(-90 25 25)"
+                transform="rotate(-90 13 13)"
             />
             {overage > 0 && (
                 <text
