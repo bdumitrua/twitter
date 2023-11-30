@@ -1,0 +1,15 @@
+.base-circle {
+    stroke: $gray;
+}
+
+.progress {
+    stroke: $blue;
+
+    &__full {
+        stroke: $red;
+    }
+
+    &__overage-text {
+        font-size: 10px;
+    }
+}

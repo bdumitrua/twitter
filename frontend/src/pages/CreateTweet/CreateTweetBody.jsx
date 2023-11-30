@@ -5,7 +5,12 @@ import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
 import cancelTweetButton from "../../assets/images/CreateTweet/cancelTweetButton.svg";
 
-const CreateTweetBody = ({ placeholder, showCloseButton }) => {
+const CreateTweetBody = ({
+	placeholder,
+	showCloseButton,
+	onCharCountChange,
+	maxCharCount
+}) => {
 	const [showLine, setShowLine] = React.useState(false);
 	const textareaRef = React.useRef(null);
 	const minHeight = 61;
@@ -20,6 +25,8 @@ const CreateTweetBody = ({ placeholder, showCloseButton }) => {
 		} else {
 			setShowLine(true);
 		}
+
+		onCharCountChange(textarea.value.length);
 	};
 
 	return (
@@ -36,6 +43,7 @@ const CreateTweetBody = ({ placeholder, showCloseButton }) => {
 				<textarea
 					ref={textareaRef}
 					onChange={handleChange}
+					onFocus={handleChange}
 					className={styles["body__input"]}
 					type="text"
 					placeholder={placeholder}
