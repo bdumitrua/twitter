@@ -10,14 +10,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class TweetLikeEvent implements ShouldBroadcast
 {
     public $tweetLike;
-    public $add;
 
     public function __construct(
-        TweetLike $tweetLike,
-        bool $add,
+        TweetLike $tweetLike
     ) {
         $this->tweetLike = $tweetLike;
-        $this->add = $add;
     }
 
     public function broadcastOn()

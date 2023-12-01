@@ -10,9 +10,7 @@ class NewLikesListener
 {
     public function handle($event)
     {
-        if (!empty($event->add)) {
-            $tweetLike = $event->tweetLike;
-            new KafkaProducer('new_likes', $tweetLike->toArray());
-        }
+        $tweetLike = $event->tweetLike;
+        new KafkaProducer('new_likes', $tweetLike->toArray());
     }
 }
