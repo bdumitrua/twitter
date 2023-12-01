@@ -330,4 +330,24 @@ class TweetRepository
             $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread->thread);
         }
     }
+
+    private function checkForNotices(Tweet &$newTweet): void
+    {
+        $tweetText = $newTweet->text;
+        if (empty($tweetText)) {
+            return;
+        }
+
+        $words = explode(' ', $tweetText);
+        $notices = [];
+        foreach ($words as $word) {
+            if (strpos($word, '@') === 0) {
+                $cleanLink = preg_replace('/[^\w]/', '', substr($word, 1));
+                $notices[] = $cleanLink;
+            }
+        }
+
+        $noticedUsers = User::whereIn('link', $notices)->get(['id', 'link']);
+        $newTweet->noticed_users = $noticedUsers;
+    }
 }

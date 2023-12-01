@@ -37,6 +37,7 @@ class TweetResource extends JsonResource
             'reposts_count' => $this->reposts_count,
             'replies_count' => $this->replies_count,
             'quotes_count' => $this->quotes_count,
+            'noticed_users' => $this->noticed_users,
             'author' => $author,
             'linkedTweet' => $linkedTweet,
             'thread' => $thread,
