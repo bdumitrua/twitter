@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class DeletedUsersListNotifyConsumerCommand extends Command
 {
     protected $topic = 'deleted_users_lists';
+    protected $consumerGroup = DeletedUsersListNotifyConsumer::class;
     protected $signature = 'kafka:consume:deleted_users_list_notify';
 
     public function __construct()
@@ -18,9 +19,13 @@ class DeletedUsersListNotifyConsumerCommand extends Command
     public function handle()
     {
         try {
-            $this->info("Starting " . DeletedUsersListNotifyConsumer::class . "...");
+            $this->info("Starting {$this->consumerGroup} consumer...");
 
-            $consumer = new DeletedUsersListNotifyConsumer($this->topic, DeletedUsersListNotifyConsumer::class);
+            $consumer = app()->make(DeletedUsersListNotifyConsumer::class, [
+                'topicName' => $this->topic,
+                'consumerGroup' => $this->consumerGroup
+            ]);
+
             $consumer->consume();
         } catch (\LogicException $e) {
             $this->error($e->getMessage());

@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class NewTweetNotifyConsumerCommand extends Command
 {
     protected $topic = 'new_tweets';
+    protected $consumerGroup = NewTweetNotifyConsumer::class;
     protected $signature = 'kafka:consume:new_tweet_notify';
 
     public function __construct()
@@ -18,11 +19,11 @@ class NewTweetNotifyConsumerCommand extends Command
     public function handle()
     {
         try {
-            $this->info("Starting " . NewTweetNotifyConsumer::class . "...");
+            $this->info("Starting {$this->consumerGroup} consumer...");
 
             $consumer = app()->make(NewTweetNotifyConsumer::class, [
                 'topicName' => $this->topic,
-                'consumerGroup' => NewTweetNotifyConsumer::class,
+                'consumerGroup' => $this->consumerGroup,
             ]);
 
             $consumer->consume();

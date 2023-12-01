@@ -8,6 +8,7 @@ use Illuminate\Console\Command;
 class NewUserNotifyConsumerCommand extends Command
 {
     protected $topic = 'new_users';
+    protected $consumerGroup = NewUserNotifyConsumer::class;
     protected $signature = 'kafka:consume:new_user_notify';
 
     public function __construct()
@@ -18,9 +19,13 @@ class NewUserNotifyConsumerCommand extends Command
     public function handle()
     {
         try {
-            $this->info("Starting " . NewUserNotifyConsumer::class . "...");
+            $this->info("Starting {$this->consumerGroup} consumer...");
 
-            $consumer = new NewUserNotifyConsumer($this->topic, NewUserNotifyConsumer::class);
+            $consumer = app()->make(NewUserNotifyConsumer::class, [
+                'topicName' => $this->topic,
+                'consumerGroup' => $this->consumerGroup,
+            ]);
+
             $consumer->consume();
         } catch (\LogicException $e) {
             $this->error($e->getMessage());
