@@ -7,6 +7,7 @@ use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Models\TweetLike;
 use App\Modules\Tweet\Models\TweetNotice;
+use App\Modules\User\Events\NewTweetEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
@@ -140,6 +141,7 @@ class TweetRepository
         $data = array_filter($data, fn ($value) => !is_null($value));
 
         $tweet = $this->tweet->create($data);
+        event(new NewTweetEvent($tweet));
 
         // TODO QUEUE
         $this->checkForNotices($tweet);

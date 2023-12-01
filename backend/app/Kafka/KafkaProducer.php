@@ -3,6 +3,7 @@
 namespace App\Kafka;
 
 use Enqueue\RdKafka\RdKafkaConnectionFactory;
+use Illuminate\Support\Str;
 
 class KafkaProducer
 {
@@ -16,7 +17,7 @@ class KafkaProducer
         $context = $connectionFactory->createContext();
 
         $topic = $context->createTopic($topicName);
-        $message = $context->createMessage(json_encode($messageData));
+        $message = $context->createMessage(json_encode($messageData), ['uuid' => Str::uuid()]);
 
         $context->createProducer()->send($topic, $message);
     }

@@ -20,7 +20,11 @@ class NewTweetNotifyConsumerCommand extends Command
         try {
             $this->info("Starting " . NewTweetNotifyConsumer::class . "...");
 
-            $consumer = new NewTweetNotifyConsumer($this->topic, NewTweetNotifyConsumer::class);
+            $consumer = app()->make(NewTweetNotifyConsumer::class, [
+                'topicName' => $this->topic,
+                'consumerGroup' => NewTweetNotifyConsumer::class,
+            ]);
+
             $consumer->consume();
         } catch (\LogicException $e) {
             $this->error($e->getMessage());
