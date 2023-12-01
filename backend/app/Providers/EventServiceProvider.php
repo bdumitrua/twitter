@@ -9,7 +9,7 @@ use App\Modules\User\Events\TweetLikeEvent;
 use App\Modules\User\Events\TweetReplyEvent;
 use App\Modules\User\Events\TweetRepostEvent;
 use App\Modules\User\Events\UserGroupMembersUpdateEvent;
-use App\Modules\User\Events\UserNoticeEvent;
+use App\Modules\User\Events\TweetNoticeEvent;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Events\UserSubscribtionEvent;
@@ -58,7 +58,7 @@ class EventServiceProvider extends ServiceProvider
         NewTweetEvent::class => [
             NewTweetsListener::class,
         ],
-        UserNoticeEvent::class => [
+        TweetNoticeEvent::class => [
             NewNoticeListener::class
         ],
         TweetLikeEvent::class => [

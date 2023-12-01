@@ -8,6 +8,7 @@ use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Models\TweetLike;
 use App\Modules\Tweet\Models\TweetNotice;
 use App\Modules\User\Events\NewTweetEvent;
+use App\Modules\User\Events\TweetNoticeEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
@@ -31,6 +32,7 @@ class TweetRepository
         TweetLike $tweetLike,
         UserRepository $userRepository,
     ) {
+
         $this->tweet = $tweet;
         $this->tweetLike = $tweetLike;
         $this->userRepository = $userRepository;
@@ -367,5 +369,9 @@ class TweetRepository
         }, $noticedUsers);
 
         TweetNotice::insert($noticesData);
+        $newTweetNotices = TweetNotice::where('tweet_id', $tweetId)->get();
+        foreach ($newTweetNotices as $tweetNotice) {
+            event(new TweetNoticeEvent($tweetNotice));
+        }
     }
 }

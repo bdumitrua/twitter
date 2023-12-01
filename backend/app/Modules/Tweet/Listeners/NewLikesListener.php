@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Listeners;
 
+use App\Kafka\KafkaProducer;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserSubscribtion;
 
@@ -9,6 +10,9 @@ class NewLikesListener
 {
     public function handle($event)
     {
-        $data = $event->data;
+        if (!empty($event->add)) {
+            $tweetLike = $event->tweetLike;
+            new KafkaProducer('new_likes', $tweetLike->toArray());
+        }
     }
 }

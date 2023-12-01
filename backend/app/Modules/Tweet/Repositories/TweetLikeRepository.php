@@ -41,6 +41,8 @@ class TweetLikeRepository
                 'tweet_id' => $tweetId,
                 'user_id' => $userId,
             ]);
+
+            event(new TweetLikeEvent($tweetLike, true));
         }
     }
 
