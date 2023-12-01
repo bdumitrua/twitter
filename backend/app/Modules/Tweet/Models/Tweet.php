@@ -35,6 +35,11 @@ class Tweet extends Model
         return $this->hasMany(TweetLike::class, 'tweet_id', 'id');
     }
 
+    public function notices()
+    {
+        return $this->hasMany(TweetNotice::class, 'tweet_id', 'id');
+    }
+
     public function favorites()
     {
         return $this->hasMany(TweetFavorite::class, 'tweet_id', 'id');

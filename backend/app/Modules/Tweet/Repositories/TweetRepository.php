@@ -6,6 +6,7 @@ use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Models\TweetLike;
+use App\Modules\Tweet\Models\TweetNotice;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
@@ -138,7 +139,10 @@ class TweetRepository
         $data['user_id'] = $userId;
         $data = array_filter($data, fn ($value) => !is_null($value));
 
-        $this->tweet->create($data);
+        $tweet = $this->tweet->create($data);
+
+        // TODO QUEUE
+        $this->checkForNotices($tweet);
     }
 
     public function destroy(Tweet $tweet): void
@@ -331,9 +335,10 @@ class TweetRepository
         }
     }
 
-    private function checkForNotices(Tweet &$newTweet): void
+    private function checkForNotices(Tweet $tweet): void
     {
-        $tweetText = $newTweet->text;
+        $tweetText = $tweet->text;
+        $tweetId = $tweet->id;
         if (empty($tweetText)) {
             return;
         }
@@ -346,8 +351,19 @@ class TweetRepository
                 $notices[] = $cleanLink;
             }
         }
+        $notices = array_unique($notices);
 
-        $noticedUsers = User::whereIn('link', $notices)->get(['id', 'link']);
-        $newTweet->noticed_users = $noticedUsers;
+        $noticedUsers = User::whereIn('link', $notices)->get(['id', 'link'])->toArray();
+        $noticesData = array_map(function ($subArray) use ($tweetId) {
+            return [
+                'link' => $subArray['link'],
+                'user_id' => $subArray['id'],
+                'tweet_id' => $tweetId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }, $noticedUsers);
+
+        TweetNotice::insert($noticesData);
     }
 }
