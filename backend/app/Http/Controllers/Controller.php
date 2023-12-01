@@ -54,11 +54,4 @@ class Controller extends BaseController
             ]);
         }
     }
-
-    public function handleKafka()
-    {
-        new KafkaProducer('user_created', [
-            "name" => "username"
-        ]);
-    }
 }

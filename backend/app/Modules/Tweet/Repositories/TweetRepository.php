@@ -6,6 +6,9 @@ use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Models\TweetLike;
+use App\Modules\Tweet\Models\TweetNotice;
+use App\Modules\User\Events\NewTweetEvent;
+use App\Modules\User\Events\TweetNoticeEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
@@ -29,6 +32,7 @@ class TweetRepository
         TweetLike $tweetLike,
         UserRepository $userRepository,
     ) {
+
         $this->tweet = $tweet;
         $this->tweetLike = $tweetLike;
         $this->userRepository = $userRepository;
@@ -138,7 +142,11 @@ class TweetRepository
         $data['user_id'] = $userId;
         $data = array_filter($data, fn ($value) => !is_null($value));
 
-        $this->tweet->create($data);
+        $tweet = $this->tweet->create($data);
+        event(new NewTweetEvent($tweet));
+
+        // TODO QUEUE
+        $this->checkForNotices($tweet);
     }
 
     public function destroy(Tweet $tweet): void
@@ -328,6 +336,42 @@ class TweetRepository
         $processedTweetIds[] = $thread->id;
         if (!empty($thread->thread)) {
             $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread->thread);
+        }
+    }
+
+    private function checkForNotices(Tweet $tweet): void
+    {
+        $tweetText = $tweet->text;
+        $tweetId = $tweet->id;
+        if (empty($tweetText)) {
+            return;
+        }
+
+        $words = explode(' ', $tweetText);
+        $notices = [];
+        foreach ($words as $word) {
+            if (strpos($word, '@') === 0) {
+                $cleanLink = preg_replace('/[^\w]/', '', substr($word, 1));
+                $notices[] = $cleanLink;
+            }
+        }
+        $notices = array_unique($notices);
+
+        $noticedUsers = User::whereIn('link', $notices)->get(['id', 'link'])->toArray();
+        $noticesData = array_map(function ($subArray) use ($tweetId) {
+            return [
+                'link' => $subArray['link'],
+                'user_id' => $subArray['id'],
+                'tweet_id' => $tweetId,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }, $noticedUsers);
+
+        TweetNotice::insert($noticesData);
+        $newTweetNotices = TweetNotice::where('tweet_id', $tweetId)->get();
+        foreach ($newTweetNotices as $tweetNotice) {
+            event(new TweetNoticeEvent($tweetNotice));
         }
     }
 }

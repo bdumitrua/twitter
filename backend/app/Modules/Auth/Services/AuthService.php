@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Services;
 
+use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
 use App\Modules\Auth\Requests\CreateUserRequest;
 use App\Modules\Auth\Requests\LoginRequest;
@@ -33,7 +34,7 @@ class AuthService
         return ['registration_id' => $registrationData->id];
     }
 
-    public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): string
+    public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): void
     {
         if ($request->code !== $authRegistration->code) {
             throw new HttpException(403, 'Incorrect code');
@@ -41,17 +42,15 @@ class AuthService
 
         $authRegistration->confirmed = true;
         $authRegistration->save();
-
-        return 'Registration confirmed successfully';
     }
 
-    public function register(AuthRegistration $authRegistration, PasswordRequest $request): string
+    public function register(AuthRegistration $authRegistration, PasswordRequest $request): void
     {
         if (empty($authRegistration->confirmed)) {
             throw new HttpException(403, 'Registration code not confirmed');
         }
 
-        User::create([
+        $user = User::create([
             'password' => Hash::make($request->password),
             'name' => $authRegistration->name,
             'link' => $authRegistration->name . Str::random(8),
@@ -59,7 +58,7 @@ class AuthService
             'birth_date' => $authRegistration->birth_date,
         ]);
 
-        return 'User created successfully';
+        event(new UserCreatedEvent($user));
     }
 
     public function login(LoginRequest $request): JsonResource

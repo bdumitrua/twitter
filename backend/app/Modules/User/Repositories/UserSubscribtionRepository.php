@@ -9,31 +9,31 @@ use Illuminate\Database\Eloquent\Collection;
 
 class UserSubscribtionRepository
 {
-    protected $userSubscribtions;
+    protected $userSubscribtion;
 
     public function __construct(
-        UserSubscribtion $userSubscribtions
+        UserSubscribtion $userSubscribtion
     ) {
-        $this->userSubscribtions = $userSubscribtions;
+        $this->userSubscribtion = $userSubscribtion;
     }
 
     protected function queryByBothIds(int $userId, int $subscriberId): Builder
     {
-        return $this->userSubscribtions
+        return $this->userSubscribtion
             ->where('subscriber_id', '=', $subscriberId)
             ->where('user_id', '=', $userId);
     }
 
     public function getSubscribtions(int $userId): Collection
     {
-        return $this->userSubscribtions
+        return $this->userSubscribtion
             ->where('subscriber_id', '=', $userId)
             ->get();
     }
 
     public function getSubscribers(int $userId): Collection
     {
-        return $this->userSubscribtions
+        return $this->userSubscribtion
             ->where('user_id', '=', $userId)
             ->get();
     }
@@ -41,14 +41,12 @@ class UserSubscribtionRepository
     public function create(int $userId, int $subscriberId): void
     {
         if (empty($this->queryByBothIds($userId, $subscriberId)->exists())) {
-            $subscribtion = $this->userSubscribtions->create([
+            $userSubscribtion = $this->userSubscribtion->create([
                 'subscriber_id' => $subscriberId,
                 'user_id' => $userId
             ]);
 
-            if (!empty($subscribtion)) {
-                event(new UserSubscribtionEvent($subscribtion, true));
-            }
+            event(new UserSubscribtionEvent($userSubscribtion));
         }
     }
 
@@ -56,7 +54,6 @@ class UserSubscribtionRepository
     {
         if ($subscribtion = $this->queryByBothIds($userId, $subscriberId)->first()) {
             $subscribtion->delete();
-            event(new UserSubscribtionEvent($subscribtion, false));
         }
     }
 }

@@ -30,16 +30,4 @@ class UserGroupMemberFactory extends Factory
             'user_group_id' => $userGroup->id
         ];
     }
-
-    /**
-     * Configure the model factory.
-     *
-     * @return $this
-     */
-    public function configure()
-    {
-        return $this->afterCreating(function (UserGroupMember $userGroupMember) {
-            event(new UserGroupMembersUpdateEvent($userGroupMember->user_group_id, true));
-        });
-    }
 }

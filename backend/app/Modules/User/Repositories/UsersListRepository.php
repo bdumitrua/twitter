@@ -4,6 +4,7 @@ namespace App\Modules\User\Repositories;
 
 use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
+use App\Modules\User\Events\DeletedUsersListEvent;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Models\UsersList;
@@ -129,23 +130,24 @@ class UsersListRepository
         ]);
 
 
-        // TODO QUEUE
         if (!empty($updatingStatus)) {
             $this->getById($usersList->id, null, true);
-            // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
-            // dispatch(new RecalculateUsersLists($listSubscribers));
+
+            // TODO QUEUE
+            // Recalculate cache
         }
     }
 
     public function delete(UsersList $usersList): void
     {
+        $usersListData = $usersList->toArray();
         $deletingStatus = $usersList->delete();
 
-        // TODO QUEUE
         if (!empty($deletingStatus)) {
-            $this->getById($usersList->id, null, true);
-            // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
-            // dispatch(new RecalculateUsersLists($listSubscribers));
+            event(new DeletedUsersListEvent($usersListData));
+
+            // TODO QUEUE
+            // Recalculate cache
         }
     }
 
@@ -156,10 +158,6 @@ class UsersListRepository
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
             ]);
-
-            if (!empty($usersListMember)) {
-                event(new UsersListMembersUpdateEvent($usersListMember, true));
-            }
         }
     }
 
@@ -167,10 +165,6 @@ class UsersListRepository
     {
         if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
             $deletingStatus = $usersListMember->delete();
-
-            if ($deletingStatus) {
-                event(new UsersListMembersUpdateEvent($usersListMember, false));
-            }
         }
     }
 
@@ -183,7 +177,6 @@ class UsersListRepository
             ]);
 
             if (!empty($usersListSubscribtion)) {
-                event(new UsersListSubscribtionEvent($usersListId, true));
                 $this->recacheUserLists($userId);
             }
         }
@@ -196,7 +189,6 @@ class UsersListRepository
             $deletingStatus = $usersListSubscribtion->delete();
 
             if (!empty($deletingStatus)) {
-                event(new UsersListSubscribtionEvent($usersListId, false));
                 $this->recacheUserLists($userId);
             }
         }

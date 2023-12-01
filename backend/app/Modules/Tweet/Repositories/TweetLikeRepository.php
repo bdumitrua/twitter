@@ -55,7 +55,6 @@ class TweetLikeRepository
 
         if (!empty($tweetLike)) {
             $tweetLike->delete();
-            event(new TweetLikeEvent($tweetLike, false));
         }
     }
 }

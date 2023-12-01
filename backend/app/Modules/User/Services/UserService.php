@@ -11,8 +11,11 @@ use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserRepository;
 use App\Modules\User\Requests\SearchRequest;
 use App\Modules\User\Requests\UserUpdateRequest;
+use App\Modules\User\Resources\ShortUserResource;
+use App\Modules\User\Resources\UserResource;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -28,14 +31,14 @@ class UserService
         $this->userRepository = $userRepository;
     }
 
-    public function index(): User
+    public function index(): JsonResource
     {
-        return $this->userRepository->getAuthUser(Auth::id());
+        return new UserResource($this->userRepository->getAuthUser(Auth::id()));
     }
 
-    public function show(User $user): User
+    public function show(User $user): JsonResource
     {
-        return $this->userRepository->getById($user->id);
+        return new UserResource($this->userRepository->getById($user->id));
     }
 
     public function update(UserUpdateRequest $userUpdateRequest): void
@@ -48,8 +51,8 @@ class UserService
         );
     }
 
-    public function search(SearchRequest $request): Collection
+    public function search(SearchRequest $request): JsonResource
     {
-        return $this->userRepository->search($request->search);
+        return ShortUserResource::collection($this->userRepository->search($request->search));
     }
 }

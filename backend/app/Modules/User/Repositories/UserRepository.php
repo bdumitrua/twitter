@@ -5,6 +5,7 @@ namespace App\Modules\User\Repositories;
 use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UserDTO;
 use App\Modules\User\Models\User;
+use App\Traits\GetCachedData;
 use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,6 +15,8 @@ use Illuminate\Support\Str;
 
 class UserRepository
 {
+    use GetCachedData;
+
     protected $users;
 
     public function __construct(
@@ -32,34 +35,19 @@ class UserRepository
     public function getAuthUser(int $userId, bool $updateCache = false): User
     {
         $cacheKey = KEY_AUTH_USER_DATA . $userId;
-
-        if ($updateCache) {
-            $userData = $this->queryById($userId)
-                ->with(['lists', 'lists_subscribtions'])
-                ->first() ?? new User();
-
-            Cache::put($cacheKey, $userData, TimeHelper::getMinutes(5));
-        }
-
-        return Cache::remember($cacheKey, TimeHelper::getMinutes(5), function () use ($userId) {
+        return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryById($userId)
-                ->with(['lists', 'lists_subscribtions'])
+                ->with(['lists', 'lists_subscribtions', 'deviceTokens'])
                 ->first() ?? new User();
-        });
+        }, $updateCache);
     }
 
     public function getById(int $userId, bool $updateCache = false): User
     {
         $cacheKey = KEY_USER_DATA . $userId;
-
-        if ($updateCache) {
-            $userData = $this->queryById($userId)->first() ?? new User();
-            Cache::put($cacheKey, $userData, TimeHelper::getMinutes(5));
-        }
-
-        return Cache::remember($cacheKey, TimeHelper::getMinutes(5), function () use ($userId) {
+        return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryById($userId)->first() ?? new User();
-        });
+        }, $updateCache);
     }
 
     public function update(int $userId, UserDTO $dto): void

@@ -42,8 +42,6 @@ class TweetFavoriteRepository
                 'tweet_id' => $tweetId,
                 'user_id' => $userId,
             ]);
-
-            event(new TweetFavoriteEvent($tweetFavorite, true));
         }
     }
 
@@ -56,7 +54,6 @@ class TweetFavoriteRepository
 
         if (!empty($tweetFavorite)) {
             $tweetFavorite->delete();
-            event(new TweetFavoriteEvent($tweetFavorite, false));
         }
     }
 }

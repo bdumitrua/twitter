@@ -9,14 +9,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class TweetRepostEvent implements ShouldBroadcast
 {
     public $tweetId;
-    public $add;
 
     public function __construct(
         int $tweetId,
-        bool $add,
     ) {
         $this->tweetId = $tweetId;
-        $this->add = $add;
     }
 
     public function broadcastOn()

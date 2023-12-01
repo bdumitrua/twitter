@@ -14,6 +14,18 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        $lists = $this->whenLoaded('lists', function () {
+            return $this->lists;
+        });
+
+        $lists_subscribtions = $this->whenLoaded('lists_subscribtions', function () {
+            return $this->lists_subscribtions;
+        });
+
+        $deviceTokens = $this->whenLoaded('deviceTokens', function () {
+            return $this->deviceTokens;
+        });
+
         return [
             'id' => $this->id,
             'name' => $this->name,
@@ -26,6 +38,11 @@ class UserResource extends JsonResource
             'address' => $this->address,
             'birth_date' => $this->birth_date,
             'created_at' => $this->created_at,
+            "subscribtions_count" => $this->subscribtions_count,
+            "subscribers_count" => $this->subscribers_count,
+            "lists" => $lists ?? [],
+            "lists_subscribtions" => $lists_subscribtions ?? [],
+            "device_tokens" => $deviceTokens ?? []
         ];
     }
 }
