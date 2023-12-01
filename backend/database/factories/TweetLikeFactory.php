@@ -30,16 +30,4 @@ class TweetLikeFactory extends Factory
             'tweet_id' => $tweet->id
         ];
     }
-
-    /**
-     * Configure the model factory.
-     *
-     * @return $this
-     */
-    // public function configure()
-    // {
-    //     return $this->afterCreating(function (TweetLike $tweetLike) {
-    //         event(new TweetLikeEvent($tweetLike, true));
-    //     });
-    // }
 }

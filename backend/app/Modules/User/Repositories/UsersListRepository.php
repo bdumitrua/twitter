@@ -134,8 +134,7 @@ class UsersListRepository
             $this->getById($usersList->id, null, true);
 
             // TODO QUEUE
-            // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
-            // dispatch(new RecalculateUsersLists($listSubscribers));
+            // Recalculate cache
         }
     }
 
@@ -148,8 +147,7 @@ class UsersListRepository
             event(new DeletedUsersListEvent($usersListData));
 
             // TODO QUEUE
-            // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
-            // dispatch(new RecalculateUsersLists($listSubscribers));
+            // Recalculate cache
         }
     }
 

@@ -27,16 +27,4 @@ class UserSubscribtionFactory extends Factory
             'subscriber_id' => $subscriber->id,
         ];
     }
-
-    /**
-     * Configure the model factory.
-     *
-     * @return $this
-     */
-    // public function configure()
-    // {
-    //     return $this->afterCreating(function (UserSubscribtion $subscribtion) {
-    //         event(new UserSubscribtionEvent($subscribtion));
-    //     });
-    // }
 }

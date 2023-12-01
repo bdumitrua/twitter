@@ -30,16 +30,4 @@ class TweetFavoriteFactory extends Factory
             'tweet_id' => $tweet->id
         ];
     }
-
-    /**
-     * Configure the model factory.
-     *
-     * @return $this
-     */
-    // public function configure()
-    // {
-    //     return $this->afterCreating(function (TweetFavorite $tweetFavorite) {
-    //         event(new TweetFavoriteEvent($tweetFavorite, true));
-    //     });
-    // }
 }
