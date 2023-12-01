@@ -8,4 +8,14 @@ class NotificationDTO
     public ?string $type = null;
     public ?int $relatedId = null;
     public ?string $status = 'unread';
+
+    public function toArray()
+    {
+        return [
+            'user_id' => $this->userId,
+            'related_id' => $this->relatedId,
+            'type' => $this->type,
+            'status' => $this->status,
+        ];
+    }
 }

@@ -17,18 +17,15 @@ class NotificationRepository
 
     public function getByUserId(int $userId): Collection
     {
-        return $this->notification->where('user_id', '=', $userId)->take(20);
+        return $this->notification->where('user_id', '=', $userId)->take(20)->get();
     }
 
     public function create(NotificationDTO $notificationDTO): void
     {
-        foreach ($notificationDTO as $property => $value) {
-            if (property_exists($this->notification, $property)) {
-                $this->notification->{$property} = $value;
-            }
-        }
+        $data = $notificationDTO->toArray();
+        $data = array_filter($data, fn ($value) => !is_null($value));
 
-        $this->notification->save();
+        $this->notification->create($data);
     }
 
     public function update(Notification $notification, string $newStatus): void
