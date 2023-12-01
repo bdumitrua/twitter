@@ -34,7 +34,7 @@ class AuthService
         return ['registration_id' => $registrationData->id];
     }
 
-    public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): string
+    public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): void
     {
         if ($request->code !== $authRegistration->code) {
             throw new HttpException(403, 'Incorrect code');
@@ -42,11 +42,9 @@ class AuthService
 
         $authRegistration->confirmed = true;
         $authRegistration->save();
-
-        return 'Registration confirmed successfully';
     }
 
-    public function register(AuthRegistration $authRegistration, PasswordRequest $request): string
+    public function register(AuthRegistration $authRegistration, PasswordRequest $request): void
     {
         if (empty($authRegistration->confirmed)) {
             throw new HttpException(403, 'Registration code not confirmed');
@@ -61,8 +59,6 @@ class AuthService
         ]);
 
         event(new UserCreatedEvent($user));
-
-        return 'User created successfully';
     }
 
     public function login(LoginRequest $request): JsonResource
