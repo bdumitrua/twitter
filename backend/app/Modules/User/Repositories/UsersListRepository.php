@@ -4,6 +4,7 @@ namespace App\Modules\User\Repositories;
 
 use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
+use App\Modules\User\Events\DeletedUsersListEvent;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Models\UsersList;
@@ -129,9 +130,10 @@ class UsersListRepository
         ]);
 
 
-        // TODO QUEUE
         if (!empty($updatingStatus)) {
             $this->getById($usersList->id, null, true);
+
+            // TODO QUEUE
             // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
             // dispatch(new RecalculateUsersLists($listSubscribers));
         }
@@ -139,11 +141,13 @@ class UsersListRepository
 
     public function delete(UsersList $usersList): void
     {
+        $usersListData = $usersList->toArray();
         $deletingStatus = $usersList->delete();
 
-        // TODO QUEUE
         if (!empty($deletingStatus)) {
-            $this->getById($usersList->id, null, true);
+            event(new DeletedUsersListEvent($usersListData));
+
+            // TODO QUEUE
             // $listSubscribers = $usersList->subscribers_data()->pluck('user_id')->toArray();
             // dispatch(new RecalculateUsersLists($listSubscribers));
         }

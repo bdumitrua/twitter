@@ -12,7 +12,7 @@ class DeletedUsersListEvent implements ShouldBroadcast
     public $usersList;
 
     public function __construct(
-        UsersList $usersList,
+        array $usersList,
     ) {
         $this->usersList = $usersList;
     }
