@@ -3,24 +3,33 @@
 namespace App\Modules\Notification\Consumers;
 
 use App\Kafka\BaseConsumer;
+use App\Modules\Notification\DTO\NotificationDTO;
+use App\Modules\Notification\Services\NotificationService;
 use Enqueue\RdKafka\RdKafkaConnectionFactory;
 
 class NewUserNotifyConsumer extends BaseConsumer
 {
+    protected $notificationService;
+
+    public function __construct(
+        string $topicName,
+        string $consumerGroup,
+        NotificationService $notificationService,
+    ) {
+        parent::__construct($topicName, $consumerGroup);
+
+        $this->notificationService = $notificationService;
+    }
+
     public function consume(): void
     {
         while (true) {
             $message = $this->consumer->receive();
-            $data = json_decode($message->getBody(), true);
+            $user = $this->getMessageBody($message);
 
-            if (json_last_error() === JSON_ERROR_NONE) {
-                echo "Получено сообщение: " . print_r($data, true) . "topic: {$this->topicName} \n";
-            } else {
-                echo "Ошибка при декодировании сообщения: " . $message->getBody() . ". topic: {$this->topicName} \n";
+            if (!empty($user)) {
+                // Future
             }
-
-            $this->consumer->acknowledge($message);
-            echo "Сообщение обработано и подтверждено. topic: {$this->topicName} \n";
         }
     }
 }

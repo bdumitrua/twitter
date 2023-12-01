@@ -9,6 +9,7 @@ class NewUsersListener
 {
     public function handle($event)
     {
-        $data = $event->data;
+        $user = $event->user;
+        new KafkaProducer('new_users', $user->toArray());
     }
 }

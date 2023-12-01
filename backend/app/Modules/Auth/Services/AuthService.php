@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Services;
 
+use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
 use App\Modules\Auth\Requests\CreateUserRequest;
 use App\Modules\Auth\Requests\LoginRequest;
@@ -51,13 +52,15 @@ class AuthService
             throw new HttpException(403, 'Registration code not confirmed');
         }
 
-        User::create([
+        $user = User::create([
             'password' => Hash::make($request->password),
             'name' => $authRegistration->name,
             'link' => $authRegistration->name . Str::random(8),
             'email' => $authRegistration->email,
             'birth_date' => $authRegistration->birth_date,
         ]);
+
+        event(new UserCreatedEvent($user));
 
         return 'User created successfully';
     }
