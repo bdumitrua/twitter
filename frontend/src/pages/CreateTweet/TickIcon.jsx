@@ -6,14 +6,14 @@ import styles from "../../assets/styles/pages/CreateTweet/TickIcon.module.scss";
 const CircleProgress = ({ charCount, maxCharCount }) => {
     const baseRadius = 7.5;
     const fullRadius = 12;
-    const isFull = charCount >= maxCharCount;
+    const isFull = charCount > maxCharCount;
     const radius = isFull ? fullRadius : baseRadius;
     const circumference = 2 * Math.PI * radius;
 
     const offset = isFull ? 0 : circumference - (charCount / maxCharCount) * circumference;
     const progressClass = isFull ? `${styles["progress__full"]}` : `${styles["progress"]}`;
 
-    const overage = charCount >= maxCharCount ? charCount - maxCharCount + 1 : 0;
+    const overage = charCount >= maxCharCount ? charCount - maxCharCount: 0;
     const overageText = overage > 0 ? `-${overage}` : '';
 
     return (
