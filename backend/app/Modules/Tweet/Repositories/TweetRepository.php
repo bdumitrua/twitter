@@ -160,7 +160,7 @@ class TweetRepository
 
             $data['user_id'] = $userId;
             if (!empty($previousTweetId)) {
-                $data['linkedTweetId'] = $previousTweetId;
+                $data['linked_tweet_id'] = $previousTweetId;
             }
 
             $data = array_filter($data, fn ($value) => !is_null($value));
@@ -257,7 +257,7 @@ class TweetRepository
     private function assembleTweetReplies(Tweet $tweet): Tweet
     {
         if ($tweet->type === 'thread') {
-            $threadStartId = $this->findThreadStartId($tweet->id);
+            $threadStartId = empty($tweet->linked_tweet_id) ? $this->findThreadStartId($tweet->id) : $tweet->id;
             $tweet->thread = $this->buildThread($threadStartId, $tweet->id);
         }
 
