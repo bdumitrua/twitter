@@ -14,15 +14,17 @@ const createTweetSlice = createSlice({
 				...action.payload,
 				charCount: 0,
 			};
-			state.nextId += 1;
 			state.tweetBodies.push(newBody);
 			state.currentId = newBody.id;
+			state.nextId++;
 		},
 		removeTweetBody: (state, action) => {
 			const { id } = action.payload;
+
 			state.tweetBodies = state.tweetBodies.filter(
 				(body) => body.id !== id
 			);
+
 			state.currentId =
 				state.tweetBodies[state.tweetBodies.length - 1].id;
 		},

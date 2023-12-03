@@ -61,8 +61,8 @@ const CreateTweet = () => {
 	return (
 		<div className={styles["create"]}>
 			<div className={styles["create__bodies"]}>
-				{tweetBodies.map((props, index) => (
-					<CreateTweetBody key={index} id={props.id} {...props} />
+				{tweetBodies.map((props) => (
+					<CreateTweetBody key={props.id} id={props.id} {...props} />
 				))}
 			</div>
 			<div className={styles["create__bars"]}>
