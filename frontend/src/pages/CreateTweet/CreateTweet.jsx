@@ -10,6 +10,7 @@ import styles from "../../assets/styles/pages/CreateTweet/CreateTweet.module.scs
 import CreateTweetBody from "./CreateTweetBody";
 import TickIcon from "./TickIcon";
 import AddButton from "./AddButton";
+import CreateTweetModal from "./CreateTweetModal";
 
 import groupIcon from "../../assets/images/Pages/CreateTweet/groupIcon.svg";
 import imageIcon from "../../assets/images/Pages/CreateTweet/imageIcon.svg";
@@ -29,6 +30,7 @@ const CreateTweet = () => {
 		);
 		return tweetBody ? tweetBody.charCount : 0;
 	});
+	const [showModal, setShowModal] = React.useState(false);
 
 	useEffect(() => {
 		setAddButtonActive(
@@ -59,52 +61,64 @@ const CreateTweet = () => {
 	};
 
 	return (
-		<div className={styles["create"]}>
-			<div className={styles["create__bodies"]}>
-				{tweetBodies.map((props) => (
-					<CreateTweetBody key={props.id} id={props.id} {...props} />
-				))}
-			</div>
-			<div className={styles["create__bars"]}>
-				<div className={styles["create__group-bar"]}>
-					<button className={styles["create__group"]}>
-						<img src={groupIcon} alt="Group icon" />
-						<span>Everyone can see</span>
-					</button>
+		<>
+			<div className={styles["create"]}>
+				<div className={styles["create__bodies"]}>
+					{tweetBodies.map((props) => (
+						<CreateTweetBody
+							key={props.id}
+							id={props.id}
+							{...props}
+						/>
+					))}
 				</div>
-				<div className={styles["create__buttons-bar"]}>
-					<div className={styles["create__media-buttons"]}>
-						<button className={styles["create__image-button"]}>
-							<img src={imageIcon} alt="Image icon" />
-						</button>
-						<button className={styles["create__gif-button"]}>
-							<img src={gifIcon} alt="Gif icon" />
-						</button>
-						<button className={styles["create__stats-button"]}>
-							<img src={statsIcon} alt="Stats icon" />
-						</button>
-						<button className={styles["create__location-button"]}>
-							<img src={locationIcon} alt="Location icon" />
+				<div className={styles["create__bars"]}>
+					<div className={styles["create__group-bar"]}>
+						<button className={styles["create__group"]} onClick={() => setShowModal(true)}>
+							<img src={groupIcon} alt="Group icon" />
+							<span>Everyone can see</span>
 						</button>
 					</div>
-					<div className={styles["create__tick-and-add"]}>
-						<div className={styles["create__tick"]}>
-							<TickIcon
-								charCount={charCount}
-								maxCharCount={maxCharCount}
-							/>
+					<div className={styles["create__buttons-bar"]}>
+						<div className={styles["create__media-buttons"]}>
+							<button className={styles["create__image-button"]}>
+								<img src={imageIcon} alt="Image icon" />
+							</button>
+							<button className={styles["create__gif-button"]}>
+								<img src={gifIcon} alt="Gif icon" />
+							</button>
+							<button className={styles["create__stats-button"]}>
+								<img src={statsIcon} alt="Stats icon" />
+							</button>
+							<button
+								className={styles["create__location-button"]}
+							>
+								<img src={locationIcon} alt="Location icon" />
+							</button>
 						</div>
-						<div className={styles["create__separator"]} />
-						<button
-							className={styles["create__add-button"]}
-							onClick={addBody}
-						>
-							<AddButton addButtonActive={addButtonActive} />
-						</button>
+						<div className={styles["create__tick-and-add"]}>
+							<div className={styles["create__tick"]}>
+								<TickIcon
+									charCount={charCount}
+									maxCharCount={maxCharCount}
+								/>
+							</div>
+							<div className={styles["create__separator"]} />
+							<button
+								className={styles["create__add-button"]}
+								onClick={addBody}
+							>
+								<AddButton addButtonActive={addButtonActive} />
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>
-		</div>
+			<CreateTweetModal
+				onClose={() => setShowModal(false)}
+				showModal={showModal}
+			/>
+		</>
 	);
 };
 
