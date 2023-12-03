@@ -1,15 +1,15 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
+
+import { updateTweetBodyLength } from "../../redux/slices/createTweet.slice";
 
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweetBody.module.scss";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
 import cancelTweetButton from "../../assets/images/Pages/CreateTweet/cancelTweetButton.svg";
 
-const CreateTweetBody = ({
-	placeholder,
-	showCloseButton,
-	onCharCountChange,
-}) => {
+const CreateTweetBody = ({ placeholder, showCloseButton, id }) => {
+	const dispatch = useDispatch();
 	const [showLine, setShowLine] = React.useState(false);
 	const textareaRef = React.useRef(null);
 	const minHeight = 61;
@@ -24,8 +24,9 @@ const CreateTweetBody = ({
 		} else {
 			setShowLine(true);
 		}
-
-		onCharCountChange(textarea.value.length);
+		dispatch(
+			updateTweetBodyLength({ id, charCount: textarea.value.length })
+		);
 	};
 
 	return (
@@ -47,17 +48,11 @@ const CreateTweetBody = ({
 					type="text"
 					placeholder={placeholder}
 				></textarea>
-				<div>
-					{showCloseButton && (
-						<button>
-							<img
-								className={styles["body__close-button"]}
-								src={cancelTweetButton}
-								alt="cancel tweet"
-							/>
-						</button>
-					)}
-				</div>
+				{showCloseButton && (
+					<button className={styles["body__close-button"]}>
+						<img src={cancelTweetButton} alt="Cancel tweet" />
+					</button>
+				)}
 			</div>
 		</div>
 	);

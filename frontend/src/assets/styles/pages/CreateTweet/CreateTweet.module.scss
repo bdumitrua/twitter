@@ -67,9 +67,17 @@
 		gap: 20px;
 	}
 
+	&__tick {
+		@include flex-center();
+	}
+
 	&__separator {
 		width: 0.35px;
 		height: 26px;
 		background: $gray;
+	}
+
+	&__add-button {
+		@include flex-center();
 	}
 }
