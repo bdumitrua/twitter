@@ -23,7 +23,7 @@ class UserUpdateRequest extends FormRequest
     {
         return [
             'name' => 'nullable|string|max:255',
-            'link' => 'nullable|string|unique:users,link|max:255',
+            'link' => 'nullable|string|unique:users,link|max:20',
             'email' => 'nullable|string|email|unique:users,email|max:255',
             'password' => 'nullable|string|min:8|max:32',
             'bgImage' => 'nullable|string|max:255',

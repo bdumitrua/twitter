@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Services;
 
+use App\Helpers\StringHelper;
 use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
 use App\Modules\Auth\Requests\CreateUserRequest;
@@ -18,6 +19,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
+use Nette\Utils\Random;
 
 class AuthService
 {
@@ -50,11 +52,14 @@ class AuthService
             throw new HttpException(403, 'Registration code not confirmed');
         }
 
+        $userEmail = $authRegistration->email;
+        $link = StringHelper::createUserLink($userEmail);
+
         $user = User::create([
-            'password' => Hash::make($request->password),
+            'link' => $link,
+            'email' => $userEmail,
             'name' => $authRegistration->name,
-            'link' => $authRegistration->name . Str::random(8),
-            'email' => $authRegistration->email,
+            'password' => Hash::make($request->password),
             'birth_date' => $authRegistration->birth_date,
         ]);
 
