@@ -136,10 +136,9 @@ class TweetRepository
         return $this->assembleTweetsCollection($usersListTweets);
     }
 
-    public function create(TweetDTO $tweetDTO, int $userId): void
+    public function create(TweetDTO $tweetDTO): void
     {
         $data = $tweetDTO->toArray();
-        $data['user_id'] = $userId;
         $data = array_filter($data, fn ($value) => !is_null($value));
 
         $tweet = $this->tweet->create($data);
@@ -152,20 +151,15 @@ class TweetRepository
     /**
      * @param TweetDTO[] $tweetDTOs 
      */
-    public function createThread(array $tweetDTOs, int $userId): void
+    public function createThread(array $tweetDTOs): void
     {
         $previousTweetId = null;
         foreach ($tweetDTOs as $tweetDTO) {
             $data = $tweetDTO->toArray();
-
-            $data['user_id'] = $userId;
-            if (!empty($previousTweetId)) {
-                $data['linked_tweet_id'] = $previousTweetId;
-            }
-
+            $data['linked_tweet_id'] = $previousTweetId;
             $data = array_filter($data, fn ($value) => !is_null($value));
-            $tweet = $this->tweet->create($data);
 
+            $tweet = $this->tweet->create($data);
             // TODO QUEUE
             $this->checkForNotices($tweet);
             event(new NewTweetEvent($tweet));

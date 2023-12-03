@@ -115,25 +115,29 @@ class TweetService
     public function create(TweetRequest $tweetRequest): void
     {
         $this->validateTweetTypeData($tweetRequest);
-        $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
 
-        $this->tweetRepository->create($tweetDTO, $this->authorizedUserId);
+        $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
+        $tweetDTO->userId = $this->authorizedUserId;
+
+        $this->tweetRepository->create($tweetDTO);
     }
 
     public function thread(CreateThreadRequest $сreateThreadRequest): void
     {
         $tweetsData = $сreateThreadRequest->tweets;
         $userGroupId = $сreateThreadRequest->userGroupId;
-
         $tweetDTOs = array_map(function ($newTweetData) use ($userGroupId) {
-            return new TweetDTO([
-                'text' => $newTweetData['text'],
-                'userGroupId' => $userGroupId,
-                'type' => 'thread'
-            ]);
+            return new TweetDTO(
+                $this->authorizedUserId,
+                [
+                    'text' => $newTweetData['text'],
+                    'userGroupId' => $userGroupId,
+                    'type' => 'thread'
+                ]
+            );
         }, $tweetsData);
 
-        $this->tweetRepository->createThread($tweetDTOs, $this->authorizedUserId);
+        $this->tweetRepository->createThread($tweetDTOs);
     }
 
     public function destroy(Tweet $tweet): void
