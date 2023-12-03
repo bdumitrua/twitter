@@ -136,10 +136,9 @@ class TweetRepository
         return $this->assembleTweetsCollection($usersListTweets);
     }
 
-    public function create(TweetDTO $tweetDTO, int $userId): void
+    public function create(TweetDTO $tweetDTO): void
     {
         $data = $tweetDTO->toArray();
-        $data['user_id'] = $userId;
         $data = array_filter($data, fn ($value) => !is_null($value));
 
         $tweet = $this->tweet->create($data);
@@ -147,6 +146,26 @@ class TweetRepository
 
         // TODO QUEUE
         $this->checkForNotices($tweet);
+    }
+
+    /**
+     * @param TweetDTO[] $tweetDTOs 
+     */
+    public function createThread(array $tweetDTOs): void
+    {
+        $previousTweetId = null;
+        foreach ($tweetDTOs as $tweetDTO) {
+            $data = $tweetDTO->toArray();
+            $data['linked_tweet_id'] = $previousTweetId;
+            $data = array_filter($data, fn ($value) => !is_null($value));
+
+            $tweet = $this->tweet->create($data);
+            // TODO QUEUE
+            $this->checkForNotices($tweet);
+            event(new NewTweetEvent($tweet));
+
+            $previousTweetId = $tweet->id;
+        }
     }
 
     public function destroy(Tweet $tweet): void
@@ -232,7 +251,7 @@ class TweetRepository
     private function assembleTweetReplies(Tweet $tweet): Tweet
     {
         if ($tweet->type === 'thread') {
-            $threadStartId = $this->findThreadStartId($tweet->id);
+            $threadStartId = empty($tweet->linked_tweet_id) ? $this->findThreadStartId($tweet->id) : $tweet->id;
             $tweet->thread = $this->buildThread($threadStartId, $tweet->id);
         }
 

@@ -29,6 +29,8 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
         Route::get('feed', 'feed');
         // Создать твит
         Route::post('create', 'create');
+        // Создать тред
+        Route::post('thread', 'thread');
         // Удалить твит
         Route::middleware(['checkRights:tweet'])->group(function () {
             Route::delete('destroy/{tweet}', 'destroy');

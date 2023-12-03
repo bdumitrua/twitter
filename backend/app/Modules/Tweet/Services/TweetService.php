@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetRepository;
+use App\Modules\Tweet\Requests\CreateThreadRequest;
 use App\Modules\Tweet\Requests\TweetRequest;
 use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Models\User;
@@ -47,7 +48,7 @@ class TweetService
 
     public function feed(): JsonResource
     {
-        return TweetResource::collection($this->tweetRepository->getUserFeed(Auth::id()));
+        return TweetResource::collection($this->tweetRepository->getUserFeed($this->authorizedUserId));
     }
 
     public function user(User $user): JsonResource
@@ -114,9 +115,29 @@ class TweetService
     public function create(TweetRequest $tweetRequest): void
     {
         $this->validateTweetTypeData($tweetRequest);
-        $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
 
-        $this->tweetRepository->create($tweetDTO, Auth::id());
+        $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
+        $tweetDTO->userId = $this->authorizedUserId;
+
+        $this->tweetRepository->create($tweetDTO);
+    }
+
+    public function thread(CreateThreadRequest $сreateThreadRequest): void
+    {
+        $tweetsData = $сreateThreadRequest->tweets;
+        $userGroupId = $сreateThreadRequest->userGroupId;
+        $tweetDTOs = array_map(function ($newTweetData) use ($userGroupId) {
+            return new TweetDTO(
+                $this->authorizedUserId,
+                [
+                    'text' => $newTweetData['text'],
+                    'userGroupId' => $userGroupId,
+                    'type' => 'thread'
+                ]
+            );
+        }, $tweetsData);
+
+        $this->tweetRepository->createThread($tweetDTOs);
     }
 
     public function destroy(Tweet $tweet): void
@@ -144,7 +165,7 @@ class TweetService
 
     private function validateTweetTypeData(TweetRequest $tweetRequest): void
     {
-        if (!empty($tweetRequest->type) && $tweetRequest->type !== "thread" && empty($tweetRequest->linkedTweetId)) {
+        if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
         }
     }

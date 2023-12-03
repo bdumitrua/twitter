@@ -17,9 +17,9 @@ class TweetResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $notices = TweetNoticeResource::collection($this->notices);
+        $notices = empty((array)$this->notices) ? [] : TweetNoticeResource::collection($this->notices);
         $author = new ShortUserResource($this->author);
-        $thread = $this->thread ? new TweetResource($this->thread) : [];
+        $thread = empty((array)$this->thread) ? [] : new TweetResource($this->thread);
         $replies = $this->whenLoaded('replies', function () {
             return TweetResource::collection($this->replies);
         });
