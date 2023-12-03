@@ -48,7 +48,7 @@ class TweetService
 
     public function feed(): JsonResource
     {
-        return TweetResource::collection($this->tweetRepository->getUserFeed(Auth::id()));
+        return TweetResource::collection($this->tweetRepository->getUserFeed($this->authorizedUserId));
     }
 
     public function user(User $user): JsonResource
@@ -117,7 +117,7 @@ class TweetService
         $this->validateTweetTypeData($tweetRequest);
         $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
 
-        $this->tweetRepository->create($tweetDTO, Auth::id());
+        $this->tweetRepository->create($tweetDTO, $this->authorizedUserId);
     }
 
     public function thread(CreateThreadRequest $сreateThreadRequest): void
@@ -133,7 +133,7 @@ class TweetService
             ]);
         }, $tweetsData);
 
-        $this->tweetRepository->createThread($tweetDTOs, Auth::id());
+        $this->tweetRepository->createThread($tweetDTOs, $this->authorizedUserId);
     }
 
     public function destroy(Tweet $tweet): void
