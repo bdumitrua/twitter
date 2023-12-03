@@ -20,24 +20,45 @@ class AuthController extends Controller
         $this->authService = $authService;
     }
 
-    public function start(CreateUserRequest $request)
+    public function registrationStart(CreateUserRequest $request)
     {
         return $this->handleServiceCall(function () use ($request) {
-            return $this->authService->start($request);
+            return $this->authService->registrationStart($request);
         });
     }
 
-    public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request)
+    public function registrationConfirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request)
     {
         return $this->handleServiceCall(function () use ($authRegistration, $request) {
-            return $this->authService->confirm($authRegistration, $request);
+            return $this->authService->registrationConfirm($authRegistration, $request);
         });
     }
 
-    public function register(AuthRegistration $authRegistration, PasswordRequest $request)
+    public function registrationEnd(AuthRegistration $authRegistration, PasswordRequest $request)
     {
         return $this->handleServiceCall(function () use ($authRegistration, $request) {
-            return $this->authService->register($authRegistration, $request);
+            return $this->authService->registrationEnd($authRegistration, $request);
+        });
+    }
+
+    public function resetCheck(CreateUserRequest $request)
+    {
+        return $this->handleServiceCall(function () use ($request) {
+            return $this->authService->resetCheck($request);
+        });
+    }
+
+    public function resetConfirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request)
+    {
+        return $this->handleServiceCall(function () use ($authRegistration, $request) {
+            return $this->authService->resetConfirm($authRegistration, $request);
+        });
+    }
+
+    public function resetEnd(AuthRegistration $authRegistration, PasswordRequest $request)
+    {
+        return $this->handleServiceCall(function () use ($authRegistration, $request) {
+            return $this->authService->resetEnd($authRegistration, $request);
         });
     }
 

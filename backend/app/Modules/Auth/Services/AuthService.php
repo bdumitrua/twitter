@@ -21,7 +21,7 @@ use Illuminate\Support\Str;
 
 class AuthService
 {
-    public function start(CreateUserRequest $request): array
+    public function registrationStart(CreateUserRequest $request): array
     {
         $registrationData = AuthRegistration::create([
             // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
@@ -34,7 +34,7 @@ class AuthService
         return ['registration_id' => $registrationData->id];
     }
 
-    public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): void
+    public function registrationConfirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): void
     {
         if ($request->code !== $authRegistration->code) {
             throw new HttpException(403, 'Incorrect code');
@@ -44,7 +44,7 @@ class AuthService
         $authRegistration->save();
     }
 
-    public function register(AuthRegistration $authRegistration, PasswordRequest $request): void
+    public function registrationEnd(AuthRegistration $authRegistration, PasswordRequest $request): void
     {
         if (empty($authRegistration->confirmed)) {
             throw new HttpException(403, 'Registration code not confirmed');
@@ -59,6 +59,21 @@ class AuthService
         ]);
 
         event(new UserCreatedEvent($user));
+    }
+
+    public function resetCheck(CreateUserRequest $request)
+    {
+        // 
+    }
+
+    public function resetConfirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request)
+    {
+        // 
+    }
+
+    public function resetEnd(AuthRegistration $authRegistration, PasswordRequest $request)
+    {
+        // 
     }
 
     public function login(LoginRequest $request): JsonResource
