@@ -4,14 +4,16 @@ namespace App\Modules\Auth\Services;
 
 use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
+use App\Modules\Auth\Models\AuthReset;
 use App\Modules\Auth\Requests\CreateUserRequest;
 use App\Modules\Auth\Requests\LoginRequest;
 use App\Modules\Auth\Requests\PasswordRequest;
-use App\Modules\Auth\Requests\RegistrationCodeRequest;
+use App\Modules\Auth\Requests\AuthConfirmCodeRequest;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Auth\Repositories\AuthRepository;
+use App\Modules\Auth\Requests\CheckEmailRequest;
 use App\Modules\Auth\Resources\AuthTokenResource;
 use App\Modules\User\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -34,7 +36,7 @@ class AuthService
         return ['registration_id' => $registrationData->id];
     }
 
-    public function registrationConfirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): void
+    public function registrationConfirm(AuthRegistration $authRegistration, AuthConfirmCodeRequest $request): void
     {
         if ($request->code !== $authRegistration->code) {
             throw new HttpException(403, 'Incorrect code');
@@ -61,17 +63,17 @@ class AuthService
         event(new UserCreatedEvent($user));
     }
 
-    public function resetCheck(CreateUserRequest $request)
+    public function resetCheck(CheckEmailRequest $request)
     {
         // 
     }
 
-    public function resetConfirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request)
+    public function resetConfirm(AuthReset $authReset, AuthConfirmCodeRequest $request)
     {
         // 
     }
 
-    public function resetEnd(AuthRegistration $authRegistration, PasswordRequest $request)
+    public function resetEnd(AuthReset $authReset, PasswordRequest $request)
     {
         // 
     }

@@ -19,9 +19,9 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
         // Проверить существование аккаунта по почте
         Route::get('check', 'resetCheck');
         // Подтвердить сборс пароля кодом
-        Route::get('confirm', 'resetConfirm');
+        Route::get('confirm/{authReset}', 'resetConfirm');
         // Изменить пароль аккаунта
-        Route::get('end', 'resetEnd');
+        Route::get('end/{authReset}', 'resetEnd');
     });
 
     // Залогиниться
