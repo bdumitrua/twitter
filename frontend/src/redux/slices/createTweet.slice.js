@@ -10,10 +10,11 @@ const createTweetSlice = createSlice({
 	reducers: {
 		addTweetBody: (state, action) => {
 			const newBody = {
-				id: state.nextId++,
+				id: state.nextId,
 				...action.payload,
 				charCount: 0,
 			};
+			state.nextId += 1;
 			state.tweetBodies.push(newBody);
 			state.currentId = newBody.id;
 		},
