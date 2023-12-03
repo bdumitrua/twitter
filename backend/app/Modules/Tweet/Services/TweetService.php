@@ -9,6 +9,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetRepository;
+use App\Modules\Tweet\Requests\CreateThreadRequest;
 use App\Modules\Tweet\Requests\TweetRequest;
 use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Models\User;
@@ -117,6 +118,22 @@ class TweetService
         $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
 
         $this->tweetRepository->create($tweetDTO, Auth::id());
+    }
+
+    public function thread(CreateThreadRequest $сreateThreadRequest): void
+    {
+        $tweetsData = $сreateThreadRequest->tweets;
+        $userGroupId = $сreateThreadRequest->userGroupId;
+
+        $tweetDTOs = array_map(function ($newTweetData) use ($userGroupId) {
+            return new TweetDTO([
+                'text' => $newTweetData['text'],
+                'userGroupId' => $userGroupId,
+                'type' => 'thread'
+            ]);
+        }, $tweetsData);
+
+        $this->tweetRepository->createThread($tweetDTOs, Auth::id());
     }
 
     public function destroy(Tweet $tweet): void

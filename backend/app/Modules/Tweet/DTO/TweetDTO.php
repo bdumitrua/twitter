@@ -9,6 +9,14 @@ class TweetDTO
     public ?string $type = null;
     public ?int $linkedTweetId = null;
 
+    public function __construct(array $data)
+    {
+        $this->text = $data['text'] ?? null;
+        $this->userGroupId = $data['userGroupId'] ?? null;
+        $this->type = $data['type'] ?? null;
+        $this->linkedTweetId = $data['linkedTweetId'] ?? null;
+    }
+
     public function toArray()
     {
         return [

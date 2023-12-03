@@ -149,6 +149,31 @@ class TweetRepository
         $this->checkForNotices($tweet);
     }
 
+    /**
+     * @param TweetDTO[] $tweetDTOs 
+     */
+    public function createThread(array $tweetDTOs, int $userId): void
+    {
+        $previousTweetId = null;
+        foreach ($tweetDTOs as $tweetDTO) {
+            $data = $tweetDTO->toArray();
+
+            $data['user_id'] = $userId;
+            if (!empty($previousTweetId)) {
+                $data['linkedTweetId'] = $previousTweetId;
+            }
+
+            $data = array_filter($data, fn ($value) => !is_null($value));
+            $tweet = $this->tweet->create($data);
+
+            // TODO QUEUE
+            $this->checkForNotices($tweet);
+            event(new NewTweetEvent($tweet));
+
+            $previousTweetId = $tweet->id;
+        }
+    }
+
     public function destroy(Tweet $tweet): void
     {
         $tweet->delete();

@@ -5,6 +5,7 @@ namespace App\Modules\Tweet\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Tweet\Models\Tweet;
+use App\Modules\Tweet\Requests\CreateThreadRequest;
 use App\Modules\Tweet\Requests\TweetRequest;
 use App\Modules\Tweet\Services\TweetService;
 use App\Modules\User\Models\User;
@@ -74,6 +75,13 @@ class TweetController extends Controller
     {
         return $this->handleServiceCall(function () use ($tweetRequest) {
             return $this->tweetService->create($tweetRequest);
+        });
+    }
+
+    public function thread(CreateThreadRequest $сreateThreadRequest): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($сreateThreadRequest) {
+            return $this->tweetService->thread($сreateThreadRequest);
         });
     }
 
