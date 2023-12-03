@@ -5,7 +5,7 @@ namespace App\Modules\Notification\Routes;
 use Illuminate\Support\Facades\Route;
 use App\Modules\Notification\Controllers\NotificationController;
 
-Route::prefix('notifications')->middleware(['auth:api'])->controller(NotificationController::class)->group(function () {
+Route::prefix('notifications')->middleware(['api.auth'])->controller(NotificationController::class)->group(function () {
     // Получить свои уведомления
     Route::get('/', 'index');
 

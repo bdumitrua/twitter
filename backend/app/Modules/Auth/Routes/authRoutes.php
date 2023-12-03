@@ -19,9 +19,9 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
         // Проверить существование аккаунта по почте
         Route::get('check', 'resetCheck');
         // Подтвердить сборс пароля кодом
-        Route::get('confirm/{authReset}', 'resetConfirm');
+        Route::post('confirm/{authReset}', 'resetConfirm');
         // Изменить пароль аккаунта
-        Route::get('end/{authReset}', 'resetEnd');
+        Route::post('end/{authReset}', 'resetEnd');
     });
 
     // Залогиниться
@@ -29,7 +29,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     // Получить новый токен (по уже истёкшему)
     Route::get('refresh', 'refresh');
 
-    Route::middleware(['auth:api'])->group(function () {
+    Route::middleware(['api.auth'])->group(function () {
         // Выйти
         Route::post('logout', 'logout');
     });

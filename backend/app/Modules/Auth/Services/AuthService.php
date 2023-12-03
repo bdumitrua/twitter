@@ -65,18 +65,45 @@ class AuthService
 
     public function resetCheck(CheckEmailRequest $request)
     {
-        // 
+        $user = User::where('email', $request->email)->first();
+
+        if (empty($user)) {
+            throw new HttpException(404, 'Account with this email doesn\'t exist');
+        }
+
+        $resetData = AuthReset::create([
+            // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
+            'code' => '11111',
+            'user_id' => $user->id,
+        ]);
+
+        return ['reset_id' => $resetData->id];
     }
 
     public function resetConfirm(AuthReset $authReset, AuthConfirmCodeRequest $request)
     {
-        // 
+        if ($request->code !== $authReset->code) {
+            throw new HttpException(403, 'Incorrect code');
+        }
+
+        $authReset->confirmed = true;
+        $authReset->save();
     }
 
     public function resetEnd(AuthReset $authReset, PasswordRequest $request)
     {
-        // 
+        if (empty($authReset->confirmed)) {
+            throw new HttpException(403, 'Registration code not confirmed');
+        }
+
+        $user = $authReset->user;
+
+        $user->password = Hash::make($request->password);
+        $user->token_invalid_before = now();
+
+        $user->save();
     }
+
 
     public function login(LoginRequest $request): JsonResource
     {
