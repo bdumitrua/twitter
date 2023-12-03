@@ -10,14 +10,20 @@ const createTweetSlice = createSlice({
 	reducers: {
 		addTweetBody: (state, action) => {
 			const newBody = {
-				id: state.nextId,
+				id: state.nextId++,
 				...action.payload,
 				charCount: 0,
 			};
 			state.tweetBodies.push(newBody);
-			state.nextId++;
+			state.currentId = newBody.id;
 		},
 		removeTweetBody: (state, action) => {
+			const { id } = action.payload;
+			state.tweetBodies = state.tweetBodies.filter(
+				(body) => body.id !== id
+			);
+			state.currentId =
+				state.tweetBodies[state.tweetBodies.length - 1].id;
 		},
 		updateTweetBodyLength: (state, action) => {
 			const { id, charCount } = action.payload;

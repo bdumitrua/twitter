@@ -1,7 +1,10 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 
-import { updateTweetBodyLength } from "../../redux/slices/createTweet.slice";
+import {
+	updateTweetBodyLength,
+	removeTweetBody,
+} from "../../redux/slices/createTweet.slice";
 
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweetBody.module.scss";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
@@ -49,7 +52,10 @@ const CreateTweetBody = ({ placeholder, showCloseButton, id }) => {
 					placeholder={placeholder}
 				></textarea>
 				{showCloseButton && (
-					<button className={styles["body__close-button"]}>
+					<button
+						className={styles["body__close-button"]}
+						onClick={() => dispatch(removeTweetBody({ id }))}
+					>
 						<img src={cancelTweetButton} alt="Cancel tweet" />
 					</button>
 				)}
