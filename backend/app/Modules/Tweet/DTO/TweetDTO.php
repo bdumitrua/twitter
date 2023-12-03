@@ -10,7 +10,7 @@ class TweetDTO
     public ?string $type = null;
     public ?int $linkedTweetId = null;
 
-    public function __construct(int $userId, array $data)
+    public function __construct(int $userId = null, array $data = [])
     {
         $this->userId = $userId;
         $this->text = $data['text'] ?? null;

@@ -165,7 +165,7 @@ class TweetService
 
     private function validateTweetTypeData(TweetRequest $tweetRequest): void
     {
-        if (!empty($tweetRequest->type) && $tweetRequest->type !== "thread" && empty($tweetRequest->linkedTweetId)) {
+        if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
         }
     }
