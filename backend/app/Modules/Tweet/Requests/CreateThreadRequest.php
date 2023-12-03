@@ -14,19 +14,22 @@ class CreateThreadRequest extends FormRequest
     public function rules()
     {
         return [
+            'userGroupId' => 'nullable|exists:user_groups,id',
             'tweets' => 'required|array',
             'tweets.*.text' => 'nullable|string|max:255',
-            'tweets.*.userGroupId' => 'nullable|exists:user_groups,id',
         ];
     }
 
     public function messages()
     {
         return [
+            'userGroupId.exists' => 'Выбранная группа пользователей не существует',
+
+            'tweets.array' => 'Поле tweets должно быть массивом',
+            'tweets.required' => 'Массив tweets является обязательным',
+
             'tweets.*.text.string' => 'Текст должен быть строкой',
             'tweets.*.text.max' => 'Максимальная длина текста 255 символов',
-
-            'tweets.*.userGroupId.exists' => 'Выбранная группа пользователей не существует',
         ];
     }
 }
