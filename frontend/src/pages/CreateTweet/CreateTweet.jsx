@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	addTweetBody,
 	selectTweetBodies,
-	selectNextId,
 } from "../../redux/slices/createTweet.slice";
 
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweet.module.scss";
