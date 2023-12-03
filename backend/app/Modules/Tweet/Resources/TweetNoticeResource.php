@@ -20,7 +20,6 @@ class TweetNoticeResource extends JsonResource
         return [
             'link' => $this->link,
             'user_id' => $this->user_id,
-            'tweet_id' => $this->tweet_id,
         ];
     }
 }
