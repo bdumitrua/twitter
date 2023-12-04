@@ -22,11 +22,7 @@ const CreateTweetBody = ({ placeholder, showCloseButton, id }) => {
 		textarea.style.height = "auto";
 		textarea.style.height = `${textarea.scrollHeight}px`;
 
-		if (textarea.scrollHeight < minHeight) {
-			setShowLine(false);
-		} else {
-			setShowLine(true);
-		}
+		setShowLine(textarea.scrollHeight > minHeight);
 		dispatch(
 			updateTweetBodyLength({ id, charCount: textarea.value.length })
 		);
