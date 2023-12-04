@@ -14,6 +14,7 @@ use App\Modules\User\Requests\UpdateUsersListRequest;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -21,41 +22,56 @@ class UsersListService
 {
     use CreateDTO;
 
-    protected $usersListRepository;
+    protected int $authorizedUserId;
+    protected UsersListRepository $usersListRepository;
+    protected LogManager $logger;
 
     public function __construct(
         UsersListRepository $usersListRepository,
+        LogManager $logger,
     ) {
         $this->usersListRepository = $usersListRepository;
+        $this->logger = $logger;
+        $this->authorizedUserId = Auth::id();
     }
 
     public function index(): Collection
     {
-        return $this->usersListRepository->getByUserId(Auth::id());
+        return $this->usersListRepository->getByUserId($this->authorizedUserId);
     }
 
     public function show(UsersList $usersList): UsersList
     {
-        return $this->usersListRepository->getById($usersList->id, Auth::id());
+        return $this->usersListRepository->getById($usersList->id, $this->authorizedUserId);
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
     {
-        $authorizedUserId = Auth::id();
+        $this->logger->info('Creating UsersListDTO from create request', $createUsersListRequest->toArray());
         $usersListDTO = $this->createDTO($createUsersListRequest, UsersListDTO::class);
 
-        $this->usersListRepository->create($usersListDTO, $authorizedUserId);
+        $this->logger->info('Creating UsersList using UsersListDTO', $usersListDTO->toArray());
+        $this->usersListRepository->create($usersListDTO, $this->authorizedUserId);
     }
 
     public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest): void
     {
+        $this->logger->info('Creating UsersListDTO from update request', $updateUsersListRequest->toArray());
         $usersListDTO = $this->createDTO($updateUsersListRequest, UsersListDTO::class);
 
+        $this->logger->info(
+            'Updating UsersList using UsersListDTO',
+            [
+                'Current usersList' => $usersList->toArray(),
+                'DTO' => $usersListDTO->toArray()
+            ]
+        );
         $this->usersListRepository->update($usersList, $usersListDTO);
     }
 
-    public function destroy(UsersList $usersList): void
+    public function destroy(UsersList $usersList, Request $request): void
     {
+        $this->logger->info('Deleting UsersList', [$usersList->toArray(), 'ip' => $request->ip()]);
         $this->usersListRepository->delete($usersList);
     }
 
@@ -71,13 +87,11 @@ class UsersListService
 
     public function subscribe(UsersList $usersList): void
     {
-        $authorizedUserId = Auth::id();
-        $this->usersListRepository->subscribe($usersList->id, $authorizedUserId);
+        $this->usersListRepository->subscribe($usersList->id, $this->authorizedUserId);
     }
 
     public function unsubscribe(UsersList $usersList): void
     {
-        $authorizedUserId = Auth::id();
-        $this->usersListRepository->unsubscribe($usersList->id, $authorizedUserId);
+        $this->usersListRepository->unsubscribe($usersList->id, $this->authorizedUserId);
     }
 }

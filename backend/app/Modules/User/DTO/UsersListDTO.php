@@ -8,4 +8,14 @@ class UsersListDTO
     public ?string $description = null;
     public ?string $bgImage = null;
     public ?bool $isPrivate = false;
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'description' => $this->description,
+            'bgImage' => $this->bgImage,
+            'isPrivate' => $this->name,
+        ];
+    }
 }

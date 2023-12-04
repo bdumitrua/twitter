@@ -50,10 +50,10 @@ class UsersListController extends Controller
         });
     }
 
-    public function destroy(UsersList $usersList): JsonResponse
+    public function destroy(UsersList $usersList, Request $request): JsonResponse
     {
-        return $this->handleServiceCall(function () use ($usersList) {
-            return $this->usersListService->destroy($usersList);
+        return $this->handleServiceCall(function () use ($usersList, $request) {
+            return $this->usersListService->destroy($usersList, $request);
         });
     }
 
