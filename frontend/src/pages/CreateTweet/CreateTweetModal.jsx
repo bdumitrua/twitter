@@ -1,6 +1,6 @@
 import React from "react";
 
-import styles from "../../assets/styles/pages/CreateTweet/CreateModal.module.scss";
+import styles from "../../assets/styles/pages/CreateTweet/CreateTweetModal.module.scss";
 
 import rectangle from "../../assets/images/Pages/CreateTweet/rectangle.svg";
 import retweet from "../../assets/images/Pages/CreateTweet/retweet.svg";
