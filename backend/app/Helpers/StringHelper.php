@@ -17,4 +17,16 @@ class StringHelper
     {
         return lcfirst(str_replace(' ', '', ucwords(str_replace('_', ' ', $string))));
     }
+
+    public static function createUserLink(string $email): string
+    {
+        $link = strstr($email, '@', true);
+        $link = preg_replace("/[^\w]/", "", $link);
+        if (strlen($link) > 15) {
+            $link = substr($link, 0, 15);
+        }
+        $link = $link . (string)rand(10000, 99999);
+
+        return $link;
+    }
 }
