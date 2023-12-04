@@ -1,7 +1,8 @@
 <?php
 
-use App\Jobs\NewJob;
 use Illuminate\Support\Facades\Route;
+use Prometheus\CollectorRegistry;
+use Prometheus\RenderTextFormat;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,6 +15,15 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    // 
+Route::get('/metrics', function () {
+    $registry = CollectorRegistry::getDefault();
+    $renderer = new RenderTextFormat();
+    $result = $renderer->render($registry->getMetricFamilySamples());
+
+    return response($result)->header('Content-Type', RenderTextFormat::MIME_TYPE);
+});
+
+Route::get('/test-metric', function () {
+    $counter = CollectorRegistry::getDefault()->getOrRegisterCounter('twitter', 'test_metric_counter', 'Counter for test metric');
+    $counter->inc();
 });
