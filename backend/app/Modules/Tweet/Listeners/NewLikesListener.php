@@ -3,14 +3,16 @@
 namespace App\Modules\User\Listeners;
 
 use App\Kafka\KafkaProducer;
-use App\Modules\User\Models\User;
-use App\Modules\User\Models\UserSubscribtion;
+use Illuminate\Support\Facades\Log;
 
 class NewLikesListener
 {
     public function handle($event)
     {
-        $tweetLike = $event->tweetLike;
-        new KafkaProducer('new_likes', $tweetLike->toArray());
+        $tweetLike = $event->tweetLike->toArray();
+        $topic = 'new_likes';
+
+        Log::info("Creating message in {$topic} topic", $tweetLike);
+        new KafkaProducer($topic, $tweetLike);
     }
 }
