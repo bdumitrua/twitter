@@ -5,7 +5,7 @@ import styles from "../../assets/styles/pages/CreateTweet/TickIcon.module.scss";
 
 const CircleProgress = ({ charCount, maxCharCount }) => {
 	const baseRadius = 7.5;
-	const fullRadius = 12;
+	const fullRadius = 9.5;
 	const isFull = charCount > maxCharCount;
 	const radius = isFull ? fullRadius : baseRadius;
 	const circumference = 2 * Math.PI * radius;
