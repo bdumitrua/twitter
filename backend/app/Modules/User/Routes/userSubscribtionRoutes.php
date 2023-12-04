@@ -11,8 +11,11 @@ Route::prefix('users/subscribtions')->middleware(['api.auth'])->controller(UserS
     Route::get('/{user}', 'subscribtions');
     // Кто подписан на пользователя
     Route::get('subscribers/{user}', 'subscribers');
-    // Подписаться на пользователя
-    Route::post('add/{user}', 'add');
-    // Отписаться от пользователя
-    Route::post('remove/{user}', 'remove');
+
+    Route::middleware(['preventSA'])->group(function () {
+        // Подписаться на пользователя
+        Route::post('add/{user}', 'add');
+        // Отписаться от пользователя
+        Route::post('remove/{user}', 'remove');
+    });
 });
