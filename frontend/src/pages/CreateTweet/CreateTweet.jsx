@@ -31,6 +31,7 @@ const CreateTweet = () => {
 		return tweetBody ? tweetBody.charCount : 0;
 	});
 	const [showModal, setShowModal] = React.useState(false);
+	const group = useSelector((state) => state.createTweet.group);
 
 	useEffect(() => {
 		setAddButtonActive(
@@ -76,7 +77,7 @@ const CreateTweet = () => {
 					<div className={styles["create__group-bar"]}>
 						<button className={styles["create__group"]} onClick={() => setShowModal(true)}>
 							<img src={groupIcon} alt="Group icon" />
-							<span>Everyone can see</span>
+							<span>{group}</span>
 						</button>
 					</div>
 					<div className={styles["create__buttons-bar"]}>

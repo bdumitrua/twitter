@@ -1,14 +1,23 @@
 import React from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweetModal.module.scss";
+
+import { changeGroup } from "../../redux/slices/createTweet.slice";
 
 import rectangle from "../../assets/images/Pages/CreateTweet/rectangle.svg";
 import retweet from "../../assets/images/Pages/CreateTweet/retweet.svg";
 import penIcon from "../../assets/images/Pages/CreateTweet/penIcon.svg";
 
-const groupsList = ["Group 1", "Group 2", "Group 3"];
-
 const CreateModal = ({ onClose, showModal }) => {
+	const dispatch = useDispatch();
+	const groupsList = useSelector((state) => state.createTweet.groupsList);
+
+	const onGroupChange = (group) => {
+		dispatch(changeGroup(group));
+		onClose();
+	};
+
 	return (
 		<>
 			{showModal && (
@@ -27,7 +36,7 @@ const CreateModal = ({ onClose, showModal }) => {
 					/>
 					<button
 						className={styles["modal__button"]}
-						onClick={onClose}
+						onClick={() => onGroupChange("Everyone can see")}
 					>
 						<img
 							className={styles["modal__all-users-icon"]}
@@ -40,7 +49,7 @@ const CreateModal = ({ onClose, showModal }) => {
 						<button
 							key={index}
 							className={styles["modal__button"]}
-							onClick={onClose}
+							onClick={() => onGroupChange(group)}
 						>
 							<img
 								className={styles["modal__pen-icon"]}

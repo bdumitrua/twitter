@@ -1,9 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+const groupsList = ["Group 1", "Group 2", "Group 3"];
+
 const createTweetSlice = createSlice({
 	name: "createTweet",
 	initialState: {
 		tweetBodies: [],
+		groupsList: groupsList,
+		group: "Everyone can see",
 		nextId: 0,
 		currentId: 0,
 	},
@@ -36,11 +40,19 @@ const createTweetSlice = createSlice({
 			}
 			state.currentId = id;
 		},
+		changeGroup: (state, action) => {
+			state.group = action.payload;
+			console.log(state.group);
+		},
 	},
 });
 
-export const { addTweetBody, removeTweetBody, updateTweetBodyLength } =
-	createTweetSlice.actions;
+export const {
+	addTweetBody,
+	removeTweetBody,
+	updateTweetBodyLength,
+	changeGroup,
+} = createTweetSlice.actions;
 
 export const selectTweetBodies = (state) => state.createTweet.tweetBodies;
 export const selectNextId = (state) => state.createTweet.nextId;
