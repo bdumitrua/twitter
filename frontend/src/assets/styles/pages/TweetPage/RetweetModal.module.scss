@@ -3,7 +3,7 @@
 }
 
 .modal {
-	@include modal(-235px);
+	@include modal();
 
 	&__open {
 		@include modal-open();

@@ -3,8 +3,7 @@
 }
 
 .modal {
-    /* FIXME: adaptive modal height */
-	@include modal(-353px);
+	@include modal();
 
 	&__open {
 		@include modal-open();

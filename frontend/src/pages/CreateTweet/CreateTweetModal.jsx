@@ -6,6 +6,8 @@ import rectangle from "../../assets/images/Pages/CreateTweet/rectangle.svg";
 import retweet from "../../assets/images/Pages/CreateTweet/retweet.svg";
 import penIcon from "../../assets/images/Pages/CreateTweet/penIcon.svg";
 
+const groupsList = ["Group 1", "Group 2", "Group 3"];
+
 const CreateModal = ({ onClose, showModal }) => {
 	return (
 		<>
@@ -34,39 +36,20 @@ const CreateModal = ({ onClose, showModal }) => {
 						/>
 						<span>All users</span>
 					</button>
-					<button
-						className={styles["modal__button"]}
-						onClick={onClose}
-					>
-						<img
-							className={styles["modal__pen-icon"]}
-							src={penIcon}
-							alt=""
-						/>
-						<span>Group 1</span>
-					</button>
-					<button
-						className={styles["modal__button"]}
-						onClick={onClose}
-					>
-						<img
-							className={styles["modal__pen-icon"]}
-							src={penIcon}
-							alt=""
-						/>
-						<span>Group 2</span>
-					</button>
-					<button
-						className={styles["modal__button"]}
-						onClick={onClose}
-					>
-						<img
-							className={styles["modal__pen-icon"]}
-							src={penIcon}
-							alt=""
-						/>
-						<span>Group 3</span>
-					</button>
+					{groupsList.map((group, index) => (
+						<button
+							key={index}
+							className={styles["modal__button"]}
+							onClick={onClose}
+						>
+							<img
+								className={styles["modal__pen-icon"]}
+								src={penIcon}
+								alt=""
+							/>
+							<span>{group}</span>
+						</button>
+					))}
 					<button
 						className={styles["modal__cancel"]}
 						onClick={onClose}

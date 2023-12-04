@@ -64,14 +64,14 @@ $z-modals: 3;
 	z-index: $z-overlay;
 }
 
-@mixin modal($bottom) {
+@mixin modal() {
 	@include text-black(19px, 400);
 	width: 100%;
 	background: white;
 	padding: 8px 8px 32px 8px;
 	border-radius: 12px;
 	position: fixed;
-	bottom: $bottom;
+	bottom: -100%;
 	z-index: $z-modals;
 	transition: bottom 0.5s ease;
 }
