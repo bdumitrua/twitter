@@ -55,7 +55,7 @@ class UserUpdateRequest extends FormRequest
 
             'link.string' => 'Ссылка должна быть строкой',
             'link.unique' => 'Эта ссылка уже существует',
-            'link.max' => 'Ссылка не должна превышать 255 символов',
+            'link.max' => 'Ссылка не должна превышать 20 символов',
 
             'email.string' => 'Email должен быть строкой',
             'email.email' => 'Введите правильный адрес электронной почты',
