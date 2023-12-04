@@ -19,7 +19,7 @@ use Illuminate\Support\Facades\Route;
 // * @See app/Providers/RouteServiceProvider.php
 
 // Опросы
-Route::prefix('polls')->middleware(['auth:api'])->controller(Controller::class)->group(function () {
+Route::prefix('polls')->middleware(['api.auth'])->controller(Controller::class)->group(function () {
     // Создать опрос
     Route::post('create', 'create');
     // Проголосовать в опросе

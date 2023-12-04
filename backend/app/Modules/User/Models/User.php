@@ -28,6 +28,7 @@ class User extends Authenticatable implements JWTSubject
         'site_url',
         'address',
         'birth_date',
+        'token_invalid_before'
     ];
 
     protected $hidden = [
@@ -37,6 +38,10 @@ class User extends Authenticatable implements JWTSubject
     protected $searchable = [
         'name',
         'link',
+    ];
+
+    protected $casts = [
+        'token_invalid_before' => 'datetime:YYYY-MM-DDTHH:MM:SS.uuuuuuZ',
     ];
 
     /**

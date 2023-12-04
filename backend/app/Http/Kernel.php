@@ -44,6 +44,11 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
+
+        'api.auth' => [
+            'auth:api',
+            \App\Http\Middleware\EnsureTokenIsValid::class,
+        ],
     ];
 
     /**

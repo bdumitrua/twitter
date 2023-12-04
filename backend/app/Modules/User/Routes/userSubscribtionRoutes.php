@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 use App\Modules\User\Controllers\UserSubscribtionController;
 
 // Работа с подписками
-Route::prefix('users/subscribtions')->middleware(['auth:api'])->controller(UserSubscribtionController::class)->group(function () {
+Route::prefix('users/subscribtions')->middleware(['api.auth'])->controller(UserSubscribtionController::class)->group(function () {
     // На кого пользователь подписан
     Route::get('/{user}', 'subscribtions');
     // Кто подписан на пользователя
