@@ -115,6 +115,7 @@ class TweetService
     public function create(TweetRequest $tweetRequest): void
     {
         $this->validateTweetTypeData($tweetRequest);
+        $this->validateTweetText($tweetRequest);
 
         $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
         $tweetDTO->userId = $this->authorizedUserId;
@@ -167,6 +168,13 @@ class TweetService
     {
         if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
+        }
+    }
+
+    private function validateTweetText(TweetRequest $tweetRequest): void
+    {
+        if (empty($tweetRequest->text) && $tweetRequest->type !== 'repost') {
+            throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, 'Tweet text is required');
         }
     }
 
