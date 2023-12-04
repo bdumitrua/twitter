@@ -21,7 +21,7 @@ COPY . .
 
 RUN composer install
 
-COPY ./laravel-worker.conf /etc/supervisor/conf.d/laravel-worker.conf
+COPY ./kafka_consumers.conf /etc/supervisor/conf.d/kafka_consumers.conf
 COPY ./start.sh /app/backend/start.sh
 
 EXPOSE 8000
