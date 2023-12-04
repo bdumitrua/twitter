@@ -20,6 +20,7 @@ use App\Modules\User\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Nette\Utils\Random;
 
@@ -27,6 +28,7 @@ class AuthService
 {
     public function registrationStart(CreateUserRequest $request): array
     {
+        Log::info('Starting user registration', $request->toArray());
         $registrationData = AuthRegistration::create([
             // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
             'code' => '11111',
@@ -40,12 +42,14 @@ class AuthService
 
     public function registrationConfirm(AuthRegistration $authRegistration, AuthConfirmCodeRequest $request): void
     {
+        Log::info('Confirming registration code', ['id' => $authRegistration->id]);
         if ($request->code !== $authRegistration->code) {
             throw new HttpException(403, 'Incorrect code');
         }
 
         $authRegistration->confirmed = true;
         $authRegistration->save();
+        Log::info('Confirmed registration code', ['id' => $authRegistration->id]);
     }
 
     public function registrationEnd(AuthRegistration $authRegistration, PasswordRequest $request): void
@@ -57,6 +61,7 @@ class AuthService
         $userEmail = $authRegistration->email;
         $link = StringHelper::createUserLink($userEmail);
 
+        Log::info('Creating user at last registration step', [$authRegistration->toArray(), $request->toArray()]);
         $user = User::create([
             'link' => $link,
             'email' => $userEmail,
@@ -76,6 +81,7 @@ class AuthService
             throw new HttpException(404, 'Account with this email doesn\'t exist');
         }
 
+        Log::info('Starting reset user password', ['user_id' => $user->id]);
         $resetData = AuthReset::create([
             // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
             'code' => '11111',
@@ -87,12 +93,14 @@ class AuthService
 
     public function resetConfirm(AuthReset $authReset, AuthConfirmCodeRequest $request)
     {
+        Log::info('Confirming reset code', ['id' => $authReset->id]);
         if ($request->code !== $authReset->code) {
             throw new HttpException(403, 'Incorrect code');
         }
 
         $authReset->confirmed = true;
         $authReset->save();
+        Log::info('Confirmed reset code', ['id' => $authReset->id]);
     }
 
     public function resetEnd(AuthReset $authReset, PasswordRequest $request)
@@ -107,6 +115,7 @@ class AuthService
         $user->token_invalid_before = now();
 
         $user->save();
+        Log::info('Changed user password', ['user_id' => $user->id]);
     }
 
 
@@ -118,12 +127,14 @@ class AuthService
             throw new HttpException(400, 'Invalid credentials');
         }
 
+        Log::info('Authorized user by email and password', ['email' => $request->email, 'ip' => $request->ip()]);
         return new AuthTokenResource($token);
     }
 
-    public function logout(): void
+    public function logout($request): void
     {
         Auth::logout();
+        Log::info('User exited from account', ['user' => Auth::user(), 'ip' => $request->ip()]);
     }
 
     public function refresh(): JsonResource
