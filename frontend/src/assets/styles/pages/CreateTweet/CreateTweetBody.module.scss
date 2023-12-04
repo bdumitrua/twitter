@@ -13,7 +13,7 @@
 
 	&__avatar-group {
 		@include flex-column();
-		min-height: 61px;
+		min-height: 60px;
 		align-items: center;
 		gap: 4px;
 		align-self: stretch;

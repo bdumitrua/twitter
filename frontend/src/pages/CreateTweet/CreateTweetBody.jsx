@@ -15,7 +15,7 @@ const CreateTweetBody = ({ placeholder, showCloseButton, id }) => {
 	const dispatch = useDispatch();
 	const [showLine, setShowLine] = React.useState(false);
 	const textareaRef = React.useRef(null);
-	const minHeight = 61;
+	const minHeight = 60;
 
 	const handleChange = () => {
 		const textarea = textareaRef.current;
