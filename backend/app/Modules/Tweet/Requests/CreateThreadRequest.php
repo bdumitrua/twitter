@@ -16,7 +16,7 @@ class CreateThreadRequest extends FormRequest
         return [
             'userGroupId' => 'nullable|exists:user_groups,id',
             'tweets' => 'required|array',
-            'tweets.*.text' => 'nullable|string|max:255',
+            'tweets.*.text' => 'required|string|max:255',
         ];
     }
 
@@ -28,6 +28,7 @@ class CreateThreadRequest extends FormRequest
             'tweets.array' => 'Поле tweets должно быть массивом',
             'tweets.required' => 'Массив tweets является обязательным',
 
+            'tweets.*.text.required' => 'Текст твита является обязательным полем',
             'tweets.*.text.string' => 'Текст должен быть строкой',
             'tweets.*.text.max' => 'Максимальная длина текста 255 символов',
         ];

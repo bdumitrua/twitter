@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\AccessDeniedException;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -21,7 +22,7 @@ class PreventSelfAction
         $user = $request->route('user');
 
         if ($user->id === Auth::id()) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, 'You can\'t do this.');
+            throw new AccessDeniedException();
         }
 
         return $next($request);

@@ -2,6 +2,8 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Exceptions\AccessDeniedException;
+use App\Exceptions\NotFoundException;
 use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Events\DeletedUsersListEvent;
@@ -82,12 +84,12 @@ class UsersListRepository
         }, $updateCache);
 
         if (empty($usersList)) {
-            throw new HttpException(Response::HTTP_NOT_FOUND, 'List not found');
+            throw new NotFoundException('List');
         }
 
         if ($usersList->is_private) {
             if (!in_array($authorizedUserId, $usersList->subscribers->pluck('user_id')->toArray())) {
-                throw new HttpException(Response::HTTP_FORBIDDEN, 'You don\'t have acces to this list');
+                throw new AccessDeniedException();
             }
         }
 
