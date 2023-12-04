@@ -12,7 +12,7 @@ trait CreateDTO
     {
         $filteredRequestData = array_filter($request->all());
         if (empty($filteredRequestData)) {
-            throw new HttpException(Response::HTTP_BAD_REQUEST, 'At least one field must be filled');
+            throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, 'At least one field must be filled');
         }
 
         $dto = new $dtoClass;
