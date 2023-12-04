@@ -2,6 +2,10 @@
 
 namespace App\Modules\Auth\Services;
 
+use App\Exceptions\CodeNotConfirmedException;
+use App\Exceptions\IncorrectCodeException;
+use App\Exceptions\InvalidCredetialsException;
+use App\Exceptions\NotFoundException;
 use App\Helpers\StringHelper;
 use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
@@ -41,7 +45,7 @@ class AuthService
     public function registrationConfirm(AuthRegistration $authRegistration, AuthConfirmCodeRequest $request): void
     {
         if ($request->code !== $authRegistration->code) {
-            throw new HttpException(403, 'Incorrect code');
+            throw new IncorrectCodeException();
         }
 
         $authRegistration->confirmed = true;
@@ -51,7 +55,7 @@ class AuthService
     public function registrationEnd(AuthRegistration $authRegistration, PasswordRequest $request): void
     {
         if (empty($authRegistration->confirmed)) {
-            throw new HttpException(403, 'Registration code not confirmed');
+            throw new CodeNotConfirmedException();
         }
 
         $userEmail = $authRegistration->email;
@@ -73,7 +77,7 @@ class AuthService
         $user = User::where('email', $request->email)->first();
 
         if (empty($user)) {
-            throw new HttpException(404, 'Account with this email doesn\'t exist');
+            throw new NotFoundException('Account');
         }
 
         $resetData = AuthReset::create([
@@ -88,7 +92,7 @@ class AuthService
     public function resetConfirm(AuthReset $authReset, AuthConfirmCodeRequest $request)
     {
         if ($request->code !== $authReset->code) {
-            throw new HttpException(403, 'Incorrect code');
+            throw new IncorrectCodeException();
         }
 
         $authReset->confirmed = true;
@@ -98,7 +102,7 @@ class AuthService
     public function resetEnd(AuthReset $authReset, PasswordRequest $request)
     {
         if (empty($authReset->confirmed)) {
-            throw new HttpException(403, 'Registration code not confirmed');
+            throw new CodeNotConfirmedException();
         }
 
         $user = $authReset->user;
@@ -115,7 +119,7 @@ class AuthService
         $credentials = $request->only('email', 'password');
 
         if (!$token = auth()->attempt($credentials)) {
-            throw new HttpException(400, 'Invalid credentials');
+            throw new InvalidCredetialsException();
         }
 
         return new AuthTokenResource($token);

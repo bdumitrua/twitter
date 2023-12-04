@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\AccessDeniedException;
 use App\Modules\User\Models\UserGroup;
 use Closure;
 use Illuminate\Http\Request;
@@ -22,7 +23,7 @@ class CheckEntityRights
         $entity = $request->route($entityName);
 
         if ($entity->user_id !== Auth::id()) {
-            throw new HttpException(Response::HTTP_FORBIDDEN, 'Access denied');
+            throw new AccessDeniedException();
         }
 
         return $next($request);

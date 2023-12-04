@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Modules\User\DTO\UserGroupDTO;
 use App\Modules\User\Events\UserGroupMembersUpdateEvent;
 use App\Modules\User\Models\UserGroup;
@@ -47,7 +48,7 @@ class UserGroupRepository
             ->first();
 
         if (empty($userGroup)) {
-            throw new HttpException(Response::HTTP_NOT_FOUND, 'Group not found');
+            throw new NotFoundException('Group');
         }
 
         return $userGroup;

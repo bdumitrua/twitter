@@ -2,6 +2,10 @@
 
 namespace App\Modules\Tweet\Services;
 
+use App\Exceptions\AccessDeniedException;
+use App\Exceptions\NotFoundException;
+use App\Exceptions\UnavailableMethodException;
+use App\Exceptions\UnprocessableContentException;
 use App\Helpers\TimeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use Illuminate\Http\Request;
@@ -70,7 +74,7 @@ class TweetService
     // ! DOESN'T WORK
     public function media(User $user): JsonResource
     {
-        throw new HttpException('418', 'Media request doesn\'t work at the moment');
+        throw new UnavailableMethodException('Media request doesn\'t work at the moment');
 
         $userTweetsWithMedia = $this->tweetRepository->getUserTweetsWithMedia($user->id);
         $userTweetsWithMedia = $this->filterTweetsByGroup($userTweetsWithMedia, $this->authorizedUserId);
@@ -90,7 +94,7 @@ class TweetService
     {
         if ($usersList->is_private) {
             if (!in_array($this->authorizedUserId, $this->pluckKey($usersList->subscribers(), 'user_id'))) {
-                throw new HttpException(Response::HTTP_FORBIDDEN, 'You don\'t have acces to this list');
+                throw new AccessDeniedException();
             }
         }
 
@@ -105,8 +109,8 @@ class TweetService
         $tweet = $this->tweetRepository->getById($tweet->id);
         $tweetAfterFiltering = $this->filterTweetsByGroup(new Collection([$tweet]), $this->authorizedUserId);
 
-        if (empty($tweetAfterFiltering)) {
-            throw new HttpException(Response::HTTP_NOT_FOUND, 'Tweet not found');
+        if (empty($tweetAfterFiltering->first())) {
+            throw new NotFoundException('Tweet');
         }
 
         return new TweetResource($tweetAfterFiltering->first());
@@ -167,14 +171,14 @@ class TweetService
     private function validateTweetTypeData(TweetRequest $tweetRequest): void
     {
         if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
-            throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, 'Linked tweet id can\'t be empty, if it\'s not default tweet');
+            throw new UnprocessableContentException('Linked tweet id can\'t be empty, if it\'s not default tweet');
         }
     }
 
     private function validateTweetText(TweetRequest $tweetRequest): void
     {
         if (empty($tweetRequest->text) && $tweetRequest->type !== 'repost') {
-            throw new HttpException(Response::HTTP_UNPROCESSABLE_ENTITY, 'Tweet text is required');
+            throw new UnprocessableContentException('Tweet text is required');
         }
     }
 
