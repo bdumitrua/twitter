@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -20,7 +20,7 @@ import locationIcon from "../../assets/images/Pages/CreateTweet/locationIcon.svg
 
 const CreateTweet = () => {
 	const dispatch = useDispatch();
-	const [addButtonActive, setAddButtonActive] = React.useState(false);
+	const [addButtonActive, setAddButtonActive] = useState(false);
 	const maxCharCount = 255;
 	const tweetBodies = useSelector(selectTweetBodies);
 	const currentId = useSelector((state) => state.createTweet.currentId);
@@ -30,7 +30,7 @@ const CreateTweet = () => {
 		);
 		return tweetBody ? tweetBody.charCount : 0;
 	});
-	const [showModal, setShowModal] = React.useState(false);
+	const [showModal, setShowModal] = useState(false);
 	const group = useSelector((state) => state.createTweet.group);
 
 	useEffect(() => {

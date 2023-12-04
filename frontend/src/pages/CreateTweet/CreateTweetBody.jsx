@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useRef } from "react";
 import { useDispatch } from "react-redux";
 
 import {
@@ -13,8 +13,8 @@ import cancelTweetButton from "../../assets/images/Pages/CreateTweet/cancelTweet
 
 const CreateTweetBody = ({ placeholder, showCloseButton, id }) => {
 	const dispatch = useDispatch();
-	const [showLine, setShowLine] = React.useState(false);
-	const textareaRef = React.useRef(null);
+	const [showLine, setShowLine] = useState(false);
+	const textareaRef = useRef(null);
 	const minHeight = 60;
 
 	const handleChange = () => {
