@@ -4,7 +4,7 @@ namespace App\Modules\Auth\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class RegistrationCodeRequest extends FormRequest
+class CheckEmailRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,16 @@ class RegistrationCodeRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'code' => 'required|string|size:5'
+            'email' => 'required|string|email|max:255',
         ];
     }
 
     public function messages()
     {
         return [
-            'code.required' => 'Код подтверждения обязателен к заполнению.',
-            'code.string' => 'Код подтверждения должен быть строкой.',
-            'code.size' => 'Код подтверждения должен состоять из 5 символов.'
+            'email.required'    => 'Почта является обязательным полем.',
+            'email.email'   => 'Введена некорректная почта.',
+            'email.max'     => 'Длина почты может быть не более 255 символов.',
         ];
     }
 }

@@ -4,14 +4,16 @@ namespace App\Modules\Auth\Services;
 
 use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
+use App\Modules\Auth\Models\AuthReset;
 use App\Modules\Auth\Requests\CreateUserRequest;
 use App\Modules\Auth\Requests\LoginRequest;
 use App\Modules\Auth\Requests\PasswordRequest;
-use App\Modules\Auth\Requests\RegistrationCodeRequest;
+use App\Modules\Auth\Requests\AuthConfirmCodeRequest;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Auth\Repositories\AuthRepository;
+use App\Modules\Auth\Requests\CheckEmailRequest;
 use App\Modules\Auth\Resources\AuthTokenResource;
 use App\Modules\User\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -21,7 +23,7 @@ use Illuminate\Support\Str;
 
 class AuthService
 {
-    public function start(CreateUserRequest $request): array
+    public function registrationStart(CreateUserRequest $request): array
     {
         $registrationData = AuthRegistration::create([
             // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
@@ -34,7 +36,7 @@ class AuthService
         return ['registration_id' => $registrationData->id];
     }
 
-    public function confirm(AuthRegistration $authRegistration, RegistrationCodeRequest $request): void
+    public function registrationConfirm(AuthRegistration $authRegistration, AuthConfirmCodeRequest $request): void
     {
         if ($request->code !== $authRegistration->code) {
             throw new HttpException(403, 'Incorrect code');
@@ -44,7 +46,7 @@ class AuthService
         $authRegistration->save();
     }
 
-    public function register(AuthRegistration $authRegistration, PasswordRequest $request): void
+    public function registrationEnd(AuthRegistration $authRegistration, PasswordRequest $request): void
     {
         if (empty($authRegistration->confirmed)) {
             throw new HttpException(403, 'Registration code not confirmed');
@@ -60,6 +62,48 @@ class AuthService
 
         event(new UserCreatedEvent($user));
     }
+
+    public function resetCheck(CheckEmailRequest $request)
+    {
+        $user = User::where('email', $request->email)->first();
+
+        if (empty($user)) {
+            throw new HttpException(404, 'Account with this email doesn\'t exist');
+        }
+
+        $resetData = AuthReset::create([
+            // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
+            'code' => '11111',
+            'user_id' => $user->id,
+        ]);
+
+        return ['reset_id' => $resetData->id];
+    }
+
+    public function resetConfirm(AuthReset $authReset, AuthConfirmCodeRequest $request)
+    {
+        if ($request->code !== $authReset->code) {
+            throw new HttpException(403, 'Incorrect code');
+        }
+
+        $authReset->confirmed = true;
+        $authReset->save();
+    }
+
+    public function resetEnd(AuthReset $authReset, PasswordRequest $request)
+    {
+        if (empty($authReset->confirmed)) {
+            throw new HttpException(403, 'Registration code not confirmed');
+        }
+
+        $user = $authReset->user;
+
+        $user->password = Hash::make($request->password);
+        $user->token_invalid_before = now();
+
+        $user->save();
+    }
+
 
     public function login(LoginRequest $request): JsonResource
     {
