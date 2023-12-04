@@ -7,6 +7,7 @@ use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Services\NotificationService;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetRepository;
+use Illuminate\Log\LogManager;
 
 class NewLikesNotifyConsumer extends BaseConsumer
 {
@@ -16,10 +17,12 @@ class NewLikesNotifyConsumer extends BaseConsumer
         string $topicName,
         string $consumerGroup,
         NotificationService $notificationService,
+        LogManager $logger,
     ) {
         parent::__construct($topicName, $consumerGroup);
 
         $this->notificationService = $notificationService;
+        $this->logger = $logger;
     }
 
     public function consume(): void

@@ -5,6 +5,7 @@ namespace App\Modules\Notification\Consumers;
 use App\Kafka\BaseConsumer;
 use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Services\NotificationService;
+use Illuminate\Log\LogManager;
 
 class NewNoticeNotifyConsumer extends BaseConsumer
 {
@@ -14,10 +15,12 @@ class NewNoticeNotifyConsumer extends BaseConsumer
         string $topicName,
         string $consumerGroup,
         NotificationService $notificationService,
+        LogManager $logger,
     ) {
         parent::__construct($topicName, $consumerGroup);
 
         $this->notificationService = $notificationService;
+        $this->logger = $logger;
     }
 
     public function consume(): void
