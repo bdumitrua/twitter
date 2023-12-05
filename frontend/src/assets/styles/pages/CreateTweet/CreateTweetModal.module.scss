@@ -1,4 +1,4 @@
-@import "../../../styles/modal.scss";
+@import '../../../styles/modal.scss';
 
 .overlay {
 	@include modal-overlay();
@@ -7,7 +7,7 @@
 .modal {
 	@include modal();
 
-	&__retweet-icon {
+	&__all-users-icon {
 		width: 24px;
 		height: 18px;
 		margin: 0px 16px;

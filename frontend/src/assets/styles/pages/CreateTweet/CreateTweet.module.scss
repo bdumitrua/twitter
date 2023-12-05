@@ -1,0 +1,81 @@
+.create {
+	@include flex-column();
+	align-items: flex-start;
+	flex-shrink: 0;
+
+	&__bodies {
+		@include flex-column();
+		width: 100%;
+		gap: 4px;
+	}
+
+	&__bars {
+		width: 100%;
+	}
+
+	&__group-bar,
+	&__buttons-bar {
+		@include flex-between();
+		align-self: stretch;
+		padding: 16px 24px;
+		box-shadow: 0px -0.5px 0px 0px $gray;
+	}
+
+	&__group {
+		@include flex-center();
+		gap: 12px;
+		img {
+			width: 18px;
+			height: 18px;
+		}
+
+		span {
+			@include text-activity(17px, 400);
+			letter-spacing: -0.5px;
+		}
+	}
+
+	&__media-buttons {
+		@include flex-start();
+		gap: 32px;
+
+		button {
+			height: 18px;
+		}
+	}
+
+	&__image-button {
+		width: 18px;
+	}
+
+	&__gif-button {
+		width: 20px;
+	}
+
+	&__stats-button {
+		width: 18px;
+	}
+
+	&__location-button {
+		width: 16px;
+	}
+
+	&__tick-and-add {
+		@include flex-center();
+		gap: 20px;
+	}
+
+	&__tick {
+		@include flex-center();
+	}
+
+	&__separator {
+		width: 0.35px;
+		height: 26px;
+		background: $gray;
+	}
+
+	&__add-button {
+		@include flex-center();
+	}
+}
