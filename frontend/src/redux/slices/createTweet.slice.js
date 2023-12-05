@@ -8,19 +8,17 @@ const createTweetSlice = createSlice({
 		tweetBodies: [],
 		groupsList: groupsList,
 		group: "Everyone can see",
-		nextId: 0,
 		currentId: 0,
 	},
 	reducers: {
 		addTweetBody: (state, action) => {
 			const newBody = {
-				id: state.nextId,
+				id: state.currentId + 1,
 				...action.payload,
 				charCount: 0,
 			};
 			state.tweetBodies.push(newBody);
 			state.currentId = newBody.id;
-			state.nextId++;
 		},
 		removeTweetBody: (state, action) => {
 			const { id } = action.payload;
