@@ -36,7 +36,7 @@ const CreateModal = ({ onClose, showModal }) => {
 					/>
 					<button
 						className={styles["modal__button"]}
-						onClick={() => onGroupChange("Everyone can see")}
+						onClick={() => onGroupChange(null)}
 					>
 						<img
 							className={styles["modal__all-users-icon"]}

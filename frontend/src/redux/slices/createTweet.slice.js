@@ -7,7 +7,7 @@ const createTweetSlice = createSlice({
 	initialState: {
 		tweetBodies: [],
 		groupsList: groupsList,
-		group: "Everyone can see",
+		group: null,
 		currentId: 0,
 	},
 	reducers: {

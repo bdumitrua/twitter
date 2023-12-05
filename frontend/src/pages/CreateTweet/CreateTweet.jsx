@@ -77,7 +77,7 @@ const CreateTweet = () => {
 					<div className={styles["create__group-bar"]}>
 						<button className={styles["create__group"]} onClick={() => setShowModal(true)}>
 							<img src={groupIcon} alt="Group icon" />
-							<span>{group}</span>
+							<span>{group ? group : "Everyone can see"}</span>
 						</button>
 					</div>
 					<div className={styles["create__buttons-bar"]}>
