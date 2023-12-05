@@ -7,22 +7,6 @@
 .modal {
 	@include modal();
 
-	&__open {
-		@include modal-open();
-	}
-
-	&__wrapper {
-		@include modal-wrapper();
-	}
-
-	&__rectangle {
-		align-self: center;
-	}
-
-	&__button {
-		@include modal-button();
-	}
-
 	&__all-users-icon {
 		width: 24px;
 		height: 18px;
@@ -33,9 +17,5 @@
 		width: 20px;
 		height: 20px;
 		margin: 0px 16px;
-	}
-
-	&__cancel {
-		@include modal-cancel();
 	}
 }
