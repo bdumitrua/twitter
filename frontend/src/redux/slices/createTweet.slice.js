@@ -40,7 +40,6 @@ const createTweetSlice = createSlice({
 		},
 		changeGroup: (state, action) => {
 			state.group = action.payload;
-			console.log(state.group);
 		},
 	},
 });
