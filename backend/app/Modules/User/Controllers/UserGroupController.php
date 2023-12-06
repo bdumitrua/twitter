@@ -45,10 +45,10 @@ class UserGroupController extends Controller
             return $this->userGroupService->update($userGroup, $updateUserGroupRequest);
         });
     }
-    public function destroy(UserGroup $userGroup): JsonResponse
+    public function destroy(UserGroup $userGroup, Request $request): JsonResponse
     {
-        return $this->handleServiceCall(function () use ($userGroup) {
-            return $this->userGroupService->destroy($userGroup);
+        return $this->handleServiceCall(function () use ($userGroup, $request) {
+            return $this->userGroupService->destroy($userGroup, $request);
         });
     }
     public function add(UserGroup $userGroup, User $user): JsonResponse

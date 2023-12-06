@@ -14,4 +14,19 @@ class UserDTO
     public ?string $siteUrl = null;
     public ?string $address = null;
     public ?string $birthDate = null;
+
+    public function toArray(): array
+    {
+        return [
+            'name' => $this->name,
+            'link' => $this->link,
+            'email' => $this->email,
+            'bgImage' => $this->bgImage,
+            'avatar' => $this->avatar,
+            'statusText' => $this->statusText,
+            'siteUrl' => $this->siteUrl,
+            'address' => $this->address,
+            'birthDate' => $this->birthDate,
+        ];
+    }
 }

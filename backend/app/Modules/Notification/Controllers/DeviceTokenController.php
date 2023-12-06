@@ -40,10 +40,10 @@ class DeviceTokenController extends Controller
     }
 
 
-    public function delete(DeviceToken $deviceToken)
+    public function delete(DeviceToken $deviceToken, Request $request)
     {
-        return $this->handleServiceCall(function () use ($deviceToken) {
-            return $this->deviceTokenService->delete($deviceToken);
+        return $this->handleServiceCall(function () use ($deviceToken, $request) {
+            return $this->deviceTokenService->delete($deviceToken, $request);
         });
     }
 }

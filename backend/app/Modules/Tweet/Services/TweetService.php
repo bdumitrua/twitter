@@ -22,6 +22,7 @@ use App\Modules\User\Repositories\UserRepository;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -32,13 +33,16 @@ class TweetService
     private $tweetRepository;
     private $userRepository;
     private $authorizedUserId;
+    protected LogManager $logger;
 
     public function __construct(
         TweetRepository $tweetRepository,
-        UserRepository $userRepository
+        UserRepository $userRepository,
+        LogManager $logger,
     ) {
         $this->tweetRepository = $tweetRepository;
         $this->userRepository = $userRepository;
+        $this->logger = $logger;
         $this->authorizedUserId = Auth::id();
     }
 
@@ -118,12 +122,14 @@ class TweetService
 
     public function create(TweetRequest $tweetRequest): void
     {
+        $this->logger->info('Validating tweet type data', $tweetRequest->toArray());
         $this->validateTweetTypeData($tweetRequest);
         $this->validateTweetText($tweetRequest);
 
         $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
         $tweetDTO->userId = $this->authorizedUserId;
 
+        $this->logger->info('Creating tweet from tweetDTO', $tweetDTO->toArray());
         $this->tweetRepository->create($tweetDTO);
     }
 
@@ -131,6 +137,8 @@ class TweetService
     {
         $tweetsData = $сreateThreadRequest->tweets;
         $userGroupId = $сreateThreadRequest->userGroupId;
+
+        $this->logger->info('Creating TweetDTOs from create thread request', $сreateThreadRequest->toArray());
         $tweetDTOs = array_map(function ($newTweetData) use ($userGroupId) {
             return new TweetDTO(
                 $this->authorizedUserId,
@@ -142,11 +150,13 @@ class TweetService
             );
         }, $tweetsData);
 
+        $this->logger->info('Creating thread tweets from tweetDTOs', $tweetDTOs);
         $this->tweetRepository->createThread($tweetDTOs);
     }
 
-    public function destroy(Tweet $tweet): void
+    public function destroy(Tweet $tweet, Request $request): void
     {
+        $this->logger->info('Deleting tweet', [$tweet->toArray(), 'ip' => $request->ip()]);
         $this->tweetRepository->destroy($tweet);
     }
 

@@ -3,21 +3,27 @@
 namespace App\Kafka;
 
 use Enqueue\RdKafka\RdKafkaConnectionFactory;
+use Enqueue\RdKafka\RdKafkaConsumer;
+use Illuminate\Log\LogManager;
+use Illuminate\Support\Facades\Log;
 use Interop\Queue\Context;
 use Interop\Queue\Message;
 
 abstract class BaseConsumer
 {
-    protected $consumer;
+    protected RdKafkaConsumer $consumer;
+    protected LogManager $logger;
     protected string $topicName;
+    protected string $consumerGroup;
 
     public function __construct(string $topicName, string $consumerGroup)
     {
         $this->topicName = $topicName;
+        $this->consumerGroup = $consumerGroup;
         $connectionFactory = new RdKafkaConnectionFactory([
             'global' => [
                 'metadata.broker.list' => config('kafka.broker_list'),
-                'group.id' => $consumerGroup,
+                'group.id' => $this->consumerGroup,
                 'enable.auto.commit' => 'false',
             ],
             'topic' => [
@@ -37,10 +43,13 @@ abstract class BaseConsumer
     {
         $messageUUID = $message->getProperty('uuid');
         $body = json_decode($message->getBody(), true);
-        echo "В топике {$this->topicName} получено сообщение: {$messageUUID}\n" . print_r($body, true);
+        $this->logger->info("Consumer-группой {$this->consumerGroup} получено сообщение: {$messageUUID}", $body);
 
         if (json_last_error() !== JSON_ERROR_NONE) {
-            echo "В топике {$this->topicName} произошла ошибка при декодировании сообщения: {$messageUUID}\n" . $message->getBody();
+            $this->logger->info(
+                "В consumer-группе {$this->consumerGroup} произошла ошибка при декодировании сообщения: {$messageUUID}",
+                $body
+            );
             return (object)[];
         }
 
@@ -51,6 +60,6 @@ abstract class BaseConsumer
     {
         $messageUUID = $message->getProperty('uuid');
         $this->consumer->acknowledge($message);
-        echo "В топике {$this->topicName} обработано и подтверждено cообщение: {$messageUUID}\n";
+        $this->logger->info("Consumer-группой {$this->consumerGroup} обработано и подтверждено cообщение: {$messageUUID}");
     }
 }

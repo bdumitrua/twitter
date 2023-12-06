@@ -13,19 +13,24 @@ use App\Modules\User\Requests\CreateUserGroupRequest;
 use App\Modules\User\Requests\UpdateUserGroupRequest;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Log;
 
 class UserGroupService
 {
     use CreateDTO;
 
-    protected $userGroupRepository;
+    protected UserGroupRepository $userGroupRepository;
+    protected LogManager $logger;
 
     public function __construct(
         UserGroupRepository $userGroupRepository,
+        LogManager $logger,
     ) {
         $this->userGroupRepository = $userGroupRepository;
+        $this->logger = $logger;
     }
 
     public function index(): Collection
@@ -40,20 +45,31 @@ class UserGroupService
 
     public function create(CreateUserGroupRequest $createUserGroupRequest): void
     {
+        $this->logger->info('Creating UserGroupDTO from create request', $createUserGroupRequest->toArray());
         $userGroupDTO = $this->createDTO($createUserGroupRequest, UserGroupDTO::class);
 
+        $this->logger->info('Creating UserGroup using UserGroupDTO', $userGroupDTO->toArray());
         $this->userGroupRepository->create($userGroupDTO, Auth::id());
     }
 
     public function update(UserGroup $userGroup, UpdateUserGroupRequest $updateUserGroupRequest): void
     {
+        $this->logger->info('Creating UserGroupDTO from update request', $updateUserGroupRequest->toArray());
         $userGroupDTO = $this->createDTO($updateUserGroupRequest, UserGroupDTO::class);
 
+        $this->logger->info(
+            'Updating UserGroup using UserGroupDTO',
+            [
+                'Current userGroup' => $userGroup->toArray(),
+                'DTO' => $userGroupDTO->toArray()
+            ]
+        );
         $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
 
-    public function destroy(UserGroup $userGroup): void
+    public function destroy(UserGroup $userGroup, Request $request): void
     {
+        $this->logger->info('Deleting UserGroup', [$userGroup->toArray(), 'ip' => $request->ip()]);
         $this->userGroupRepository->delete($userGroup);
     }
 

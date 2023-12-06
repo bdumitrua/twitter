@@ -14,26 +14,28 @@ use Illuminate\Support\Facades\Cache;
 
 class TweetLikeService
 {
-    private $tweetLikeRepository;
+    private TweetLikeRepository $tweetLikeRepository;
+    protected int $authorizedUserId;
 
     public function __construct(
         TweetLikeRepository $tweetLikeRepository
     ) {
         $this->tweetLikeRepository = $tweetLikeRepository;
+        $this->authorizedUserId = Auth::id();
     }
 
     public function index(): Collection
     {
-        return $this->tweetLikeRepository->getByUserId(Auth::id());
+        return $this->tweetLikeRepository->getByUserId($this->authorizedUserId);
     }
 
     public function add(Tweet $tweet): void
     {
-        $this->tweetLikeRepository->add($tweet->id, Auth::id());
+        $this->tweetLikeRepository->add($tweet->id, $this->authorizedUserId);
     }
 
     public function remove(Tweet $tweet): void
     {
-        $this->tweetLikeRepository->remove($tweet->id, Auth::id());
+        $this->tweetLikeRepository->remove($tweet->id, $this->authorizedUserId);
     }
 }

@@ -71,10 +71,10 @@ class AuthController extends Controller
         });
     }
 
-    public function logout()
+    public function logout(Request $request)
     {
-        return $this->handleServiceCall(function () {
-            return $this->authService->logout();
+        return $this->handleServiceCall(function () use ($request) {
+            return $this->authService->logout($request);
         });
     }
 

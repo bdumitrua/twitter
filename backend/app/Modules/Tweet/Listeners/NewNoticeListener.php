@@ -3,16 +3,16 @@
 namespace App\Modules\User\Listeners;
 
 use App\Kafka\KafkaProducer;
-use App\Modules\Tweet\Models\TweetNotice;
-use App\Modules\User\Models\User;
-use App\Modules\User\Models\UserSubscribtion;
+use Illuminate\Support\Facades\Log;
 
 class NewNoticeListener
 {
     public function handle($event)
     {
-        /** @var TweetNotice */
-        $tweetNotice = $event->tweetNotice;
-        new KafkaProducer('new_notices', $tweetNotice);
+        $tweetNotice = $event->tweetNotice->toArray();
+        $topic = 'new_notices';
+
+        Log::info("Creating message in {$topic} topic", $tweetNotice);
+        new KafkaProducer($topic, $tweetNotice);
     }
 }
