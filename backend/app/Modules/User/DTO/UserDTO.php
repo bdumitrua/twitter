@@ -8,6 +8,7 @@ class UserDTO
     public ?string $link = null;
     public ?string $email = null;
     public ?string $password = null;
+    public ?string $about = null;
     public ?string $bgImage = null;
     public ?string $avatar = null;
     public ?string $statusText = null;
@@ -21,6 +22,7 @@ class UserDTO
             'name' => $this->name,
             'link' => $this->link,
             'email' => $this->email,
+            'about' => $this->about,
             'bgImage' => $this->bgImage,
             'avatar' => $this->avatar,
             'statusText' => $this->statusText,

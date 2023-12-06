@@ -26,6 +26,7 @@ class UserUpdateRequest extends FormRequest
             'link' => 'nullable|string|unique:users,link|max:20',
             'email' => 'nullable|string|email|unique:users,email|max:255',
             'password' => 'nullable|string|min:8|max:32',
+            'about' => 'nullable|string|max:255',
             'bgImage' => 'nullable|string|max:255',
             'avatar' => 'nullable|string|max:255',
             'statusText' => 'nullable|string|max:500',
@@ -54,17 +55,20 @@ class UserUpdateRequest extends FormRequest
             'password.min' => 'Пароль должен содержать не менее 8 символов',
             'password.max' => 'Пароль должен содержать не более 32 символов',
 
-            'bgImage.string' => 'Изображение фона должно быть строкой',
-
             'avatar.string' => 'Аватар должен быть строкой',
+            'avatar.max' => 'Аватар не должен превышать 255 символов',
+
+            'bgImage.string' => 'Изображение фона должно быть строкой',
             'bgImage.max' => 'Изображение фона не должно превышать 255 символов',
 
             'statusText.string' => 'Текст статуса должен быть строкой',
             'statusText.max' => 'Текст статуса не должен превышать 500 символов',
 
             'siteUrl.string' => 'URL сайта должен быть строкой',
-            'avatar.max' => 'Аватар не должен превышать 255 символов',
             'siteUrl.max' => 'URL сайта не должен превышать 255 символов',
+
+            'about.string' => '\'О себе\' должен быть строкой',
+            'about.max' => '\'О себе\' не должен превышать 255 символов',
 
             'address.string' => 'Адрес должен быть строкой',
             'address.max' => 'Адрес не должен превышать 255 символов',
