@@ -40,6 +40,7 @@ class Kernel extends HttpKernel
 
         'api' => [
             \App\Http\Middleware\PrometheusMiddleware::class,
+            \App\Http\Middleware\ErrorTrackingMiddleware::class,
             // \Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful::class,
             \App\Http\Middleware\ForceJsonResponse::class,
             \Illuminate\Routing\Middleware\ThrottleRequests::class . ':api',

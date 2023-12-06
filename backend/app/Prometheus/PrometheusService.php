@@ -9,10 +9,7 @@ use Prometheus\Exception\MetricNotFoundException;
 class PrometheusService
 {
     protected $countersNamespace = 'twitter';
-
     protected $registry;
-    protected $counter;
-    protected $histogram;
 
     public function __construct()
     {
@@ -30,25 +27,36 @@ class PrometheusService
 
     public function addResponseTimeHistogram($duration, string $routeName): void
     {
-        $this->histogram = $this->registry->getOrRegisterHistogram(
+        $histogram = $this->registry->getOrRegisterHistogram(
             $this->countersNamespace,
             'http_response_time_seconds',
             'Duration of HTTP response in seconds',
             ['route']
         );
 
-        $this->histogram->observe($duration, [$routeName]);
+        $histogram->observe($duration, [$routeName]);
     }
 
     public function incrementRequestCounter($routeName): void
     {
-        $this->counter = $this->registry->getOrRegisterCounter(
+        $counter = $this->registry->getOrRegisterCounter(
             $this->countersNamespace,
             'http_requests_total',
             'Total HTTP requests',
             ['route']
         );
 
-        $this->counter->inc([$routeName]);
+        $counter->inc([$routeName]);
+    }
+
+    public function incrementErrorCounter($statusCode, $routeName)
+    {
+        $counter = $this->registry->getOrRegisterCounter(
+            $this->countersNamespace,
+            'http_errors_total',
+            'Total HTTP errors',
+            ['status_code', 'route']
+        );
+        $counter->inc([$statusCode, $routeName]);
     }
 }
