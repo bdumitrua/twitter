@@ -24,7 +24,7 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
         Route::get('media/{user}', 'media');
     });
 
-    Route::middleware(['api.auth'])->group(function () {
+    Route::middleware(['auth:api'])->group(function () {
         // Получить ленту твитов
         Route::get('feed', 'feed');
         // Создать твит

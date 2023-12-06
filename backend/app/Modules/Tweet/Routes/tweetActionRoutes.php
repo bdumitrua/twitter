@@ -7,7 +7,7 @@ use App\Modules\Tweet\Controllers\TweetFavoriteController;
 use App\Modules\Tweet\Controllers\TweetLikeController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('tweets/actions')->middleware(['api.auth'])->group(function () {
+Route::prefix('tweets/actions')->middleware(['auth:api'])->group(function () {
     // Лайки
     Route::prefix('likes')->controller(TweetLikeController::class)->group(function () {
         // Получить свои лайки

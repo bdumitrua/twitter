@@ -10,7 +10,7 @@ Route::prefix('users')->controller(UserController::class)->group(function () {
     // Получить данные по id пользователя
     Route::get('show/{user}', 'show');
 
-    Route::middleware(['api.auth'])->group(function () {
+    Route::middleware(['auth:api'])->group(function () {
         // Получить данные своего аккаунта
         Route::get('/', 'index');
         // Поиск по нику/ссылке пользователя
