@@ -14,7 +14,9 @@ use App\Modules\Search\Requests\RecentSearchRequest;
 use App\Modules\Search\Requests\SearchRequest;
 use App\Modules\Search\Resources\RecentSearchResource;
 use App\Modules\Tweet\Repositories\TweetRepository;
+use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Repositories\UserRepository;
+use App\Modules\User\Resources\ShortUserResource;
 use Illuminate\Support\Facades\Auth;
 
 class SearchService
@@ -44,12 +46,16 @@ class SearchService
 
     public function users(SearchRequest $request)
     {
-        return $this->userRepository->search($request->search);
+        return ShortUserResource::collection(
+            $this->userRepository->search($request->search)
+        );
     }
 
     public function tweets(SearchRequest $request)
     {
-        // return $this->tweetRepository->search($request->search);
+        return TweetResource::collection(
+            $this->tweetRepository->search($request->search)
+        );
     }
 
     public function create(RecentSearchRequest $request)
@@ -60,5 +66,10 @@ class SearchService
         $recentSearchDTO->linkedUserId = $request->linkedUserId;
 
         $this->recentSearchRepository->create($recentSearchDTO);
+    }
+
+    public function clear()
+    {
+        $this->recentSearchRepository->clear($this->authorizedUserId);
     }
 }

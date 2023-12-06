@@ -16,6 +16,7 @@ use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Elastic\ScoutDriverPlus\Support\Query;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
@@ -60,6 +61,16 @@ class TweetRepository
         return $this->tweetLike->newQuery()
             ->where('user_id', '=', $userId)
             ->orderBy('created_at', 'desc');
+    }
+
+    public function search(string $text): Collection
+    {
+        $query = Query::match()
+            ->field('text')
+            ->query($text)
+            ->fuzziness('AUTO');
+
+        return $this->tweet->searchQuery($query)->execute()->models();
     }
 
     public function getById(int $tweetId): Tweet

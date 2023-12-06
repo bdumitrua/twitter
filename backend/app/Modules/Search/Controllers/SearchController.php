@@ -45,4 +45,11 @@ class SearchController extends Controller
             return $this->searchService->create($request);
         });
     }
+
+    public function clear()
+    {
+        return $this->handleServiceCall(function () {
+            return $this->searchService->clear();
+        });
+    }
 }

@@ -14,4 +14,6 @@ Route::prefix('search')->middleware(['auth:api'])->controller(SearchController::
     Route::get('tweets', 'tweets');
     // Создать недавний поиск
     Route::post('create', 'create');
+    // Удалить свои поиски
+    Route::delete('clear', 'clear');
 });
