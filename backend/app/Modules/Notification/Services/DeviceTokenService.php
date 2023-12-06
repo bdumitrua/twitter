@@ -19,7 +19,7 @@ class DeviceTokenService
 {
     private DeviceTokenRepository $deviceTokenRepository;
     protected LogManager $logger;
-    private int $authorizedUserId;
+    private ?int $authorizedUserId;
 
     public function __construct(
         DeviceTokenRepository $deviceTokenRepository,

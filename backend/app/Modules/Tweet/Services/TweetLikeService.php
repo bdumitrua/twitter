@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Cache;
 class TweetLikeService
 {
     private TweetLikeRepository $tweetLikeRepository;
-    protected int $authorizedUserId;
+    protected ?int $authorizedUserId;
 
     public function __construct(
         TweetLikeRepository $tweetLikeRepository

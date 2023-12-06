@@ -22,7 +22,7 @@ class UsersListService
 {
     use CreateDTO;
 
-    protected int $authorizedUserId;
+    protected ?int $authorizedUserId;
     protected UsersListRepository $usersListRepository;
     protected LogManager $logger;
 

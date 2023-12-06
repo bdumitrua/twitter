@@ -17,7 +17,7 @@ class NotificationService
 {
     private NotificationRepository $notificationRepository;
     protected LogManager $logger;
-    private int $authorizedUserId;
+    private ?int $authorizedUserId;
 
     public function __construct(
         NotificationRepository $notificationRepository,

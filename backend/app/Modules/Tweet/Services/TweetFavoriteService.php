@@ -12,7 +12,7 @@ use Illuminate\Support\Facades\Auth;
 class TweetFavoriteService
 {
     private TweetFavoriteRepository $tweetFavoriteRepository;
-    protected int $authorizedUserId;
+    protected ?int $authorizedUserId;
 
     public function __construct(
         TweetFavoriteRepository $tweetFavoriteRepository,
