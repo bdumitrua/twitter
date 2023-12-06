@@ -17,6 +17,13 @@ class SearchController extends Controller
         $this->searchService = $searchService;
     }
 
+    public function index()
+    {
+        return $this->handleServiceCall(function () {
+            return $this->searchService->index();
+        });
+    }
+
     public function users(SearchRequest $request)
     {
         return $this->handleServiceCall(function () use ($request) {

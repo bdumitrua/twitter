@@ -22,6 +22,11 @@ class SearchService
         $this->authorizedUserId = Auth::id();
     }
 
+    public function index()
+    {
+        // 
+    }
+
     public function users(SearchRequest $request)
     {
         // 
