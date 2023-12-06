@@ -26,12 +26,12 @@ class UserUpdateRequest extends FormRequest
             'link' => 'nullable|string|unique:users,link|max:20',
             'email' => 'nullable|string|email|unique:users,email|max:255',
             'password' => 'nullable|string|min:8|max:32',
+            'about' => 'nullable|string|max:255',
             'bgImage' => 'nullable|string|max:255',
             'avatar' => 'nullable|string|max:255',
             'statusText' => 'nullable|string|max:500',
             'siteUrl' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
-            'about' => 'nullable|string|max:255',
             'birth_date' => 'nullable|date|date_format:Y-m-d|before_or_equal:today',
         ];
     }
