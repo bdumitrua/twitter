@@ -5,7 +5,7 @@ namespace App\Modules\User\Routes;
 use Illuminate\Support\Facades\Route;
 use App\Modules\User\Controllers\UsersListController;
 
-Route::prefix('users/lists')->middleware(['api.auth'])->controller(UsersListController::class)->group(function () {
+Route::prefix('users/lists')->middleware(['auth:api'])->controller(UsersListController::class)->group(function () {
     // Получить свои списки
     Route::get('/', 'index');
     // Посмотреть список

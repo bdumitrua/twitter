@@ -4,7 +4,7 @@ use App\Modules\User\Controllers\UserGroupController;
 use Illuminate\Support\Facades\Route;
 
 
-Route::prefix('users/groups')->middleware(['api.auth'])->controller(UserGroupController::class)->group(function () {
+Route::prefix('users/groups')->middleware(['auth:api'])->controller(UserGroupController::class)->group(function () {
     // Получить мои группы 
     Route::get('/', 'index');
     // Создать группу

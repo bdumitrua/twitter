@@ -29,7 +29,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
     // Получить новый токен (по уже истёкшему)
     Route::get('refresh', 'refresh');
 
-    Route::middleware(['api.auth'])->group(function () {
+    Route::middleware(['auth:api'])->group(function () {
         // Выйти
         Route::post('logout', 'logout');
     });
