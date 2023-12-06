@@ -5,7 +5,7 @@ namespace App\Modules\Search\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SearchResource extends JsonResource
+class RecentSearchResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
