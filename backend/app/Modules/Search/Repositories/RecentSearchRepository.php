@@ -31,7 +31,8 @@ class RecentSearchRepository
     {
         return $this->recentSearch->newQuery()
             ->where('user_id', $authorizedUserId)
-            ->where('text', $text);
+            ->where('text', $text)
+            ->whereNull('linked_user_id');
     }
 
     public function getByUserId(int $userId, $updateCache = false): Collection
@@ -61,11 +62,13 @@ class RecentSearchRepository
             )->first();
         }
 
-        $data = array_filter($recentSearchDTO->toArray(), fn ($value) => !is_null($value));
         if (empty($oldRecentSearch)) {
+            $data = array_filter($recentSearchDTO->toArray(), fn ($value) => !is_null($value));
             $this->recentSearch->create($data);
         } else {
-            $oldRecentSearch->update($data);
+            $oldRecentSearch->text = $recentSearchDTO->text;
+            $oldRecentSearch->updated_at = now();
+            $oldRecentSearch->save();
         }
 
         $this->recacheUserRecent($recentSearchDTO->userId);
