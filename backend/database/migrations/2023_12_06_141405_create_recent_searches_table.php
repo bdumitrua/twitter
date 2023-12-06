@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('recent_searchs', function (Blueprint $table) {
+        Schema::create('recent_searches', function (Blueprint $table) {
             $table->id();
             $table->string('text');
             $table->unsignedBigInteger('user_id');
@@ -28,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('recent_searchs');
+        Schema::dropIfExists('recent_searches');
     }
 };

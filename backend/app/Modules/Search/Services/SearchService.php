@@ -10,6 +10,7 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Search\Models\Search;
 use App\Modules\Search\Repositories\RecentSearchRepository;
 use App\Modules\Search\Repositories\SearchRepository;
+use App\Modules\Search\Requests\RecentSearchRequest;
 use App\Modules\Search\Requests\SearchRequest;
 use App\Modules\Search\Resources\RecentSearchResource;
 use App\Modules\Tweet\Repositories\TweetRepository;
@@ -51,5 +52,15 @@ class SearchService
     public function tweets(SearchRequest $request)
     {
         // return $this->tweetRepository->search($request->search);
+    }
+
+    public function create(RecentSearchRequest $request)
+    {
+        $recentSearchDTO = new RecentSearchDTO();
+        $recentSearchDTO->text = $request->text;
+        $recentSearchDTO->userId = $this->authorizedUserId;
+        $recentSearchDTO->linkedUserId = $request->linkedUserId;
+
+        $this->recentSearchRepository->create($recentSearchDTO);
     }
 }

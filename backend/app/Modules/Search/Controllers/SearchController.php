@@ -5,6 +5,7 @@ namespace App\Modules\Search\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Search\Models\Search;
+use App\Modules\Search\Requests\RecentSearchRequest;
 use App\Modules\Search\Requests\SearchRequest;
 use App\Modules\Search\Services\SearchService;
 
@@ -35,6 +36,13 @@ class SearchController extends Controller
     {
         return $this->handleServiceCall(function () use ($request) {
             return $this->searchService->tweets($request);
+        });
+    }
+
+    public function create(RecentSearchRequest $request)
+    {
+        return $this->handleServiceCall(function () use ($request) {
+            return $this->searchService->create($request);
         });
     }
 }
