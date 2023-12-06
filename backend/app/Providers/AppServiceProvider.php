@@ -22,18 +22,6 @@ class AppServiceProvider extends ServiceProvider
                 ->setHosts([config('services.elasticsearch.host')])
                 ->build();
         });
-
-        \Prometheus\Storage\Redis::setDefaultOptions(
-            [
-                'host' => env('REDIS_HOST', '127.0.0.1'),
-                'port' => env('REDIS_PORT', '6379'),
-                'username' => env('REDIS_USERNAME'),
-                'password' => env('REDIS_PASSWORD'),
-                'timeout' => 0.1, // in seconds
-                'read_timeout' => '10', // in seconds
-                'persistent_connections' => false
-            ]
-        );
     }
 
     /**
@@ -41,10 +29,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        /** @var PrometheusService */
-        $prometheusService = app(PrometheusService::class);
 
-        DB::listen(function ($query) use ($prometheusService) {
+        DB::listen(function ($query) {
+            /** @var PrometheusService */
+            $prometheusService = app(PrometheusService::class);
             $source = optional(request()->route())->getActionName() ?? 'unknown';
             $executionTimeInSeconds = floatval($query->time) / 1000;
 

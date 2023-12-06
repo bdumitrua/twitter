@@ -1,5 +1,6 @@
 <?php
 
+use App\Prometheus\PrometheusService;
 use Illuminate\Support\Facades\Route;
 use Prometheus\CollectorRegistry;
 use Prometheus\RenderTextFormat;
@@ -16,19 +17,10 @@ use Prometheus\RenderTextFormat;
 */
 
 Route::get('/metrics', function () {
-    $registry = CollectorRegistry::getDefault();
-    $renderer = new RenderTextFormat();
-    $result = $renderer->render($registry->getMetricFamilySamples());
-
+    $result = app(PrometheusService::class)->getMetrics();
     return response($result)->header('Content-Type', RenderTextFormat::MIME_TYPE);
 });
 
 Route::get('/metrics/wipe', function () {
-    $registry = CollectorRegistry::getDefault();
-    $registry->wipeStorage();
-});
-
-Route::get('/test-metric', function () {
-    $counter = CollectorRegistry::getDefault()->getOrRegisterCounter('twitter', 'test_metric_counter', 'Counter for test metric');
-    $counter->inc();
+    app(PrometheusService::class)->clearMetrics();
 });

@@ -4,25 +4,39 @@ namespace App\Prometheus;
 
 use Prometheus\CollectorRegistry;
 use Prometheus\Counter;
-use Prometheus\Exception\MetricNotFoundException;
+use Prometheus\RenderTextFormat;
 
 class PrometheusService
 {
     protected $countersNamespace = 'twitter';
-    protected $registry;
+    public $registry;
 
     public function __construct()
     {
+        \Prometheus\Storage\Redis::setDefaultOptions(
+            [
+                'host' => env('REDIS_HOST', '127.0.0.1'),
+                'port' => env('REDIS_PORT', '6379'),
+                'username' => env('REDIS_USERNAME'),
+                'password' => env('REDIS_PASSWORD'),
+                'timeout' => 0.1, // in seconds
+                'read_timeout' => '5', // in seconds
+                'persistent_connections' => false
+            ]
+        );
+
         $this->registry = CollectorRegistry::getDefault();
     }
 
-    public function getCounter(string $name, string $description = ''): Counter
+    public function getMetrics(): string
     {
-        return $this->registry->getOrRegisterCounter(
-            $this->countersNamespace,
-            $name,
-            $description
-        );
+        $renderer = new RenderTextFormat();
+        return $renderer->render($this->registry->getMetricFamilySamples());
+    }
+
+    public function clearMetrics(): void
+    {
+        $this->registry->wipeStorage();
     }
 
     public function addResponseTimeHistogram($duration, string $routeName): void
