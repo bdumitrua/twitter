@@ -1,4 +1,6 @@
+import { useSelector } from "react-redux";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import Authorization from "../pages/Authorization/Authorization";
 import DefaultLayout from "../pages/DefaultLayout";
 import Feed from "../pages/Feed/Feed";
 import Profile from "../pages/Profile/Profile";
@@ -6,13 +8,33 @@ import LikesTab from "../pages/Profile/Tabs/LikesTab";
 import MediaTab from "../pages/Profile/Tabs/MediaTab";
 import TweetsAndRepliesTab from "../pages/Profile/Tabs/TweetsAndRepliesTab";
 import TweetsTab from "../pages/Profile/Tabs/TweetsTab";
+import Registration from "../pages/Registration/Registration";
+import RegistrationCode from "../pages/Registration/RegistrationCode";
+import RegistrationConfirmation from "../pages/Registration/RegistrationConfirmation";
+import RegistrationEnd from "../pages/Registration/RegistrationEnd";
+import RegistrationStart from "../pages/Registration/RegistrationStart";
 import TweetPage from "../pages/TweetPage/TweetPage";
-import CreateTweet from "../pages/CreateTweet/CreateTweet";
+import Welcome from "../pages/Welcome/Welcome";
+
+const ProtectedRoute = ({ children }) => {
+	const loggedIn = useSelector((state) => state.auth.loggedIn);
+
+	if (!loggedIn) {
+		// Перенаправление на страницу авторизации
+		return <Navigate to="/welcome" />;
+	}
+
+	return children;
+};
 
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: <DefaultLayout />,
+		element: (
+			<ProtectedRoute>
+				<DefaultLayout />
+			</ProtectedRoute>
+		),
 		children: [
 			{
 				path: "/",
@@ -52,9 +74,39 @@ const router = createBrowserRouter([
 					},
 				],
 			},
+		],
+	},
+	{
+		path: "/welcome",
+		element: <Welcome />,
+	},
+	{
+		path: "/auth",
+		element: <Authorization />,
+	},
+	{
+		path: "/registration",
+		element: <Registration />,
+		children: [
 			{
-				path: "/create",
-				element: <CreateTweet />,
+				path: "/registration",
+				element: <Navigate to="/registration/start" />,
+			},
+			{
+				path: "/registration/start",
+				element: <RegistrationStart />,
+			},
+			{
+				path: "/registration/confirm/:registrationId",
+				element: <RegistrationConfirmation />,
+			},
+			{
+				path: "/registration/code/:registrationId",
+				element: <RegistrationCode />,
+			},
+			{
+				path: "/registration/end/:registrationId",
+				element: <RegistrationEnd />,
 			},
 		],
 	},

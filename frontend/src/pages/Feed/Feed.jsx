@@ -1,7 +1,7 @@
 import styles from "../../assets/styles/pages/Feed.module.scss";
 import Tweet from "../../components/Tweet/Tweet";
 
-const Feed = (props) => {
+const Feed = () => {
 	const haveThread = true;
 
 	return (

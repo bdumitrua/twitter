@@ -17,7 +17,7 @@ const tabs = [
 	{ name: "Likes", value: "likes" },
 ];
 
-const Profile = (props) => {
+const Profile = () => {
 	const [activeTab, setActiveTab] = React.useState("tweets");
 
 	const handleTabClick = (value) => {

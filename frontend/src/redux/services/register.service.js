@@ -1,23 +1,31 @@
 import axiosInstance from "@/utils/axios/instance";
 
 const RegisterService = {
-	register: async (name, email, password) => {
-		try {
-			// Отправляем данные на сервер для проверки и получения токена.
-			const response = await axiosInstance.post("auth/register", {
-				name,
-				email,
+	registerStart: async (name, email, birth_date) => {
+		const response = await axiosInstance.post("auth/start", {
+			name,
+			email,
+			birth_date,
+		});
+		return response.data.registration_id;
+	},
+	registerCode: async (code, registerId) => {
+		const response = await axiosInstance.post(
+			`auth/confirm/${registerId}`,
+			{
+				code,
+			}
+		);
+		return response.status;
+	},
+	register: async (password, registerId) => {
+		const response = await axiosInstance.post(
+			`auth/register/${registerId}`,
+			{
 				password,
-			});
-
-			// Возвращаем токен из функции
-			console.log(response);
-			return response.data.message;
-		} catch (error) {
-			console.error("Ошибка", error);
-
-			throw error;
-		}
+			}
+		);
+		return response.status;
 	},
 };
 
