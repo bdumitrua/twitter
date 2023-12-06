@@ -5,11 +5,14 @@ namespace App\Modules\Search\Repositories;
 use App\Modules\Search\DTO\RecentSearchDTO;
 use App\Modules\Search\Models\RecentSearch;
 use App\Modules\Search\Models\Search;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
 class RecentSearchRepository
 {
+    use GetCachedData;
+
     protected RecentSearch $recentSearch;
 
     public function __construct(RecentSearch $recentSearch)
@@ -31,13 +34,16 @@ class RecentSearchRepository
             ->where('text', $text);
     }
 
-    public function getByUserId(int $userId): Collection
+    public function getByUserId(int $userId, $updateCache = false): Collection
     {
-        return $this->recentSearch->with('linked_user')
-            ->where('user_id', $userId)
-            ->latest('updated_at')
-            ->take(10)
-            ->get();
+        $cacheKey = KEY_USER_SEARCH . $userId;
+        return $this->getCachedData($cacheKey, null, function () use ($userId) {
+            return $this->recentSearch->with('linked_user')
+                ->where('user_id', $userId)
+                ->latest('updated_at')
+                ->take(10)
+                ->get();
+        }, $updateCache);
     }
 
     public function create(RecentSearchDTO $recentSearchDTO): void
@@ -61,10 +67,19 @@ class RecentSearchRepository
         } else {
             $oldRecentSearch->update($data);
         }
+
+        $this->recacheUserRecent($recentSearchDTO->userId);
     }
 
     public function clear(int $authorizedUserId): void
     {
         $this->recentSearch->where('user_id', $authorizedUserId)->delete();
+
+        $this->recacheUserRecent($authorizedUserId);
+    }
+
+    protected function recacheUserRecent(int $userId): void
+    {
+        $this->getByUserId($userId, true);
     }
 }
