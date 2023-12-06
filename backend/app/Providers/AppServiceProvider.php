@@ -3,8 +3,11 @@
 namespace App\Providers;
 
 use App\Kafka\KafkaConsumer;
+use App\Prometheus\PrometheusService;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -38,6 +41,17 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        /** @var PrometheusService */
+        $prometheusService = app(PrometheusService::class);
+
+        DB::listen(function ($query) use ($prometheusService) {
+            $source = optional(request()->route())->getActionName() ?? 'unknown';
+            $executionTimeInSeconds = floatval($query->time) / 1000;
+
+            $prometheusService->incrementDatabaseQueryCount($source);
+            $prometheusService->addDatabaseQueryTimeHistogram($executionTimeInSeconds, $source);
+        });
+
         $this->defineCacheKeysConstants();
     }
 

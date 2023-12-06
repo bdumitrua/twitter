@@ -81,4 +81,27 @@ class PrometheusService
         );
         $counter->inc([$cacheKey]);
     }
+
+    public function incrementDatabaseQueryCount($source)
+    {
+        $counter = $this->registry->getOrRegisterCounter(
+            $this->countersNamespace,
+            'database_queries_total',
+            'Total database queries',
+            ['source']
+        );
+        $counter->inc([$source]);
+    }
+
+    public function addDatabaseQueryTimeHistogram($duration, $source): void
+    {
+        $histogram = $this->registry->getOrRegisterHistogram(
+            $this->countersNamespace,
+            'database_queries_time',
+            'Duration of database query in seconds',
+            ['source']
+        );
+
+        $histogram->observe($duration, ['source' => $source]);
+    }
 }
