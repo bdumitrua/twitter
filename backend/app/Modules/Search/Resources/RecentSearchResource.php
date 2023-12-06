@@ -2,6 +2,7 @@
 
 namespace App\Modules\Search\Resources;
 
+use App\Modules\User\Resources\ShortUserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -14,9 +15,13 @@ class RecentSearchResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        // Implement your logic here
+        $linkedUser = empty($this->linked_user) ? [] : new ShortUserResource($this->linked_user);
+
         return [
             'id' => $this->id,
+            'text' => $this->text,
+            'linked_user' => $linkedUser,
+            "updated_at" => $this->updated_at,
         ];
     }
 }

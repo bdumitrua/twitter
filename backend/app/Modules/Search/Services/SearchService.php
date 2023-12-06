@@ -37,11 +37,9 @@ class SearchService
 
     public function index()
     {
-        // return RecentSearchResource::collection(
-        //     $this->recentSearchRepository->getByUserId($this->authorizedUserId)
-        // );
-
-        return $this->recentSearchRepository->getByUserId($this->authorizedUserId);
+        return RecentSearchResource::collection(
+            $this->recentSearchRepository->getByUserId($this->authorizedUserId)
+        );
     }
 
     public function users(SearchRequest $request)

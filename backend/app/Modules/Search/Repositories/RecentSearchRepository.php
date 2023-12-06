@@ -16,19 +16,49 @@ class RecentSearchRepository
         $this->recentSearch = $recentSearch;
     }
 
+    protected function queryByLinkedId(int $authorizedUserId, int $linkedUserId)
+    {
+        return $this->recentSearch->newQuery()
+            ->where('user_id', $authorizedUserId)
+            ->where('linked_user_id', $linkedUserId);
+    }
+
+    protected function queryByText(int $authorizedUserId, string $text)
+    {
+        return $this->recentSearch->newQuery()
+            ->where('user_id', $authorizedUserId)
+            ->where('text', $text);
+    }
+
     public function getByUserId(int $userId): Collection
     {
         return $this->recentSearch->with('linked_user')
             ->where('user_id', $userId)
+            ->latest('updated_at')
             ->take(10)
             ->get();
     }
 
     public function create(RecentSearchDTO $recentSearchDTO): void
     {
-        $data = $recentSearchDTO->toArray();
-        $data = array_filter($data, fn ($value) => !is_null($value));
+        $oldRecentSearch = null;
+        if (!empty($recentSearchDTO->linkedUserId)) {
+            $oldRecentSearch = $this->queryByLinkedId(
+                $recentSearchDTO->userId,
+                $recentSearchDTO->linkedUserId
+            )->first();
+        } else {
+            $oldRecentSearch = $this->queryByText(
+                $recentSearchDTO->userId,
+                $recentSearchDTO->text
+            )->first();
+        }
 
-        $this->recentSearch->create($data);
+        $data = array_filter($recentSearchDTO->toArray(), fn ($value) => !is_null($value));
+        if (empty($oldRecentSearch)) {
+            $this->recentSearch->create($data);
+        } else {
+            $oldRecentSearch->update($data);
+        }
     }
 }
