@@ -59,4 +59,26 @@ class PrometheusService
         );
         $counter->inc([$statusCode, $routeName]);
     }
+
+    public function incrementCacheHit($cacheKey)
+    {
+        $counter = $this->registry->getOrRegisterCounter(
+            $this->countersNamespace,
+            'cache_hits',
+            'Total cache hits',
+            ['cache_key']
+        );
+        $counter->inc([$cacheKey]);
+    }
+
+    public function incrementCacheMiss($cacheKey)
+    {
+        $counter = $this->registry->getOrRegisterCounter(
+            $this->countersNamespace,
+            'cache_misses',
+            'Total cache misses',
+            ['cache_key']
+        );
+        $counter->inc([$cacheKey]);
+    }
 }
