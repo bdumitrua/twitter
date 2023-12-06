@@ -8,7 +8,7 @@ use App\Modules\User\Controllers\UserController;
 
 Route::prefix('users')->controller(UserController::class)->group(function () {
     // Получить данные по id пользователя
-    Route::get('show/{user}', 'show');
+    Route::get('show/{user}', 'show')->name('show_user');
 
     Route::middleware(['auth:api'])->group(function () {
         // Получить данные своего аккаунта

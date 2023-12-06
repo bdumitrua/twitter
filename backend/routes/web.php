@@ -23,6 +23,11 @@ Route::get('/metrics', function () {
     return response($result)->header('Content-Type', RenderTextFormat::MIME_TYPE);
 });
 
+Route::get('/metrics/wipe', function () {
+    $registry = CollectorRegistry::getDefault();
+    $registry->wipeStorage();
+});
+
 Route::get('/test-metric', function () {
     $counter = CollectorRegistry::getDefault()->getOrRegisterCounter('twitter', 'test_metric_counter', 'Counter for test metric');
     $counter->inc();
