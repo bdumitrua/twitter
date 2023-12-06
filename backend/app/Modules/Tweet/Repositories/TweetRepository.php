@@ -70,7 +70,10 @@ class TweetRepository
             ->query($text)
             ->fuzziness('AUTO');
 
-        return $this->tweet->searchQuery($query)->execute()->models();
+        $searchedTweetsIds = $this->tweet->searchQuery($query)->execute()
+            ->models()->pluck('id')->toArray();
+
+        return $this->assembleTweetsCollection($searchedTweetsIds);
     }
 
     public function getById(int $tweetId): Tweet
