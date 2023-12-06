@@ -1,4 +1,21 @@
 services:
+    nginx:
+        build:
+            context: ./nginx
+            dockerfile: Dockerfile
+        ports:
+            - "443:443"
+            - "80:80"
+        volumes:
+            - ./frontend/public:/var/www/html/twitter
+            - ./backend/storage/app/public:/var/www/sata/twitter
+            - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+            - /etc/letsencrypt/:/etc/letsencrypt/
+        depends_on:
+            - frontend
+        networks:
+            - app
+
     backend:
         build:
             context: ./backend
