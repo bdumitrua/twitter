@@ -58,6 +58,11 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
+    public function searchableAs()
+    {
+        return 'users';
+    }
+
     /**
      * Get the identifier that will be stored in the subject claim of the JWT.
      *
@@ -81,11 +86,6 @@ class User extends Authenticatable implements JWTSubject
     protected static function newFactory()
     {
         return UserFactory::new();
-    }
-
-    public function searchableAs()
-    {
-        return 'users';
     }
 
     public function deviceTokens()

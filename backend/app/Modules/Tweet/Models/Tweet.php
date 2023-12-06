@@ -4,13 +4,14 @@ namespace App\Modules\Tweet\Models;
 
 use App\Modules\User\Models\User;
 use Database\Factories\TweetFactory;
+use Elastic\ScoutDriverPlus\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Cache;
 
 class Tweet extends Model
 {
-    use HasFactory;
+    use HasFactory, Searchable;
 
     protected $fillable = [
         'user_id',
@@ -19,6 +20,22 @@ class Tweet extends Model
         'type',
         'linked_tweet_id'
     ];
+
+    protected $searchable = [
+        'text',
+    ];
+
+    public function toSearchableArray()
+    {
+        return [
+            'text' => $this->text,
+        ];
+    }
+
+    public function searchableAs()
+    {
+        return 'tweets';
+    }
 
     protected static function newFactory()
     {

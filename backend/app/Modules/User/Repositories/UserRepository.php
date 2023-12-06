@@ -17,19 +17,29 @@ class UserRepository
 {
     use GetCachedData;
 
-    protected $users;
+    protected $user;
 
     public function __construct(
         User $user,
     ) {
-        $this->users = $user;
+        $this->user = $user;
     }
 
     protected function queryById(int $userId): Builder
     {
-        return $this->users->newQuery()
+        return $this->user->newQuery()
             ->where('id', '=', $userId)
             ->withCount(['subscribtions', 'subscribers']);
+    }
+
+    public function search(string $text): Collection
+    {
+        $query = Query::match()
+            ->field('name')
+            ->query($text)
+            ->fuzziness('AUTO');
+
+        return $this->user->searchQuery($query)->execute()->models();
     }
 
     public function getAuthUser(int $userId, bool $updateCache = false): User
@@ -70,16 +80,6 @@ class UserRepository
         if (!empty($savingStatus)) {
             $this->recacheUserData($user->id);
         }
-    }
-
-    public function search(string $text): Collection
-    {
-        $query = Query::match()
-            ->field('name')
-            ->query($text)
-            ->fuzziness('AUTO');
-
-        return User::searchQuery($query)->execute()->models();
     }
 
     public function recacheUserData(int $userId): void

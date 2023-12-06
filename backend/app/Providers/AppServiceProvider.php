@@ -73,6 +73,9 @@ class AppServiceProvider extends ServiceProvider
         // Массив твиттов пользователя
         define('KEY_USER_TWEETS', 'user_tweets:');
 
+        // Массив данных недавнего поиска
+        define('KEY_USER_SEARCH', 'user_search:');
+
         // Массив ответов пользователя
         define('KEY_USER_REPLIES', 'user_replies:');
 
