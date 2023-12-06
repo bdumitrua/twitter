@@ -30,4 +30,13 @@ class UserSubscribtion extends Model
     {
         return $this->belongsTo(User::class, 'subscriber_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('UserSubscribtion');
+        });
+    }
 }

@@ -21,4 +21,13 @@ class TweetLike extends Model
     {
         return TweetLikeFactory::new();
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('TweetLike');
+        });
+    }
 }

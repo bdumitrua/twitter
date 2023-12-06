@@ -3,6 +3,7 @@
 namespace App\Modules\Tweet\Models;
 
 use App\Modules\User\Models\User;
+use App\Prometheus\PrometheusService;
 use Database\Factories\TweetFactory;
 use Elastic\ScoutDriverPlus\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -83,5 +84,14 @@ class Tweet extends Model
     {
         return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
             ->where('type', 'quote');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($tweet) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('Tweet');
+        });
     }
 }

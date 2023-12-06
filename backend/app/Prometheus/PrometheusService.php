@@ -104,4 +104,15 @@ class PrometheusService
 
         $histogram->observe($duration, ['source' => $source]);
     }
+
+    public function incrementEntityCreatedCount($entityName)
+    {
+        $counter = $this->registry->getOrRegisterCounter(
+            $this->countersNamespace,
+            'entities_total',
+            'Total count of all entities',
+            ['entity']
+        );
+        $counter->inc([$entityName]);
+    }
 }
