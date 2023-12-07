@@ -18,7 +18,7 @@ use Prometheus\RenderTextFormat;
 */
 
 Route::get('/email', function () {
-    Mail::to('dimakpe4eneg@gmail.com')->send(new RegistrationCodeMail());
+    Mail::to('fake@email.com')->send(new RegistrationCodeMail());
 });
 
 Route::get('/metrics', function () {
