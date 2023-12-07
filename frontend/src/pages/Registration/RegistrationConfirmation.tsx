@@ -6,7 +6,7 @@ import InputField from "../../components/InputField/InputField";
 import { getLastEntry } from "../../utils/functions/getLastEntry";
 
 const RegistrationConfirmation = () => {
-	const { control, handleSubmit } = useForm();
+	const { control, handleSubmit, trigger } = useForm();
 
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -31,6 +31,7 @@ const RegistrationConfirmation = () => {
 				type="text"
 				name="name"
 				defaultValue={name}
+				trigger={trigger}
 				control={control}
 				disabled={true}
 			/>
@@ -39,6 +40,7 @@ const RegistrationConfirmation = () => {
 				type="email"
 				name="email"
 				defaultValue={email}
+				trigger={trigger}
 				control={control}
 				disabled={true}
 			/>
@@ -47,6 +49,7 @@ const RegistrationConfirmation = () => {
 				type="text"
 				name="birth_date"
 				defaultValue={formatDate(birthDate)}
+				trigger={trigger}
 				control={control}
 				disabled={true}
 			/>

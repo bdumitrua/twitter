@@ -1,7 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { InputRules } from "@/types/inputRules";
 import React from "react";
-import { Controller, FieldError } from "react-hook-form";
+import { Control, Controller, FieldError } from "react-hook-form";
 import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
 
 interface InputFieldProps {
@@ -12,9 +13,9 @@ interface InputFieldProps {
 	placeholder?: string;
 	defaultValue?: string | null;
 	rules?: InputRules;
-	error?: FieldError | string | never; // FieldError из react-hook-form, если используется, иначе string
-	control?: any; // Уточните generic, если известен конкретный тип данных формы
-	trigger?: () => void;
+	error?: FieldError | string;
+	control: Control<any>;
+	trigger: () => void;
 	maxLength?: number;
 	required?: boolean;
 	disabled?: boolean;

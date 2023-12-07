@@ -1,4 +1,6 @@
-export const emailRules = {
+import { InputRules } from "@/types/inputRules";
+
+export const emailRules: InputRules = {
 	required: "Почта является обязательным полем.",
 	pattern: {
 		value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i,
@@ -10,7 +12,7 @@ export const emailRules = {
 	},
 };
 
-export const passwordRules = {
+export const passwordRules: InputRules = {
 	required: "Пароль обязателен",
 	minLength: {
 		value: 8,
@@ -18,7 +20,7 @@ export const passwordRules = {
 	},
 };
 
-export const nameRules = {
+export const nameRules: InputRules = {
 	required: "Имя является обязательным полем.",
 	maxLength: {
 		value: 255,
@@ -26,7 +28,7 @@ export const nameRules = {
 	},
 };
 
-export const codeRules = {
+export const codeRules: InputRules = {
 	required: "Введите код подтверждения",
 	minLength: {
 		value: 5,
