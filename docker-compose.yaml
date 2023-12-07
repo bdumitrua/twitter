@@ -96,7 +96,7 @@ services:
             - zookeeper
 
     zookeeper:
-        image: arm64v8/zookeeper
+        image: wurstmeister/zookeeper
         ports:
             - "2181:2181"
         networks:

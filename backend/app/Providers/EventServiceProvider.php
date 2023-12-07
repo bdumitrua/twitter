@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Modules\Auth\Events\PasswordResetStartedEvent;
+use App\Modules\Auth\Events\RegistrationStartedEvent;
 use App\Modules\User\Events\DeletedUsersListEvent;
 use App\Modules\User\Events\NewTweetEvent;
 use App\Modules\User\Events\TweetFavoriteEvent;
@@ -19,6 +21,8 @@ use App\Modules\User\Listeners\NewNoticeListener;
 use App\Modules\User\Listeners\NewSubscribtionsListener;
 use App\Modules\User\Listeners\NewTweetsListener;
 use App\Modules\User\Listeners\NewUsersListener;
+use App\Modules\User\Listeners\PasswordResetStartedListener;
+use App\Modules\User\Listeners\RegistrationStartedListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -32,10 +36,13 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        // Registered::class => [
-        // NewUsersListener::class
-        // SendEmailVerificationNotification::class,
-        // ],
+        // Auth
+        RegistrationStartedEvent::class => [
+            RegistrationStartedListener::class
+        ],
+        PasswordResetStartedEvent::class => [
+            PasswordResetStartedListener::class
+        ],
 
         // Users
         UserSubscribtionEvent::class => [

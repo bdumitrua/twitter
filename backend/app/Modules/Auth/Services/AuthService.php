@@ -9,6 +9,8 @@ use App\Exceptions\NotFoundException;
 use App\Helpers\StringHelper;
 use App\Mail\RegistrationCodeMail;
 use App\Mail\ResetPasswordCodeEmail;
+use App\Modules\Auth\Events\PasswordResetStartedEvent;
+use App\Modules\Auth\Events\RegistrationStartedEvent;
 use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
 use App\Modules\Auth\Models\AuthReset;
@@ -40,10 +42,7 @@ class AuthService
             'email' => $userEmail,
             'birth_date' => $request->birth_date,
         ]);
-
-        // TODO QUEUE
-        Log::info('Sending registration code', ['email' => $userEmail]);
-        Mail::to($userEmail)->send(new RegistrationCodeMail($registrationCode));
+        event(new RegistrationStartedEvent($registrationData));
 
         return ['registration_id' => $registrationData->id];
     }
@@ -99,10 +98,7 @@ class AuthService
             'code' => $resetCode,
             'user_id' => $user->id,
         ]);
-
-        // TODO QUEUE
-        Log::info('Sending password reset code', ['email' => $email]);
-        Mail::to($email)->send(new ResetPasswordCodeEmail($resetData));
+        event(new PasswordResetStartedEvent($resetData, $email));
 
         return ['reset_id' => $resetData->id];
     }

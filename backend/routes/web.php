@@ -1,6 +1,7 @@
 <?php
 
 use App\Mail\RegistrationCodeMail;
+use App\Prometheus\PrometheusService;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Prometheus\CollectorRegistry;
