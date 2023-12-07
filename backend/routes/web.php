@@ -1,6 +1,7 @@
 <?php
 
-use App\Prometheus\PrometheusService;
+use App\Mail\RegistrationCodeMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Prometheus\CollectorRegistry;
 use Prometheus\RenderTextFormat;
@@ -15,6 +16,10 @@ use Prometheus\RenderTextFormat;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/email', function () {
+    Mail::to('fake@email.com')->send(new RegistrationCodeMail());
+});
 
 Route::get('/metrics', function () {
     $result = app(PrometheusService::class)->getMetrics();
