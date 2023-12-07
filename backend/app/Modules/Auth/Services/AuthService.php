@@ -65,7 +65,7 @@ class AuthService
         $userEmail = $authRegistration->email;
         $link = StringHelper::createUserLink($userEmail);
 
-        Log::info('Creating user at last registration step', [$authRegistration->toArray(), $request->toArray()]);
+        Log::info('Creating user at last registration step', ['authRegistration' => $authRegistration->toArray(), 'request' => $request->toArray()]);
         $user = User::create([
             'link' => $link,
             'email' => $userEmail,
@@ -75,6 +75,9 @@ class AuthService
         ]);
 
         event(new UserCreatedEvent($user));
+
+        Log::info('Deleting all registration data after registration', ['email' => $userEmail]);
+        AuthRegistration::where('email', $userEmail)->delete();
     }
 
     public function resetCheck(CheckEmailRequest $request)
@@ -120,6 +123,9 @@ class AuthService
 
         $user->save();
         Log::info('Changed user password', ['user_id' => $user->id]);
+
+        Log::info('Deleting all reset password data after succesfull reset', ['user_id' => $user->id]);
+        AuthRegistration::where('user_id', $user->id)->delete();
     }
 
 
