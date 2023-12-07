@@ -79,7 +79,7 @@ class AuthService
 
         event(new UserCreatedEvent($user));
 
-        Log::info('Deleting all registration data after registration', ['email' => $userEmail]);
+        Log::info('Deleting all registration datxa after registration', ['email' => $userEmail]);
         AuthRegistration::where('email', $userEmail)->delete();
     }
 
@@ -130,7 +130,7 @@ class AuthService
         Log::info('Changed user password', ['user_id' => $user->id]);
 
         Log::info('Deleting all reset password data after succesfull reset', ['user_id' => $user->id]);
-        AuthRegistration::where('user_id', $user->id)->delete();
+        AuthRegistration::where('email', $user->email)->delete();
     }
 
 
