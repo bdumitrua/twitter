@@ -1,10 +1,12 @@
+import { ValidationValue } from "react-hook-form";
+
 interface InputRule {
-	value?: string | RegExp | number;
+	value: string | number | RegExp | ValidationValue;
 	message: string;
 }
 
 export interface InputRules {
-	required?: string | InputRule;
+	required?: InputRule | string;
 	pattern?: InputRule;
 	maxLength?: InputRule;
 	minLength?: InputRule;
