@@ -1,17 +1,12 @@
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { formatDate } from "@/utils/functions/formatDate.js";
-import React from "react";
 import { useForm } from "react-hook-form";
 import { useLocation, useNavigate } from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
 import { getLastEntry } from "../../utils/functions/getLastEntry";
 
 const RegistrationConfirmation = () => {
-	const {
-		control,
-		handleSubmit,
-		formState: { errors },
-	} = useForm();
+	const { control, handleSubmit } = useForm();
 
 	const location = useLocation();
 	const navigate = useNavigate();
@@ -36,7 +31,6 @@ const RegistrationConfirmation = () => {
 				type="text"
 				name="name"
 				defaultValue={name}
-				error={errors.name}
 				control={control}
 				disabled={true}
 			/>
@@ -45,7 +39,6 @@ const RegistrationConfirmation = () => {
 				type="email"
 				name="email"
 				defaultValue={email}
-				error={errors.email}
 				control={control}
 				disabled={true}
 			/>
@@ -54,7 +47,6 @@ const RegistrationConfirmation = () => {
 				type="text"
 				name="birth_date"
 				defaultValue={formatDate(birthDate)}
-				error={errors.birthDate}
 				control={control}
 				disabled={true}
 			/>

@@ -1,4 +1,3 @@
-import React from "react";
 import DefaultLayout from "./pages/DefaultLayout";
 
 const App = () => {

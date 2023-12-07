@@ -1,3 +1,4 @@
+import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Authorization from "../pages/Authorization/Authorization";
@@ -16,8 +17,12 @@ import RegistrationStart from "../pages/Registration/RegistrationStart";
 import TweetPage from "../pages/TweetPage/TweetPage";
 import Welcome from "../pages/Welcome/Welcome";
 
-const ProtectedRoute = ({ children }) => {
-	const loggedIn = useSelector((state) => state.auth.loggedIn);
+interface ProtectedRouteProps {
+	children: React.ReactNode;
+}
+
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
+	const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
 
 	if (!loggedIn) {
 		// Перенаправление на страницу авторизации

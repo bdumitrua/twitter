@@ -1,5 +1,7 @@
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
-import React, { useEffect } from "react";
+import { AppDispatch, RootState } from "@/redux/store";
+import { RegisterCodePayload } from "@/types/redux/register";
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -15,14 +17,14 @@ const RegistrationCode = () => {
 		trigger,
 		setError,
 		formState: { errors },
-	} = useForm();
+	} = useForm<RegisterCodePayload>();
 
 	const navigate = useNavigate();
 	const location = useLocation();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const registrationId = getLastEntry(location.pathname, "/");
-	const error = useSelector((state) => state.register.error);
+	const error = useSelector((state: RootState) => state.register.error);
 
 	useEffect(() => {
 		if (error && error.status === 404) {
@@ -45,14 +47,14 @@ const RegistrationCode = () => {
 		}
 	}, [error]);
 
-	const handleRegistration = async (data) => {
+	const handleRegistration = async (data: RegisterCodePayload) => {
 		const response = await dispatch(
 			codeRegisterAsync({
 				code: data.code,
 				registrationId: registrationId,
 			})
 		);
-		if (!response.error) {
+		if (response.meta.requestStatus === "rejected") {
 			navigate(`/registration/end/${registrationId}`);
 		}
 	};

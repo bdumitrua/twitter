@@ -22,5 +22,6 @@ export interface RegisterCodePayload {
 
 export interface RegisterEndPayload {
 	password: string;
+	repeatPassword?: string;
 	registrationId: number;
 }

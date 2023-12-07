@@ -1,13 +1,15 @@
-import React from 'react'
-
 import styles from "../../assets/styles/pages/TweetPage/RetweetModal.module.scss";
 
+import rectangle from "../../assets/images/Tweet/rectangle.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
 import retweetWithComment from "../../assets/images/Tweet/retweetWithComment.svg";
-import rectangle from "../../assets/images/Tweet/rectangle.svg";
 
+interface RetweetModalProps {
+	onClose: () => void;
+	showModal: boolean;
+}
 
-const RetweetModal = ({ onClose, showModal }) => (
+const RetweetModal: React.FC<RetweetModalProps> = ({ onClose, showModal }) => (
 	<>
 		{showModal && (
 			<div className={styles["overlay"]} onClick={onClose}></div>
@@ -47,4 +49,4 @@ const RetweetModal = ({ onClose, showModal }) => (
 	</>
 );
 
-export default RetweetModal
+export default RetweetModal;

@@ -1,7 +1,9 @@
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { ErrorMessage } from "@/components/ErrorMessage/ErrorMessage.jsx";
 import { registerAsync } from "@/redux/slices/register.slice";
-import { useEffect } from "react";
+import { AppDispatch, RootState } from "@/redux/store";
+import { RegisterEndPayload } from "@/types/redux/register";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -14,40 +16,35 @@ const RegistrationEnd = () => {
 		control,
 		handleSubmit,
 		watch,
-		setError,
 		trigger,
 		formState: { errors },
-	} = useForm();
+	} = useForm<RegisterEndPayload>();
+	const [generalError, setGeneralError] = useState<string | null>(null);
 
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
+	const dispatch = useDispatch<AppDispatch>();
 
 	const registrationId = getLastEntry(location.pathname, "/");
 
-	const error = useSelector((state) => state.register.error);
+	const error = useSelector((state: RootState) => state.register.error);
 	useEffect(() => {
 		if (error && error.status === 403) {
-			setError("steps", {
-				type: "manual",
-				message: "Необходимо ввести код подтверждения",
-			});
+			setGeneralError("Необходимо ввести код подтверждения");
+		} else if (error && error.status === 404) {
+			setGeneralError("Вам следует перейти к первому шагу регистрации");
+		} else {
+			setGeneralError(null);
 		}
-		if (error && error.status === 404) {
-			setError("steps", {
-				type: "manual",
-				message: "Вам следует перейти к первому шагу регистрации",
-			});
-		}
-	}, [error, setError]);
+	}, [error]);
 
-	const handleRegistration = async (data) => {
+	const handleRegistration = async (data: RegisterEndPayload) => {
 		const response = await dispatch(
 			registerAsync({
 				password: data.password,
 				registrationId: registrationId,
 			})
 		);
-		if (!response.error) {
+		if (response.meta.requestStatus === "rejected") {
 			navigate("/auth");
 		}
 	};
@@ -73,14 +70,14 @@ const RegistrationEnd = () => {
 				placeholder="Повторите пароль"
 				rules={{
 					required: "Повторите пароль",
-					validate: (value) =>
+					validate: (value: string) =>
 						value === watch("password") || "Пароли не совпадают",
 				}}
 				trigger={trigger}
 				control={control}
 				required={true}
 			/>
-			<ErrorMessage error={errors.steps} />
+			{generalError && <ErrorMessage error={generalError} />}
 
 			<button className={styles["registration__button"]} type="submit">
 				Зарегистрироваться

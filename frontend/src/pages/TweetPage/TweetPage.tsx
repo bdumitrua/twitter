@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 
 import styles from "../../assets/styles/pages/TweetPage/TweetPage.module.scss";
 import Tweet from "../../components/Tweet/Tweet";
@@ -17,9 +17,9 @@ import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
 import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 
 const TweetPage = () => {
-	const [showModal, setShowModal] = React.useState(false);
-	const [likeSrc, setLikeSrc] = React.useState(unpaintedLike);
-	const [likeActive, setLikeActive] = React.useState(false);
+	const [showModal, setShowModal] = useState(false);
+	const [likeSrc, setLikeSrc] = useState(unpaintedLike);
+	const [likeActive, setLikeActive] = useState(false);
 
 	const onClickLike = () => {
 		if (likeSrc === unpaintedLike) {
