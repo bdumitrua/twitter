@@ -1,4 +1,5 @@
 import { RootState } from "@/redux/store";
+import { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Authorization from "../pages/Authorization/Authorization";
@@ -18,7 +19,7 @@ import TweetPage from "../pages/TweetPage/TweetPage";
 import Welcome from "../pages/Welcome/Welcome";
 
 interface ProtectedRouteProps {
-	children: React.ReactNode;
+	children: ReactNode;
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {

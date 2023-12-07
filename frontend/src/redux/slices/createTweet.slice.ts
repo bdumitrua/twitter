@@ -51,7 +51,7 @@ const createTweetSlice = createSlice({
 			}
 			state.currentId = id;
 		},
-		changeGroup: (state, action: PayloadAction<string>) => {
+		changeGroup: (state, action: PayloadAction<string | null>) => {
 			state.group = action.payload;
 		},
 	},

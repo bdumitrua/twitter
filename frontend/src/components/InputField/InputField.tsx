@@ -2,7 +2,13 @@
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { InputRules } from "@/types/inputRules";
 import React from "react";
-import { Control, Controller, FieldError } from "react-hook-form";
+import {
+	Control,
+	Controller,
+	FieldError,
+	FieldErrorsImpl,
+	Merge,
+} from "react-hook-form";
 import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
 
 interface InputFieldProps {
@@ -13,7 +19,7 @@ interface InputFieldProps {
 	placeholder?: string;
 	defaultValue?: string | null;
 	rules?: InputRules;
-	error?: FieldError | string;
+	error?: FieldError | string | Merge<FieldError, FieldErrorsImpl<any>>;
 	control: Control<any>;
 	trigger: () => void;
 	maxLength?: number;

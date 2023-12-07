@@ -1,5 +1,8 @@
 import styles from "@/assets/styles/pages/Auth/Authorization.scss";
 import { loginAsync, setLoggedIn } from "@/redux/slices/auth.slice";
+import { AppDispatch, RootState } from "@/redux/store";
+import { LoginPayload } from "@/types/redux/auth";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -11,23 +14,20 @@ const Authorization = () => {
 	const {
 		control,
 		handleSubmit,
-		setError,
 		trigger,
 		formState: { errors },
 	} = useForm();
 	const navigate = useNavigate();
-	const dispatch = useDispatch();
-	const loading = useSelector((state) => state.auth.loading);
+	const dispatch = useDispatch<AppDispatch>();
+	const loading = useSelector((state: RootState) => state.auth.loading);
+	const [generalError, setGeneralError] = useState<string | undefined>("");
 
-	const handleLogin = async (data) => {
+	const handleLogin = async (data: LoginPayload) => {
 		const response = await dispatch(
 			loginAsync({ email: data.email, password: data.password })
 		);
-		if (response.error) {
-			setError("auth", {
-				type: "manual",
-				message: "Неверная почта или пароль!",
-			});
+		if (response.meta.requestStatus === "rejected") {
+			setGeneralError("Неверная почта или пароль!");
 		} else {
 			dispatch(setLoggedIn(true));
 			navigate("/feed");
@@ -66,7 +66,7 @@ const Authorization = () => {
 					rules={passwordRules}
 				/>
 
-				<ErrorMessage error={errors.auth} />
+				<ErrorMessage error={generalError} />
 
 				<button className={styles["auth__button"]} type="submit">
 					{loading ? "Вход..." : "Войти"}
