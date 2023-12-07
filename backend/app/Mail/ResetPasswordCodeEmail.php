@@ -9,7 +9,7 @@ use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
 
-class RegistrationCodeMail extends Mailable
+class ResetPasswordCodeEmail extends Mailable
 {
     use Queueable, SerializesModels;
 
@@ -23,7 +23,7 @@ class RegistrationCodeMail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Registration code',
+            subject: 'Password reset code',
         );
     }
 
@@ -33,7 +33,7 @@ class RegistrationCodeMail extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.RegistrationCodeMail',
+            view: 'emails.passwordResetCodeMail',
             with: ['code' => $this->code]
         );
     }

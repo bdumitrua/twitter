@@ -3,6 +3,7 @@
 namespace App\Modules\Notification\Models;
 
 use App\Modules\User\Models\User;
+use App\Prometheus\PrometheusService;
 use Database\Factories\DeviceTokenFactory;
 use Database\Factories\NotificationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;

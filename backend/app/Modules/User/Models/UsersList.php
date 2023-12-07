@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Models;
 
+use App\Prometheus\PrometheusService;
 use Database\Factories\UsersListFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
