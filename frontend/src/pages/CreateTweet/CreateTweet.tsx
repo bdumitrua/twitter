@@ -7,31 +7,36 @@ import {
 } from "../../redux/slices/createTweet.slice";
 
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweet.module.scss";
-import CreateTweetBody from "./CreateTweetBody";
-import TickIcon from "./TickIcon";
 import AddButton from "./AddButton";
+import CreateTweetBody from "./CreateTweetBody";
 import CreateTweetModal from "./CreateTweetModal";
+import TickIcon from "./TickIcon";
 
+import { AppDispatch, RootState } from "@/redux/store";
+import gifIcon from "../../assets/images/Pages/CreateTweet/gifIcon.svg";
 import groupIcon from "../../assets/images/Pages/CreateTweet/groupIcon.svg";
 import imageIcon from "../../assets/images/Pages/CreateTweet/imageIcon.svg";
-import gifIcon from "../../assets/images/Pages/CreateTweet/gifIcon.svg";
-import statsIcon from "../../assets/images/Pages/CreateTweet/statsIcon.svg";
 import locationIcon from "../../assets/images/Pages/CreateTweet/locationIcon.svg";
+import statsIcon from "../../assets/images/Pages/CreateTweet/statsIcon.svg";
 
 const CreateTweet = () => {
-	const dispatch = useDispatch();
-	const [addButtonActive, setAddButtonActive] = useState(false);
+	const dispatch = useDispatch<AppDispatch>();
+	const [addButtonActive, setAddButtonActive] = useState<boolean>(false);
 	const maxCharCount = 255;
 	const tweetBodies = useSelector(selectTweetBodies);
-	const currentId = useSelector((state) => state.createTweet.currentId);
-	const charCount = useSelector((state) => {
+	const currentId = useSelector(
+		(state: RootState) => state.createTweet.currentId
+	);
+
+	const charCount = useSelector((state: RootState) => {
 		const tweetBody = state.createTweet.tweetBodies.find(
 			(body) => body.id === currentId
 		);
 		return tweetBody ? tweetBody.charCount : 0;
 	});
-	const [showModal, setShowModal] = useState(false);
-	const group = useSelector((state) => state.createTweet.group);
+
+	const [showModal, setShowModal] = useState<boolean>(false);
+	const group = useSelector((state: RootState) => state.createTweet.group);
 
 	useEffect(() => {
 		setAddButtonActive(
@@ -66,16 +71,15 @@ const CreateTweet = () => {
 			<div className={styles["create"]}>
 				<div className={styles["create__bodies"]}>
 					{tweetBodies.map((props) => (
-						<CreateTweetBody
-							key={props.id}
-							id={props.id}
-							{...props}
-						/>
+						<CreateTweetBody key={props.id} {...props} />
 					))}
 				</div>
 				<div className={styles["create__bars"]}>
 					<div className={styles["create__group-bar"]}>
-						<button className={styles["create__group"]} onClick={() => setShowModal(true)}>
+						<button
+							className={styles["create__group"]}
+							onClick={() => setShowModal(true)}
+						>
 							<img src={groupIcon} alt="Group icon" />
 							<span>{group ? group : "Everyone can see"}</span>
 						</button>

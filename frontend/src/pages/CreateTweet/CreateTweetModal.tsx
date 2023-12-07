@@ -1,19 +1,26 @@
-import React from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweetModal.module.scss";
 
 import { changeGroup } from "../../redux/slices/createTweet.slice";
 
+import { AppDispatch, RootState } from "@/redux/store";
+import penIcon from "../../assets/images/Pages/CreateTweet/penIcon.svg";
 import rectangle from "../../assets/images/Pages/CreateTweet/rectangle.svg";
 import retweet from "../../assets/images/Pages/CreateTweet/retweet.svg";
-import penIcon from "../../assets/images/Pages/CreateTweet/penIcon.svg";
 
-const CreateModal = ({ onClose, showModal }) => {
-	const dispatch = useDispatch();
-	const groupsList = useSelector((state) => state.createTweet.groupsList);
+interface CreateModalProps {
+	onClose: () => void;
+	showModal: boolean;
+}
 
-	const onGroupChange = (group) => {
+const CreateModal: React.FC<CreateModalProps> = ({ onClose, showModal }) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const groupsList = useSelector(
+		(state: RootState) => state.createTweet.groupsList
+	);
+
+	const onGroupChange = (group: string | null) => {
 		dispatch(changeGroup(group));
 		onClose();
 	};

@@ -1,7 +1,10 @@
-import React from "react";
 import styles from "../../assets/styles/pages/CreateTweet/AddButton.module.scss";
 
-const AddButton = ({ addButtonActive }) => {
+interface AddButtonProps {
+	addButtonActive?: boolean;
+}
+
+const AddButton: React.FC<AddButtonProps> = ({ addButtonActive }) => {
 	return (
 		<svg
 			width="20"

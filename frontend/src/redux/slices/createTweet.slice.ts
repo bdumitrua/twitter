@@ -1,4 +1,11 @@
-import { createSlice } from "@reduxjs/toolkit";
+import {
+	AddTweetBodyPayload,
+	CreateTweetState,
+	RemoveTweetBodyPayload,
+	UpdateTweetBodyLengthPayload,
+} from "@/types/redux/createTweet";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
+import { RootState } from "../store";
 
 const groupsList = ["Group 1", "Group 2", "Group 3"];
 
@@ -9,9 +16,9 @@ const createTweetSlice = createSlice({
 		groupsList: groupsList,
 		group: null,
 		currentId: 0,
-	},
+	} as CreateTweetState,
 	reducers: {
-		addTweetBody: (state, action) => {
+		addTweetBody: (state, action: PayloadAction<AddTweetBodyPayload>) => {
 			const newBody = {
 				id: state.currentId + 1,
 				...action.payload,
@@ -20,7 +27,10 @@ const createTweetSlice = createSlice({
 			state.tweetBodies.push(newBody);
 			state.currentId = newBody.id;
 		},
-		removeTweetBody: (state, action) => {
+		removeTweetBody: (
+			state,
+			action: PayloadAction<RemoveTweetBodyPayload>
+		) => {
 			const { id } = action.payload;
 
 			state.tweetBodies = state.tweetBodies.filter(
@@ -30,7 +40,10 @@ const createTweetSlice = createSlice({
 			state.currentId =
 				state.tweetBodies[state.tweetBodies.length - 1].id;
 		},
-		updateTweetBodyLength: (state, action) => {
+		updateTweetBodyLength: (
+			state,
+			action: PayloadAction<UpdateTweetBodyLengthPayload>
+		) => {
 			const { id, charCount } = action.payload;
 			const tweetBody = state.tweetBodies.find((body) => body.id === id);
 			if (tweetBody) {
@@ -38,7 +51,7 @@ const createTweetSlice = createSlice({
 			}
 			state.currentId = id;
 		},
-		changeGroup: (state, action) => {
+		changeGroup: (state, action: PayloadAction<string>) => {
 			state.group = action.payload;
 		},
 	},
@@ -51,7 +64,7 @@ export const {
 	changeGroup,
 } = createTweetSlice.actions;
 
-export const selectTweetBodies = (state) => state.createTweet.tweetBodies;
-export const selectNextId = (state) => state.createTweet.nextId;
+export const selectTweetBodies = (state: RootState) =>
+	state.createTweet.tweetBodies;
 
 export default createTweetSlice.reducer;

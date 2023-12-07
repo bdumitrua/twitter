@@ -1,9 +1,17 @@
-import React from "react";
 import { motion } from "framer-motion";
+import React from "react";
 
 import styles from "../../assets/styles/pages/CreateTweet/TickIcon.module.scss";
 
-const CircleProgress = ({ charCount, maxCharCount }) => {
+interface CircleProgressProps {
+	charCount: number;
+	maxCharCount: number;
+}
+
+const CircleProgress: React.FC<CircleProgressProps> = ({
+	charCount,
+	maxCharCount,
+}) => {
 	const baseRadius = 7.5;
 	const fullRadius = 9.5;
 	const isFull = charCount > maxCharCount;

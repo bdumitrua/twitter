@@ -1,31 +1,44 @@
-import { useState, useRef } from "react";
+import { useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import {
-	updateTweetBodyLength,
 	removeTweetBody,
+	updateTweetBodyLength,
 } from "../../redux/slices/createTweet.slice";
 
+import { AppDispatch } from "@/redux/store";
+import cancelTweetButton from "../../assets/images/Pages/CreateTweet/cancelTweetButton.svg";
+import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweetBody.module.scss";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
-import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
-import cancelTweetButton from "../../assets/images/Pages/CreateTweet/cancelTweetButton.svg";
 
-const CreateTweetBody = ({ placeholder, showCloseButton, id }) => {
-	const dispatch = useDispatch();
-	const [showLine, setShowLine] = useState(false);
-	const textareaRef = useRef(null);
+interface CreateTweetBodyProps {
+	placeholder?: string;
+	showCloseButton?: boolean;
+	id: number;
+}
+
+const CreateTweetBody: React.FC<CreateTweetBodyProps> = ({
+	placeholder,
+	showCloseButton,
+	id,
+}) => {
+	const dispatch = useDispatch<AppDispatch>();
+	const [showLine, setShowLine] = useState<boolean>(false);
+	const textareaRef = useRef<HTMLTextAreaElement>(null);
 	const minHeight = 60;
 
 	const handleChange = () => {
-		const textarea = textareaRef.current;
-		textarea.style.height = "auto";
-		textarea.style.height = `${textarea.scrollHeight}px`;
+		if (textareaRef.current) {
+			const textarea = textareaRef.current;
+			textarea.style.height = "auto";
+			textarea.style.height = `${textarea.scrollHeight}px`;
 
-		setShowLine(textarea.scrollHeight > minHeight);
-		dispatch(
-			updateTweetBodyLength({ id, charCount: textarea.value.length })
-		);
+			setShowLine(textarea.scrollHeight > minHeight);
+			dispatch(
+				updateTweetBodyLength({ id, charCount: textarea.value.length })
+			);
+		}
 	};
 
 	return (
@@ -44,7 +57,6 @@ const CreateTweetBody = ({ placeholder, showCloseButton, id }) => {
 					onChange={handleChange}
 					onFocus={handleChange}
 					className={styles["body__input"]}
-					type="text"
 					placeholder={placeholder}
 				></textarea>
 				{showCloseButton && (
