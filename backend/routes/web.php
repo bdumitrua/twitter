@@ -3,10 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use Prometheus\CollectorRegistry;
 use Prometheus\RenderTextFormat;
-use Kreait\Firebase\Factory;
-use Kreait\Firebase\Messaging;
-use Kreait\Firebase\Messaging\CloudMessage;
-use Kreait\Laravel\Firebase\Facades\Firebase;
 
 /*
 |--------------------------------------------------------------------------
