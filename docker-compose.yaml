@@ -29,9 +29,7 @@ services:
             DB_DATABASE: twitter
             DB_USERNAME: root
             DB_PASSWORD: root
-            MAIL_MAILER: smtp
-            MAIL_HOST: docker.from.mac.localhost
-            MAIL_PORT: 1025
+
         ports:
             - 8000:8000
             - 1025:1025

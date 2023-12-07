@@ -1,5 +1,7 @@
 <?php
 
+use App\Mail\RegistrationCodeMail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 use Prometheus\CollectorRegistry;
 use Prometheus\RenderTextFormat;
@@ -14,6 +16,10 @@ use Prometheus\RenderTextFormat;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+Route::get('/email', function () {
+    Mail::to('dimakpe4eneg@gmail.com')->send(new RegistrationCodeMail());
+});
 
 Route::get('/metrics', function () {
     $registry = CollectorRegistry::getDefault();
