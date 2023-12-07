@@ -12,4 +12,13 @@ class AuthRegistration extends Model
         'email',
         'birth_date',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('AuthRegistration');
+        });
+    }
 }

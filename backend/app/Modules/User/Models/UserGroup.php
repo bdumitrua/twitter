@@ -32,4 +32,13 @@ class UserGroup extends Model
     {
         return $this->members()->with('users_data');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('UserGroup');
+        });
+    }
 }

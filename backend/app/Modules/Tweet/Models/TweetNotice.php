@@ -20,4 +20,13 @@ class TweetNotice extends Model
         'user_id',
         'tweet_id',
     ];
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('TweetNotice');
+        });
+    }
 }
