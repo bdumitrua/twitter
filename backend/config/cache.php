@@ -37,6 +37,12 @@ return [
             'connection' => 'cache',
             'lock_connection' => 'default',
         ],
+
+        'file' => [
+            'driver' => 'file',
+            'path' => storage_path('framework/cache/data'),
+            'lock_path' => storage_path('framework/cache/data'),
+        ],
     ],
 
     /*

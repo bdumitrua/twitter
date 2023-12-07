@@ -20,12 +20,12 @@ class NotificationRepository
         return $this->notification->where('user_id', '=', $userId)->take(20)->get();
     }
 
-    public function create(NotificationDTO $notificationDTO): void
+    public function create(NotificationDTO $notificationDTO): Notification
     {
         $data = $notificationDTO->toArray();
         $data = array_filter($data, fn ($value) => !is_null($value));
 
-        $this->notification->create($data);
+        return $this->notification->create($data);
     }
 
     public function update(Notification $notification, string $newStatus): void
