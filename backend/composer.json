@@ -14,6 +14,7 @@
         "elasticsearch/elasticsearch": "^8.10",
         "enqueue/rdkafka": "^0.10.19",
         "guzzlehttp/guzzle": "^7.2",
+        "kreait/laravel-firebase": "^5.5",
         "laravel/framework": "^10.10",
         "laravel/sanctum": "^3.2",
         "laravel/scout": "^10.5",

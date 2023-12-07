@@ -2,6 +2,7 @@
 
 namespace App\Modules\Notification\Services;
 
+use App\Firebase\FirebaseService;
 use App\Modules\Notification\DTO\NotificationDTO;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -17,13 +18,16 @@ class NotificationService
 {
     private NotificationRepository $notificationRepository;
     protected LogManager $logger;
+    protected FirebaseService $firebaseService;
     private ?int $authorizedUserId;
 
     public function __construct(
         NotificationRepository $notificationRepository,
+        FirebaseService $firebaseService,
         LogManager $logger,
     ) {
         $this->notificationRepository = $notificationRepository;
+        $this->firebaseService = $firebaseService;
         $this->logger = $logger;
         $this->authorizedUserId = Auth::id();
     }
@@ -36,7 +40,10 @@ class NotificationService
     public function create(NotificationDTO $notificationDTO): void
     {
         $this->logger->info('Creating notification from request DTO', $notificationDTO->toArray());
-        $this->notificationRepository->create($notificationDTO);
+        $newNotification = $this->notificationRepository->create($notificationDTO);
+
+        $this->logger->info('Sending notification to firebase', $newNotification->toArray());
+        $this->firebaseService->storeNotification($newNotification);
     }
 
     public function update(Notification $notification, UpdateNotificationStatusRequest $updateNotificationStatusRequest): void
