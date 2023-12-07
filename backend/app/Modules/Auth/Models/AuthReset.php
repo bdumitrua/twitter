@@ -3,6 +3,7 @@
 namespace App\Modules\Auth\Models;
 
 use App\Modules\User\Models\User;
+use App\Prometheus\PrometheusService;
 use Illuminate\Database\Eloquent\Model;
 
 class AuthReset extends Model

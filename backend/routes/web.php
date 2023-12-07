@@ -17,10 +17,6 @@ use Prometheus\RenderTextFormat;
 |
 */
 
-Route::get('/email', function () {
-    Mail::to('fake@email.com')->send(new RegistrationCodeMail());
-});
-
 Route::get('/metrics', function () {
     $result = app(PrometheusService::class)->getMetrics();
     return response($result)->header('Content-Type', RenderTextFormat::MIME_TYPE);

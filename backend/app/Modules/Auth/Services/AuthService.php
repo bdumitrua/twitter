@@ -7,6 +7,8 @@ use App\Exceptions\IncorrectCodeException;
 use App\Exceptions\InvalidCredetialsException;
 use App\Exceptions\NotFoundException;
 use App\Helpers\StringHelper;
+use App\Mail\RegistrationCodeMail;
+use App\Mail\ResetPasswordCodeEmail;
 use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
 use App\Modules\Auth\Models\AuthReset;
@@ -14,10 +16,6 @@ use App\Modules\Auth\Requests\CreateUserRequest;
 use App\Modules\Auth\Requests\LoginRequest;
 use App\Modules\Auth\Requests\PasswordRequest;
 use App\Modules\Auth\Requests\AuthConfirmCodeRequest;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use App\Modules\Auth\Repositories\AuthRepository;
 use App\Modules\Auth\Requests\CheckEmailRequest;
 use App\Modules\Auth\Resources\AuthTokenResource;
 use App\Modules\User\Models\User;
@@ -25,21 +23,27 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
-use Nette\Utils\Random;
 
 class AuthService
 {
-    public function registrationStart(CreateUserRequest $request): array
+    public function registrationStart(CreateUserRequest $request)
     {
+        $registrationCode = '11111';
+        $userEmail = $request->email;
+
         Log::info('Starting user registration', $request->toArray());
         $registrationData = AuthRegistration::create([
-            // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
-            'code' => '11111',
+            'code' => $registrationCode,
             'name' => $request->name,
-            'email' => $request->email,
+            'email' => $userEmail,
             'birth_date' => $request->birth_date,
         ]);
+
+        // TODO QUEUE
+        Log::info('Sending registration code', ['email' => $userEmail]);
+        Mail::to($userEmail)->send(new RegistrationCodeMail($registrationCode));
 
         return ['registration_id' => $registrationData->id];
     }
@@ -82,18 +86,23 @@ class AuthService
 
     public function resetCheck(CheckEmailRequest $request)
     {
-        $user = User::where('email', $request->email)->first();
+        $email = $request->email;
+        $user = User::where('email', $email)->first();
 
         if (empty($user)) {
             throw new NotFoundException('Account');
         }
 
         Log::info('Starting reset user password', ['user_id' => $user->id]);
+        $resetCode = '11111';
         $resetData = AuthReset::create([
-            // * Оставил 11111 для удобства разработки, сделать 5 рандомных символов не трудно
-            'code' => '11111',
+            'code' => $resetCode,
             'user_id' => $user->id,
         ]);
+
+        // TODO QUEUE
+        Log::info('Sending password reset code', ['email' => $email]);
+        Mail::to($email)->send(new ResetPasswordCodeEmail($resetData));
 
         return ['reset_id' => $resetData->id];
     }

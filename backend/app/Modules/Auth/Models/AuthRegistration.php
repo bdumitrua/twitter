@@ -2,6 +2,7 @@
 
 namespace App\Modules\Auth\Models;
 
+use App\Prometheus\PrometheusService;
 use Illuminate\Database\Eloquent\Model;
 
 class AuthRegistration extends Model
