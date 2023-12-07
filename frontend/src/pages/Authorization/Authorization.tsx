@@ -3,7 +3,7 @@ import { loginAsync, setLoggedIn } from "@/redux/slices/auth.slice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { LoginPayload } from "@/types/redux/auth";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
@@ -16,13 +16,13 @@ const Authorization = () => {
 		handleSubmit,
 		trigger,
 		formState: { errors },
-	} = useForm();
+	} = useForm<LoginPayload>();
 	const navigate = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 	const loading = useSelector((state: RootState) => state.auth.loading);
 	const [generalError, setGeneralError] = useState<string | undefined>("");
 
-	const handleLogin = async (data: LoginPayload) => {
+	const handleLogin: SubmitHandler<LoginPayload> = async (data) => {
 		const response = await dispatch(
 			loginAsync({ email: data.email, password: data.password })
 		);
