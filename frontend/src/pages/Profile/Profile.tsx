@@ -1,4 +1,4 @@
-import React from "react";
+import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
 import styles from "../../assets/styles/pages/Profile/Profile.module.scss";
@@ -18,9 +18,9 @@ const tabs = [
 ];
 
 const Profile = () => {
-	const [activeTab, setActiveTab] = React.useState("tweets");
+	const [activeTab, setActiveTab] = useState("tweets");
 
-	const handleTabClick = (value) => {
+	const handleTabClick = (value: string) => {
 		setActiveTab(value);
 	};
 
