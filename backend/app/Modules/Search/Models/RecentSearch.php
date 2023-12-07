@@ -3,6 +3,7 @@
 namespace App\Modules\Search\Models;
 
 use App\Modules\User\Models\User;
+use App\Prometheus\PrometheusService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -17,5 +18,14 @@ class RecentSearch extends Model
     public function linked_user()
     {
         return $this->belongsTo(User::class, 'linked_user_id');
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('RecentSearch');
+        });
     }
 }

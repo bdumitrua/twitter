@@ -4,6 +4,7 @@ namespace App\Modules\User\Models;
 
 use App\Modules\Notification\Models\DeviceToken;
 use App\Modules\Notification\Models\Notification;
+use App\Prometheus\PrometheusService;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
