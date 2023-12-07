@@ -1,6 +1,5 @@
 services:
     nginx:
-        container_name: nginx
         build:
             context: ./nginx
             dockerfile: Dockerfile
@@ -18,12 +17,9 @@ services:
             - app
 
     backend:
-        container_name: backend
-
         build:
             context: ./backend
             dockerfile: Dockerfile
-
         environment:
             DB_HOST: mysql
             DB_DATABASE: twitter
@@ -33,23 +29,22 @@ services:
         ports:
             - 8000:8000
             - 1025:1025
-
         volumes:
             - ./backend:/app/backend
             - vendor:/app/backend/vendor
-
         depends_on:
             - mysql
             - redis
             - elasticsearch
             - kafka
             - kibana
+            - prometheus
+            - grafana
 
         networks:
             - app
 
     frontend:
-        container_name: frontend
         build:
             context: .
             dockerfile: frontend/Dockerfile
@@ -66,7 +61,6 @@ services:
             - app
 
     mysql:
-        container_name: mysql
         image: mysql
         environment:
             MYSQL_DATABASE: "twitter"
@@ -81,7 +75,6 @@ services:
             - app
 
     redis:
-        container_name: redis
         image: redis
         ports:
             - 6379:6379
@@ -89,7 +82,6 @@ services:
             - app
 
     kafka:
-        container_name: kafka
         image: wurstmeister/kafka
         ports:
             - "9092:9092"
@@ -103,8 +95,14 @@ services:
         depends_on:
             - zookeeper
 
+    zookeeper:
+        image: arm64v8/zookeeper
+        ports:
+            - "2181:2181"
+        networks:
+            - app
+
     elasticsearch:
-        container_name: elasticsearch
         image: elasticsearch:8.10.1
         volumes:
             - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
@@ -117,16 +115,7 @@ services:
         networks:
             - app
 
-    zookeeper:
-        container_name: zookeeper
-        image: arm64v8/zookeeper
-        ports:
-            - "2181:2181"
-        networks:
-            - app
-
     kibana:
-        container_name: kibana
         image: docker.elastic.co/kibana/kibana:8.10.1
         environment:
             - ELASTICSEARCH_URL=http://elasticsearch:9200
@@ -140,7 +129,6 @@ services:
             - elasticsearch
 
     prometheus:
-        container_name: prometheus
         image: prom/prometheus
         ports:
             - 9090:9090
@@ -150,7 +138,6 @@ services:
             - app
 
     grafana:
-        container_name: grafana
         image: grafana/grafana
         ports:
             - 3100:3000
@@ -158,6 +145,17 @@ services:
             - grafana_data:/var/lib/grafana
         environment:
             - GF_SECURITY_ADMIN_PASSWORD=admin
+        networks:
+            - app
+
+    redis_exporter:
+        image: oliver006/redis_exporter
+        environment:
+            REDIS_ADDR: redis:6379
+        ports:
+            - 9121:9121
+        depends_on:
+            - redis
         networks:
             - app
 

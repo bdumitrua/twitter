@@ -44,4 +44,13 @@ class UsersList extends Model
     {
         return $this->subscribers()->with('users_data');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('UsersList');
+        });
+    }
 }

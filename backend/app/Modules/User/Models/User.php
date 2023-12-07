@@ -142,4 +142,13 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->hasMany(Notification::class, 'user_id', 'id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('User');
+        });
+    }
 }

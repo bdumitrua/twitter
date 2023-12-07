@@ -30,6 +30,8 @@ class Notification extends Model
             if (empty($model->uuid)) {
                 $model->uuid = (string) Str::uuid();
             }
+
+            app(PrometheusService::class)->incrementEntityCreatedCount('Notification');
         });
     }
 

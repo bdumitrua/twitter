@@ -20,4 +20,13 @@ class TweetFavorite extends Model
     {
         return TweetFavoriteFactory::new();
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('TweetFavorite');
+        });
+    }
 }

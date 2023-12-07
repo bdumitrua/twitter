@@ -17,4 +17,13 @@ class AuthReset extends Model
     {
         return $this->hasOne(User::class, 'id', 'user_id');
     }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('AuthReset');
+        });
+    }
 }

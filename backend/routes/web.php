@@ -22,14 +22,10 @@ Route::get('/email', function () {
 });
 
 Route::get('/metrics', function () {
-    $registry = CollectorRegistry::getDefault();
-    $renderer = new RenderTextFormat();
-    $result = $renderer->render($registry->getMetricFamilySamples());
-
+    $result = app(PrometheusService::class)->getMetrics();
     return response($result)->header('Content-Type', RenderTextFormat::MIME_TYPE);
 });
 
-Route::get('/test-metric', function () {
-    $counter = CollectorRegistry::getDefault()->getOrRegisterCounter('twitter', 'test_metric_counter', 'Counter for test metric');
-    $counter->inc();
+Route::get('/metrics/wipe', function () {
+    app(PrometheusService::class)->clearMetrics();
 });
