@@ -1,15 +1,19 @@
 import axiosInstance from "@/utils/axios/instance";
 
 const RegisterService = {
-	registerStart: async (name, email, birth_date) => {
+	registerStart: async (
+		name: string,
+		email: string,
+		birth_date: string
+	): Promise<number> => {
 		const response = await axiosInstance.post("auth/start", {
 			name,
 			email,
 			birth_date,
 		});
-		return response.data.registration_id;
+		return response.data.registration_id; // предполагая, что сервер возвращает число
 	},
-	registerCode: async (code, registerId) => {
+	registerCode: async (code: string, registerId: number) => {
 		const response = await axiosInstance.post(
 			`auth/confirm/${registerId}`,
 			{
@@ -18,7 +22,7 @@ const RegisterService = {
 		);
 		return response.status;
 	},
-	register: async (password, registerId) => {
+	register: async (password: string, registerId: number) => {
 		const response = await axiosInstance.post(
 			`auth/register/${registerId}`,
 			{

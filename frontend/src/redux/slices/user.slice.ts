@@ -1,3 +1,4 @@
+import { UserState } from "@/types/redux/user";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import UserService from "../services/user.service";
 
@@ -7,9 +8,9 @@ export const getMeAsync = createAsyncThunk("user/me", async () => {
 	return user;
 });
 
-const initialState = {
+const initialState: UserState = {
 	user: null,
-	isSuccesfull: null,
+	isSuccessfull: null,
 	loading: false,
 	error: null,
 };
@@ -20,7 +21,7 @@ const userSlice = createSlice({
 	reducers: {
 		resetUser: (state) => {
 			state.user = null;
-			state.isSuccesfull = null;
+			state.isSuccessfull = null;
 			state.loading = false;
 			state.error = null;
 		},
@@ -38,7 +39,7 @@ const userSlice = createSlice({
 			})
 			.addCase(getMeAsync.rejected, (state, action) => {
 				state.loading = false;
-				state.error = action.error.message;
+				state.error = action.error.message || "Неизвестная ошибка";
 			});
 	},
 });

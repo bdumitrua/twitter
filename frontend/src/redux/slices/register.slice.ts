@@ -1,27 +1,33 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import {
+	RegisterCodePayload,
+	RegisterEndPayload,
+	RegisterStartPayload,
+	RegisterState,
+} from "@/types/redux/register";
+import { AnyAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { getLastEntry } from "../../utils/functions/getLastEntry";
 import RegisterService from "../services/register.service";
 
-export const startRegisterAsync = createAsyncThunk(
-	"register/start",
-	async ({ name, email, birth_date }) => {
-		try {
-			const registrationId = await RegisterService.registerStart(
-				name,
-				email,
-				birth_date
-			);
-			return registrationId;
-		} catch (error) {
-			console.error(error);
-			throw error;
-		}
+export const startRegisterAsync = createAsyncThunk<
+	number,
+	RegisterStartPayload
+>("register/start", async ({ name, email, birth_date }) => {
+	try {
+		const registrationId = await RegisterService.registerStart(
+			name,
+			email,
+			birth_date
+		);
+		return registrationId;
+	} catch (error) {
+		console.error(error);
+		throw error;
 	}
-);
+});
 
 export const codeRegisterAsync = createAsyncThunk(
 	"register/code",
-	async ({ code, registrationId }) => {
+	async ({ code, registrationId }: RegisterCodePayload): Promise<number> => {
 		try {
 			const status = await RegisterService.registerCode(
 				code,
@@ -37,7 +43,7 @@ export const codeRegisterAsync = createAsyncThunk(
 
 export const registerAsync = createAsyncThunk(
 	"register/signup",
-	async ({ password, registrationId }) => {
+	async ({ password, registrationId }: RegisterEndPayload) => {
 		try {
 			const status = await RegisterService.register(
 				password,
@@ -51,20 +57,18 @@ export const registerAsync = createAsyncThunk(
 	}
 );
 
-const initialState = {
+const initialState: RegisterState = {
 	registrationId: null,
-	isSuccesfullCode: null,
-	isSuccesfullRegistration: null,
 	loading: false,
 	error: null,
 };
 
-const handlePending = (state) => {
+const handlePending = (state: RegisterState) => {
 	state.loading = true;
 	state.error = null;
 };
 
-const handleRejected = (state, action) => {
+const handleRejected = (state: RegisterState, action: AnyAction) => {
 	state.loading = false;
 	if (action.error) {
 		state.error = {
@@ -89,18 +93,16 @@ const registerSlice = createSlice({
 			.addCase(startRegisterAsync.rejected, handleRejected)
 
 			.addCase(codeRegisterAsync.pending, handlePending)
-			.addCase(codeRegisterAsync.fulfilled, (state, action) => {
+			.addCase(codeRegisterAsync.fulfilled, (state) => {
 				state.loading = false;
 				state.error = null;
-				state.isSuccesfullCode = action.payload;
 			})
 			.addCase(codeRegisterAsync.rejected, handleRejected)
 
 			.addCase(registerAsync.pending, handlePending)
-			.addCase(registerAsync.fulfilled, (state, action) => {
+			.addCase(registerAsync.fulfilled, (state) => {
 				state.loading = false;
 				state.error = null;
-				state.isSuccesfullRegistration = action.payload;
 			})
 			.addCase(registerAsync.rejected, handleRejected);
 	},

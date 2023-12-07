@@ -1,4 +1,4 @@
-import { AuthState, LoginPayload } from "@/types/auth";
+import { AuthState, LoginPayload } from "@/types/redux/auth";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import { useDispatch } from "react-redux";

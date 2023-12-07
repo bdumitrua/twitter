@@ -1,17 +1,14 @@
+import { User } from "@/types/redux/user";
 import axiosInstance from "@/utils/axios/instance";
 
 const UserService = {
-	getMe: async () => {
+	getMe: async (): Promise<User> => {
 		try {
-			// Отправляем данные на сервер для проверки и получения токена.
-			const response = await axiosInstance.get("/user/");
-
-			// Возвращаем токен из функции
+			const response = await axiosInstance.get<User>("/user/");
 			console.log(response.data);
 			return response.data;
 		} catch (error) {
 			console.error("Ошибка", error);
-
 			throw error;
 		}
 	},
