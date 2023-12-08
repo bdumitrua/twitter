@@ -17,32 +17,69 @@ class TweetResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $notices = empty((array)$this->notices) ? [] : TweetNoticeResource::collection($this->notices);
         $author = new ShortUserResource($this->author);
-        $thread = empty((array)$this->thread) ? [] : new TweetResource($this->thread);
-        $replies = $this->whenLoaded('replies', function () {
-            return TweetResource::collection($this->replies);
-        });
+
+        $notices = !empty((array)$this->notices)
+            ? TweetNoticeResource::collection($this->notices)
+            : [];
+        $thread = !empty((array)$this->thread)
+            ? new TweetResource($this->thread)
+            : [];
+
         $linkedTweet = $this->whenLoaded('linkedTweet', function () {
             return new TweetResource($this->linkedTweet);
-        });
+        }, []);
+        $replies = $this->whenLoaded('replies', function () {
+            return TweetResource::collection($this->replies);
+        }, []);
+
+        $relatedData = $this->prepareRelatedData($linkedTweet, $thread);
+        $counters = $this->prepareCounters();
 
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
-            'text' => $this->text,
             'type' => $this->type,
-            'created_at' => $this->created_at,
-            'likes_count' => $this->likes_count,
-            'favorites_count' => $this->favorites_count,
-            'reposts_count' => $this->reposts_count,
-            'replies_count' => $this->replies_count,
-            'quotes_count' => $this->quotes_count,
-            'notices' => $notices,
             'author' => $author,
-            'linkedTweet' => $linkedTweet,
-            'thread' => $thread,
+            'content' => [
+                'text' => $this->text,
+                'notices' => $notices,
+                'created_at' => $this->created_at,
+            ],
+            'counters' => $counters,
+            'related' => $relatedData,
             'replies' => $replies
+        ];
+    }
+
+    private function prepareRelatedData($linkedTweet, $thread): array
+    {
+        if (!empty($linkedTweet) || !empty($thread)) {
+            $relatedType = empty($linkedTweet) ? 'thread' : 'tweet';
+            return [
+                $relatedType => empty($linkedTweet) ? $thread : $linkedTweet
+            ];
+        }
+        return [];
+    }
+
+    private function prepareCounters(): array
+    {
+        return [
+            'likes' => [
+                'count' => $this->likes_count
+            ],
+            'replies' => [
+                'count' => $this->replies_count
+            ],
+            'reposts' => [
+                'count' => $this->reposts_count
+            ],
+            'quotes' => [
+                'count' => $this->quotes_count
+            ],
+            'favorites' => [
+                'count' => $this->favorites_count
+            ],
         ];
     }
 }
