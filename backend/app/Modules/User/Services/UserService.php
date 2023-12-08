@@ -26,6 +26,7 @@ class UserService
 
     protected UserRepository $userRepository;
     protected LogManager $logger;
+    protected ?int $authorizedUserId;
 
     public function __construct(
         UserRepository $userRepository,
@@ -33,11 +34,12 @@ class UserService
     ) {
         $this->userRepository = $userRepository;
         $this->logger = $logger;
+        $this->authorizedUserId = Auth::id();
     }
 
     public function index(): JsonResource
     {
-        return new UserResource($this->userRepository->getAuthUser(Auth::id()));
+        return new UserResource($this->userRepository->getAuthorizedUser($this->authorizedUserId));
     }
 
     public function show(User $user): JsonResource
@@ -50,7 +52,7 @@ class UserService
         $this->logger->info('Creating UserDTO from update request', $userUpdateRequest->toArray());
         $userDTO = $this->createDTO($userUpdateRequest, UserDTO::class);
 
-        $authorizedUser = User::find(Auth::id());
+        $authorizedUser = $this->userRepository->getById($this->authorizedUserId);
         $this->logger->info(
             'Updating User using UserDTO',
             [
