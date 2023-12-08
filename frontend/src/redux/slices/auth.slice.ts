@@ -1,11 +1,8 @@
 import { AuthState, LoginPayload } from "@/types/redux/auth";
 import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
-import { useDispatch } from "react-redux";
 import AuthService from "../services/auth.service";
-import { resetUser } from "./user.slice";
 
-const dispatch = useDispatch();
 // Создаем асинхронный Thunk для выполнения запроса на авторизацию
 export const loginAsync = createAsyncThunk<string, LoginPayload>(
 	"auth/login",
@@ -40,8 +37,6 @@ const authSlice = createSlice({
 			state.loading = false;
 			state.error = null;
 			state.loggedIn = false;
-			Cookies.remove("access_token");
-			dispatch(resetUser());
 		},
 		setLoggedIn: (state: AuthState, action: PayloadAction<boolean>) => {
 			state.loggedIn = action.payload;

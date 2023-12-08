@@ -1,5 +1,5 @@
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
-import { ErrorMessage } from "@/components/ErrorMessage/ErrorMessage.jsx";
+import { ErrorMessage } from "@/components/ErrorMessage/ErrorMessage";
 import { registerAsync } from "@/redux/slices/register.slice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { RegisterEndPayload } from "@/types/redux/register";
@@ -55,7 +55,7 @@ const RegistrationEnd = () => {
 				label="Пароль"
 				type="password"
 				name="password"
-				error={errors.password}
+				error={errors?.password?.message?.toString()}
 				placeholder="Пароль"
 				rules={passwordRules}
 				trigger={trigger}
@@ -66,7 +66,7 @@ const RegistrationEnd = () => {
 				label="Повторите пароль"
 				type="password"
 				name="repeatPassword"
-				error={errors.repeatPassword}
+				error={errors?.repeatPassword?.message?.toString()}
 				placeholder="Повторите пароль"
 				rules={{
 					required: "Повторите пароль",

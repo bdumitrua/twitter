@@ -60,7 +60,7 @@ const RegistrationStart: React.FC = () => {
 				label="Имя"
 				type="text"
 				name="name"
-				error={errors.name}
+				error={errors?.name?.message?.toString()}
 				placeholder="Имя"
 				rules={nameRules}
 				trigger={trigger}
@@ -71,7 +71,7 @@ const RegistrationStart: React.FC = () => {
 				label="Почта"
 				type="email"
 				name="email"
-				error={errors.email}
+				error={errors?.email?.message?.toString()}
 				placeholder="Почта"
 				rules={emailRules}
 				trigger={trigger}
@@ -82,7 +82,7 @@ const RegistrationStart: React.FC = () => {
 				label="Дата рождения"
 				type="date"
 				name="birth_date"
-				error={errors.birth_date}
+				error={errors?.birth_date?.message?.toString()}
 				rules={{
 					required: "Дата обязательна к заполнению.",
 				}}

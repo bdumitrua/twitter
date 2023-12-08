@@ -5,21 +5,26 @@ import React from "react";
 import {
 	Control,
 	Controller,
-	FieldError,
-	FieldErrorsImpl,
-	Merge,
+	FieldPath,
+	FieldValues,
+	RegisterOptions,
 } from "react-hook-form";
 import { ErrorMessage } from "../ErrorMessage/ErrorMessage";
 
-interface InputFieldProps {
+interface InputFieldProps<
+	TFieldValues extends FieldValues = FieldValues,
+	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
+> {
 	label: string;
 	type: string;
 	name?: string;
 	id?: string;
 	placeholder?: string;
 	defaultValue?: string | null;
-	rules?: InputRules;
-	error?: FieldError | string | Merge<FieldError, FieldErrorsImpl<any>>;
+	rules?:
+		| InputRules
+		| Omit<RegisterOptions<TFieldValues, TName>, string | "disabled">;
+	error?: string;
 	control: Control<any>;
 	trigger: () => void;
 	maxLength?: number;
@@ -64,9 +69,9 @@ const InputField: React.FC<InputFieldProps> = ({
 							error ? styles["input__error"] : ""
 						}`}
 						{...field}
-						onBlur={(e) => {
-							field.onBlur(e);
-							trigger(name);
+						onBlur={() => {
+							field.onBlur();
+							trigger();
 						}}
 						required={required}
 						disabled={disabled}

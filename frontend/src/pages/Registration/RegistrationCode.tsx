@@ -68,7 +68,7 @@ const RegistrationCode = () => {
 				label="Код подтверждения"
 				type="text"
 				name="code"
-				error={errors.code}
+				error={errors?.code?.message?.toString()}
 				placeholder="Код подтверждения"
 				rules={codeRules}
 				maxLength={5}
