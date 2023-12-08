@@ -6,7 +6,7 @@ const RegisterService = {
 		email: string,
 		birth_date: string
 	): Promise<number> => {
-		const response = await axiosInstance.post("auth/start", {
+		const response = await axiosInstance.post("auth/registration/start", {
 			name,
 			email,
 			birth_date,
@@ -15,7 +15,7 @@ const RegisterService = {
 	},
 	registerCode: async (code: string, registerId: number) => {
 		const response = await axiosInstance.post(
-			`auth/confirm/${registerId}`,
+			`auth/registration/confirm/${registerId}`,
 			{
 				code,
 			}
@@ -24,7 +24,7 @@ const RegisterService = {
 	},
 	register: async (password: string, registerId: number) => {
 		const response = await axiosInstance.post(
-			`auth/register/${registerId}`,
+			`auth/registration/end/${registerId}`,
 			{
 				password,
 			}

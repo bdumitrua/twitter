@@ -22,6 +22,10 @@ export const passwordRules: InputRules = {
 
 export const nameRules: InputRules = {
 	required: "Имя является обязательным полем.",
+	minLength: {
+		value: 2,
+		message: "Имя не может быть короче 2 символов.",
+	},
 	maxLength: {
 		value: 255,
 		message: "Имя может быть не длиннее 255 символов.",

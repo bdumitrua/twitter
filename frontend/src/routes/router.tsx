@@ -23,9 +23,9 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-	const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
+	const user = useSelector((state: RootState) => state.user.user);
 
-	if (!loggedIn) {
+	if (!user) {
 		// Перенаправление на страницу авторизации
 		return <Navigate to="/welcome" />;
 	}

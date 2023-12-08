@@ -1,5 +1,6 @@
 import styles from "@/assets/styles/pages/Auth/Authorization.scss";
 import { loginAsync, setLoggedIn } from "@/redux/slices/auth.slice";
+import { getMeAsync } from "@/redux/slices/user.slice";
 import { AppDispatch, RootState } from "@/redux/store";
 import { LoginPayload } from "@/types/redux/auth";
 import { useState } from "react";
@@ -29,6 +30,7 @@ const Authorization = () => {
 		if (response.meta.requestStatus === "rejected") {
 			setGeneralError("Неверная почта или пароль!");
 		} else {
+			dispatch(getMeAsync());
 			dispatch(setLoggedIn(true));
 			navigate("/feed");
 		}

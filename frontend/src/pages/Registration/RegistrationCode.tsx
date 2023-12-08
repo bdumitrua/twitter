@@ -33,16 +33,10 @@ const RegistrationCode = () => {
 				message: "Вам следует пройти первый шаг регистрации!",
 			});
 		}
-		if (error && error.status === 403) {
+		if (error && error.status === 400) {
 			setError("code", {
 				type: "manual",
 				message: "Вы ввели некорректный код подтверждения!",
-			});
-		}
-		if (error && error.status === 422) {
-			setError("code", {
-				type: "manual",
-				message: "Код подтверждения должен состоять из 5 символов!",
 			});
 		}
 	}, [error]);
