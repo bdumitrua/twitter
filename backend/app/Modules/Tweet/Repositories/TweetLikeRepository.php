@@ -37,21 +37,16 @@ class TweetLikeRepository
     public function add(int $tweetId, int $userId): void
     {
         if (empty($this->queryByBothIds($tweetId, $userId)->first())) {
-            $tweetLike = $this->tweetLike->create([
+            $this->tweetLike->create([
                 'tweet_id' => $tweetId,
                 'user_id' => $userId,
             ]);
-
-            event(new TweetLikeEvent($tweetLike, true));
         }
     }
 
     public function remove(int $tweetId, int $userId): void
     {
-        $tweetLike = $this->tweetLike->where([
-            'tweet_id' => $tweetId,
-            'user_id' => $userId,
-        ])->first();
+        $tweetLike = $this->queryByBothIds($tweetId, $userId)->first();
 
         if (!empty($tweetLike)) {
             $tweetLike->delete();

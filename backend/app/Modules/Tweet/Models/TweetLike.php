@@ -2,6 +2,7 @@
 
 namespace App\Modules\Tweet\Models;
 
+use App\Modules\User\Events\TweetLikeEvent;
 use App\Modules\User\Models\User;
 use App\Prometheus\PrometheusService;
 use Database\Factories\TweetFactory;
@@ -27,8 +28,10 @@ class TweetLike extends Model
     {
         parent::boot();
 
-        static::created(function ($model) {
+        static::created(function ($tweetLike) {
             app(PrometheusService::class)->incrementEntityCreatedCount('TweetLike');
+
+            event(new TweetLikeEvent($tweetLike));
         });
     }
 }

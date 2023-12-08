@@ -2,6 +2,7 @@
 
 namespace App\Modules\Tweet\Models;
 
+use App\Modules\User\Events\TweetNoticeEvent;
 use App\Modules\User\Models\User;
 use App\Prometheus\PrometheusService;
 use Database\Factories\TweetFavoriteFactory;
@@ -26,8 +27,10 @@ class TweetNotice extends Model
     {
         parent::boot();
 
-        static::created(function ($model) {
+        static::created(function ($tweetNotice) {
             app(PrometheusService::class)->incrementEntityCreatedCount('TweetNotice');
+
+            event(new TweetNoticeEvent($tweetNotice));
         });
     }
 }

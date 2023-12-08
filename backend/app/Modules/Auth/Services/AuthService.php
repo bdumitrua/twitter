@@ -42,7 +42,6 @@ class AuthService
             'email' => $userEmail,
             'birth_date' => $request->birth_date,
         ]);
-        event(new RegistrationStartedEvent($registrationData));
 
         return ['registration_id' => $registrationData->id];
     }
@@ -68,16 +67,20 @@ class AuthService
         $userEmail = $authRegistration->email;
         $link = StringHelper::createUserLink($userEmail);
 
-        Log::info('Creating user at last registration step', ['authRegistration' => $authRegistration->toArray(), 'request' => $request->toArray()]);
-        $user = User::create([
+        Log::info(
+            'Creating user at last registration step',
+            [
+                'authRegistration' => $authRegistration->toArray(),
+                'request' => $request->toArray()
+            ]
+        );
+        User::create([
             'link' => $link,
             'email' => $userEmail,
             'name' => $authRegistration->name,
             'password' => Hash::make($request->password),
             'birth_date' => $authRegistration->birth_date,
         ]);
-
-        event(new UserCreatedEvent($user));
 
         Log::info('Deleting all registration datxa after registration', ['email' => $userEmail]);
         AuthRegistration::where('email', $userEmail)->delete();
