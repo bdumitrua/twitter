@@ -17,15 +17,18 @@ class TweetResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // Подгружаем
         $author = new ShortUserResource($this->author);
-
         $notices = !empty((array)$this->notices)
             ? TweetNoticeResource::collection($this->notices)
             : [];
+
+        // Может добавиться на этапе сборки
         $thread = !empty((array)$this->thread)
             ? new TweetResource($this->thread)
             : [];
 
+        // Только если подгружено ранее (в репозитории)
         $linkedTweet = $this->whenLoaded('linkedTweet', function () {
             return new TweetResource($this->linkedTweet);
         }, []);
