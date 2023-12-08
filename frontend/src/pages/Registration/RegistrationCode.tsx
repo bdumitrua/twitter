@@ -54,7 +54,7 @@ const RegistrationCode = () => {
 				registrationId: registrationId,
 			})
 		);
-		if (response.meta.requestStatus === "rejected") {
+		if (response.meta.requestStatus === "fulfilled") {
 			navigate(`/registration/end/${registrationId}`);
 		}
 	};

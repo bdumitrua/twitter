@@ -44,7 +44,7 @@ const RegistrationEnd = () => {
 				registrationId: registrationId,
 			})
 		);
-		if (response.meta.requestStatus === "rejected") {
+		if (response.meta.requestStatus === "fulfilled") {
 			navigate("/auth");
 		}
 	};

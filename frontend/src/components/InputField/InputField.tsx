@@ -26,7 +26,7 @@ interface InputFieldProps<
 		| Omit<RegisterOptions<TFieldValues, TName>, string | "disabled">;
 	error?: string;
 	control: Control<any>;
-	trigger: () => void;
+	trigger: (name: any) => void;
 	maxLength?: number;
 	required?: boolean;
 	disabled?: boolean;
@@ -71,7 +71,7 @@ const InputField: React.FC<InputFieldProps> = ({
 						{...field}
 						onBlur={() => {
 							field.onBlur();
-							trigger();
+							trigger(name);
 						}}
 						required={required}
 						disabled={disabled}

@@ -2,7 +2,7 @@ import { ApiError } from "@/types/api";
 import axios, { AxiosError } from "axios";
 import Cookies from "js-cookie";
 
-const ApiUrl: string = "/api";
+const ApiUrl: string = process.env.APP_URL + "/api";
 
 const axiosInstance = axios.create({
 	baseURL: ApiUrl,

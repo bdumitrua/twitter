@@ -29,7 +29,7 @@ const RegistrationStart: React.FC = () => {
 				birth_date: data.birth_date,
 			})
 		);
-		if (response.meta.requestStatus === "rejected") {
+		if (response.meta.requestStatus === "fulfilled") {
 			const queryParams = new URLSearchParams({
 				name: data.name,
 				email: data.email,
