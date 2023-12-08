@@ -1,4 +1,3 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 import createTweetButtonSVG from "../../assets/images/Footer/createTweetButton.svg";

@@ -1,4 +1,3 @@
-import React from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import accountImage from "../../assets/images/Header/accountImage.svg";
@@ -7,7 +6,11 @@ import somthingIcon from "../../assets/images/Header/somethingIcon.svg";
 import twitterLogo from "../../assets/images/Header/twitterLogo.svg";
 import styles from "../../assets/styles/components/Header.module.scss";
 
-const Header = (props) => {
+interface HeaderProps {
+	haveUnwatched: boolean;
+}
+
+const Header = (props: HeaderProps) => {
 	const location = useLocation();
 
 	const entities = ["tweet", "profile"];
