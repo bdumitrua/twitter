@@ -9,10 +9,14 @@ import UserAvatar from "../UserAvatar/UserAvatar";
 import TweetAdditional from "./TweetAdditional";
 import TweetThread from "./TweetThread";
 
-let tweetText =
+const tweetText =
 	"UXR/UX: You can only bring one item to a remote island to assist your research of native use of tools and usability. What do you bring? #TellMeAboutYou";
 
-const Tweet = (props) => {
+interface TweetProps {
+	haveThread: boolean;
+}
+
+const Tweet = (props: TweetProps) => {
 	return (
 		<div className={styles["wrapper"]}>
 			<div className={styles["tweet"]}>

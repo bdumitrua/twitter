@@ -1,9 +1,13 @@
-import React from "react";
 import { Link } from "react-router-dom";
 
 import styles from "../../assets/styles/components/UserAvatar/UserAvatar.module.scss";
 
-const UserAvatar = ({ userPhoto, link }) => {
+interface UserAvatarProps {
+	userPhoto: string;
+	link: string;
+}
+
+const UserAvatar = ({ userPhoto, link }: UserAvatarProps) => {
 	return (
 		<Link to={link} className={styles["user-avatar__link"]}>
 			<img className={styles["user-avatar"]} src={userPhoto} alt="" />
