@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Models;
 
+use App\Modules\User\Events\UserSubscribtionEvent;
 use App\Prometheus\PrometheusService;
 use Database\Factories\UserSubscribtionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -36,8 +37,10 @@ class UserSubscribtion extends Model
     {
         parent::boot();
 
-        static::created(function ($model) {
+        static::created(function ($userSubscribtion) {
             app(PrometheusService::class)->incrementEntityCreatedCount('UserSubscribtion');
+
+            event(new UserSubscribtionEvent($userSubscribtion));
         });
     }
 }

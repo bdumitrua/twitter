@@ -41,12 +41,10 @@ class UserSubscribtionRepository
     public function create(int $userId, int $subscriberId): void
     {
         if (empty($this->queryByBothIds($userId, $subscriberId)->exists())) {
-            $userSubscribtion = $this->userSubscribtion->create([
+            $this->userSubscribtion->create([
                 'subscriber_id' => $subscriberId,
                 'user_id' => $userId
             ]);
-
-            event(new UserSubscribtionEvent($userSubscribtion));
         }
     }
 

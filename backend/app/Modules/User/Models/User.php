@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Models;
 
+use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Notification\Models\DeviceToken;
 use App\Modules\Notification\Models\Notification;
 use App\Prometheus\PrometheusService;
@@ -148,8 +149,10 @@ class User extends Authenticatable implements JWTSubject
     {
         parent::boot();
 
-        static::created(function ($model) {
+        static::created(function ($user) {
             app(PrometheusService::class)->incrementEntityCreatedCount('User');
+
+            event(new UserCreatedEvent($user));
         });
     }
 }

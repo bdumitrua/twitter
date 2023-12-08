@@ -156,7 +156,6 @@ class TweetRepository
         $data = array_filter($data, fn ($value) => !is_null($value));
 
         $tweet = $this->tweet->create($data);
-        event(new NewTweetEvent($tweet));
 
         // TODO QUEUE
         $this->checkForNotices($tweet);
@@ -176,7 +175,6 @@ class TweetRepository
             $tweet = $this->tweet->create($data);
             // TODO QUEUE
             $this->checkForNotices($tweet);
-            event(new NewTweetEvent($tweet));
 
             $previousTweetId = $tweet->id;
         }
@@ -402,9 +400,5 @@ class TweetRepository
         }, $noticedUsers);
 
         TweetNotice::insert($noticesData);
-        $newTweetNotices = TweetNotice::where('tweet_id', $tweetId)->get();
-        foreach ($newTweetNotices as $tweetNotice) {
-            event(new TweetNoticeEvent($tweetNotice));
-        }
     }
 }
