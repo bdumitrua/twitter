@@ -19,16 +19,21 @@ import imageIcon from "../../assets/images/Pages/CreateTweet/imageIcon.svg";
 import locationIcon from "../../assets/images/Pages/CreateTweet/locationIcon.svg";
 import statsIcon from "../../assets/images/Pages/CreateTweet/statsIcon.svg";
 
+interface FirstCreateProps {
+	placeholder: string;
+	showCloseButton: boolean;
+}
+
 const CreateTweet = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const [addButtonActive, setAddButtonActive] = useState<boolean>(false);
-	const maxCharCount = 255;
+	const maxCharCount: number = 255;
 	const tweetBodies = useSelector(selectTweetBodies);
-	const currentId = useSelector(
+	const currentId: number = useSelector(
 		(state: RootState) => state.createTweet.currentId
 	);
 
-	const charCount = useSelector((state: RootState) => {
+	const charCount: number = useSelector((state: RootState) => {
 		const tweetBody = state.createTweet.tweetBodies.find(
 			(body) => body.id === currentId
 		);
@@ -36,7 +41,9 @@ const CreateTweet = () => {
 	});
 
 	const [showModal, setShowModal] = useState<boolean>(false);
-	const group = useSelector((state: RootState) => state.createTweet.group);
+	const group: string | null = useSelector(
+		(state: RootState) => state.createTweet.group
+	);
 
 	useEffect(() => {
 		setAddButtonActive(
@@ -46,12 +53,12 @@ const CreateTweet = () => {
 		);
 	}, [tweetBodies]);
 
-	const firstCreateProps = {
+	const firstCreateProps: FirstCreateProps = {
 		placeholder: "What's happening?",
 		showCloseButton: false,
 	};
 
-	const additionalCreateProps = {
+	const additionalCreateProps: FirstCreateProps = {
 		placeholder: "Add another post",
 		showCloseButton: true,
 	};
@@ -60,7 +67,7 @@ const CreateTweet = () => {
 		dispatch(addTweetBody({ ...firstCreateProps }));
 	}, []);
 
-	const addBody = () => {
+	const addBody: () => void = () => {
 		if (addButtonActive) {
 			dispatch(addTweetBody({ ...additionalCreateProps }));
 		}

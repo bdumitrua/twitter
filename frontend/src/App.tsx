@@ -1,6 +1,6 @@
 import DefaultLayout from "./pages/DefaultLayout";
 
-const App = () => {
+const App: React.FC = () => {
 	return (
 		<div>
 			<DefaultLayout />

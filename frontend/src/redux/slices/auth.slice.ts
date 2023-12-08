@@ -3,12 +3,11 @@ import { PayloadAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 import AuthService from "../services/auth.service";
 
-// Создаем асинхронный Thunk для выполнения запроса на авторизацию
 export const loginAsync = createAsyncThunk<string, LoginPayload>(
 	"auth/login",
 	async ({ email, password }) => {
 		const access_token = await AuthService.login(email, password);
-		console.log(access_token);
+
 		saveToken(access_token);
 		return access_token;
 	}

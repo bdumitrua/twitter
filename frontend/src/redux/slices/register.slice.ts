@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
 	RegisterCodePayload,
 	RegisterEndPayload,
@@ -19,8 +20,14 @@ export const startRegisterAsync = createAsyncThunk<
 			birth_date
 		);
 		return registrationId;
-	} catch (error) {
-		console.error(error);
+	} catch (error: any) {
+		if (error.response) {
+			console.error(error.response.status, error.response.data);
+		} else if (error.request) {
+			console.error(error.request);
+		} else {
+			console.error(error.message);
+		}
 		throw error;
 	}
 });
@@ -34,8 +41,14 @@ export const codeRegisterAsync = createAsyncThunk(
 				registrationId
 			);
 			return status;
-		} catch (error) {
-			console.error(error);
+		} catch (error: any) {
+			if (error.response) {
+				console.error(error.response.status, error.response.data);
+			} else if (error.request) {
+				console.error(error.request);
+			} else {
+				console.error(error.message);
+			}
 			throw error;
 		}
 	}
@@ -50,8 +63,14 @@ export const registerAsync = createAsyncThunk(
 				registrationId
 			);
 			return status;
-		} catch (error) {
-			console.error(error);
+		} catch (error: any) {
+			if (error.response) {
+				console.error(error.response.status, error.response.data);
+			} else if (error.request) {
+				console.error(error.request);
+			} else {
+				console.error(error.message);
+			}
 			throw error;
 		}
 	}

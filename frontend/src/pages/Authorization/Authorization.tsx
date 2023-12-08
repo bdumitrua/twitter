@@ -6,7 +6,7 @@ import { LoginPayload } from "@/types/redux/auth";
 import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 import InputField from "../../components/InputField/InputField";
 import { emailRules, passwordRules } from "../../utils/inputRules";
@@ -18,9 +18,11 @@ const Authorization = () => {
 		trigger,
 		formState: { errors },
 	} = useForm<LoginPayload>();
-	const navigate = useNavigate();
+	const navigate: NavigateFunction = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
-	const loading = useSelector((state: RootState) => state.auth.loading);
+	const loading: boolean = useSelector(
+		(state: RootState) => state.auth.loading
+	);
 	const [generalError, setGeneralError] = useState<string | undefined>("");
 
 	const handleLogin: SubmitHandler<LoginPayload> = async (data) => {

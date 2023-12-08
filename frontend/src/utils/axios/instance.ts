@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
 		if (error.config && error.response && error.response.status === 401) {
 			// Сохраняем оригинальный запрос
 			const originalRequest = error.config;
-			const token = Cookies.get("access_token");
+			const token: string | undefined = Cookies.get("access_token");
 
 			if (token) {
 				try {

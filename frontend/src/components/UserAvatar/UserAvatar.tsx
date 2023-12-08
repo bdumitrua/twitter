@@ -7,7 +7,7 @@ interface UserAvatarProps {
 	link: string;
 }
 
-const UserAvatar = ({ userPhoto, link }: UserAvatarProps) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({ userPhoto, link }) => {
 	return (
 		<Link to={link} className={styles["user-avatar__link"]}>
 			<img className={styles["user-avatar"]} src={userPhoto} alt="" />

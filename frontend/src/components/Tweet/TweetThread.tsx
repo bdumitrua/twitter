@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 import styles from "../../assets/styles/components/Tweet/TweetThread.module.scss";
 
-const TweetThread = () => {
+const TweetThread: React.FC = () => {
 	return (
 		<div className={styles["tweet__thread"]}>
 			<img

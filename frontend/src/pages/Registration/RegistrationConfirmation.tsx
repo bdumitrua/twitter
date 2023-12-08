@@ -1,23 +1,33 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { formatDate } from "@/utils/functions/formatDate.js";
-import { useForm } from "react-hook-form";
-import { useLocation, useNavigate } from "react-router-dom";
+import { getLastEntry } from "@/utils/functions/getLastEntry";
+import { FieldValues, useForm } from "react-hook-form";
+import {
+	Location,
+	NavigateFunction,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
-import { getLastEntry } from "../../utils/functions/getLastEntry";
 
 const RegistrationConfirmation = () => {
-	const { control, handleSubmit, trigger } = useForm();
+	const { control, handleSubmit, trigger } = useForm<
+		FieldValues,
+		any,
+		undefined
+	>();
 
-	const location = useLocation();
-	const navigate = useNavigate();
-	const registrationId = getLastEntry(location.pathname, "/");
+	const location: Location<any> = useLocation();
+	const navigate: NavigateFunction = useNavigate();
+	const registrationId: number = getLastEntry(location.pathname, "/");
 
-	const queryParams = new URLSearchParams(location.search);
-	const name = queryParams.get("name");
-	const email = queryParams.get("email");
-	const birthDate = queryParams.get("birth_date");
+	const queryParams: URLSearchParams = new URLSearchParams(location.search);
+	const name: string | null = queryParams.get("name");
+	const email: string | null = queryParams.get("email");
+	const birthDate: string | null = queryParams.get("birth_date");
 
-	const handleConfirmRegistration = () => {
+	const handleConfirmRegistration: () => void = () => {
 		navigate(`/registration/code/${registrationId}`);
 	};
 

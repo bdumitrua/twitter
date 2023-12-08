@@ -6,7 +6,7 @@ import notificationsIcon from "../../assets/images/Footer/notificationsIcon.svg"
 import searchIcon from "../../assets/images/Footer/searchIcon.svg";
 import styles from "../../assets/styles/components/Footer/Footer.module.scss";
 
-const Footer = () => {
+const Footer: React.FC = () => {
 	return (
 		<>
 			<div className={styles["footer"]}>

@@ -1,7 +1,7 @@
 import shadedLike from "../../assets/images/Tweet/shadedLike.svg";
 import styles from "../../assets/styles/components/Tweet/TweetAdditional.module.scss";
 
-const TweetAdditional = () => {
+const TweetAdditional: React.FC = () => {
 	return (
 		<div className={styles["tweet__additional"]}>
 			<div className={styles["tweet__type"]}>

@@ -1,19 +1,26 @@
 import { AppDispatch, RootState } from "@/redux/store";
+import { User } from "@/types/redux/user";
 import Cookies from "js-cookie";
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import { getMeAsync } from "../../redux/slices/user.slice";
 
-const Welcome = () => {
+const Welcome: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
-	const navigate = useNavigate();
-	const loggedIn = useSelector((state: RootState) => state.auth.loggedIn);
-	const error = useSelector((state: RootState) => state.user.error);
-	const user = useSelector((state: RootState) => state.user.user);
+	const navigate: NavigateFunction = useNavigate();
+	// const loggedIn: boolean = useSelector(
+	// 	(state: RootState) => state.auth.loggedIn
+	// );
+	const error: string | null = useSelector(
+		(state: RootState) => state.user.error
+	);
+	const user: User | null = useSelector(
+		(state: RootState) => state.user.user
+	);
 
 	useEffect(() => {
-		if (!error && !user && !loggedIn && Cookies.get("access_token")) {
+		if (!user && Cookies.get("access_token")) {
 			dispatch(getMeAsync());
 		}
 		if (user) {

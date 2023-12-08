@@ -1,9 +1,5 @@
-import React from 'react'
+const MediaTab: React.FC = () => {
+	return <div>MediaTab</div>;
+};
 
-const MediaTab = () => {
-  return (
-    <div>MediaTab</div>
-  )
-}
-
-export default MediaTab
+export default MediaTab;

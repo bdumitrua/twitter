@@ -1,14 +1,24 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { AppDispatch, RootState } from "@/redux/store";
-import { RegisterCodePayload } from "@/types/redux/register";
+import { RegisterCodePayload, RegisterError } from "@/types/redux/register";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useNavigate } from "react-router-dom";
+import {
+	Location,
+	NavigateFunction,
+	useLocation,
+	useNavigate,
+} from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
 import { codeRegisterAsync } from "../../redux/slices/register.slice";
 import { getLastEntry } from "../../utils/functions/getLastEntry";
 import { codeRules } from "../../utils/inputRules";
+
+interface ErrorMessages {
+	[key: number]: string;
+}
 
 const RegistrationCode = () => {
 	const {
@@ -19,29 +29,31 @@ const RegistrationCode = () => {
 		formState: { errors },
 	} = useForm<RegisterCodePayload>();
 
-	const navigate = useNavigate();
-	const location = useLocation();
+	const navigate: NavigateFunction = useNavigate();
+	const location: Location<any> = useLocation();
 	const dispatch = useDispatch<AppDispatch>();
 
-	const registrationId = getLastEntry(location.pathname, "/");
-	const error = useSelector((state: RootState) => state.register.error);
+	const registrationId: number = getLastEntry(location.pathname, "/");
+	const error: RegisterError | null = useSelector(
+		(state: RootState) => state.register.error
+	);
 
+	const errorMessages: ErrorMessages = {
+		400: "Вы ввели некорректный код подтверждения!",
+		404: "Вам следует пройти первый шаг регистрации!",
+	};
 	useEffect(() => {
-		if (error && error.status === 404) {
+		if (error && errorMessages[error.status]) {
 			setError("code", {
 				type: "manual",
-				message: "Вам следует пройти первый шаг регистрации!",
-			});
-		}
-		if (error && error.status === 400) {
-			setError("code", {
-				type: "manual",
-				message: "Вы ввели некорректный код подтверждения!",
+				message: errorMessages[error.status],
 			});
 		}
 	}, [error]);
 
-	const handleRegistration = async (data: RegisterCodePayload) => {
+	const handleRegistration: (
+		data: RegisterCodePayload
+	) => Promise<void> = async (data) => {
 		const response = await dispatch(
 			codeRegisterAsync({
 				code: data.code,

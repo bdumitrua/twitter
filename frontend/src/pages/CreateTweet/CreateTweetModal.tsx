@@ -16,7 +16,7 @@ interface CreateModalProps {
 
 const CreateModal: React.FC<CreateModalProps> = ({ onClose, showModal }) => {
 	const dispatch = useDispatch<AppDispatch>();
-	const groupsList = useSelector(
+	const groupsList: string[] = useSelector(
 		(state: RootState) => state.createTweet.groupsList
 	);
 

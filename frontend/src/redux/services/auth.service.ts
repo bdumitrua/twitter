@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axiosInstance from "@/utils/axios/instance";
 
 const AuthService = {
@@ -13,8 +14,14 @@ const AuthService = {
 				"Bearer " + response.data.access_token;
 
 			return response.data.access_token;
-		} catch (error) {
-			console.log(error);
+		} catch (error: any) {
+			if (error.response) {
+				console.error(error.response.status, error.response.data);
+			} else if (error.request) {
+				console.error(error.request);
+			} else {
+				console.error(error.message);
+			}
 			throw error;
 		}
 	},

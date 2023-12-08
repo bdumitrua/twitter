@@ -1,4 +1,4 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, Location, useLocation } from "react-router-dom";
 
 import accountImage from "../../assets/images/Header/accountImage.svg";
 import leftArrowIcon from "../../assets/images/Header/leftArrowIcon.svg";
@@ -10,11 +10,11 @@ interface HeaderProps {
 	haveUnwatched: boolean;
 }
 
-const Header = (props: HeaderProps) => {
-	const location = useLocation();
+const Header: React.FC<HeaderProps> = (props) => {
+	const location: Location<any> = useLocation();
 
-	const entities = ["tweet", "profile"];
-	const isEntity = entities.some(
+	const entities: string[] = ["tweet", "profile"];
+	const isEntity: boolean = entities.some(
 		(entity) => entity === location.pathname.split("/")[1]
 	);
 

@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { InputRules } from "@/types/inputRules";
-import React from "react";
+
 import {
 	Control,
 	Controller,

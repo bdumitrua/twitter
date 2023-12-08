@@ -10,7 +10,12 @@ import calendarIcon from "../../assets/images/Pages/Profile/calendarIcon.svg";
 import linkIcon from "../../assets/images/Pages/Profile/linkIcon.svg";
 import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
 
-const tabs = [
+interface Tabs {
+	name: string;
+	value: string;
+}
+
+const tabs: Tabs[] = [
 	{ name: "Tweets", value: "tweets" },
 	{ name: "Tweets & replies", value: "tweets-with-replies" },
 	{ name: "Media", value: "media" },
@@ -18,7 +23,7 @@ const tabs = [
 ];
 
 const Profile = () => {
-	const [activeTab, setActiveTab] = useState("tweets");
+	const [activeTab, setActiveTab] = useState<string>("tweets");
 
 	const handleTabClick = (value: string) => {
 		setActiveTab(value);

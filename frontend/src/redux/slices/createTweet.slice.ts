@@ -9,14 +9,16 @@ import { RootState } from "../store";
 
 const groupsList = ["Group 1", "Group 2", "Group 3"];
 
+const initialState: CreateTweetState = {
+	tweetBodies: [],
+	groupsList: groupsList,
+	group: null,
+	currentId: 0,
+};
+
 const createTweetSlice = createSlice({
 	name: "createTweet",
-	initialState: {
-		tweetBodies: [],
-		groupsList: groupsList,
-		group: null,
-		currentId: 0,
-	} as CreateTweetState,
+	initialState,
 	reducers: {
 		addTweetBody: (state, action: PayloadAction<AddTweetBodyPayload>) => {
 			const newBody = {

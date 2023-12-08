@@ -2,14 +2,18 @@ import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { ErrorMessage } from "@/components/ErrorMessage/ErrorMessage";
 import { registerAsync } from "@/redux/slices/register.slice";
 import { AppDispatch, RootState } from "@/redux/store";
-import { RegisterEndPayload } from "@/types/redux/register";
+import { RegisterEndPayload, RegisterError } from "@/types/redux/register";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { NavigateFunction, useNavigate } from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
 import { getLastEntry } from "../../utils/functions/getLastEntry";
 import { passwordRules } from "../../utils/inputRules";
+
+interface ErrorMessages {
+	[key: number]: string;
+}
 
 const RegistrationEnd = () => {
 	const {
@@ -21,23 +25,27 @@ const RegistrationEnd = () => {
 	} = useForm<RegisterEndPayload>();
 	const [generalError, setGeneralError] = useState<string | null>(null);
 
-	const navigate = useNavigate();
+	const navigate: NavigateFunction = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 
-	const registrationId = getLastEntry(location.pathname, "/");
+	const registrationId: number = getLastEntry(location.pathname, "/");
 
-	const error = useSelector((state: RootState) => state.register.error);
+	const error: RegisterError | null = useSelector(
+		(state: RootState) => state.register.error
+	);
+	const errorMessages: ErrorMessages = {
+		403: "Необходимо ввести код подтверждения!",
+		404: "Вам следует перейти к первому шагу регистрации!",
+	};
 	useEffect(() => {
-		if (error && error.status === 403) {
-			setGeneralError("Необходимо ввести код подтверждения");
-		} else if (error && error.status === 404) {
-			setGeneralError("Вам следует перейти к первому шагу регистрации");
-		} else {
-			setGeneralError(null);
+		if (error) {
+			setGeneralError(errorMessages[error.status] ?? null);
 		}
 	}, [error]);
 
-	const handleRegistration = async (data: RegisterEndPayload) => {
+	const handleRegistration: (
+		data: RegisterEndPayload
+	) => Promise<void> = async (data) => {
 		const response = await dispatch(
 			registerAsync({
 				password: data.password,

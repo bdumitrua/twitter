@@ -1,9 +1,5 @@
-import React from 'react'
+const LikesTab: React.FC = () => {
+	return <div>LikesTab</div>;
+};
 
-const LikesTab = () => {
-  return (
-    <div>LikesTab</div>
-  )
-}
-
-export default LikesTab
+export default LikesTab;

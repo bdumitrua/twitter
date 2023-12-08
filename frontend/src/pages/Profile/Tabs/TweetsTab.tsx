@@ -1,16 +1,14 @@
-import React from 'react'
+import Tweet from "../../../components/Tweet/Tweet";
 
-import Tweet from '../../../components/Tweet/Tweet'
+const TweetsTab: React.FC = () => {
+	return (
+		<>
+			<Tweet />
+			<Tweet />
+			<Tweet />
+			<Tweet />
+		</>
+	);
+};
 
-const TweetsTab = () => {
-  return (
-    <>
-      <Tweet />
-      <Tweet />
-      <Tweet />
-      <Tweet />
-    </>
-  )
-}
-
-export default TweetsTab
+export default TweetsTab;

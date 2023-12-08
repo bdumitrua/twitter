@@ -1,5 +1,4 @@
 import { motion } from "framer-motion";
-import React from "react";
 
 import styles from "../../assets/styles/pages/CreateTweet/TickIcon.module.scss";
 
@@ -12,21 +11,22 @@ const CircleProgress: React.FC<CircleProgressProps> = ({
 	charCount,
 	maxCharCount,
 }) => {
-	const baseRadius = 7.5;
-	const fullRadius = 9.5;
-	const isFull = charCount > maxCharCount;
-	const radius = isFull ? fullRadius : baseRadius;
-	const circumference = 2 * Math.PI * radius;
+	const baseRadius: number = 7.5;
+	const fullRadius: number = 9.5;
+	const isFull: boolean = charCount > maxCharCount;
+	const radius: number = isFull ? fullRadius : baseRadius;
+	const circumference: number = 2 * Math.PI * radius;
 
-	const offset = isFull
+	const offset: number = isFull
 		? 0
 		: circumference - (charCount / maxCharCount) * circumference;
-	const progressClass = isFull
+	const progressClass: string = isFull
 		? `${styles["progress__full"]}`
 		: `${styles["progress"]}`;
 
-	const overage = charCount >= maxCharCount ? charCount - maxCharCount : 0;
-	const overageText = overage > 0 ? `-${overage}` : "";
+	const overage: number =
+		charCount >= maxCharCount ? charCount - maxCharCount : 0;
+	const overageText: string = overage > 0 ? `-${overage}` : "";
 
 	return (
 		<svg width="26" height="26" viewBox="0 0 26 26">

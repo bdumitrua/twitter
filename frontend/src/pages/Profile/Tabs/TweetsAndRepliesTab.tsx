@@ -1,8 +1,6 @@
-import React from "react";
+import Tweet from "../../../components/Tweet/Tweet";
 
-import Tweet from '../../../components/Tweet/Tweet'
-
-const TweetsAndRepliesTab = () => {
+const TweetsAndRepliesTab: React.FC = () => {
 	return (
 		<>
 			<Tweet />

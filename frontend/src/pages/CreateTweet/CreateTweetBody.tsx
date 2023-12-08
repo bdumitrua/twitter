@@ -26,11 +26,11 @@ const CreateTweetBody: React.FC<CreateTweetBodyProps> = ({
 	const dispatch = useDispatch<AppDispatch>();
 	const [showLine, setShowLine] = useState<boolean>(false);
 	const textareaRef = useRef<HTMLTextAreaElement>(null);
-	const minHeight = 60;
+	const minHeight: number = 60;
 
-	const handleChange = () => {
+	const handleChange: () => void = () => {
 		if (textareaRef.current) {
-			const textarea = textareaRef.current;
+			const textarea: HTMLTextAreaElement = textareaRef.current;
 			textarea.style.height = "auto";
 			textarea.style.height = `${textarea.scrollHeight}px`;
 

@@ -16,12 +16,12 @@ import shadedLike from "../../assets/images/Tweet/shadedLike.svg";
 import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
 import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 
-const TweetPage = () => {
-	const [showModal, setShowModal] = useState(false);
-	const [likeSrc, setLikeSrc] = useState(unpaintedLike);
-	const [likeActive, setLikeActive] = useState(false);
+const TweetPage: React.FC = () => {
+	const [showModal, setShowModal] = useState<boolean>(false);
+	const [likeSrc, setLikeSrc] = useState<string>(unpaintedLike);
+	const [likeActive, setLikeActive] = useState<boolean>(false);
 
-	const onClickLike = () => {
+	const onClickLike: () => void = () => {
 		if (likeSrc === unpaintedLike) {
 			setLikeSrc(shadedLike);
 			setLikeActive(true);

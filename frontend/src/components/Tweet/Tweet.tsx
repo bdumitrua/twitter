@@ -16,7 +16,7 @@ interface TweetProps {
 	haveThread?: boolean;
 }
 
-const Tweet = (props: TweetProps) => {
+const Tweet: React.FC<TweetProps> = (props) => {
 	return (
 		<div className={styles["wrapper"]}>
 			<div className={styles["tweet"]}>
