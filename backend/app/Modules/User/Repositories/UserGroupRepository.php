@@ -7,6 +7,7 @@ use App\Modules\User\DTO\UserGroupDTO;
 use App\Modules\User\Events\UserGroupMembersUpdateEvent;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
@@ -15,6 +16,8 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class UserGroupRepository
 {
+    use GetCachedData;
+
     protected $userGroup;
     protected $userGroupMember;
 
@@ -41,31 +44,19 @@ class UserGroupRepository
 
     public function getById(int $id): UserGroup
     {
-        $userGroup = $this->userGroup
+        return $this->userGroup
             ->withCount(['members'])
             ->with(['members_data'])
             ->where('id', '=', $id)
             ->first();
-
-        if (empty($userGroup)) {
-            throw new NotFoundException('Group');
-        }
-
-        return $userGroup;
     }
 
     public function getByUserId(int $userId, bool $updateCache = false): Collection
     {
         $cacheKey = KEY_USER_GROUPS . $userId;
-
-        if ($updateCache) {
-            $userGroups = $this->queryByUserId($userId)->get();
-            Cache::forever($cacheKey, $userGroups);
-        }
-
-        return Cache::rememberForever($cacheKey, function () use ($userId) {
+        return $this->getCachedData($cacheKey, null, function () use ($userId) {
             return $this->queryByUserId($userId)->get();
-        });
+        }, $updateCache);
     }
 
     public function create(UserGroupDTO $dto, int $userId): void
@@ -77,7 +68,7 @@ class UserGroupRepository
         ]);
 
         if (!empty($createdUserGroup)) {
-            $this->recacheUserGroups($userId);
+            $this->clearUserGroupsCache($userId);
         }
     }
 
@@ -89,7 +80,7 @@ class UserGroupRepository
         ]);
 
         if (!empty($updatingStatus)) {
-            $this->recacheUserGroups($userGroup->user_id);
+            $this->clearUserGroupsCache($userGroup->user_id);
         }
     }
 
@@ -98,14 +89,14 @@ class UserGroupRepository
         $deletingStatus = $userGroup->delete();
 
         if ($deletingStatus) {
-            $this->recacheUserGroups($userGroup->user_id);
+            $this->clearUserGroupsCache($userGroup->user_id);
         }
     }
 
     public function addUser(int $userGroupId, int $userId): void
     {
         if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
-            $addingStatus = $this->userGroupMember->create([
+            $this->userGroupMember->create([
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId
             ]);
@@ -119,8 +110,9 @@ class UserGroupRepository
         }
     }
 
-    private function recacheUserGroups(int $userId)
+    private function clearUserGroupsCache(int $userId): void
     {
-        $this->getByUserId($userId, true);
+        $cacheKey = KEY_USER_GROUPS . (string)$userId;
+        $this->clearCache($cacheKey);
     }
 }
