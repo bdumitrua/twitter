@@ -63,9 +63,4 @@ class UserService
             $userDTO
         );
     }
-
-    public function search(SearchRequest $request): JsonResource
-    {
-        return ShortUserResource::collection($this->userRepository->search($request->search));
-    }
 }

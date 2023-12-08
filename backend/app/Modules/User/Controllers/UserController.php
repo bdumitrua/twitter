@@ -39,11 +39,4 @@ class UserController extends Controller
             return $this->userService->update($userUpdateRequest);
         });
     }
-
-    public function search(SearchRequest $request): JsonResponse
-    {
-        return $this->handleServiceCall(function () use ($request) {
-            return $this->userService->search($request);
-        });
-    }
 }
