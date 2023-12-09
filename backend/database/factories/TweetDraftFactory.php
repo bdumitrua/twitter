@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Modules\Tweet\Models\TweetDraft;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -9,6 +10,8 @@ use Illuminate\Database\Eloquent\Factories\Factory;
  */
 class TweetDraftFactory extends Factory
 {
+    protected $model = TweetDraft::class;
+
     /**
      * Define the model's default state.
      *
