@@ -10,7 +10,9 @@ use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetDraftRepository;
 use App\Modules\Tweet\Requests\CreateTweetDraftRequest;
 use App\Modules\Tweet\Requests\RemoveTweetDraftsRequest;
+use App\Modules\Tweet\Resources\TweetDraftResource;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 
@@ -26,9 +28,11 @@ class TweetDraftService
         $this->authorizedUserId = Auth::id();
     }
 
-    public function index(): Collection
+    public function index(): JsonResource
     {
-        return $this->tweetDraftRepository->getByUserId($this->authorizedUserId);
+        return TweetDraftResource::collection(
+            $this->tweetDraftRepository->getByUserId($this->authorizedUserId)
+        );
     }
 
     public function create(CreateTweetDraftRequest $request): void
