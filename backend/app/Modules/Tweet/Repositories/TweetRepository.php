@@ -6,10 +6,6 @@ use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Models\TweetLike;
-use App\Modules\Tweet\Models\TweetNotice;
-use App\Modules\User\Events\NewTweetEvent;
-use App\Modules\User\Events\TweetNoticeEvent;
-use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserGroupRepository;
 use App\Modules\User\Repositories\UserRepository;
@@ -176,10 +172,7 @@ class TweetRepository
         $usersListId = $usersList->id;
         $cacheKey = KEY_USERS_LIST_FEED . $usersListId;
         $usersListTweets = $this->getCachedData($cacheKey, 15, function () use ($usersListId, $userId) {
-            $membersIds = $this->pluckKey(
-                $this->usersListRepository->getUsersListMembers($usersListId),
-                'id'
-            );
+            $membersIds = $this->usersListRepository->getUsersListMembersIds($usersListId);
             $userGroupIds = $this->pluckKey(
                 $this->userGroupRepository->getByUserId($userId),
                 'id'

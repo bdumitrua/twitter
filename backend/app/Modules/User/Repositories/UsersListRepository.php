@@ -49,10 +49,13 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
-    public function getUsersListMembers(int $usersListId): Collection
+    public function getUsersListMembersIds(int $usersListId): array
     {
-        // TODO CACHE
-        return $this->usersListMember->where('users_list_id', $usersListId)->get();
+        $cacheKey = KEY_USERS_LIST_MEMBERS . $usersListId;
+        return $this->getCachedData($cacheKey, null, function () use ($usersListId) {
+            return $this->usersListMember->where('users_list_id', $usersListId)
+                ->get(['id'])->pluck('id')->toArray();
+        });
     }
 
     public function getUserListsIds(int $userId, bool $updateCache = false): array
@@ -147,17 +150,25 @@ class UsersListRepository
     public function addMember(int $usersListId, int $userId): void
     {
         if (empty($this->queryUserMembership($usersListId, $userId)->exists())) {
-            $this->usersListMember->create([
+            $addMember = $this->usersListMember->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
             ]);
+
+            if (!empty($addMember)) {
+                $this->clearListMembersCache($usersListId);
+            }
         }
     }
 
     public function removeMember(int $usersListId, int $userId): void
     {
         if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
-            $usersListMember->delete();
+            $removeMemberStatus = $usersListMember->delete();
+
+            if (!empty($removeMemberStatus)) {
+                $this->clearListMembersCache($usersListId);
+            }
         }
     }
 
@@ -214,6 +225,12 @@ class UsersListRepository
         $this->clearCache($cacheKey);
 
         $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
+        $this->clearCache($cacheKey);
+    }
+
+    protected function clearListMembersCache(int $usersListId): void
+    {
+        $cacheKey = KEY_USERS_LIST_MEMBERS . $usersListId;
         $this->clearCache($cacheKey);
     }
 }

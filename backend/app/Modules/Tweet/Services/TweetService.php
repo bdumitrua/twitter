@@ -60,7 +60,9 @@ class TweetService
 
     public function feed(): JsonResource
     {
-        return TweetResource::collection($this->tweetRepository->getUserFeed($this->authorizedUserId));
+        return TweetResource::collection(
+            $this->tweetRepository->getUserFeed($this->authorizedUserId)
+        );
     }
 
     public function user(User $user): JsonResource
