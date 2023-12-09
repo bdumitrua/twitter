@@ -8,6 +8,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetDraftRepository;
+use App\Modules\Tweet\Requests\CreateTweetDraftRequest;
+use App\Modules\Tweet\Requests\RemoveTweetDraftsRequest;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
@@ -29,13 +31,13 @@ class TweetDraftService
         return $this->tweetDraftRepository->getByUserId($this->authorizedUserId);
     }
 
-    public function create(Request $request): void
+    public function create(CreateTweetDraftRequest $request): void
     {
-        $this->tweetDraftRepository->create();
+        $this->tweetDraftRepository->create($request->text, $this->authorizedUserId);
     }
 
-    public function delete(Request $request): void
+    public function delete(RemoveTweetDraftsRequest $request): void
     {
-        $this->tweetDraftRepository->delete();
+        $this->tweetDraftRepository->delete($request->drafts, $this->authorizedUserId);
     }
 }

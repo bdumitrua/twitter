@@ -18,4 +18,34 @@ class TweetDraftRepository
     ) {
         $this->tweetDraft = $tweetDraft;
     }
+
+    public function getByUserId(int $userId): Collection
+    {
+        return $this->tweetDraft->where('user_id', $userId)->latest('updated_at')->get();
+    }
+
+    public function create(string $text, int $authorizedUserId): void
+    {
+        $sameDraft = $this->tweetDraft->where('user_id', $authorizedUserId)
+            ->where('text', $text)
+            ->first();
+
+        if (empty($sameDraft)) {
+            $this->tweetDraft->create([
+                'text' => $text,
+                'user_id' => $authorizedUserId,
+            ]);
+        } else {
+            $sameDraft->updated_at = now();
+            $sameDraft->save();
+        }
+    }
+
+    public function delete(array $drafts, int $authorizedUserId): void
+    {
+        $this->tweetDraft
+            ->where('user_id', $authorizedUserId)
+            ->whereIn('id', $drafts)
+            ->delete();
+    }
 }

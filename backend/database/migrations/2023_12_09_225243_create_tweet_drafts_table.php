@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('tweet_drafts', function (Blueprint $table) {
             $table->id();
             $table->string('text');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('user_id')->index();
             $table->timestamps();
 
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

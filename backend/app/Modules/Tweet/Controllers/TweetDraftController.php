@@ -4,12 +4,9 @@ namespace App\Modules\Tweet\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Modules\Tweet\Models\Tweet;
-use App\Modules\Tweet\Requests\CreateThreadRequest;
-use App\Modules\Tweet\Requests\TweetRequest;
+use App\Modules\Tweet\Requests\CreateTweetDraftRequest;
+use App\Modules\Tweet\Requests\RemoveTweetDraftsRequest;
 use App\Modules\Tweet\Services\TweetDraftService;
-use App\Modules\User\Models\User;
-use App\Modules\User\Models\UsersList;
 use Illuminate\Http\JsonResponse;
 
 class TweetDraftController extends Controller
@@ -28,14 +25,14 @@ class TweetDraftController extends Controller
         });
     }
 
-    public function create(Request $request): JsonResponse
+    public function create(CreateTweetDraftRequest $request): JsonResponse
     {
         return $this->handleServiceCall(function () use ($request) {
             return $this->tweetDraftService->create($request);
         });
     }
 
-    public function delete(Request $request): JsonResponse
+    public function delete(RemoveTweetDraftsRequest $request): JsonResponse
     {
         return $this->handleServiceCall(function () use ($request) {
             return $this->tweetDraftService->delete($request);
