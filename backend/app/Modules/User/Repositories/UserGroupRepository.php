@@ -44,11 +44,17 @@ class UserGroupRepository
 
     public function getById(int $id): UserGroup
     {
-        return $this->userGroup
+        $userGroup = $this->userGroup
             ->withCount(['members'])
             ->with(['members_data'])
             ->where('id', '=', $id)
             ->first();
+
+        if (empty($userGroup)) {
+            throw new NotFoundException('Group');
+        }
+
+        return $userGroup;
     }
 
     public function getByUserId(int $userId, bool $updateCache = false): Collection
