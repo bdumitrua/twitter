@@ -13,8 +13,12 @@
 		"resolveJsonModule": true,
 		"isolatedModules": true,
 		"noEmit": true,
-		"jsx": "react-jsx"
+		"jsx": "react-jsx",
+		"baseUrl": "./",
+		"paths": {
+			"@/*": ["src/*"]
+		}
 	},
-	"include": ["src/**/*.ts", "src/**/*.tsx", "src/pages/Feed/Feed.jsx"],
+	"include": ["src/**/*.ts", "src/**/*.tsx", "src/pages/Feed/Feed.tsx"],
 	"exclude": ["node_modules"]
 }
