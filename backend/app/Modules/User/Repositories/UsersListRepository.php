@@ -21,9 +21,11 @@ class UsersListRepository
 {
     use GetCachedData;
 
-    protected $usersList;
-    protected $usersListMember;
-    protected $usersListSubscribtion;
+    protected int $usersListCacheTime = 5 * 60;
+
+    protected UsersList $usersList;
+    protected UsersListMember $usersListMember;
+    protected UsersListSubscribtion $usersListSubscribtion;
 
     public function __construct(
         UsersList $usersList,
@@ -71,7 +73,7 @@ class UsersListRepository
     public function getById(int $usersListId, bool $updateCache = false): UsersList
     {
         $cacheKey = KEY_USERS_LIST_SHOW_DATA . $usersListId;
-        $usersList = $this->getCachedData($cacheKey, 5 * 60, function () use ($usersListId) {
+        $usersList = $this->getCachedData($cacheKey, $this->usersListCacheTime, function () use ($usersListId) {
             return $this->usersList
                 ->withCount(['members', 'subscribers'])
                 ->where('id', '=', $usersListId)
@@ -119,7 +121,7 @@ class UsersListRepository
         ]);
 
         if (!empty($createdUsersList)) {
-            $this->recacheUserLists($userId);
+            $this->clearUserCache($userId);
         }
     }
 
@@ -135,10 +137,7 @@ class UsersListRepository
 
 
         if (!empty($updatingStatus)) {
-            $this->getById($usersList->id, true);
-
-            // TODO QUEUE
-            // Recalculate cache
+            $this->clearListCache($usersList->id);
         }
     }
 
@@ -150,8 +149,7 @@ class UsersListRepository
         if (!empty($deletingStatus)) {
             event(new DeletedUsersListEvent($usersListData));
 
-            // TODO QUEUE
-            // Recalculate cache
+            $this->clearListCache($usersList->id);
         }
     }
 
@@ -181,7 +179,7 @@ class UsersListRepository
             ]);
 
             if (!empty($usersListSubscribtion)) {
-                $this->recacheUserLists($userId);
+                $this->clearUserCache($userId);
             }
         }
     }
@@ -193,14 +191,9 @@ class UsersListRepository
             $deletingStatus = $usersListSubscribtion->delete();
 
             if (!empty($deletingStatus)) {
-                $this->recacheUserLists($userId);
+                $this->clearUserCache($userId);
             }
         }
-    }
-
-    public function recacheUserLists(int $userId): void
-    {
-        $this->getByUserId($userId, true);
     }
 
     protected function getListsData(array $usersListsIds): Collection
@@ -213,8 +206,23 @@ class UsersListRepository
     protected function getUsersListData(int $usersListId): UsersList
     {
         $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
-        return $this->getCachedData($cacheKey, 5 * 60, function () use ($usersListId) {
+        return $this->getCachedData($cacheKey, $this->usersListCacheTime, function () use ($usersListId) {
             return $this->usersList->where('id', $usersListId)->first();
         });
+    }
+
+    public function clearUserCache(int $userId): void
+    {
+        $cacheKey = KEY_USER_LISTS . $userId;
+        $this->clearCache($cacheKey);
+    }
+
+    public function clearListCache(int $usersListId): void
+    {
+        $cacheKey = KEY_USERS_LIST_SHOW_DATA . $usersListId;
+        $this->clearCache($cacheKey);
+
+        $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
+        $this->clearCache($cacheKey);
     }
 }
