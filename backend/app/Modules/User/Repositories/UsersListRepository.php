@@ -2,9 +2,7 @@
 
 namespace App\Modules\User\Repositories;
 
-use App\Exceptions\AccessDeniedException;
 use App\Exceptions\NotFoundException;
-use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Events\DeletedUsersListEvent;
 use App\Modules\User\Models\UsersList;
@@ -51,23 +49,26 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function getUserListsIds(int $userId): array
+    public function getUserListsIds(int $userId, bool $updateCache = false): array
     {
-        $whereIsCreator = $this->usersList
-            ->where('user_id', '=', $userId)
-            ->get(['id'])
-            ->pluck('id')
-            ->toArray();
+        $cacheKey = KEY_USER_LISTS . $userId;
+        return $this->getCachedData($cacheKey, null, function () use ($userId) {
+            $whereIsCreator = $this->usersList
+                ->where('user_id', '=', $userId)
+                ->get(['id'])
+                ->pluck('id')
+                ->toArray();
 
-        $whereIsSubscriber = $this->usersListSubscribtion
-            ->where('user_id', '=', $userId)
-            ->get(['users_list_id'])
-            ->pluck('users_list_id')
-            ->toArray();
+            $whereIsSubscriber = $this->usersListSubscribtion
+                ->where('user_id', '=', $userId)
+                ->get(['users_list_id'])
+                ->pluck('users_list_id')
+                ->toArray();
 
-        $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
+            $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
 
-        return $listsIds;
+            return $listsIds;
+        }, $updateCache);
     }
 
     public function getById(int $usersListId, bool $updateCache = false): UsersList
@@ -87,25 +88,9 @@ class UsersListRepository
         return $usersList;
     }
 
-    public function getByUserId(int $userId, bool $updateCache = false): Collection
+    public function getByUserId(int $userId): Collection
     {
-        $cacheKey = KEY_USER_LISTS . $userId;
-        $listsIds = $this->getCachedData($cacheKey, null, function () use ($userId) {
-            $whereIsCreator = $this->usersList
-                ->where('user_id', '=', $userId)
-                ->get(['id'])
-                ->pluck('id')
-                ->toArray();
-
-            $whereIsSubscriber = $this->usersListSubscribtion
-                ->where('user_id', '=', $userId)
-                ->get(['users_list_id'])
-                ->pluck('users_list_id')
-                ->toArray();
-
-            return array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
-        }, $updateCache);
-
+        $listsIds = $this->getUserListsIds($userId);
         return $this->getListsData($listsIds);
     }
 

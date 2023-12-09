@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Services;
 
+use App\Exceptions\AccessDeniedException;
 use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use Symfony\Component\HttpFoundation\Response;
@@ -37,12 +38,23 @@ class UsersListService
 
     public function index(): Collection
     {
-        return $this->usersListRepository->getByUserId($this->authorizedUserId);
+        $usersLists = $this->usersListRepository->getByUserId($this->authorizedUserId);
+        $filteredUsersLists = $this->filterPrivateLists($usersLists);
+
+        return $filteredUsersLists;
     }
 
     public function show(UsersList $usersList): UsersList
     {
-        return $this->usersListRepository->getById($usersList->id);
+        $usersList = $this->usersListRepository->getById($usersList->id);
+
+        $filteredUsersList = $this->filterPrivateLists(new Collection([$usersList]))->first();
+
+        if (empty($filteredUsersList)) {
+            throw new AccessDeniedException();
+        }
+
+        return $filteredUsersList;
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
@@ -71,7 +83,10 @@ class UsersListService
 
     public function destroy(UsersList $usersList, Request $request): void
     {
-        $this->logger->info('Deleting UsersList', [$usersList->toArray(), 'ip' => $request->ip()]);
+        $this->logger->info(
+            'Deleting UsersList',
+            array_merge($usersList->toArray(), ['ip' => $request->ip()])
+        );
         $this->usersListRepository->delete($usersList);
     }
 
@@ -93,5 +108,14 @@ class UsersListService
     public function unsubscribe(UsersList $usersList): void
     {
         $this->usersListRepository->unsubscribe($usersList->id, $this->authorizedUserId);
+    }
+
+    protected function filterPrivateLists(Collection $usersLists): Collection
+    {
+        $userId = $this->authorizedUserId;
+        return $usersLists->filter(function ($usersList) use ($userId) {
+            return !($usersList->is_private)
+                || in_array($userId, $this->usersListRepository->getUserListsIds($userId));
+        });
     }
 }
