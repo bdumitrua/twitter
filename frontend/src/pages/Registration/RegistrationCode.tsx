@@ -48,6 +48,11 @@ const RegistrationCode = () => {
 				type: "manual",
 				message: errorMessages[error.status],
 			});
+		} else if (error && !errorMessages[error.status]) {
+			setError("code", {
+				type: "manual",
+				message: "Неизвестная ошибка, обратитесь в тех. поддержку.",
+			});
 		}
 	}, [error]);
 
