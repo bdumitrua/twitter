@@ -2,14 +2,12 @@
 
 namespace App\Modules\User\Repositories;
 
-use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UserDTO;
 use App\Modules\User\Models\User;
 use App\Traits\GetCachedData;
 use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 

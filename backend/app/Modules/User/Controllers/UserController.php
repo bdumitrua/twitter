@@ -5,7 +5,6 @@ namespace App\Modules\User\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\User\Models\User;
-use App\Modules\User\Requests\SearchRequest;
 use App\Modules\User\Requests\UserUpdateRequest;
 use App\Modules\User\Services\UserService;
 use Illuminate\Http\JsonResponse;
