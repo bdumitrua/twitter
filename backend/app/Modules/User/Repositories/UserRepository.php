@@ -78,11 +78,11 @@ class UserRepository
         $savingStatus = $user->save();
 
         if (!empty($savingStatus)) {
-            $this->recacheUserData($user->id);
+            $this->clearUserDataCache($user->id);
         }
     }
 
-    public function recacheUserData(int $userId): void
+    public function clearUserDataCache(int $userId): void
     {
         $authorizedUserCacheKey = KEY_AUTH_USER_DATA . (string)$userId;
         $userCacheKey = KEY_USER_DATA . (string)$userId;
