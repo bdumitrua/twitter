@@ -23,6 +23,7 @@ class DatabaseSeeder extends Seeder
             TweetTableSeeder::class,
             TweetLikeTableSeeder::class,
             TweetFavoriteTableSeeder::class,
+            TweetDraftTableSeeder::class,
         ]);
     }
 }

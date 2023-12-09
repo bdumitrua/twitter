@@ -3,6 +3,7 @@
 namespace Database\Factories;
 
 use App\Modules\Tweet\Models\TweetDraft;
+use App\Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -19,8 +20,11 @@ class TweetDraftFactory extends Factory
      */
     public function definition(): array
     {
+        $user = User::all()->random();
+
         return [
-            //
+            'text' => fake()->words(10, true),
+            'user_id' => $user->id,
         ];
     }
 }
