@@ -235,13 +235,13 @@ class TweetRepository
         $userId = $tweet->user_id;
 
         $tweet->delete();
+
         $this->clearTweetCache($tweetId);
         $this->clearUserTweetsCache($userId);
     }
 
     protected function getTweetsData(array $tweetsIds): Collection
     {
-        // TODO pluck id here
         return new Collection(array_map(function ($tweetId) {
             return $this->getTweetData($tweetId);
         }, $tweetsIds));
