@@ -90,7 +90,7 @@ class AppServiceProvider extends ServiceProvider
         // Массив групп пользователя
         define('KEY_USER_GROUPS', 'user_groups:');
 
-        // Массив списков, в которых пользователь создатель/подписчик
+        // Массив id списков, в которых пользователь создатель/подписчик
         define('KEY_USER_LISTS', 'user_lists:');
 
         // Массив избранных твиттов пользователя
@@ -103,8 +103,11 @@ class AppServiceProvider extends ServiceProvider
         *   Ключи связанные с данными списка
         */
 
-        // Данные списка (включая подписчиков и участников)
+        // Данные списка
         define('KEY_USERS_LIST_DATA', 'users_list_data:');
+
+        // Данные списка (включая кол-во подписчиков и участников)
+        define('KEY_USERS_LIST_SHOW_DATA', 'users_list_show_data:');
 
         // Лента списка
         define('KEY_USERS_LIST_FEED', 'users_list_feed:');

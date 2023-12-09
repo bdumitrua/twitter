@@ -42,7 +42,7 @@ class UsersListService
 
     public function show(UsersList $usersList): UsersList
     {
-        return $this->usersListRepository->getById($usersList->id, $this->authorizedUserId);
+        return $this->usersListRepository->getById($usersList->id);
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
