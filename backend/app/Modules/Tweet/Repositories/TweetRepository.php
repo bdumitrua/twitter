@@ -201,9 +201,6 @@ class TweetRepository
 
         $tweet = $this->tweet->create($data);
         $this->clearUserTweetsCache($tweet->user_id);
-
-        // TODO QUEUE
-        $this->checkForNotices($tweet);
     }
 
     /**
@@ -220,8 +217,6 @@ class TweetRepository
             $data = array_filter($data, fn ($value) => !is_null($value));
 
             $tweet = $this->tweet->create($data);
-            // TODO QUEUE
-            $this->checkForNotices($tweet);
 
             $previousTweetId = $tweet->id;
         }
@@ -438,37 +433,5 @@ class TweetRepository
         if (!empty($thread->thread)) {
             $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread->thread);
         }
-    }
-
-    private function checkForNotices(Tweet $tweet): void
-    {
-        $tweetText = $tweet->text;
-        $tweetId = $tweet->id;
-        if (empty($tweetText)) {
-            return;
-        }
-
-        $words = explode(' ', $tweetText);
-        $notices = [];
-        foreach ($words as $word) {
-            if (strpos($word, '@') === 0) {
-                $cleanLink = preg_replace('/[^\w]/', '', substr($word, 1));
-                $notices[] = $cleanLink;
-            }
-        }
-        $notices = array_unique($notices);
-
-        $noticedUsers = User::whereIn('link', $notices)->get(['id', 'link'])->toArray();
-        $noticesData = array_map(function ($noticedUser) use ($tweetId) {
-            return [
-                'link' => $noticedUser['link'],
-                'user_id' => $noticedUser['id'],
-                'tweet_id' => $tweetId,
-                'created_at' => now(),
-                'updated_at' => now(),
-            ];
-        }, $noticedUsers);
-
-        TweetNotice::insert($noticesData);
     }
 }
