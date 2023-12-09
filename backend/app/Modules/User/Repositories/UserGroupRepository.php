@@ -18,8 +18,8 @@ class UserGroupRepository
 {
     use GetCachedData;
 
-    protected $userGroup;
-    protected $userGroupMember;
+    protected UserGroup $userGroup;
+    protected UserGroupMember $userGroupMember;
 
     public function __construct(
         UserGroup $userGroup,

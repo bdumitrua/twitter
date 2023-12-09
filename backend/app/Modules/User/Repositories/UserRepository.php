@@ -17,7 +17,7 @@ class UserRepository
 {
     use GetCachedData;
 
-    protected $user;
+    protected User $user;
 
     public function __construct(
         User $user,
