@@ -99,6 +99,9 @@ class AppServiceProvider extends ServiceProvider
         // Массив избранных твиттов пользователя
         define('KEY_USER_LIKES', 'auth_user_likes:');
 
+        // Массив избранных твиттов пользователя
+        define('KEY_USER_NOTIFICATIONS', 'auth_user_notifications:');
+
         /*
         *   Ключи связанные с данными списка
         */
