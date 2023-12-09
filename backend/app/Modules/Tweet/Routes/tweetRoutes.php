@@ -8,8 +8,6 @@ use App\Modules\Tweet\Controllers\TweetController;
 Route::prefix('tweets')->controller(TweetController::class)->group(function () {
     // Получить по id твита
     Route::get('show/{tweet}', 'show')->name('get_tweet_by_id');
-    // Получить твиты списка
-    Route::get('list/{usersList}', 'list')->name('get_users_list_tweets');
 
     Route::prefix('user')->group(function () {
         // Получить твиты пользователя
@@ -26,6 +24,8 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         // Получить ленту твитов
         Route::get('feed', 'feed')->name('get_user_feed');
+        // Получить твиты списка
+        Route::get('list/{usersList}', 'list')->name('get_users_list_tweets');
         // Создать твит
         Route::post('create', 'create')->name('create_tweet');
         // Создать тред

@@ -2,13 +2,9 @@
 
 namespace App\Modules\User\Repositories;
 
-use App\Exceptions\AccessDeniedException;
 use App\Exceptions\NotFoundException;
-use App\Helpers\TimeHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Events\DeletedUsersListEvent;
-use App\Modules\User\Events\UsersListMembersUpdateEvent;
-use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListMember;
 use App\Modules\User\Models\UsersListSubscribtion;
@@ -23,9 +19,11 @@ class UsersListRepository
 {
     use GetCachedData;
 
-    protected $usersList;
-    protected $usersListMember;
-    protected $usersListSubscribtion;
+    protected int $usersListCacheTime = 5 * 60;
+
+    protected UsersList $usersList;
+    protected UsersListMember $usersListMember;
+    protected UsersListSubscribtion $usersListSubscribtion;
 
     public function __construct(
         UsersList $usersList,
@@ -51,34 +49,40 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
-    protected function queryByUserId(int $userId): Builder
+    public function getUsersListMembers(int $usersListId): Collection
     {
-        $whereIsCreator = $this->usersList
-            ->where('user_id', '=', $userId)
-            ->get(['id'])
-            ->pluck('id')
-            ->toArray();
-
-        $whereIsSubscriber = $this->usersListSubscribtion
-            ->where('user_id', '=', $userId)
-            ->get(['users_list_id'])
-            ->pluck('users_list_id')
-            ->toArray();
-
-        $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
-
-        return $this->usersList->newQuery()
-            ->whereIn('id', $listsIds);
+        // TODO CACHE
+        return $this->usersListMember->where('users_list_id', $usersListId)->get();
     }
 
-    public function getById(int $usersListId, ?int $authorizedUserId, bool $updateCache = false): UsersList
+    public function getUserListsIds(int $userId, bool $updateCache = false): array
     {
-        $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
+        $cacheKey = KEY_USER_LISTS . $userId;
+        return $this->getCachedData($cacheKey, null, function () use ($userId) {
+            $whereIsCreator = $this->usersList
+                ->where('user_id', '=', $userId)
+                ->get(['id'])
+                ->pluck('id')
+                ->toArray();
 
-        $usersList = $this->getCachedData($cacheKey, 5 * 60, function () use ($usersListId) {
+            $whereIsSubscriber = $this->usersListSubscribtion
+                ->where('user_id', '=', $userId)
+                ->get(['users_list_id'])
+                ->pluck('users_list_id')
+                ->toArray();
+
+            $listsIds = array_unique(array_merge($whereIsCreator, $whereIsSubscriber));
+
+            return $listsIds;
+        }, $updateCache);
+    }
+
+    public function getById(int $usersListId, bool $updateCache = false): UsersList
+    {
+        $cacheKey = KEY_USERS_LIST_SHOW_DATA . $usersListId;
+        $usersList = $this->getCachedData($cacheKey, $this->usersListCacheTime, function () use ($usersListId) {
             return $this->usersList
                 ->withCount(['members', 'subscribers'])
-                ->with(['subscribers'])
                 ->where('id', '=', $usersListId)
                 ->first();
         }, $updateCache);
@@ -87,22 +91,13 @@ class UsersListRepository
             throw new NotFoundException('List');
         }
 
-        if ($usersList->is_private) {
-            if (!in_array($authorizedUserId, $usersList->subscribers->pluck('user_id')->toArray())) {
-                throw new AccessDeniedException();
-            }
-        }
-
         return $usersList;
     }
 
-    public function getByUserId(int $userId, bool $updateCache = false): Collection
+    public function getByUserId(int $userId): Collection
     {
-        $cacheKey = KEY_USER_LISTS . $userId;
-
-        return $this->getCachedData($cacheKey, null, function () use ($userId) {
-            return $this->queryByUserId($userId)->get();
-        }, $updateCache);
+        $listsIds = $this->getUserListsIds($userId);
+        return $this->getListsData($listsIds);
     }
 
     public function create(UsersListDTO $dto, int $userId): void
@@ -117,7 +112,7 @@ class UsersListRepository
         ]);
 
         if (!empty($createdUsersList)) {
-            $this->recacheUserLists($userId);
+            $this->clearUserCache($userId);
         }
     }
 
@@ -133,10 +128,7 @@ class UsersListRepository
 
 
         if (!empty($updatingStatus)) {
-            $this->getById($usersList->id, null, true);
-
-            // TODO QUEUE
-            // Recalculate cache
+            $this->clearListCache($usersList->id);
         }
     }
 
@@ -148,15 +140,14 @@ class UsersListRepository
         if (!empty($deletingStatus)) {
             event(new DeletedUsersListEvent($usersListData));
 
-            // TODO QUEUE
-            // Recalculate cache
+            $this->clearListCache($usersList->id);
         }
     }
 
     public function addMember(int $usersListId, int $userId): void
     {
         if (empty($this->queryUserMembership($usersListId, $userId)->exists())) {
-            $usersListMember = $this->usersListMember->create([
+            $this->usersListMember->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
             ]);
@@ -166,7 +157,7 @@ class UsersListRepository
     public function removeMember(int $usersListId, int $userId): void
     {
         if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
-            $deletingStatus = $usersListMember->delete();
+            $usersListMember->delete();
         }
     }
 
@@ -179,7 +170,7 @@ class UsersListRepository
             ]);
 
             if (!empty($usersListSubscribtion)) {
-                $this->recacheUserLists($userId);
+                $this->clearUserCache($userId);
             }
         }
     }
@@ -191,13 +182,38 @@ class UsersListRepository
             $deletingStatus = $usersListSubscribtion->delete();
 
             if (!empty($deletingStatus)) {
-                $this->recacheUserLists($userId);
+                $this->clearUserCache($userId);
             }
         }
     }
 
-    public function recacheUserLists(int $userId): void
+    protected function getListsData(array $usersListsIds): Collection
     {
-        $this->getByUserId($userId, true);
+        return new Collection(array_map(function ($usersListId) {
+            return $this->getUsersListData($usersListId);
+        }, $usersListsIds));
+    }
+
+    protected function getUsersListData(int $usersListId): UsersList
+    {
+        $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
+        return $this->getCachedData($cacheKey, $this->usersListCacheTime, function () use ($usersListId) {
+            return $this->usersList->where('id', $usersListId)->first();
+        });
+    }
+
+    protected function clearUserCache(int $userId): void
+    {
+        $cacheKey = KEY_USER_LISTS . $userId;
+        $this->clearCache($cacheKey);
+    }
+
+    protected function clearListCache(int $usersListId): void
+    {
+        $cacheKey = KEY_USERS_LIST_SHOW_DATA . $usersListId;
+        $this->clearCache($cacheKey);
+
+        $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
+        $this->clearCache($cacheKey);
     }
 }

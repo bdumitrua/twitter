@@ -19,6 +19,7 @@ use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserRepository;
+use App\Modules\User\Services\UsersListService;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -30,16 +31,19 @@ class TweetService
 {
     use CreateDTO;
 
-    private $tweetRepository;
-    private $userRepository;
-    private $authorizedUserId;
+    protected UsersListService $usersListService;
+    protected TweetRepository $tweetRepository;
+    protected UserRepository $userRepository;
     protected LogManager $logger;
+    protected ?int $authorizedUserId;
 
     public function __construct(
+        UsersListService $usersListService,
         TweetRepository $tweetRepository,
         UserRepository $userRepository,
         LogManager $logger,
     ) {
+        $this->usersListService = $usersListService;
         $this->tweetRepository = $tweetRepository;
         $this->userRepository = $userRepository;
         $this->logger = $logger;
@@ -96,13 +100,13 @@ class TweetService
 
     public function list(UsersList $usersList): JsonResource
     {
-        if ($usersList->is_private) {
-            if (!in_array($this->authorizedUserId, $this->pluckKey($usersList->subscribers(), 'user_id'))) {
-                throw new AccessDeniedException();
-            }
+        $usersList = $this->usersListService->filterPrivateLists(new Collection([$usersList]), $this->authorizedUserId)->first();
+
+        if (empty($usersList)) {
+            throw new AccessDeniedException();
         }
 
-        $usersListFeed = $this->tweetRepository->getFeedByUsersList($usersList);
+        $usersListFeed = $this->tweetRepository->getFeedByUsersList($usersList, $this->authorizedUserId);
         $tweets = $this->filterTweetsByGroup($usersListFeed, $this->authorizedUserId);
 
         return TweetResource::collection($tweets);
@@ -156,7 +160,7 @@ class TweetService
 
     public function destroy(Tweet $tweet, Request $request): void
     {
-        $this->logger->info('Deleting tweet', [$tweet->toArray(), 'ip' => $request->ip()]);
+        $this->logger->info('Deleting tweet', array_merge($tweet->toArray(), ['ip' => $request->ip()]));
         $this->tweetRepository->destroy($tweet);
     }
 

@@ -4,11 +4,14 @@ namespace App\Modules\Notification\Repositories;
 
 use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Models\Notification;
+use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Collection;
 
 class NotificationRepository
 {
-    protected $notification;
+    use GetCachedData;
+
+    protected Notification $notification;
 
     public function __construct(Notification $notification)
     {
@@ -17,7 +20,10 @@ class NotificationRepository
 
     public function getByUserId(int $userId): Collection
     {
-        return $this->notification->where('user_id', '=', $userId)->take(20)->get();
+        $cacheKey = KEY_USER_NOTIFICATIONS . $userId;
+        return $this->getCachedData($cacheKey, 30, function () use ($userId) {
+            return $this->notification->where('user_id', '=', $userId)->take(20)->get();
+        }, false);
     }
 
     public function create(NotificationDTO $notificationDTO): Notification
@@ -25,7 +31,10 @@ class NotificationRepository
         $data = $notificationDTO->toArray();
         $data = array_filter($data, fn ($value) => !is_null($value));
 
-        return $this->notification->create($data);
+        $newNotification = $this->notification->create($data);
+        $this->clearUserNotificationsCache($newNotification->user_id);
+
+        return $newNotification;
     }
 
     public function update(Notification $notification, string $newStatus): void
@@ -33,5 +42,13 @@ class NotificationRepository
         $notification->update([
             'status' => $newStatus
         ]);
+
+        $this->clearUserNotificationsCache($notification->user_id);
+    }
+
+    protected function clearUserNotificationsCache(int $userId): void
+    {
+        $cacheKey = KEY_USER_NOTIFICATIONS . $userId;
+        $this->clearCache($cacheKey);
     }
 }

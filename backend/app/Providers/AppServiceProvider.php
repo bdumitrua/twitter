@@ -51,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
 
         define('KEY_WITH_RELATIONS', 'with_relations:');
 
+        define('KEY_TWEET_THREAD_START_ID', 'tweet_thread_start_id:');
+
         define('KEY_TWEET_DATA', 'tweet_data:');
 
         /*
@@ -90,7 +92,7 @@ class AppServiceProvider extends ServiceProvider
         // Массив групп пользователя
         define('KEY_USER_GROUPS', 'user_groups:');
 
-        // Массив списков, в которых пользователь создатель/подписчик
+        // Массив id списков, в которых пользователь создатель/подписчик
         define('KEY_USER_LISTS', 'user_lists:');
 
         // Массив избранных твиттов пользователя
@@ -99,12 +101,18 @@ class AppServiceProvider extends ServiceProvider
         // Массив избранных твиттов пользователя
         define('KEY_USER_LIKES', 'auth_user_likes:');
 
+        // Массив избранных твиттов пользователя
+        define('KEY_USER_NOTIFICATIONS', 'auth_user_notifications:');
+
         /*
         *   Ключи связанные с данными списка
         */
 
-        // Данные списка (включая подписчиков и участников)
+        // Данные списка
         define('KEY_USERS_LIST_DATA', 'users_list_data:');
+
+        // Данные списка (включая кол-во подписчиков и участников)
+        define('KEY_USERS_LIST_SHOW_DATA', 'users_list_show_data:');
 
         // Лента списка
         define('KEY_USERS_LIST_FEED', 'users_list_feed:');

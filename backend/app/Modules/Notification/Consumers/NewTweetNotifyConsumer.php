@@ -30,9 +30,9 @@ class NewTweetNotifyConsumer extends BaseConsumer
         while (true) {
             $message = $this->consumer->receive();
             $tweetData = $this->getMessageBody($message);
-            $tweetId = $tweetData->id;
 
             if (!empty($tweetData)) {
+                $tweetId = $tweetData->id;
                 $userWithSubscribers = User::find($tweetData->user_id)->with(['subscribers'])->first();
                 $subscrubersIds = $userWithSubscribers->subscribers->pluck('subscriber_id');
 

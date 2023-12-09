@@ -71,18 +71,18 @@ class RecentSearchRepository
             $oldRecentSearch->save();
         }
 
-        $this->recacheUserRecent($recentSearchDTO->userId);
+        $this->clearUserRecentCache($recentSearchDTO->userId);
     }
 
     public function clear(int $authorizedUserId): void
     {
         $this->recentSearch->where('user_id', $authorizedUserId)->delete();
-
-        $this->recacheUserRecent($authorizedUserId);
+        $this->clearUserRecentCache($authorizedUserId);
     }
 
-    protected function recacheUserRecent(int $userId): void
+    protected function clearUserRecentCache(int $userId): void
     {
-        $this->getByUserId($userId, true);
+        $cacheKey = KEY_USER_SEARCH . $userId;
+        $this->clearCache($cacheKey);
     }
 }

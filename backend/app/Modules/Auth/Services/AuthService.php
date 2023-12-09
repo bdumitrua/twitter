@@ -32,7 +32,7 @@ class AuthService
 {
     public function registrationStart(CreateUserRequest $request)
     {
-        $registrationCode = '11111';
+        $registrationCode = $this->createUniqueCode();
         $userEmail = $request->email;
 
         Log::info('Starting user registration', $request->toArray());
@@ -96,7 +96,7 @@ class AuthService
         }
 
         Log::info('Starting reset user password', ['user_id' => $user->id]);
-        $resetCode = '11111';
+        $resetCode = $this->createUniqueCode();
         $resetData = AuthReset::create([
             'code' => $resetCode,
             'user_id' => $user->id,
@@ -158,5 +158,10 @@ class AuthService
     public function refresh(): JsonResource
     {
         return new AuthTokenResource(Auth::refresh());
+    }
+
+    protected function createUniqueCode(): string
+    {
+        return '11111';
     }
 }

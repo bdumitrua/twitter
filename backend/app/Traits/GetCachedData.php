@@ -28,4 +28,9 @@ trait GetCachedData
         $prometheusService->incrementCacheHit($cacheKeyForMetrics);
         return Cache::get($cacheKey);
     }
+
+    protected function clearCache(string $cacheKey): void
+    {
+        Cache::forget($cacheKey);
+    }
 }

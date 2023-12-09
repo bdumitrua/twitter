@@ -17,7 +17,7 @@ class UserRepository
 {
     use GetCachedData;
 
-    protected $user;
+    protected User $user;
 
     public function __construct(
         User $user,
@@ -42,7 +42,7 @@ class UserRepository
         return $this->user->searchQuery($query)->execute()->models();
     }
 
-    public function getAuthUser(int $userId, bool $updateCache = false): User
+    public function getAuthorizedUser(int $userId, bool $updateCache = false): User
     {
         $cacheKey = KEY_AUTH_USER_DATA . $userId;
         return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
@@ -78,13 +78,16 @@ class UserRepository
         $savingStatus = $user->save();
 
         if (!empty($savingStatus)) {
-            $this->recacheUserData($user->id);
+            $this->clearUserDataCache($user->id);
         }
     }
 
-    public function recacheUserData(int $userId): void
+    protected function clearUserDataCache(int $userId): void
     {
-        $this->getById($userId, true);
-        $this->getAuthUser($userId, true);
+        $authorizedUserCacheKey = KEY_AUTH_USER_DATA . (string)$userId;
+        $userCacheKey = KEY_USER_DATA . (string)$userId;
+
+        $this->clearCache($authorizedUserCacheKey);
+        $this->clearCache($userCacheKey);
     }
 }
