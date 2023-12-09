@@ -27,8 +27,6 @@ class NewTweetCreateNoticesConsumer extends BaseConsumer
             $message = $this->consumer->receive();
             $newTweet = $this->getMessageBody($message);
 
-            $this->logger->debug('sdafafsddfasafsd', (array)$newTweet);
-
             if (!empty($newTweet) && $newTweet->type !== 'repost') {
                 try {
                     $tweetText = $newTweet->text;
