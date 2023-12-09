@@ -3,13 +3,7 @@
 namespace App\Modules\Search\Services;
 
 use App\Modules\Search\DTO\RecentSearchDTO;
-use App\Modules\Search\Models\RecentSearch;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use App\Modules\Search\Models\Search;
 use App\Modules\Search\Repositories\RecentSearchRepository;
-use App\Modules\Search\Repositories\SearchRepository;
 use App\Modules\Search\Requests\RecentSearchRequest;
 use App\Modules\Search\Requests\SearchRequest;
 use App\Modules\Search\Resources\RecentSearchResource;

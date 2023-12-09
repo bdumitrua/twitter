@@ -2,8 +2,6 @@
 
 namespace App\Modules\Search\Listeners;
 
-use Illuminate\Queue\InteractsWithQueue;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Modules\Search\Events\NewSearchEvent;
 
 class NewSearchListener

@@ -4,7 +4,6 @@ namespace App\Modules\Search\Models;
 
 use App\Modules\User\Models\User;
 use App\Prometheus\PrometheusService;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class RecentSearch extends Model
