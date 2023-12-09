@@ -2,8 +2,6 @@
 
 namespace App\Modules\Tweet\Services;
 
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetFavoriteRepository;
 use Illuminate\Database\Eloquent\Collection;

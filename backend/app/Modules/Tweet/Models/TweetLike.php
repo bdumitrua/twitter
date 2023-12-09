@@ -3,9 +3,7 @@
 namespace App\Modules\Tweet\Models;
 
 use App\Modules\User\Events\TweetLikeEvent;
-use App\Modules\User\Models\User;
 use App\Prometheus\PrometheusService;
-use Database\Factories\TweetFactory;
 use Database\Factories\TweetLikeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;

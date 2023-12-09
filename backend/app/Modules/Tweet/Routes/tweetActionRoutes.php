@@ -2,7 +2,6 @@
 
 namespace App\Modules\Tweet\Routes;
 
-use App\Modules\Tweet\Controllers\TweetActionController;
 use App\Modules\Tweet\Controllers\TweetFavoriteController;
 use App\Modules\Tweet\Controllers\TweetLikeController;
 use Illuminate\Support\Facades\Route;

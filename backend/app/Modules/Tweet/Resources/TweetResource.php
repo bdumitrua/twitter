@@ -2,9 +2,7 @@
 
 namespace App\Modules\Tweet\Resources;
 
-use App\Modules\Tweet\Models\Tweet;
 use App\Modules\User\Resources\ShortUserResource;
-use App\Modules\User\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
