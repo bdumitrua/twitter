@@ -69,7 +69,7 @@ class UserGroupService
 
     public function destroy(UserGroup $userGroup, Request $request): void
     {
-        $this->logger->info('Deleting UserGroup', [$userGroup->toArray(), 'ip' => $request->ip()]);
+        $this->logger->info('Deleting UserGroup', array_merge($userGroup->toArray(), ['ip' => $request->ip()]));
         $this->userGroupRepository->delete($userGroup);
     }
 
