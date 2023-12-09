@@ -175,7 +175,11 @@ class TweetService
     protected function getUserGroupIds(int $userId): array
     {
         $user = $this->userRepository->getById($userId);
-        return $this->pluckKey($user->groups_member, 'id');
+
+        return array_merge(
+            $this->pluckKey($user->groups_member, 'user_group_id'),
+            $this->pluckKey($user->groups_creator, 'id')
+        );
     }
 
     private function validateTweetTypeData(TweetRequest $tweetRequest): void
