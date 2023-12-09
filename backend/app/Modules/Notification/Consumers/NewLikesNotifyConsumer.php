@@ -6,7 +6,6 @@ use App\Kafka\BaseConsumer;
 use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Services\NotificationService;
 use App\Modules\Tweet\Models\Tweet;
-use App\Modules\Tweet\Repositories\TweetRepository;
 use Illuminate\Log\LogManager;
 
 class NewLikesNotifyConsumer extends BaseConsumer

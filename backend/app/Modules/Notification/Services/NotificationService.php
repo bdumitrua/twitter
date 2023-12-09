@@ -4,9 +4,6 @@ namespace App\Modules\Notification\Services;
 
 use App\Firebase\FirebaseService;
 use App\Modules\Notification\DTO\NotificationDTO;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Notification\Models\Notification;
 use App\Modules\Notification\Repositories\NotificationRepository;
 use App\Modules\Notification\Requests\UpdateNotificationStatusRequest;
