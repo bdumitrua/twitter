@@ -119,7 +119,6 @@ class TweetRepository
 
     public function getByUserId(int $userId, bool $updateCache = false): Collection
     {
-        // TODO RECACHE
         $cacheKey = KEY_USER_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->pluckKey(
@@ -133,7 +132,6 @@ class TweetRepository
 
     public function getUserReplies(int $userId, bool $updateCache = false): Collection
     {
-        // TODO RECACHE
         $cacheKey = KEY_USER_REPLIES . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->pluckKey(
@@ -149,7 +147,6 @@ class TweetRepository
     // ! DOESN'T WORK
     public function getUserTweetsWithMedia(int $userId, bool $updateCache = false): Collection
     {
-        // TODO RECACHE
         $cacheKey = KEY_USER_MEDIA_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->pluckKey(
@@ -203,6 +200,7 @@ class TweetRepository
         $data = array_filter($data, fn ($value) => !is_null($value));
 
         $tweet = $this->tweet->create($data);
+        $this->clearUserTweetsCache($tweet->user_id);
 
         // TODO QUEUE
         $this->checkForNotices($tweet);
@@ -214,6 +212,8 @@ class TweetRepository
     public function createThread(array $tweetDTOs): void
     {
         $previousTweetId = null;
+        $userId = $tweetDTOs[0]->userId;
+
         foreach ($tweetDTOs as $tweetDTO) {
             $data = $tweetDTO->toArray();
             $data['linked_tweet_id'] = $previousTweetId;
@@ -225,11 +225,18 @@ class TweetRepository
 
             $previousTweetId = $tweet->id;
         }
+
+        $this->clearUserTweetsCache($userId);
     }
 
     public function destroy(Tweet $tweet): void
     {
+        $tweetId = $tweet->id;
+        $userId = $tweet->user_id;
+
         $tweet->delete();
+        $this->clearTweetCache($tweetId);
+        $this->clearUserTweetsCache($userId);
     }
 
     protected function getTweetsData(array $tweetsIds): Collection
@@ -242,7 +249,6 @@ class TweetRepository
 
     protected function getTweetData(int $tweetId): Tweet
     {
-        // TODO RECACHE DELETE
         $cacheKey = KEY_TWEET_DATA . $tweetId;
         return $this->getCachedData($cacheKey, $this->getTweetCacheTime($tweetId), function () use ($tweetId) {
             return $this->queryById($tweetId)->first();
@@ -254,7 +260,26 @@ class TweetRepository
         return TweetAgeHelper::getTweetAge($this->tweet->find($tweetId));
     }
 
-    private function getFeedQuery(array $userIds, array $groupIds): Builder
+    protected function clearTweetCache(int $tweetId): void
+    {
+        $cacheKey = KEY_TWEET_DATA . $tweetId;
+        $this->clearCache($cacheKey);
+    }
+
+    protected function clearUserTweetsCache(int $userId): void
+    {
+        $userCacheKeys = [
+            KEY_USER_MEDIA_TWEETS . $userId,
+            KEY_USER_REPLIES . $userId,
+            KEY_USER_TWEETS . $userId,
+        ];
+
+        foreach ($userCacheKeys as $cacheKey) {
+            $this->clearCache($cacheKey);
+        }
+    }
+
+    protected function getFeedQuery(array $userIds, array $groupIds): Builder
     {
         return $this->baseQuery()
             ->whereIn('user_id', $userIds)
@@ -266,7 +291,7 @@ class TweetRepository
             ->take(20);
     }
 
-    private function pluckKey($relation, string $key): array
+    protected function pluckKey($relation, string $key): array
     {
         return $relation->pluck($key)->toArray();
     }
