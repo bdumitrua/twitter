@@ -39,7 +39,7 @@ class UsersListService
     public function index(): Collection
     {
         $usersLists = $this->usersListRepository->getByUserId($this->authorizedUserId);
-        $filteredUsersLists = $this->filterPrivateLists($usersLists);
+        $filteredUsersLists = $this->filterPrivateLists($usersLists, $this->authorizedUserId);
 
         return $filteredUsersLists;
     }
@@ -48,7 +48,7 @@ class UsersListService
     {
         $usersList = $this->usersListRepository->getById($usersList->id);
 
-        $filteredUsersList = $this->filterPrivateLists(new Collection([$usersList]))->first();
+        $filteredUsersList = $this->filterPrivateLists(new Collection([$usersList]), $this->authorizedUserId)->first();
 
         if (empty($filteredUsersList)) {
             throw new AccessDeniedException();
@@ -110,9 +110,8 @@ class UsersListService
         $this->usersListRepository->unsubscribe($usersList->id, $this->authorizedUserId);
     }
 
-    protected function filterPrivateLists(Collection $usersLists): Collection
+    public function filterPrivateLists(Collection $usersLists, int $userId): Collection
     {
-        $userId = $this->authorizedUserId;
         return $usersLists->filter(function ($usersList) use ($userId) {
             return !($usersList->is_private)
                 || in_array($userId, $this->usersListRepository->getUserListsIds($userId));

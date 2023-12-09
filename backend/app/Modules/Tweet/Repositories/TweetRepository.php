@@ -11,7 +11,10 @@ use App\Modules\User\Events\NewTweetEvent;
 use App\Modules\User\Events\TweetNoticeEvent;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
+use App\Modules\User\Repositories\UserGroupRepository;
 use App\Modules\User\Repositories\UserRepository;
+use App\Modules\User\Repositories\UsersListRepository;
+use App\Modules\User\Repositories\UserSubscribtionRepository;
 use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -27,16 +30,25 @@ class TweetRepository
     protected Tweet $tweet;
     protected TweetLike $tweetLike;
     protected UserRepository $userRepository;
+    protected UsersListRepository $usersListRepository;
+    protected UserGroupRepository $userGroupRepository;
+    protected UserSubscribtionRepository $userSubscribtionRepository;
 
     public function __construct(
         Tweet $tweet,
         TweetLike $tweetLike,
         UserRepository $userRepository,
+        UsersListRepository $usersListRepository,
+        UserGroupRepository $userGroupRepository,
+        UserSubscribtionRepository $userSubscribtionRepository,
     ) {
 
         $this->tweet = $tweet;
         $this->tweetLike = $tweetLike;
         $this->userRepository = $userRepository;
+        $this->usersListRepository = $usersListRepository;
+        $this->userGroupRepository = $userGroupRepository;
+        $this->userSubscribtionRepository = $userSubscribtionRepository;
     }
 
     protected function baseQuery(): Builder
@@ -86,12 +98,20 @@ class TweetRepository
     public function getUserFeed(int $userId, bool $updateCache = false): Collection
     {
         $cacheKey = KEY_AUTH_USER_FEED . $userId;
-        $userFeedTweetsIds = $this->getCachedData($cacheKey, 15, function () use ($userId) {
-            $user = $this->getUser($userId);
-            $subscribedUserIds = $this->pluckKey($user->subscribtions(), 'user_id');
-            $userGroupIds = $this->pluckKey($user->groups_member(), 'id');
+        $userFeedTweetsIds = $this->getCachedData($cacheKey, 5, function () use ($userId) {
+            $subscribedUserIds = $this->pluckKey(
+                $this->userSubscribtionRepository->getSubscribtions($userId),
+                'user_id'
+            );
+            $userGroupIds = $this->pluckKey(
+                $this->userGroupRepository->getByUserId($userId),
+                'id'
+            );
 
-            return $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get()->pluck('id')->toArray();
+            return $this->pluckKey(
+                $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get(),
+                'id'
+            );
         }, $updateCache);
 
         return $this->assembleTweetsCollection($userFeedTweetsIds);
@@ -99,9 +119,13 @@ class TweetRepository
 
     public function getByUserId(int $userId, bool $updateCache = false): Collection
     {
+        // TODO RECACHE
         $cacheKey = KEY_USER_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
-            return $this->queryByUserId($userId)->get()->pluck('id')->toArray();
+            return $this->pluckKey(
+                $this->queryByUserId($userId)->get(),
+                'id'
+            );
         }, $updateCache);
 
         return $this->assembleTweetsCollection($userTweetsIds);
@@ -109,9 +133,13 @@ class TweetRepository
 
     public function getUserReplies(int $userId, bool $updateCache = false): Collection
     {
+        // TODO RECACHE
         $cacheKey = KEY_USER_REPLIES . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
-            return $this->queryByUserId($userId)->where('type', '=', 'reply')->get()->pluck('id')->toArray();
+            return $this->pluckKey(
+                $this->queryByUserId($userId)->where('type', '=', 'reply')->get(),
+                'id'
+            );
         }, $updateCache);
 
         return $this->assembleTweetsCollection($userTweetsIds);
@@ -121,9 +149,13 @@ class TweetRepository
     // ! DOESN'T WORK
     public function getUserTweetsWithMedia(int $userId, bool $updateCache = false): Collection
     {
+        // TODO RECACHE
         $cacheKey = KEY_USER_MEDIA_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
-            return $this->queryByUserId($userId)->whereNotNull('media')->get()->pluck('id')->toArray();
+            return $this->pluckKey(
+                $this->queryByUserId($userId)->whereNotNull('media')->get(),
+                'id'
+            );
         }, $updateCache);
 
         return $this->assembleTweetsCollection($userTweetsIds);
@@ -133,18 +165,33 @@ class TweetRepository
     {
         $cacheKey = KEY_USER_LIKED_TWEETS . $userId;
         $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
-            return $this->queryLikedByUserId($userId)->get()->pluck('tweet_id', 'id')->toArray();
+            return $this->pluckKey(
+                $this->queryLikedByUserId($userId)->get(),
+                'tweet_id'
+            );
         }, $updateCache);
 
         return $this->assembleTweetsCollection($userTweetsIds);
     }
 
-    public function getFeedByUsersList(UsersList $usersList, bool $updateCache = false): Collection
+    public function getFeedByUsersList(UsersList $usersList, int $userId, bool $updateCache = false): Collection
     {
-        $cacheKey = KEY_USERS_LIST_FEED . $usersList->id;
-        $usersListTweets = $this->getCachedData($cacheKey, 15, function () use ($usersList) {
-            $membersIds = $this->pluckKey($usersList->members(), 'id');
-            return $this->getFeedQuery($membersIds, null)->get()->pluck('id')->toArray();
+        $usersListId = $usersList->id;
+        $cacheKey = KEY_USERS_LIST_FEED . $usersListId;
+        $usersListTweets = $this->getCachedData($cacheKey, 15, function () use ($usersListId, $userId) {
+            $membersIds = $this->pluckKey(
+                $this->usersListRepository->getUsersListMembers($usersListId),
+                'id'
+            );
+            $userGroupIds = $this->pluckKey(
+                $this->userGroupRepository->getByUserId($userId),
+                'id'
+            );
+
+            return $this->pluckKey(
+                $this->getFeedQuery($membersIds, $userGroupIds)->get(),
+                'id'
+            );
         }, $updateCache);
 
         return $this->assembleTweetsCollection($usersListTweets);
@@ -187,6 +234,7 @@ class TweetRepository
 
     protected function getTweetsData(array $tweetsIds): Collection
     {
+        // TODO pluck id here
         return new Collection(array_map(function ($tweetId) {
             return $this->getTweetData($tweetId);
         }, $tweetsIds));
@@ -194,33 +242,28 @@ class TweetRepository
 
     protected function getTweetData(int $tweetId): Tweet
     {
+        // TODO RECACHE DELETE
         $cacheKey = KEY_TWEET_DATA . $tweetId;
-        return $this->getCachedData($cacheKey, TweetAgeHelper::getTweetAge(Tweet::findOrFail($tweetId)), function () use ($tweetId) {
+        return $this->getCachedData($cacheKey, $this->getTweetCacheTime($tweetId), function () use ($tweetId) {
             return $this->queryById($tweetId)->first();
         });
     }
 
-    private function getFeedQuery(array $userIds, ?array $groupIds = null): Builder
+    protected function getTweetCacheTime(int $tweetId): int
+    {
+        return TweetAgeHelper::getTweetAge($this->tweet->find($tweetId));
+    }
+
+    private function getFeedQuery(array $userIds, array $groupIds): Builder
     {
         return $this->baseQuery()
             ->whereIn('user_id', $userIds)
             ->where(function (Builder $query) use ($groupIds) {
-                if ($groupIds) {
-                    $query->where(function (Builder $query) use ($groupIds) {
-                        $query->whereNull('user_group_id')
-                            ->orWhereIn('user_group_id', $groupIds);
-                    });
-                } else {
-                    $query->whereNull('user_group_id');
-                }
+                $query->whereNull('user_group_id')
+                    ->orWhereIn('user_group_id', $groupIds);
             })
-            ->orderBy('created_at', 'desc')
+            ->latest()
             ->take(20);
-    }
-
-    private function getUser(int $userId): User
-    {
-        return $this->userRepository->getById($userId);
     }
 
     private function pluckKey($relation, string $key): array
@@ -253,7 +296,7 @@ class TweetRepository
             } else {
                 $this->loadLinkedTweetData($tweet);
                 $result->push($tweet);
-                $processedTweetIds[] = $tweet->id; // Отметить твит как обработанный
+                $processedTweetIds[] = $tweet->id;
             }
         }
 
@@ -262,8 +305,10 @@ class TweetRepository
 
     private function assembleTweetReplies(Tweet $tweet): Tweet
     {
-        if ($tweet->type === 'thread') {
-            $threadStartId = empty($tweet->linked_tweet_id) ? $this->findThreadStartId($tweet->id) : $tweet->id;
+        if ($tweet->type === 'thread' && !empty($tweet->threadChild()->first())) {
+            $threadStartId = empty($tweet->linked_tweet_id)
+                ? $this->findThreadStartId($tweet->id)
+                : $tweet->id;
             $tweet->thread = $this->buildThread($threadStartId, $tweet->id);
         }
 
@@ -276,29 +321,29 @@ class TweetRepository
     private function loadLinkedTweetData(Tweet &$tweet): void
     {
         $needsLinkedTweet = ['reply', 'repost', 'quote'];
-        if (in_array($tweet->type, $needsLinkedTweet)) {
-            $tweet->load(['linkedTweet' => function ($query) {
-                $query->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
-                    ->first();
-            }]);
+        $linkedTweetId = $tweet->linked_tweet_id;
+
+        if (in_array($tweet->type, $needsLinkedTweet) && !empty($linkedTweetId)) {
+            $tweet->linkedTweet = $this->getTweetData($linkedTweetId);
         }
     }
 
     private function loadRepliesData(Tweet &$tweet): void
     {
-        $tweet->load(['replies' => function ($query) {
-            $query->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
-                ->take(15);
-        }]);
+        $tweetRepliesIds = $this->pluckKey($tweet->replies()->take(15)->get(['id']), 'id');
+        $tweet->replies = $this->getTweetsData($tweetRepliesIds);
     }
 
     private function findThreadStartId(int $tweetId)
     {
-        $tweet = Tweet::find($tweetId);
-        while ($tweet->linked_tweet_id !== null) {
-            $tweet = Tweet::find($tweet->linked_tweet_id);
-        }
-        return $tweet->id;
+        $cacheKey = KEY_TWEET_THREAD_START_ID . $tweetId;
+        return $this->getCachedData($cacheKey, null, function () use ($tweetId) {
+            $tweet = $this->getTweetData($tweetId);
+            while ($tweet->linked_tweet_id !== null) {
+                $tweet = $this->getTweetData($tweet->linked_tweet_id);
+            }
+            return $tweet->id;
+        });
     }
 
     private function buildThread(int $tweetId, int $startTweetId = null): Tweet
@@ -389,10 +434,10 @@ class TweetRepository
         $notices = array_unique($notices);
 
         $noticedUsers = User::whereIn('link', $notices)->get(['id', 'link'])->toArray();
-        $noticesData = array_map(function ($subArray) use ($tweetId) {
+        $noticesData = array_map(function ($noticedUser) use ($tweetId) {
             return [
-                'link' => $subArray['link'],
-                'user_id' => $subArray['id'],
+                'link' => $noticedUser['link'],
+                'user_id' => $noticedUser['id'],
                 'tweet_id' => $tweetId,
                 'created_at' => now(),
                 'updated_at' => now(),

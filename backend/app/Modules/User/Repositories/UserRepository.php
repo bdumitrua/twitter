@@ -82,7 +82,7 @@ class UserRepository
         }
     }
 
-    public function clearUserDataCache(int $userId): void
+    protected function clearUserDataCache(int $userId): void
     {
         $authorizedUserCacheKey = KEY_AUTH_USER_DATA . (string)$userId;
         $userCacheKey = KEY_USER_DATA . (string)$userId;

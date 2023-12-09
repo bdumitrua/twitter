@@ -51,6 +51,8 @@ class AppServiceProvider extends ServiceProvider
 
         define('KEY_WITH_RELATIONS', 'with_relations:');
 
+        define('KEY_TWEET_THREAD_START_ID', 'tweet_thread_start_id:');
+
         define('KEY_TWEET_DATA', 'tweet_data:');
 
         /*

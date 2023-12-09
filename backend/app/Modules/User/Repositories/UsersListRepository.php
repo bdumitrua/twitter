@@ -49,6 +49,12 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
+    public function getUsersListMembers(int $usersListId): Collection
+    {
+        // TODO CACHE
+        return $this->usersListMember->where('users_list_id', $usersListId)->get();
+    }
+
     public function getUserListsIds(int $userId, bool $updateCache = false): array
     {
         $cacheKey = KEY_USER_LISTS . $userId;
@@ -196,13 +202,13 @@ class UsersListRepository
         });
     }
 
-    public function clearUserCache(int $userId): void
+    protected function clearUserCache(int $userId): void
     {
         $cacheKey = KEY_USER_LISTS . $userId;
         $this->clearCache($cacheKey);
     }
 
-    public function clearListCache(int $usersListId): void
+    protected function clearListCache(int $usersListId): void
     {
         $cacheKey = KEY_USERS_LIST_SHOW_DATA . $usersListId;
         $this->clearCache($cacheKey);

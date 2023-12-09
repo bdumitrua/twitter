@@ -69,6 +69,12 @@ class Tweet extends Model
         return $this->hasOne(Tweet::class, 'id', 'linked_tweet_id');
     }
 
+    public function threadChild()
+    {
+        return $this->hasOne(Tweet::class, 'linked_tweet_id', 'id')
+            ->where('type', 'thread');
+    }
+
     public function replies()
     {
         return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
