@@ -5,6 +5,7 @@ namespace App\Modules\Auth\Services;
 use App\Exceptions\CodeNotConfirmedException;
 use App\Exceptions\IncorrectCodeException;
 use App\Exceptions\InvalidCredetialsException;
+use App\Exceptions\InvalidTokenException;
 use App\Exceptions\NotFoundException;
 use App\Helpers\StringHelper;
 use App\Modules\Auth\Events\PasswordResetStartedEvent;
@@ -21,6 +22,7 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 
 class AuthService
 {
@@ -151,7 +153,13 @@ class AuthService
 
     public function refresh(): JsonResource
     {
-        return new AuthTokenResource(Auth::refresh());
+        try {
+            $newToken = new AuthTokenResource(Auth::refresh());
+            return $newToken;
+        } catch (TokenBlacklistedException $e) {
+            // From 502 to 403
+            throw new InvalidTokenException();
+        }
     }
 
     protected function createUniqueCode(): string
