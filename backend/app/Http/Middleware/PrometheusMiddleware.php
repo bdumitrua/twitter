@@ -27,7 +27,7 @@ class PrometheusMiddleware
 
         $response = $next($request);
 
-        $duration = $this->stopwatch->stop();;
+        $duration = $this->stopwatch->stop();
         $this->prometheusService->addResponseTimeHistogram($duration, $routeName);
 
         return $response;
