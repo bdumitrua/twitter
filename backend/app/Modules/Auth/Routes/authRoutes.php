@@ -21,7 +21,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
         // Подтвердить сборс пароля кодом
         Route::post('confirm/{authReset}', 'resetConfirm')->name('confirm_password_reset_code');
         // Изменить пароль аккаунта
-        Route::post('end/{authReset}', 'resetEnd')->name('end_password_reseting');
+        Route::post('end/{authReset}', 'resetEnd')->name('end_password_reset');
     });
 
     // Залогиниться

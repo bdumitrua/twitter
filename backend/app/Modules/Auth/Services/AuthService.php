@@ -17,6 +17,10 @@ use App\Modules\Auth\Requests\PasswordRequest;
 use App\Modules\Auth\Requests\AuthConfirmCodeRequest;
 use App\Modules\Auth\Requests\CheckEmailRequest;
 use App\Modules\Auth\Resources\AuthTokenResource;
+use App\Modules\Auth\Resources\PasswordResetCodeResource;
+use App\Modules\Auth\Resources\PasswordResetConfirmedResource;
+use App\Modules\Auth\Resources\RegistrationCodeResource;
+use App\Modules\Auth\Resources\RegistrationConfirmedResource;
 use App\Modules\User\Models\User;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +30,7 @@ use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 
 class AuthService
 {
-    public function registrationStart(CreateUserRequest $request)
+    public function registrationStart(CreateUserRequest $request): JsonResource
     {
         $registrationCode = $this->createUniqueCode();
         $userEmail = $request->email;
@@ -39,19 +43,22 @@ class AuthService
             'birth_date' => $request->birth_date,
         ]);
 
-        return ['registration_id' => $registrationData->id];
+        return new RegistrationCodeResource($registrationData->id);
     }
 
-    public function registrationConfirm(AuthRegistration $authRegistration, AuthConfirmCodeRequest $request): void
+    public function registrationConfirm(AuthRegistration $authRegistration, AuthConfirmCodeRequest $request): JsonResource
     {
-        Log::info('Confirming registration code', ['id' => $authRegistration->id]);
+        $registrationId = $authRegistration->id;
+        Log::info('Confirming registration code', ['id' => $registrationId]);
         if ($request->code !== $authRegistration->code) {
             throw new IncorrectCodeException();
         }
 
         $authRegistration->confirmed = true;
         $authRegistration->save();
-        Log::info('Confirmed registration code', ['id' => $authRegistration->id]);
+        Log::info('Confirmed registration code', ['id' => $registrationId]);
+
+        return new RegistrationConfirmedResource($registrationId);
     }
 
     public function registrationEnd(AuthRegistration $authRegistration, PasswordRequest $request): void
@@ -82,7 +89,7 @@ class AuthService
         AuthRegistration::where('email', $userEmail)->delete();
     }
 
-    public function resetCheck(CheckEmailRequest $request)
+    public function resetCheck(CheckEmailRequest $request): JsonResource
     {
         $email = $request->email;
         $user = User::where('email', $email)->first();
@@ -99,19 +106,22 @@ class AuthService
         ]);
         event(new PasswordResetStartedEvent($resetData, $email));
 
-        return ['reset_id' => $resetData->id];
+        return new PasswordResetCodeResource($resetData->id);
     }
 
     public function resetConfirm(AuthReset $authReset, AuthConfirmCodeRequest $request)
     {
-        Log::info('Confirming reset code', ['id' => $authReset->id]);
+        $resetId = $authReset->id;
+        Log::info('Confirming reset code', ['id' => $resetId]);
         if ($request->code !== $authReset->code) {
             throw new IncorrectCodeException();
         }
 
         $authReset->confirmed = true;
         $authReset->save();
-        Log::info('Confirmed reset code', ['id' => $authReset->id]);
+        Log::info('Confirmed reset code', ['id' => $resetId]);
+
+        return new PasswordResetConfirmedResource($resetId);
     }
 
     public function resetEnd(AuthReset $authReset, PasswordRequest $request)
