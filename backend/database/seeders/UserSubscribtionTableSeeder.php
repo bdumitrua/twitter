@@ -12,6 +12,6 @@ class UserSubscribtionTableSeeder extends Seeder
      */
     public function run(): void
     {
-        UserSubscribtion::factory(500)->create();
+        UserSubscribtion::factory(15)->create();
     }
 }

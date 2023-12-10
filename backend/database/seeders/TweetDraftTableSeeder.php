@@ -13,6 +13,6 @@ class TweetDraftTableSeeder extends Seeder
      */
     public function run(): void
     {
-        TweetDraft::factory(600)->create();
+        TweetDraft::factory(50)->create();
     }
 }

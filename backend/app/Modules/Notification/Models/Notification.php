@@ -14,6 +14,7 @@ class Notification extends Model
 
     public $incrementing = false;
     protected $keyType = 'string';
+    protected $primaryKey = 'uuid';
     protected $fillable = [
         'uuid',
         'user_id',

@@ -13,6 +13,6 @@ class TweetTableSeeder extends Seeder
      */
     public function run(): void
     {
-        Tweet::factory(500)->create();
+        Tweet::factory(25)->create();
     }
 }
