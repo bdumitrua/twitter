@@ -96,6 +96,14 @@ class TweetService
         return TweetResource::collection($userLikedTweets);
     }
 
+    public function bookmarks(): JsonResource
+    {
+        $userLikedTweets = $this->tweetRepository->getUserBookmarks($this->authorizedUserId);
+        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets, $this->authorizedUserId);
+
+        return TweetResource::collection($userLikedTweets);
+    }
+
     public function list(UsersList $usersList): JsonResource
     {
         $usersList = $this->usersListService->filterPrivateLists(new Collection([$usersList]), $this->authorizedUserId)->first();

@@ -17,13 +17,6 @@ class TweetLikeController extends Controller
         $this->tweetLikeService = $tweetLikeService;
     }
 
-    public function index(): JsonResponse
-    {
-        return $this->handleServiceCall(function () {
-            return $this->tweetLikeService->index();
-        });
-    }
-
     public function add(Tweet $tweet): JsonResponse
     {
         return $this->handleServiceCall(function () use ($tweet) {

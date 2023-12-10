@@ -27,9 +27,7 @@ class TweetFavoriteRepository
 
     public function getByUserId(int $userId): Collection
     {
-        return $this->tweetFavorite
-            ->where('user_id', '=', $userId)
-            ->get();
+        return $this->tweetFavorite->where('user_id', '=', $userId)->get();
     }
 
     public function add(int $tweetId, int $userId): void

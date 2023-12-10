@@ -64,6 +64,13 @@ class TweetController extends Controller
         });
     }
 
+    public function bookmarks(): JsonResponse
+    {
+        return $this->handleServiceCall(function () {
+            return $this->tweetService->bookmarks();
+        });
+    }
+
     public function list(UsersList $usersList): JsonResponse
     {
         return $this->handleServiceCall(function () use ($usersList) {

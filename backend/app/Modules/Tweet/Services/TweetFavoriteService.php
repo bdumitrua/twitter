@@ -19,11 +19,6 @@ class TweetFavoriteService
         $this->authorizedUserId = Auth::id();
     }
 
-    public function index(): Collection
-    {
-        return $this->tweetFavoriteRepository->getByUserId($this->authorizedUserId);
-    }
-
     public function add(Tweet $tweet): void
     {
         $this->tweetFavoriteRepository->add($tweet->id, $this->authorizedUserId);

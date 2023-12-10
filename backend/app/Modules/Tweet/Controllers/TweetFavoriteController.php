@@ -17,13 +17,6 @@ class TweetFavoriteController extends Controller
         $this->tweetFavoriteService = $tweetFavoriteService;
     }
 
-    public function index(): JsonResponse
-    {
-        return $this->handleServiceCall(function () {
-            return $this->tweetFavoriteService->index();
-        });
-    }
-
     public function add(Tweet $tweet): JsonResponse
     {
         return $this->handleServiceCall(function () use ($tweet) {

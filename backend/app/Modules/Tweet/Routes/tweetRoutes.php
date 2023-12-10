@@ -12,6 +12,8 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
     Route::middleware(['auth:api'])->group(function () {
         // Получить ленту твитов
         Route::get('feed', 'feed')->name('get_user_feed');
+        // Получить твиты, которые авторизованный юзер добавил в избранное
+        Route::get('bookmarks', 'bookmarks')->name('get_authorized_user_bookmarks');
         // Получить твиты списка
         Route::get('list/{usersList}', 'list')->name('get_users_list_tweets');
         // Создать твит

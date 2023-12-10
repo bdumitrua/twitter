@@ -5,6 +5,7 @@ namespace App\Modules\Tweet\Repositories;
 use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
+use App\Modules\Tweet\Models\TweetFavorite;
 use App\Modules\Tweet\Models\TweetLike;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UserGroupRepository;
@@ -23,6 +24,7 @@ class TweetRepository
 
     protected Tweet $tweet;
     protected TweetLike $tweetLike;
+    protected TweetFavorite $tweetFavorite;
     protected UserRepository $userRepository;
     protected UsersListRepository $usersListRepository;
     protected UserGroupRepository $userGroupRepository;
@@ -31,6 +33,7 @@ class TweetRepository
     public function __construct(
         Tweet $tweet,
         TweetLike $tweetLike,
+        TweetFavorite $tweetFavorite,
         UserRepository $userRepository,
         UsersListRepository $usersListRepository,
         UserGroupRepository $userGroupRepository,
@@ -39,6 +42,7 @@ class TweetRepository
 
         $this->tweet = $tweet;
         $this->tweetLike = $tweetLike;
+        $this->tweetFavorite = $tweetFavorite;
         $this->userRepository = $userRepository;
         $this->usersListRepository = $usersListRepository;
         $this->userGroupRepository = $userGroupRepository;
@@ -66,7 +70,14 @@ class TweetRepository
     {
         return $this->tweetLike->newQuery()
             ->where('user_id', '=', $userId)
-            ->orderBy('created_at', 'desc');
+            ->latest();
+    }
+
+    protected function queryBookmarksByUserId($userId): Builder
+    {
+        return $this->tweetFavorite->newQuery()
+            ->where('user_id', '=', $userId)
+            ->latest();
     }
 
     public function search(string $text): Collection
@@ -155,9 +166,22 @@ class TweetRepository
     public function getUserLikedTweets(int $userId, bool $updateCache = false): Collection
     {
         $cacheKey = KEY_USER_LIKED_TWEETS . $userId;
-        $userTweetsIds = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+        $userTweetsIds = $this->getCachedData($cacheKey, 3 * 60, function () use ($userId) {
             return $this->pluckKey(
                 $this->queryLikedByUserId($userId)->get(),
+                'tweet_id'
+            );
+        }, $updateCache);
+
+        return $this->assembleTweetsCollection($userTweetsIds);
+    }
+
+    public function getUserBookmarks(int $userId, bool $updateCache = false): Collection
+    {
+        $cacheKey = KEY_USER_BOOKMARKS . $userId;
+        $userTweetsIds = $this->getCachedData($cacheKey, 3 * 60, function () use ($userId) {
+            return $this->pluckKey(
+                $this->queryBookmarksByUserId($userId)->get(),
                 'tweet_id'
             );
         }, $updateCache);
@@ -226,14 +250,14 @@ class TweetRepository
         $this->clearUserTweetsCache($userId);
     }
 
-    protected function getTweetsData(array $tweetsIds): Collection
+    public function getTweetsData(array $tweetsIds): Collection
     {
         return new Collection(array_map(function ($tweetId) {
             return $this->getTweetData($tweetId);
         }, $tweetsIds));
     }
 
-    protected function getTweetData(int $tweetId): Tweet
+    public function getTweetData(int $tweetId): Tweet
     {
         $cacheKey = KEY_TWEET_DATA . $tweetId;
         return $this->getCachedData($cacheKey, $this->getTweetCacheTime($tweetId), function () use ($tweetId) {
