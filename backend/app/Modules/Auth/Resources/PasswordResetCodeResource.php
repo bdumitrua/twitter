@@ -17,10 +17,12 @@ class PasswordResetCodeResource extends JsonResource
     public function toArray(Request $request): array
     {
         $resetId = $this->resource;
-        $actions = new ActionsResource([
-            "ConfirmCode",
-            "confirm_password_reset_code",
-            ['authReset' => $resetId],
+        $actions = ActionsResource::collection([
+            [
+                "ConfirmCode",
+                "confirm_password_reset_code",
+                ['authReset' => $resetId],
+            ]
         ]);
 
         return [

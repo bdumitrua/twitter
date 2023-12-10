@@ -17,10 +17,12 @@ class RegistrationConfirmedResource extends JsonResource
     public function toArray(Request $request): array
     {
         $registrationId = $this->resource;
-        $actions = new ActionsResource([
-            "EndRegistration",
-            "end_registration",
-            ['authRegistration' => $registrationId],
+        $actions = ActionsResource::collection([
+            [
+                "EndRegistration",
+                "end_registration",
+                ['authRegistration' => $registrationId],
+            ]
         ]);
 
         return [
