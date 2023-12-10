@@ -1,9 +1,8 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
-
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const Dotenv = require("dotenv-webpack");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
@@ -156,6 +155,5 @@ module.exports = {
 			chunkFilename: "[id].css",
 		}),
 		new ForkTsCheckerWebpackPlugin(),
-		new Dotenv(),
 	],
 };
