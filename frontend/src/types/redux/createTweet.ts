@@ -5,7 +5,7 @@ export interface CreateTweetState {
 	currentId: number;
 }
 
-interface TweetBody {
+export interface TweetBody {
 	id: number;
 	charCount: number;
 }

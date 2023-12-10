@@ -1,13 +1,16 @@
 import styles from "@/assets/styles/components/UserAvatar/UserAvatarPlug.module.scss";
 import { RootState } from "@/redux/store";
+import { User } from "@/types/redux/user";
 import { useSelector } from "react-redux";
 
 const UserAvatarPlug = () => {
-	const user = useSelector((state: RootState) => state.user.authorizedUser);
+	const authorizedUser: User | null = useSelector(
+		(state: RootState) => state.user.authorizedUser
+	);
 
 	return (
 		<div className={styles["user-image-plug"]}>
-			{user?.name[0].toUpperCase()}
+			{authorizedUser?.name[0].toUpperCase()}
 		</div>
 	);
 };

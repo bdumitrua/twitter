@@ -9,9 +9,7 @@ import { getMeAsync } from "../../redux/slices/user.slice";
 const Welcome: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate: NavigateFunction = useNavigate();
-	// const loggedIn: boolean = useSelector(
-	// 	(state: RootState) => state.auth.loggedIn
-	// );
+
 	const error: string | null = useSelector(
 		(state: RootState) => state.user.error
 	);

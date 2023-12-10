@@ -1,6 +1,7 @@
 import { Link, Location, useLocation } from "react-router-dom";
 
 import { RootState } from "@/redux/store";
+import { User } from "@/types/redux/user";
 import { useSelector } from "react-redux";
 import accountImage from "../../assets/images/Header/accountImage.svg";
 import leftArrowIcon from "../../assets/images/Header/leftArrowIcon.svg";
@@ -21,7 +22,7 @@ const Header: React.FC<HeaderProps> = (props) => {
 		(entity) => entity === location.pathname.split("/")[1]
 	);
 
-	const authorizedUser = useSelector(
+	const authorizedUser: User | null = useSelector(
 		(state: RootState) => state.user.authorizedUser
 	);
 

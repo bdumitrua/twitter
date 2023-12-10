@@ -1,4 +1,5 @@
 import { RootState } from "@/redux/store";
+import { User } from "@/types/redux/user";
 import { ReactNode } from "react";
 import { useSelector } from "react-redux";
 import { createBrowserRouter, Navigate } from "react-router-dom";
@@ -23,9 +24,11 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-	const user = useSelector((state: RootState) => state.user.authorizedUser);
+	const authorizedUser: User | null = useSelector(
+		(state: RootState) => state.user.authorizedUser
+	);
 
-	if (!user) {
+	if (!authorizedUser) {
 		// Перенаправление на страницу авторизации
 		return <Navigate to="/welcome" />;
 	}
