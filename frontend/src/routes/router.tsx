@@ -23,7 +23,7 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-	const user = useSelector((state: RootState) => state.user.user);
+	const user = useSelector((state: RootState) => state.user.authorizedUser);
 
 	if (!user) {
 		// Перенаправление на страницу авторизации

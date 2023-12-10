@@ -10,7 +10,7 @@ export const getMeAsync = createAsyncThunk("user/me", async () => {
 });
 
 const initialState: UserState = {
-	user: null,
+	authorizedUser: null,
 	isSuccessfull: null,
 	loading: false,
 	error: null,
@@ -21,7 +21,7 @@ const userSlice = createSlice({
 	initialState,
 	reducers: {
 		resetUser: (state) => {
-			state.user = null;
+			state.authorizedUser = null;
 			state.isSuccessfull = null;
 			state.loading = false;
 			state.error = null;
@@ -35,7 +35,7 @@ const userSlice = createSlice({
 			})
 			.addCase(getMeAsync.fulfilled, (state, action) => {
 				state.loading = false;
-				state.user = action.payload;
+				state.authorizedUser = action.payload;
 				state.error = null;
 			})
 			.addCase(getMeAsync.rejected, (state, action) => {

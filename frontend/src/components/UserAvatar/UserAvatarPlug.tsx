@@ -3,7 +3,7 @@ import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 
 const UserAvatarPlug = () => {
-	const user = useSelector((state: RootState) => state.user.user);
+	const user = useSelector((state: RootState) => state.user.authorizedUser);
 
 	return (
 		<div className={styles["user-image-plug"]}>

@@ -16,7 +16,7 @@ const Welcome: React.FC = () => {
 		(state: RootState) => state.user.error
 	);
 	const user: User | null = useSelector(
-		(state: RootState) => state.user.user
+		(state: RootState) => state.user.authorizedUser
 	);
 
 	useEffect(() => {

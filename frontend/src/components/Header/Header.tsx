@@ -21,7 +21,9 @@ const Header: React.FC<HeaderProps> = (props) => {
 		(entity) => entity === location.pathname.split("/")[1]
 	);
 
-	const authorizedUser = useSelector((state: RootState) => state.user.user);
+	const authorizedUser = useSelector(
+		(state: RootState) => state.user.authorizedUser
+	);
 
 	return (
 		<div className={styles["header"]}>
