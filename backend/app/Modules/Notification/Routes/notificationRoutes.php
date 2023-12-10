@@ -11,6 +11,6 @@ Route::prefix('notifications')->middleware(['auth:api'])->controller(Notificatio
 
     Route::middleware(['checkRights:notification'])->group(function () {
         // Изменить статус
-        Route::patch('update/{notification}', 'update')->name('update_notification');
+        Route::patch('{notification}', 'update')->name('update_notification');
     });
 });
