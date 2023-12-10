@@ -170,6 +170,12 @@ class TweetService
         $this->tweetRepository->destroy($tweet);
     }
 
+    public function unrepost(Tweet $tweet, Request $request): void
+    {
+        $this->logger->info("Deleting repost of tweet {$tweet->id}", ['userId' => $this->authorizedUserId, 'ip' => $request->ip()]);
+        $this->tweetRepository->unrepost($tweet->id, $this->authorizedUserId);
+    }
+
     protected function filterTweetsByGroup(Collection $tweets): Collection
     {
         $groupIds = [];

@@ -92,6 +92,13 @@ class TweetController extends Controller
         });
     }
 
+    public function unrepost(Tweet $tweet, Request $request): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($tweet, $request) {
+            return $this->tweetService->unrepost($tweet, $request);
+        });
+    }
+
     public function destroy(Tweet $tweet, Request $request): JsonResponse
     {
         return $this->handleServiceCall(function () use ($tweet, $request) {

@@ -250,6 +250,22 @@ class TweetRepository
         $this->clearUserTweetsCache($userId);
     }
 
+    public function unrepost(int $tweetId, int $authorizedUserId): void
+    {
+        $this->tweet->where('user_id', $authorizedUserId)
+            ->where('type', 'repost')
+            ->where('linked_tweet_id', $tweetId)
+            ->first() ?? [];
+
+        if (!empty($tweet)) {
+            $repostTweetId = $tweet->id;
+            $tweet->delete();
+
+            $this->clearTweetCache($repostTweetId);
+            $this->clearUserTweetsCache($authorizedUserId);
+        }
+    }
+
     public function getTweetsData(array $tweetsIds): Collection
     {
         return new Collection(array_map(function ($tweetId) {

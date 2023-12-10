@@ -20,8 +20,10 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
         Route::post('create', 'create')->name('create_tweet');
         // Создать тред
         Route::post('thread', 'thread')->name('create_thread');
-        // Удалить твит
+        // Удалить репост
+        Route::post('unrepost/{tweet}', 'unrepost')->name('unrepost_tweet');
         Route::middleware(['checkRights:tweet'])->group(function () {
+            // Удалить твит
             Route::delete('{tweet}', 'destroy')->name('destroy_tweet');
         });
     });

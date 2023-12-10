@@ -2,6 +2,7 @@
 
 namespace App\Modules\Tweet\Resources;
 
+use App\Http\Resources\ActionsResource;
 use App\Modules\User\Resources\ShortUserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -36,6 +37,7 @@ class TweetResource extends JsonResource
 
         $relatedData = $this->prepareRelatedData($linkedTweet, $thread);
         $counters = $this->prepareCounters();
+        $actions = $this->prepareActions();
 
         return [
             'id' => $this->id,
@@ -48,7 +50,8 @@ class TweetResource extends JsonResource
             ],
             'counters' => $counters,
             'related' => $relatedData,
-            'replies' => $replies
+            'replies' => $replies,
+            'actions' => $actions,
         ];
     }
 
@@ -82,5 +85,64 @@ class TweetResource extends JsonResource
                 'count' => $this->favorites_count
             ],
         ];
+    }
+
+    private function prepareActions(): JsonResource
+    {
+        $isShowing = $this->whenLoaded('replies', function () {
+            return true;
+        }, false);
+
+        $actions = [
+            [
+                "LikeTweet",
+                "like_tweet",
+                ["tweet" => $this->id]
+            ],
+            [
+                "DislikeTweet",
+                "dislike_tweet",
+                ["tweet" => $this->id]
+            ],
+            [
+                "BookmarkTweet",
+                "add_tweet_to_bookmarks",
+                ["tweet" => $this->id]
+            ],
+            [
+                "UnbookmarkTweet",
+                "remove_tweet_from_bookmarks",
+                ["tweet" => $this->id]
+            ],
+            [
+                "RepostTweet",
+                "create_tweet",
+            ],
+            [
+                "UnrepostTweet",
+                "unrepost_tweet",
+                ["tweet" => $this->id]
+            ],
+            [
+                "QuoteTweet",
+                "create_tweet",
+            ],
+        ];
+
+        if ($isShowing) {
+            $actions[] = [
+                'ShareTweet',
+                'get_tweet_by_id',
+                ["tweet" => $this->id]
+            ];
+        } else {
+            $actions[] = [
+                'ShowTweet',
+                'get_tweet_by_id',
+                ["tweet" => $this->id]
+            ];
+        }
+
+        return ActionsResource::collection($actions);
     }
 }
