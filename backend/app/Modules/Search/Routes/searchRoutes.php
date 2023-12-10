@@ -13,7 +13,7 @@ Route::prefix('search')->middleware(['auth:api'])->controller(SearchController::
     // Поиск по содержимому твита
     Route::get('tweets', 'tweets')->name('global_search_tweets');
     // Создать недавний поиск
-    Route::post('create', 'create')->name('create_user_recent_search');
+    Route::post('/', 'create')->name('create_user_recent_search');
     // Удалить свои поиски
-    Route::delete('clear', 'clear')->name('clear_authorized_user_recent_searches');
+    Route::delete('/', 'clear')->name('clear_authorized_user_recent_searches');
 });
