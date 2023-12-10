@@ -9,18 +9,6 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
     // Получить по id твита
     Route::get('{tweet}', 'show')->name('get_tweet_by_id');
 
-    Route::prefix('user')->group(function () {
-        // Получить твиты пользователя
-        Route::get('{user}', 'user')->name('get_user_tweets');
-        // Получить ответы пользователя
-        Route::get('replies/{user}', 'replies')->name('get_user_replies');
-        // Получить лайкнутые твиты пользователя
-        Route::get('likes/{user}', 'likes')->name('get_user_likes');
-        // Получить медиа пользователя
-        // ! DOESN'T WORK
-        Route::get('media/{user}', 'media')->name('get_user_tweets_with_media');
-    });
-
     Route::middleware(['auth:api'])->group(function () {
         // Получить ленту твитов
         Route::get('feed', 'feed')->name('get_user_feed');
@@ -34,5 +22,17 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
         Route::middleware(['checkRights:tweet'])->group(function () {
             Route::delete('{tweet}', 'destroy')->name('destroy_tweet');
         });
+    });
+
+    Route::prefix('user')->group(function () {
+        // Получить твиты пользователя
+        Route::get('{user}', 'user')->name('get_user_tweets');
+        // Получить ответы пользователя
+        Route::get('replies/{user}', 'replies')->name('get_user_replies');
+        // Получить лайкнутые твиты пользователя
+        Route::get('likes/{user}', 'likes')->name('get_user_likes');
+        // Получить медиа пользователя
+        // ! DOESN'T WORK
+        Route::get('media/{user}', 'media')->name('get_user_tweets_with_media');
     });
 });
