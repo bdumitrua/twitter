@@ -31,11 +31,15 @@ axiosInstance.interceptors.response.use(
 						`/auth/refresh?token=${token}`
 					);
 
+					console.log("nu ya");
+
+					console.log(Cookies.get("access_token"));
 					// Обновляем токен в хранилище
 					Cookies.set("access_token", response.data.access_token, {
 						expires: 14,
 					});
 
+					console.log(Cookies.get("access_token"));
 					// Обновляем токен в заголовке авторизации
 					axiosInstance.defaults.headers.common["Authorization"] =
 						"Bearer " + Cookies.get("access_token");

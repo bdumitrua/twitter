@@ -2,7 +2,7 @@ import styles from "@/assets/styles/components/UserAvatar/UserAvatarPlug.module.
 import { RootState } from "@/redux/store";
 import { useSelector } from "react-redux";
 
-const UserImagePlug = () => {
+const UserAvatarPlug = () => {
 	const user = useSelector((state: RootState) => state.user.user);
 
 	return (
@@ -12,4 +12,4 @@ const UserImagePlug = () => {
 	);
 };
 
-export default UserImagePlug;
+export default UserAvatarPlug;

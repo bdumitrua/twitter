@@ -11,6 +11,8 @@
 	z-index: $z-header;
 
 	&__burger-icon {
+		width: 32px;
+		height: 32px;
 		display: flex;
 		position: relative;
 	}

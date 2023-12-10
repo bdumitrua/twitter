@@ -20,7 +20,7 @@ const Welcome: React.FC = () => {
 	);
 
 	useEffect(() => {
-		if (!user && Cookies.get("access_token")) {
+		if (!user && Cookies.get("access_token") && !error) {
 			dispatch(getMeAsync());
 		}
 		if (user) {
