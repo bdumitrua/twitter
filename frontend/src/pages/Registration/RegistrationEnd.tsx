@@ -2,6 +2,7 @@ import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { ErrorMessage } from "@/components/ErrorMessage/ErrorMessage";
 import { registerAsync } from "@/redux/slices/register.slice";
 import { AppDispatch, RootState } from "@/redux/store";
+import { ErrorMessages } from "@/types/api";
 import { RegisterEndPayload, RegisterError } from "@/types/redux/register";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -10,10 +11,6 @@ import { NavigateFunction, useNavigate } from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
 import { getLastEntry } from "../../utils/functions/getLastEntry";
 import { passwordRules } from "../../utils/inputRules";
-
-interface ErrorMessages {
-	[key: number]: string;
-}
 
 const RegistrationEnd = () => {
 	const {

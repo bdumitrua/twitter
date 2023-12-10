@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import styles from "../../assets/styles/global.scss";
 
 export function parseHashtags(text: string, page: string) {
-	const hashtagRegex = /#(\w+)/g;
+	const hashtagRegex: RegExp = /#(\w+)/g;
 	const parts: any[] = [];
 	let lastIndex: number = 0;
 

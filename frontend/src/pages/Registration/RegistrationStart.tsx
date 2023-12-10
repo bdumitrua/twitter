@@ -1,5 +1,6 @@
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { AppDispatch, RootState } from "@/redux/store";
+import { ErrorMessages } from "@/types/api";
 import { RegisterError, RegisterStartPayload } from "@/types/redux/register";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -45,11 +46,20 @@ const RegistrationStart: React.FC = () => {
 	const error: RegisterError | null = useSelector(
 		(state: RootState) => state.register.error
 	);
+
+	const errorMessages: ErrorMessages = {
+		422: "Данная почта уже занята",
+	};
 	useEffect(() => {
-		if (error && error.status === 422) {
+		if (error && errorMessages[error.status]) {
 			setError("email", {
 				type: "manual",
-				message: "Данная почта уже занята",
+				message: errorMessages[error.status],
+			});
+		} else if (error && !errorMessages[error.status]) {
+			setError("email", {
+				type: "manual",
+				message: "Неизвестная ошибка, обратитесь в тех. поддержку.",
 			});
 		}
 	}, [error]);
