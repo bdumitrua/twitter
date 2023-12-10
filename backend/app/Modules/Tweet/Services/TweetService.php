@@ -6,11 +6,8 @@ use App\Exceptions\AccessDeniedException;
 use App\Exceptions\NotFoundException;
 use App\Exceptions\UnavailableMethodException;
 use App\Exceptions\UnprocessableContentException;
-use App\Helpers\TimeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetRepository;
 use App\Modules\Tweet\Requests\CreateThreadRequest;
@@ -25,7 +22,6 @@ use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
 
 class TweetService
 {

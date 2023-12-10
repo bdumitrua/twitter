@@ -3,11 +3,8 @@
 namespace App\Modules\Tweet\Repositories;
 
 use App\Modules\Tweet\Models\TweetFavorite;
-use App\Modules\User\Events\TweetFavoriteEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TweetFavoriteRepository
 {
@@ -38,7 +35,7 @@ class TweetFavoriteRepository
     public function add(int $tweetId, int $userId): void
     {
         if (empty($this->queryByBothIds($tweetId, $userId)->first())) {
-            $tweetFavorite = $this->tweetFavorite->create([
+            $this->tweetFavorite->create([
                 'tweet_id' => $tweetId,
                 'user_id' => $userId,
             ]);

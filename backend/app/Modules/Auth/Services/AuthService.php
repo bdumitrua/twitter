@@ -7,11 +7,7 @@ use App\Exceptions\IncorrectCodeException;
 use App\Exceptions\InvalidCredetialsException;
 use App\Exceptions\NotFoundException;
 use App\Helpers\StringHelper;
-use App\Mail\RegistrationCodeMail;
-use App\Mail\ResetPasswordCodeEmail;
 use App\Modules\Auth\Events\PasswordResetStartedEvent;
-use App\Modules\Auth\Events\RegistrationStartedEvent;
-use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Auth\Models\AuthRegistration;
 use App\Modules\Auth\Models\AuthReset;
 use App\Modules\Auth\Requests\CreateUserRequest;
@@ -25,8 +21,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 
 class AuthService
 {

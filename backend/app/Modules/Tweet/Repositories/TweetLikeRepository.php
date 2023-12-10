@@ -3,11 +3,8 @@
 namespace App\Modules\Tweet\Repositories;
 
 use App\Modules\Tweet\Models\TweetLike;
-use App\Modules\User\Events\TweetLikeEvent;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class TweetLikeRepository
 {

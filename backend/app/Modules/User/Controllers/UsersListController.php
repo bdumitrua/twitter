@@ -7,9 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Requests\CreateUsersListRequest;
-use App\Modules\User\Requests\SearchRequest;
 use App\Modules\User\Requests\UpdateUsersListRequest;
-use App\Modules\User\Requests\UsersListRequest;
 use App\Modules\User\Services\UsersListService;
 use Illuminate\Http\JsonResponse;
 

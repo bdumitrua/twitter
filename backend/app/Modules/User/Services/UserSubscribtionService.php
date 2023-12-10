@@ -2,10 +2,6 @@
 
 namespace App\Modules\User\Services;
 
-use App\Modules\User\Events\UserSubscribtionEvent;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserSubscribtionRepository;
 use Illuminate\Database\Eloquent\Collection;

@@ -4,8 +4,6 @@ namespace App\Modules\User\Services;
 
 use App\Modules\User\DTO\UserGroupDTO;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Repositories\UserGroupRepository;
@@ -15,8 +13,6 @@ use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Cache;
-use Illuminate\Support\Facades\Log;
 
 class UserGroupService
 {

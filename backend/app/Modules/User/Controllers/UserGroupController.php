@@ -8,7 +8,6 @@ use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Requests\CreateUserGroupRequest;
 use App\Modules\User\Requests\UpdateUserGroupRequest;
-use App\Modules\User\Requests\UserGroupRequest;
 use App\Modules\User\Services\UserGroupService;
 use Illuminate\Http\JsonResponse;
 

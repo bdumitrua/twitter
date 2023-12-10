@@ -5,7 +5,6 @@ namespace App\Modules\Auth\Consumers;
 use App\Kafka\BaseConsumer;
 use App\Mail\RegistrationCodeMail;
 use Illuminate\Log\LogManager;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 
 class NewRegistrationsConsumer extends BaseConsumer

@@ -12,6 +12,6 @@ class DeviceTokenTableSeeder extends Seeder
      */
     public function run(): void
     {
-        DeviceTokenFactory::factory(30)->create();
+        DeviceTokenFactory::factory(5)->create();
     }
 }

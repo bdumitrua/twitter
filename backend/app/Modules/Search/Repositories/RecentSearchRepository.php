@@ -4,7 +4,6 @@ namespace App\Modules\Search\Repositories;
 
 use App\Modules\Search\DTO\RecentSearchDTO;
 use App\Modules\Search\Models\RecentSearch;
-use App\Modules\Search\Models\Search;
 use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;

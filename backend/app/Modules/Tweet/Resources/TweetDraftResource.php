@@ -5,7 +5,7 @@ namespace App\Modules\Tweet\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TweetNoticeResource extends JsonResource
+class TweetDraftResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -15,8 +15,8 @@ class TweetNoticeResource extends JsonResource
     public function toArray(Request $request): array
     {
         return [
-            'link' => $this->link,
-            'user_id' => $this->user_id,
+            'id' => $this->id,
+            'text' => $this->text,
         ];
     }
 }

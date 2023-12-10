@@ -2,34 +2,31 @@
 
 namespace App\Modules\Tweet\Models;
 
-use App\Modules\User\Events\TweetLikeEvent;
 use App\Prometheus\PrometheusService;
-use Database\Factories\TweetLikeFactory;
+use Database\Factories\TweetDraftFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class TweetLike extends Model
+class TweetDraft extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'user_id',
-        'tweet_id',
+        'text',
     ];
 
     protected static function newFactory()
     {
-        return TweetLikeFactory::new();
+        return TweetDraftFactory::new();
     }
 
     protected static function boot()
     {
         parent::boot();
 
-        static::created(function ($tweetLike) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('TweetLike');
-
-            event(new TweetLikeEvent($tweetLike));
+        static::created(function ($model) {
+            app(PrometheusService::class)->incrementEntityCreatedCount('TweetDraft');
         });
     }
 }

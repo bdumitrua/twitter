@@ -99,13 +99,16 @@ class AppServiceProvider extends ServiceProvider
         define('KEY_USERS_LIST_MEMBERS', 'users_list_members:');
 
         // Массив избранных твиттов пользователя
-        define('KEY_USER_FAVORITES', 'auth_user_favorites:');
+        define('KEY_USER_FAVORITES', 'user_favorites:');
 
         // Массив избранных твиттов пользователя
-        define('KEY_USER_LIKES', 'auth_user_likes:');
+        define('KEY_USER_LIKES', 'user_likes:');
+
+        // Черновики пользователя
+        define('KEY_USER_TWEET_DRAFTS', 'user_tweet_drafts:');
 
         // Массив избранных твиттов пользователя
-        define('KEY_USER_NOTIFICATIONS', 'auth_user_notifications:');
+        define('KEY_USER_NOTIFICATIONS', 'user_notifications:');
 
         /*
         *   Ключи связанные с данными списка

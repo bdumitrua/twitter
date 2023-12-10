@@ -5,7 +5,6 @@ namespace App\Modules\Notification\Consumers;
 use App\Kafka\BaseConsumer;
 use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Services\NotificationService;
-use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListSubscribtion;
 use Illuminate\Log\LogManager;
 

@@ -3,9 +3,7 @@
 namespace App\Modules\Notification\Consumers;
 
 use App\Kafka\BaseConsumer;
-use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Services\NotificationService;
-use Enqueue\RdKafka\RdKafkaConnectionFactory;
 use Illuminate\Log\LogManager;
 
 class NewUserNotifyConsumer extends BaseConsumer

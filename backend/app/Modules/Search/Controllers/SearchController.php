@@ -4,7 +4,6 @@ namespace App\Modules\Search\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Modules\Search\Models\Search;
 use App\Modules\Search\Requests\RecentSearchRequest;
 use App\Modules\Search\Requests\SearchRequest;
 use App\Modules\Search\Services\SearchService;

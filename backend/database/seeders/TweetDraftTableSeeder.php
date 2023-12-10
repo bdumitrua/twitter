@@ -2,17 +2,17 @@
 
 namespace Database\Seeders;
 
-use App\Modules\User\Models\UsersListSubscribtion;
+use App\Modules\Tweet\Models\TweetDraft;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class UsersListSubscribtionTableSeeder extends Seeder
+class TweetDraftTableSeeder extends Seeder
 {
     /**
      * Run the database seeds.
      */
     public function run(): void
     {
-        UsersListSubscribtion::factory(10)->create();
+        TweetDraft::factory(50)->create();
     }
 }
