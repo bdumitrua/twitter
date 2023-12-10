@@ -9,8 +9,10 @@ use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Repositories\UserGroupRepository;
 use App\Modules\User\Requests\CreateUserGroupRequest;
 use App\Modules\User\Requests\UpdateUserGroupRequest;
+use App\Modules\User\Resources\UserGroupResource;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,14 +31,18 @@ class UserGroupService
         $this->logger = $logger;
     }
 
-    public function index(): Collection
+    public function index(): JsonResource
     {
-        return $this->userGroupRepository->getByUserId(Auth::id());
+        return UserGroupResource::collection(
+            $this->userGroupRepository->getByUserId(Auth::id())
+        );
     }
 
-    public function show(UserGroup $userGroup): UserGroup
+    public function show(UserGroup $userGroup): JsonResource
     {
-        return $this->userGroupRepository->getById($userGroup->id);
+        return new UserGroupResource(
+            $this->userGroupRepository->getById($userGroup->id)
+        );
     }
 
     public function create(CreateUserGroupRequest $createUserGroupRequest): void
