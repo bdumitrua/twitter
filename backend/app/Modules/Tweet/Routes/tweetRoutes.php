@@ -7,7 +7,7 @@ use App\Modules\Tweet\Controllers\TweetController;
 
 Route::prefix('tweets')->controller(TweetController::class)->group(function () {
     // Получить по id твита
-    Route::get('show/{tweet}', 'show')->name('get_tweet_by_id');
+    Route::get('{tweet}', 'show')->name('get_tweet_by_id');
 
     Route::prefix('user')->group(function () {
         // Получить твиты пользователя
@@ -32,7 +32,7 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
         Route::post('thread', 'thread')->name('create_thread');
         // Удалить твит
         Route::middleware(['checkRights:tweet'])->group(function () {
-            Route::delete('destroy/{tweet}', 'destroy')->name('destroy_tweet');
+            Route::delete('{tweet}', 'destroy')->name('destroy_tweet');
         });
     });
 });
