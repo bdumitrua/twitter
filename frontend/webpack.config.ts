@@ -1,14 +1,13 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 const path = require("path");
-
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
-const Dotenv = require("dotenv-webpack");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
 	mode: "development",
-	entry: "./src/index.js",
+	entry: "./src/index.tsx",
 	output: {
 		path: path.resolve(__dirname, "build"),
 		filename: "[name].bundle.js",
@@ -83,7 +82,8 @@ module.exports = {
 						options: {
 							importLoaders: 2,
 							modules: {
-								localIdentName: "[name]__[local]___[hash:base64:5]", // Преобразовывает имя класса
+								localIdentName:
+									"[name]__[local]___[hash:base64:5]", // Преобразовывает имя класса
 							},
 						},
 					},
@@ -94,7 +94,8 @@ module.exports = {
 						loader: "sass-loader",
 						options: {
 							sourceMap: true,
-							additionalData: '@import "./src/assets/styles/resources.scss";',
+							additionalData:
+								'@import "./src/assets/styles/resources.scss";',
 						},
 					},
 					{
@@ -154,6 +155,5 @@ module.exports = {
 			chunkFilename: "[id].css",
 		}),
 		new ForkTsCheckerWebpackPlugin(),
-		new Dotenv(),
 	],
 };

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
-import { formatDate } from "@/utils/functions/formatDate.js";
+import { formatDate } from "@/utils/functions/formatDate";
 import { getLastEntry } from "@/utils/functions/getLastEntry";
 import { FieldValues, useForm } from "react-hook-form";
 import {
