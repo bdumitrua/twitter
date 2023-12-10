@@ -53,7 +53,7 @@ interface ListsData {
 }
 
 export interface UserState {
-	user: User | null;
+	authorizedUser: User | null;
 	isSuccessfull: boolean | null;
 	loading: boolean;
 	error: string | null;

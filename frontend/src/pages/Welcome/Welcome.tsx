@@ -9,18 +9,16 @@ import { getMeAsync } from "../../redux/slices/user.slice";
 const Welcome: React.FC = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const navigate: NavigateFunction = useNavigate();
-	// const loggedIn: boolean = useSelector(
-	// 	(state: RootState) => state.auth.loggedIn
-	// );
+
 	const error: string | null = useSelector(
 		(state: RootState) => state.user.error
 	);
 	const user: User | null = useSelector(
-		(state: RootState) => state.user.user
+		(state: RootState) => state.user.authorizedUser
 	);
 
 	useEffect(() => {
-		if (!user && Cookies.get("access_token")) {
+		if (!user && Cookies.get("access_token") && !error) {
 			dispatch(getMeAsync());
 		}
 		if (user) {

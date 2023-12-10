@@ -13,6 +13,7 @@ import CreateTweetModal from "./CreateTweetModal";
 import TickIcon from "./TickIcon";
 
 import { AppDispatch, RootState } from "@/redux/store";
+import { TweetBody } from "@/types/redux/createTweet";
 import gifIcon from "../../assets/images/Pages/CreateTweet/gifIcon.svg";
 import groupIcon from "../../assets/images/Pages/CreateTweet/groupIcon.svg";
 import imageIcon from "../../assets/images/Pages/CreateTweet/imageIcon.svg";
@@ -28,7 +29,7 @@ const CreateTweet = () => {
 	const dispatch = useDispatch<AppDispatch>();
 	const [addButtonActive, setAddButtonActive] = useState<boolean>(false);
 	const maxCharCount: number = 255;
-	const tweetBodies = useSelector(selectTweetBodies);
+	const tweetBodies: TweetBody[] = useSelector(selectTweetBodies);
 	const currentId: number = useSelector(
 		(state: RootState) => state.createTweet.currentId
 	);
