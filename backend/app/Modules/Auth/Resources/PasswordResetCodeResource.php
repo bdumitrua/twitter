@@ -9,11 +9,6 @@ use Illuminate\Support\Facades\Auth;
 
 class PasswordResetCodeResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request $request): array
     {
         $resetId = $this->resource;
