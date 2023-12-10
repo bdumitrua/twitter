@@ -7,7 +7,7 @@ use App\Modules\Tweet\Controllers\TweetController;
 
 Route::prefix('tweets')->controller(TweetController::class)->group(function () {
     // Получить по id твита
-    Route::get('{tweet}', 'show')->name('get_tweet_by_id');
+    Route::get('show/{tweet}', 'show')->name('get_tweet_by_id');
 
     Route::middleware(['auth:api'])->group(function () {
         // Получить ленту твитов

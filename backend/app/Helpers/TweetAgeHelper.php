@@ -11,8 +11,12 @@ class TweetAgeHelper
      * @param Tweet $tweet
      * @return int
      */
-    public static function getTweetAge(Tweet $tweet): int
+    public static function getTweetAge(?Tweet $tweet): int
     {
+        if (empty($tweet)) {
+            return 30;
+        }
+
         $createdAt = $tweet->created_at;
         $now = Carbon::now();
 
