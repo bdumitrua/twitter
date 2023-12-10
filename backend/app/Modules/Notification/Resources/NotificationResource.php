@@ -2,21 +2,46 @@
 
 namespace App\Modules\Notification\Resources;
 
+use App\Http\Resources\ActionsResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
 class NotificationResource extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
+    // TODO DATA
+    // Прикрепить свзанную сущность
     public function toArray(Request $request): array
     {
-        // Implement your logic here
+        $allStatuses = ['unread', 'sended', 'readed'];
+        $status = $this->status;
+        $availableStatuses = [];
+        $actions = [];
+
+        $statusIndex = array_search($status, $allStatuses);
+        if ($statusIndex !== false) {
+            $availableStatuses = array_slice($allStatuses, $statusIndex + 1);
+        }
+
+        if (!empty($availableStatuses)) {
+            $actions = ActionsResource::collection([
+                [
+                    "UpdateNotificationStatus",
+                    "update_notification",
+                    ["notification" => $this->uuid],
+                    ['available_statuses' => $availableStatuses]
+                ],
+            ]);
+        }
+
         return [
-            'id' => $this->id,
+            'uuid' => $this->uuid,
+            'user_id' => $this->user_id,
+            'type' => $this->type,
+            'related_id' => $this->related_id,
+            'status' => $this->status,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
+            'actions' => $actions,
         ];
     }
 }

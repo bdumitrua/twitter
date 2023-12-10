@@ -14,7 +14,7 @@ class UpdateNotificationStatusRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|string|in:sended,readed,deleted',
+            'status' => 'required|string|in:sended,readed',
         ];
     }
 

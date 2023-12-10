@@ -7,7 +7,9 @@ use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Models\Notification;
 use App\Modules\Notification\Repositories\NotificationRepository;
 use App\Modules\Notification\Requests\UpdateNotificationStatusRequest;
+use App\Modules\Notification\Resources\NotificationResource;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -29,9 +31,11 @@ class NotificationService
         $this->authorizedUserId = Auth::id();
     }
 
-    public function index(): Collection
+    public function index(): JsonResource
     {
-        return $this->notificationRepository->getByUserId($this->authorizedUserId);
+        return NotificationResource::collection(
+            $this->notificationRepository->getByUserId($this->authorizedUserId)
+        );
     }
 
     public function create(NotificationDTO $notificationDTO): void

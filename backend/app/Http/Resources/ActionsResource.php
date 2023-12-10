@@ -19,12 +19,19 @@ class ActionsResource extends JsonResource
         $actionName = $this->resource[0];
         $actionRoute = route($this->resource[1], $this->resource[2] ?? [], false);
         $actionMethod = $this->getRouteMethod($this->resource[1]);
+        $additionalData = $this->resource[3] ?? null;
 
-        return [
+        $response = [
             'name' => $actionName,
             'url' => $actionRoute,
             'method' => $actionMethod,
         ];
+
+        if (!empty($additionalData)) {
+            $response[array_key_first($additionalData)] = array_values($additionalData)[0];
+        }
+
+        return $response;
     }
 
     protected function getRouteMethod(string $routeName): string
