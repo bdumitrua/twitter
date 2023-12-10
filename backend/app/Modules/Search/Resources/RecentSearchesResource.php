@@ -7,7 +7,7 @@ use App\Modules\User\Resources\ShortUserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class RecentSearchResource extends JsonResource
+class RecentSearchesResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -16,15 +16,18 @@ class RecentSearchResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        $linkedUser = $this->whenLoaded('linked_user', function () {
-            return new ShortUserResource($this->linked_user);
-        }, []);
+        $recentSearches = RecentSearchResource::collection($this->resource);
+
+        $actions = ActionsResource::collection([
+            [
+                "ClearRecentSearches",
+                "clear_authorized_user_recent_searches",
+            ],
+        ]);
 
         return [
-            'id' => $this->id,
-            'text' => $this->text,
-            'linked_user' => $linkedUser,
-            "updated_at" => $this->updated_at,
+            'recent_searches' => $recentSearches,
+            'actions' => $actions
         ];
     }
 }

@@ -6,7 +6,7 @@ use App\Modules\Search\DTO\RecentSearchDTO;
 use App\Modules\Search\Repositories\RecentSearchRepository;
 use App\Modules\Search\Requests\RecentSearchRequest;
 use App\Modules\Search\Requests\SearchRequest;
-use App\Modules\Search\Resources\RecentSearchResource;
+use App\Modules\Search\Resources\RecentSearchesResource;
 use App\Modules\Tweet\Repositories\TweetRepository;
 use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Repositories\UserRepository;
@@ -37,7 +37,7 @@ class SearchService
 
     public function index()
     {
-        return RecentSearchResource::collection(
+        return new RecentSearchesResource(
             $this->recentSearchRepository->getByUserId($this->authorizedUserId)
         );
     }
