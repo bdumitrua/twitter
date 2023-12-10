@@ -22,9 +22,10 @@ class ActionsResource extends JsonResource
         $additionalData = $this->resource[3] ?? null;
 
         $response = [
-            'name' => $actionName,
-            'url' => $actionRoute,
-            'method' => $actionMethod,
+            $actionName => [
+                'url' => $actionRoute,
+                'method' => $actionMethod,
+            ]
         ];
 
         if (!empty($additionalData)) {
@@ -32,6 +33,23 @@ class ActionsResource extends JsonResource
         }
 
         return $response;
+    }
+
+    public static function collection($resource): object
+    {
+        // Для формирования удобного массива с ключ => данные
+        $new = [];
+
+        foreach ($resource as $action) {
+            $actionResource = new ActionsResource($action);
+            $actionArray = $actionResource->toArray(request());
+
+            foreach ($actionArray as $key => $value) {
+                $new[$key] = $value;
+            }
+        }
+
+        return (object) $new;
     }
 
     protected function getRouteMethod(string $routeName): string

@@ -87,7 +87,7 @@ class TweetResource extends JsonResource
         ];
     }
 
-    private function prepareActions(): JsonResource
+    private function prepareActions(): object
     {
         $isShowing = $this->whenLoaded('replies', function () {
             return true;
