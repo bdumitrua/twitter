@@ -5,3 +5,7 @@ export interface ApiResponse<T> {
 export interface ApiError {
 	message: string;
 }
+
+export interface ErrorMessages {
+	[key: number]: string;
+}

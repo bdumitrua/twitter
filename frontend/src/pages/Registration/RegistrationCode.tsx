@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { AppDispatch, RootState } from "@/redux/store";
+import { ErrorMessages } from "@/types/api";
 import { RegisterCodePayload, RegisterError } from "@/types/redux/register";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -15,10 +16,6 @@ import InputField from "../../components/InputField/InputField";
 import { codeRegisterAsync } from "../../redux/slices/register.slice";
 import { getLastEntry } from "../../utils/functions/getLastEntry";
 import { codeRules } from "../../utils/inputRules";
-
-interface ErrorMessages {
-	[key: number]: string;
-}
 
 const RegistrationCode = () => {
 	const {
