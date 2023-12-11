@@ -11,11 +11,13 @@ interface ThreadProps {
 const TweetThread: React.FC<ThreadProps> = ({ authorAvatar, authorName }) => {
 	return (
 		<div className={styles["tweet__thread"]}>
-			{authorAvatar ? (
-				<UserAvatar userPhoto={authorAvatar} link="/profile" />
-			) : (
-				<UserAvatarPlug userName={authorName} />
-			)}
+			<div className={styles["tweet__thread-avatar"]}>
+				{authorAvatar ? (
+					<UserAvatar userPhoto={authorAvatar} link="/profile" />
+				) : (
+					<UserAvatarPlug userName={authorName} />
+				)}
+			</div>
 			<Link to="/tweet" className={styles["tweet__show-thread"]}>
 				Show this Thread
 			</Link>
