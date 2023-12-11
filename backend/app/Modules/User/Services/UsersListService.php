@@ -36,6 +36,9 @@ class UsersListService
         $this->authorizedUserId = Auth::id();
     }
 
+    /**
+     * @return JsonResource
+     */
     public function index(): JsonResource
     {
         $usersLists = $this->usersListRepository->getByUserId($this->authorizedUserId);
@@ -44,6 +47,11 @@ class UsersListService
         return UsersListResource::collection($filteredUsersLists);
     }
 
+    /**
+     * @param UsersList $usersList
+     * 
+     * @return JsonResource
+     */
     public function show(UsersList $usersList): JsonResource
     {
         $usersList = $this->usersListRepository->getById($usersList->id);
@@ -57,6 +65,11 @@ class UsersListService
         return new UsersListResource($filteredUsersList);
     }
 
+    /**
+     * @param CreateUsersListRequest $createUsersListRequest
+     * 
+     * @return void
+     */
     public function create(CreateUsersListRequest $createUsersListRequest): void
     {
         $this->logger->info('Creating UsersListDTO from create request', $createUsersListRequest->toArray());
@@ -66,6 +79,12 @@ class UsersListService
         $this->usersListRepository->create($usersListDTO, $this->authorizedUserId);
     }
 
+    /**
+     * @param UsersList $usersList
+     * @param UpdateUsersListRequest $updateUsersListRequest
+     * 
+     * @return void
+     */
     public function update(UsersList $usersList, UpdateUsersListRequest $updateUsersListRequest): void
     {
         $this->logger->info('Creating UsersListDTO from update request', $updateUsersListRequest->toArray());
@@ -90,7 +109,12 @@ class UsersListService
         $this->usersListRepository->delete($usersList);
     }
 
-    public function members(UsersList $usersList)
+    /**
+     * @param UsersList $usersList
+     * 
+     * @return JsonResource
+     */
+    public function members(UsersList $usersList): JsonResource
     {
         $membersData = $this->usersListRepository->members($usersList->id);
 
@@ -101,33 +125,66 @@ class UsersListService
         return SubscribableUserResource::collection($membersData);
     }
 
-    public function subscribtions(UsersList $usersList)
+    /**
+     * @param UsersList $usersList
+     * 
+     * @return JsonResource
+     */
+    public function subscribtions(UsersList $usersList): JsonResource
     {
         return SubscribableUserResource::collection(
             $this->usersListRepository->subscribtions($usersList->id)
         );
     }
 
+    /**
+     * @param UsersList $usersList
+     * @param User $user
+     * 
+     * @return void
+     */
     public function add(UsersList $usersList, User $user): void
     {
         $this->usersListRepository->addMember($usersList->id, $user->id);
     }
 
+    /**
+     * @param UsersList $usersList
+     * @param User $user
+     * 
+     * @return void
+     */
     public function remove(UsersList $usersList, User $user): void
     {
         $this->usersListRepository->removeMember($usersList->id, $user->id);
     }
 
+    /**
+     * @param UsersList $usersList
+     * 
+     * @return void
+     */
     public function subscribe(UsersList $usersList): void
     {
         $this->usersListRepository->subscribe($usersList->id, $this->authorizedUserId);
     }
 
+    /**
+     * @param UsersList $usersList
+     * 
+     * @return void
+     */
     public function unsubscribe(UsersList $usersList): void
     {
         $this->usersListRepository->unsubscribe($usersList->id, $this->authorizedUserId);
     }
 
+    /**
+     * @param Collection $usersLists
+     * @param int $userId
+     * 
+     * @return Collection
+     */
     public function filterPrivateLists(Collection $usersLists, int $userId): Collection
     {
         return $usersLists->filter(function ($usersList) use ($userId) {

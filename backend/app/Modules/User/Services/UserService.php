@@ -29,16 +29,29 @@ class UserService
         $this->authorizedUserId = Auth::id();
     }
 
+    /**
+     * @return JsonResource
+     */
     public function index(): JsonResource
     {
         return new UserResource($this->userRepository->getAuthorizedUser($this->authorizedUserId));
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return JsonResource
+     */
     public function show(User $user): JsonResource
     {
         return new UserResource($this->userRepository->getById($user->id));
     }
 
+    /**
+     * @param UserUpdateRequest $userUpdateRequest
+     * 
+     * @return void
+     */
     public function update(UserUpdateRequest $userUpdateRequest): void
     {
         $this->logger->info('Creating UserDTO from update request', $userUpdateRequest->toArray());

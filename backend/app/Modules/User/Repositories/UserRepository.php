@@ -23,6 +23,11 @@ class UserRepository
         $this->user = $user;
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return Builder
+     */
     protected function queryById(int $userId): Builder
     {
         return $this->user->newQuery()
@@ -30,6 +35,11 @@ class UserRepository
             ->withCount(['subscribtions', 'subscribers']);
     }
 
+    /**
+     * @param string $text
+     * 
+     * @return Collection
+     */
     public function search(string $text): Collection
     {
         $query = Query::match()
@@ -40,6 +50,12 @@ class UserRepository
         return $this->user->searchQuery($query)->execute()->models();
     }
 
+    /**
+     * @param int $userId
+     * @param bool $updateCache
+     * 
+     * @return User
+     */
     public function getAuthorizedUser(int $userId, bool $updateCache = false): User
     {
         $cacheKey = KEY_AUTH_USER_DATA . $userId;
@@ -50,6 +66,12 @@ class UserRepository
         }, $updateCache);
     }
 
+    /**
+     * @param int $userId
+     * @param bool $updateCache
+     * 
+     * @return User
+     */
     public function getById(int $userId, bool $updateCache = false): User
     {
         $cacheKey = KEY_USER_DATA . $userId;
@@ -58,6 +80,12 @@ class UserRepository
         }, $updateCache);
     }
 
+    /**
+     * @param int $userId
+     * @param UserDTO $dto
+     * 
+     * @return void
+     */
     public function update(int $userId, UserDTO $dto): void
     {
         $user = $this->getById($userId);
@@ -80,6 +108,11 @@ class UserRepository
         }
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return void
+     */
     protected function clearUserDataCache(int $userId): void
     {
         $authorizedUserCacheKey = KEY_AUTH_USER_DATA . (string)$userId;

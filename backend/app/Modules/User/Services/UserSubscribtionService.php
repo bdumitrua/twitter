@@ -17,21 +17,41 @@ class UserSubscribtionService
         $this->userSubscribtionRepository = $userSubscribtionRepository;
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return Collection
+     */
     public function subscribtions(User $user): Collection
     {
         return $this->userSubscribtionRepository->getSubscribtions($user->id);
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return Collection
+     */
     public function subscribers(User $user): Collection
     {
         return $this->userSubscribtionRepository->getSubscribers($user->id);
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return void
+     */
     public function add(User $user): void
     {
         $this->userSubscribtionRepository->create($user->id, Auth::id());
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return void
+     */
     public function remove(User $user): void
     {
         $this->userSubscribtionRepository->remove($user->id, Auth::id());
