@@ -25,6 +25,11 @@ Route::prefix('users/lists')->middleware(['auth:api'])->controller(UsersListCont
         Route::delete('members/{usersList}/{user}', 'remove')->name('remove_member_from_users_list');
     });
 
+    // Получить участников списка
+    Route::get('members/{usersList}', 'members')->name('get_users_list_members');
+    // Получить подписчиков списка
+    Route::get('subscribtions/{usersList}', 'subscribtions')->name('get_users_list_subscribers');
+
     // Подписаться на список
     Route::post('subscribtions/{usersList}', 'subscribe')->name('subscribe_to_users_list');
     // Отписаться от списка

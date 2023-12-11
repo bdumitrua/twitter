@@ -6,7 +6,7 @@ use App\Modules\User\Models\UserSubscribtion;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UserSubscribtionEvent implements ShouldBroadcast
+class UserSubscribtionEvent
 {
     public $userSubscribtion;
 
@@ -14,13 +14,5 @@ class UserSubscribtionEvent implements ShouldBroadcast
         UserSubscribtion $userSubscribtion,
     ) {
         $this->userSubscribtion = $userSubscribtion;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }

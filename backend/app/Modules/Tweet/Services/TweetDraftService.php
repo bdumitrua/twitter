@@ -5,7 +5,7 @@ namespace App\Modules\Tweet\Services;
 use App\Modules\Tweet\Repositories\TweetDraftRepository;
 use App\Modules\Tweet\Requests\CreateTweetDraftRequest;
 use App\Modules\Tweet\Requests\RemoveTweetDraftsRequest;
-use App\Modules\Tweet\Resources\TweetDraftResource;
+use App\Modules\Tweet\Resources\TweetDraftsResource;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +27,7 @@ class TweetDraftService
 
     public function index(): JsonResource
     {
-        return TweetDraftResource::collection(
+        return new TweetDraftsResource(
             $this->tweetDraftRepository->getByUserId($this->authorizedUserId)
         );
     }

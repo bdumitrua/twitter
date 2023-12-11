@@ -96,6 +96,14 @@ class TweetService
         return TweetResource::collection($userLikedTweets);
     }
 
+    public function bookmarks(): JsonResource
+    {
+        $userLikedTweets = $this->tweetRepository->getUserBookmarks($this->authorizedUserId);
+        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets, $this->authorizedUserId);
+
+        return TweetResource::collection($userLikedTweets);
+    }
+
     public function list(UsersList $usersList): JsonResource
     {
         $usersList = $this->usersListService->filterPrivateLists(new Collection([$usersList]), $this->authorizedUserId)->first();
@@ -160,6 +168,12 @@ class TweetService
     {
         $this->logger->info('Deleting tweet', array_merge($tweet->toArray(), ['ip' => $request->ip()]));
         $this->tweetRepository->destroy($tweet);
+    }
+
+    public function unrepost(Tweet $tweet, Request $request): void
+    {
+        $this->logger->info("Deleting repost of tweet {$tweet->id}", ['userId' => $this->authorizedUserId, 'ip' => $request->ip()]);
+        $this->tweetRepository->unrepost($tweet->id, $this->authorizedUserId);
     }
 
     protected function filterTweetsByGroup(Collection $tweets): Collection

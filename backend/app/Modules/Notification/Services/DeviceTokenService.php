@@ -6,6 +6,7 @@ use App\Modules\Notification\Models\DeviceToken;
 use Illuminate\Http\Request;
 use App\Modules\Notification\Repositories\DeviceTokenRepository;
 use App\Modules\Notification\Requests\DeviceTokenRequest;
+use App\Modules\Notification\Resources\DeviceTokenResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
@@ -27,7 +28,9 @@ class DeviceTokenService
 
     public function index()
     {
-        return $this->deviceTokenRepository->getByUserId($this->authorizedUserId);
+        return DeviceTokenResource::collection(
+            $this->deviceTokenRepository->getByUserId($this->authorizedUserId)
+        );
     }
 
     public function create(DeviceTokenRequest $request): void

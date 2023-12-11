@@ -6,7 +6,7 @@ use App\Modules\User\Models\User;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UserCreatedEvent implements ShouldBroadcast
+class UserCreatedEvent
 {
     public $user;
 
@@ -14,13 +14,5 @@ class UserCreatedEvent implements ShouldBroadcast
         User $user,
     ) {
         $this->user = $user;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }

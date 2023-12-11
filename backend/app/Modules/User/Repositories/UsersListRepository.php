@@ -144,6 +144,33 @@ class UsersListRepository
         }
     }
 
+    public function subscribtions(int $usersListId): Collection
+    {
+        $subscribers = $this->usersListSubscribtion->with('users_data')
+            ->where('users_list_id', $usersListId)->get();
+
+        $subscribersData = [];
+        foreach ($subscribers as $subscriber) {
+            $subscribersData[] = $subscriber->users_data;
+        }
+
+        return new Collection($subscribersData);
+    }
+
+    public function members(int $usersListId): Collection
+    {
+        $members = $this->usersListMember->with('users_data')
+            ->where('users_list_id', $usersListId)->get();
+
+        $membersData = [];
+        foreach ($members as $member) {
+            $member->users_data->users_list_id = $usersListId;
+            $membersData[] = $member->users_data;
+        }
+
+        return new Collection($membersData);
+    }
+
     public function addMember(int $usersListId, int $userId): void
     {
         if (empty($this->queryUserMembership($usersListId, $userId)->exists())) {

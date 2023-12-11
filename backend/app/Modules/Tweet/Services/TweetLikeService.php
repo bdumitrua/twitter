@@ -19,11 +19,6 @@ class TweetLikeService
         $this->authorizedUserId = Auth::id();
     }
 
-    public function index(): Collection
-    {
-        return $this->tweetLikeRepository->getByUserId($this->authorizedUserId);
-    }
-
     public function add(Tweet $tweet): void
     {
         $this->tweetLikeRepository->add($tweet->id, $this->authorizedUserId);

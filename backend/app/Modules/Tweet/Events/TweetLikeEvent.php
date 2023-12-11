@@ -7,7 +7,7 @@ use App\Modules\User\Models\UserSubscribtion;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TweetLikeEvent implements ShouldBroadcast
+class TweetLikeEvent
 {
     public $tweetLike;
 
@@ -15,13 +15,5 @@ class TweetLikeEvent implements ShouldBroadcast
         TweetLike $tweetLike
     ) {
         $this->tweetLike = $tweetLike;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }

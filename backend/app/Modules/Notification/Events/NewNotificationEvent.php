@@ -6,7 +6,7 @@ use App\Modules\Notification\Models\Notification;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class NewNotificationEvent implements ShouldBroadcast
+class NewNotificationEvent
 {
     public $notification;
 
@@ -14,13 +14,5 @@ class NewNotificationEvent implements ShouldBroadcast
         Notification $notification
     ) {
         $this->notification = $notification;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }

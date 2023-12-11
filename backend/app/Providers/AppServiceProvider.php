@@ -99,7 +99,7 @@ class AppServiceProvider extends ServiceProvider
         define('KEY_USERS_LIST_MEMBERS', 'users_list_members:');
 
         // Массив избранных твиттов пользователя
-        define('KEY_USER_FAVORITES', 'user_favorites:');
+        define('KEY_USER_BOOKMARKS', 'user_bookmarks:');
 
         // Массив избранных твиттов пользователя
         define('KEY_USER_LIKES', 'user_likes:');

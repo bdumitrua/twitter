@@ -153,7 +153,7 @@ namespace App\\Modules\\{$moduleName}\\{$folderName};
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class {$fileName} implements ShouldBroadcast
+class {$fileName}
 {
     public \$$modelVariableName;
 
@@ -162,13 +162,6 @@ class {$fileName} implements ShouldBroadcast
         \$this->{$modelVariableName} = \$$modelVariableName;
     }
 
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
-    }
 }
 ";
     }
@@ -251,11 +244,6 @@ use Illuminate\Http\Resources\Json\JsonResource;
 
 class {$fileName} extends JsonResource
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @return array<string, mixed>
-     */
     public function toArray(Request \$request): array
     {
         // Implement your logic here

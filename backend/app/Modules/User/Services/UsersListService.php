@@ -9,9 +9,13 @@ use App\Modules\User\Models\UsersList;
 use App\Modules\User\Repositories\UsersListRepository;
 use App\Modules\User\Requests\CreateUsersListRequest;
 use App\Modules\User\Requests\UpdateUsersListRequest;
+use App\Modules\User\Resources\ListUserResource;
+use App\Modules\User\Resources\SubscribableUserResource;
+use App\Modules\User\Resources\UsersListResource;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -32,15 +36,15 @@ class UsersListService
         $this->authorizedUserId = Auth::id();
     }
 
-    public function index(): Collection
+    public function index(): JsonResource
     {
         $usersLists = $this->usersListRepository->getByUserId($this->authorizedUserId);
         $filteredUsersLists = $this->filterPrivateLists($usersLists, $this->authorizedUserId);
 
-        return $filteredUsersLists;
+        return UsersListResource::collection($filteredUsersLists);
     }
 
-    public function show(UsersList $usersList): UsersList
+    public function show(UsersList $usersList): JsonResource
     {
         $usersList = $this->usersListRepository->getById($usersList->id);
 
@@ -50,7 +54,7 @@ class UsersListService
             throw new AccessDeniedException();
         }
 
-        return $filteredUsersList;
+        return new UsersListResource($filteredUsersList);
     }
 
     public function create(CreateUsersListRequest $createUsersListRequest): void
@@ -84,6 +88,24 @@ class UsersListService
             array_merge($usersList->toArray(), ['ip' => $request->ip()])
         );
         $this->usersListRepository->delete($usersList);
+    }
+
+    public function members(UsersList $usersList)
+    {
+        $membersData = $this->usersListRepository->members($usersList->id);
+
+        if ($this->authorizedUserId === $usersList->user_id) {
+            return ListUserResource::collection($membersData);
+        }
+
+        return SubscribableUserResource::collection($membersData);
+    }
+
+    public function subscribtions(UsersList $usersList)
+    {
+        return SubscribableUserResource::collection(
+            $this->usersListRepository->subscribtions($usersList->id)
+        );
     }
 
     public function add(UsersList $usersList, User $user): void

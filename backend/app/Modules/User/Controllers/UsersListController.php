@@ -76,6 +76,20 @@ class UsersListController extends Controller
         });
     }
 
+    public function members(UsersList $usersList): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($usersList) {
+            return $this->usersListService->members($usersList);
+        });
+    }
+
+    public function subscribtions(UsersList $usersList): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($usersList) {
+            return $this->usersListService->subscribtions($usersList);
+        });
+    }
+
     public function unsubscribe(UsersList $usersList): JsonResponse
     {
         return $this->handleServiceCall(function () use ($usersList) {

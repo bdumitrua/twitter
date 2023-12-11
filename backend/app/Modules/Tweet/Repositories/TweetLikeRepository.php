@@ -8,12 +8,15 @@ use Illuminate\Database\Eloquent\Collection;
 
 class TweetLikeRepository
 {
-    protected $tweetLike;
+    protected TweetLike $tweetLike;
+    protected TweetRepository $tweetRepository;
 
     public function __construct(
         TweetLike $tweetLike,
+        TweetRepository $tweetRepository,
     ) {
         $this->tweetLike = $tweetLike;
+        $this->tweetRepository = $tweetRepository;
     }
 
     protected function queryByBothIds(int $tweetId, int $userId): Builder
@@ -26,9 +29,7 @@ class TweetLikeRepository
 
     public function getByUserId(int $userId): Collection
     {
-        return $this->tweetLike
-            ->where('user_id', '=', $userId)
-            ->get();
+        return $this->tweetLike->where('user_id', '=', $userId)->get();
     }
 
     public function add(int $tweetId, int $userId): void

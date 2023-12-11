@@ -64,6 +64,13 @@ class TweetController extends Controller
         });
     }
 
+    public function bookmarks(): JsonResponse
+    {
+        return $this->handleServiceCall(function () {
+            return $this->tweetService->bookmarks();
+        });
+    }
+
     public function list(UsersList $usersList): JsonResponse
     {
         return $this->handleServiceCall(function () use ($usersList) {
@@ -82,6 +89,13 @@ class TweetController extends Controller
     {
         return $this->handleServiceCall(function () use ($сreateThreadRequest) {
             return $this->tweetService->thread($сreateThreadRequest);
+        });
+    }
+
+    public function unrepost(Tweet $tweet, Request $request): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($tweet, $request) {
+            return $this->tweetService->unrepost($tweet, $request);
         });
     }
 
