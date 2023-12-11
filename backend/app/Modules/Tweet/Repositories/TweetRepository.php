@@ -521,7 +521,7 @@ class TweetRepository
         $linkedTweetId = $tweet->linked_tweet_id;
 
         if (in_array($tweet->type, $needsLinkedTweet) && !empty($linkedTweetId)) {
-            $tweet->linkedTweet = $this->getTweetData($linkedTweetId);
+            $tweet->linkedTweetData = $this->getTweetData($linkedTweetId);
         }
     }
 

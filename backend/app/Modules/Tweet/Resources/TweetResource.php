@@ -3,6 +3,7 @@
 namespace App\Modules\Tweet\Resources;
 
 use App\Http\Resources\ActionsResource;
+use App\Modules\Tweet\Models\Tweet;
 use App\Modules\User\Resources\ShortUserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -22,15 +23,16 @@ class TweetResource extends JsonResource
             ? new TweetResource($this->thread)
             : [];
 
+        $linkedTweetData = !empty((array)$this->linkedTweetData)
+            ? new TweetResource($this->linkedTweetData)
+            : [];
+
         // Только если подгружено ранее (в репозитории)
-        $linkedTweet = $this->whenLoaded('linkedTweet', function () {
-            return new TweetResource($this->linkedTweet);
-        }, []);
         $replies = $this->whenLoaded('replies', function () {
             return TweetResource::collection($this->replies);
         }, []);
 
-        $relatedData = $this->prepareRelatedData($linkedTweet, $thread);
+        $relatedData = $this->prepareRelatedData($linkedTweetData, $thread) ?? [];
         $counters = $this->prepareCounters();
         $actions = $this->prepareActions();
 
@@ -50,15 +52,13 @@ class TweetResource extends JsonResource
         ];
     }
 
-    private function prepareRelatedData($linkedTweet, $thread): array
+    private function prepareRelatedData($linkedTweet, $thread): ?TweetResource
     {
         if (!empty($linkedTweet) || !empty($thread)) {
-            $relatedType = empty($linkedTweet) ? 'thread' : 'tweet';
-            return [
-                $relatedType => empty($linkedTweet) ? $thread : $linkedTweet
-            ];
+            return empty($linkedTweet) ? $thread : $linkedTweet;
         }
-        return [];
+
+        return null;
     }
 
     private function prepareCounters(): array
