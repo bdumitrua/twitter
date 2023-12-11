@@ -31,6 +31,9 @@ class NotificationService
         $this->authorizedUserId = Auth::id();
     }
 
+    /**
+     * @return JsonResource
+     */
     public function index(): JsonResource
     {
         return NotificationResource::collection(
@@ -38,6 +41,11 @@ class NotificationService
         );
     }
 
+    /**
+     * @param NotificationDTO $notificationDTO
+     * 
+     * @return void
+     */
     public function create(NotificationDTO $notificationDTO): void
     {
         $this->logger->info('Creating notification from request DTO', $notificationDTO->toArray());
@@ -47,6 +55,12 @@ class NotificationService
         $this->firebaseService->storeNotification($newNotification);
     }
 
+    /**
+     * @param Notification $notification
+     * @param UpdateNotificationStatusRequest $updateNotificationStatusRequest
+     * 
+     * @return void
+     */
     public function update(Notification $notification, UpdateNotificationStatusRequest $updateNotificationStatusRequest): void
     {
         $this->logger->info(
