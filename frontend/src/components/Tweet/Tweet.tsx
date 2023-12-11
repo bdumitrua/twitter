@@ -16,70 +16,68 @@ interface TweetProps {
 	haveThread?: boolean;
 }
 
-const Tweet: React.FC<TweetProps> = (props) => {
+const Tweet: React.FC<TweetProps | null> = (props) => {
 	return (
-		<div className={styles["wrapper"]}>
-			<div className={styles["tweet"]}>
-				<TweetAdditional />
-				<div className={styles["tweet__wrapper"]}>
-					<div className={styles["tweet__image"]}>
-						<UserAvatar userPhoto={userPhoto} link="/profile" />
-						{props.haveThread && (
-							<div className={styles["tweet__line"]}></div>
-						)}
+		<div className={styles["tweet"]}>
+			<TweetAdditional />
+			<div className={styles["tweet__wrapper"]}>
+				<div className={styles["tweet__image"]}>
+					<UserAvatar userPhoto={userPhoto} link="/profile" />
+					{props?.haveThread && (
+						<div className={styles["tweet__line"]}></div>
+					)}
+				</div>
+				<div className={styles["tweet__content"]}>
+					<div className={styles["tweet__user-info"]}>
+						<span className={styles["tweet__username"]}>
+							Martha Craig
+						</span>
+						<span className={styles["tweet__nickname"]}>
+							@craig_love
+						</span>
+						<span className={styles["tweet__hours"]}>·12h</span>
 					</div>
-					<div className={styles["tweet__content"]}>
-						<div className={styles["tweet__user-info"]}>
-							<span className={styles["tweet__username"]}>
-								Martha Craig
-							</span>
-							<span className={styles["tweet__nickname"]}>
-								@craig_love
-							</span>
-							<span className={styles["tweet__hours"]}>·12h</span>
-						</div>
-						<div className={styles["tweet__tweet-body"]}>
-							<span className={styles["tweet__text"]}>
-								{parseHashtags(tweetText, "feed")}
-							</span>
-						</div>
-						<div className={styles["tweet__counters"]}>
-							<a className={styles["tweet__counter"]} href="#/">
-								<img
-									className={styles["tweet__counter-logo"]}
-									src={comment}
-									alt=""
-								/>
-								28
-							</a>
-							<a className={styles["tweet__counter"]} href="#/">
-								<img
-									className={styles["tweet__counter-logo"]}
-									src={retweet}
-									alt=""
-								/>
-								5
-							</a>
-							<a className={styles["tweet__counter"]} href="#/">
-								<img
-									className={styles["tweet__counter-logo"]}
-									src={unpaintedLike}
-									alt=""
-								/>
-								21
-							</a>
-							<a className={styles["tweet__counter"]} href="#/">
-								<img
-									className={styles["tweet__conter-logo"]}
-									src={makeRepost}
-									alt=""
-								/>
-							</a>
-						</div>
+					<div className={styles["tweet__tweet-body"]}>
+						<span className={styles["tweet__text"]}>
+							{parseHashtags(tweetText, "feed")}
+						</span>
+					</div>
+					<div className={styles["tweet__counters"]}>
+						<a className={styles["tweet__counter"]} href="#/">
+							<img
+								className={styles["tweet__counter-logo"]}
+								src={comment}
+								alt=""
+							/>
+							28
+						</a>
+						<a className={styles["tweet__counter"]} href="#/">
+							<img
+								className={styles["tweet__counter-logo"]}
+								src={retweet}
+								alt=""
+							/>
+							5
+						</a>
+						<a className={styles["tweet__counter"]} href="#/">
+							<img
+								className={styles["tweet__counter-logo"]}
+								src={unpaintedLike}
+								alt=""
+							/>
+							21
+						</a>
+						<a className={styles["tweet__counter"]} href="#/">
+							<img
+								className={styles["tweet__conter-logo"]}
+								src={makeRepost}
+								alt=""
+							/>
+						</a>
 					</div>
 				</div>
-				<TweetThread />
 			</div>
+			<TweetThread />
 		</div>
 	);
 };
