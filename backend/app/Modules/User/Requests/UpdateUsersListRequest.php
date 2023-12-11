@@ -24,9 +24,9 @@ class UpdateUsersListRequest extends FormRequest
         return [
             'name' => 'nullable|string|max:255',
             'description' => 'nullable|string|max:255',
-            'is_private' => 'nullable|boolean',
+            'isPrivate' => 'nullable|boolean',
             // TODO FILES
-            'bg_image' => 'nullable|string|max:255',
+            'bgImage' => 'nullable|string|max:255',
         ];
     }
 
@@ -39,7 +39,7 @@ class UpdateUsersListRequest extends FormRequest
             'description.string'    => 'Описание списка должно быть строкой.',
             'description.max'    => 'Описание списка не может быть длиннее 255 символов.',
 
-            'is_private.boolean'    => 'Приватность должна быть типа boolean (true/false).',
+            'isPrivate.boolean'    => 'Приватность должна быть типа boolean (true/false).',
         ];
     }
 }

@@ -32,7 +32,7 @@ class UserUpdateRequest extends FormRequest
             'statusText' => 'nullable|string|max:500',
             'siteUrl' => 'nullable|string|max:255',
             'address' => 'nullable|string|max:255',
-            'birth_date' => 'nullable|date|date_format:Y-m-d|before_or_equal:today',
+            'birthDate' => 'nullable|date|date_format:Y-m-d|before_or_equal:today',
         ];
     }
 

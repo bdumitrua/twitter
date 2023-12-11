@@ -24,7 +24,7 @@ class CreateUserRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'birth_date' => 'required|date|date_format:Y-m-d',
+            'birthDate' => 'required|date|date_format:Y-m-d',
         ];
     }
 
@@ -40,9 +40,9 @@ class CreateUserRequest extends FormRequest
             'email.max'     => 'Длина почты может быть не более 255 символов.',
             'email.unique'  => 'Данная почта уже занята.',
 
-            'birth_date.required' => 'Дата обязательна к заполнению.',
-            'birth_date.date' => 'Некорректный формат даты.',
-            'birth_date.date_format' => 'Формат даты должен быть YYYY-MM-DD.',
+            'birthDate.required' => 'Дата обязательна к заполнению.',
+            'birthDate.date' => 'Некорректный формат даты.',
+            'birthDate.date_format' => 'Формат даты должен быть YYYY-MM-DD.',
         ];
     }
 }
