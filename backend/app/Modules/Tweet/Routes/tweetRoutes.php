@@ -32,11 +32,11 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
         // Получить твиты пользователя
         Route::get('{user}', 'user')->name('get_user_tweets');
         // Получить ответы пользователя
-        Route::get('replies/{user}', 'replies')->name('get_user_replies');
+        Route::get('{user}/replies', 'replies')->name('get_user_replies');
         // Получить лайкнутые твиты пользователя
-        Route::get('likes/{user}', 'likes')->name('get_user_likes');
+        Route::get('{user}/likes', 'likes')->name('get_user_likes');
         // Получить медиа пользователя
         // ! DOESN'T WORK
-        Route::get('media/{user}', 'media')->name('get_user_tweets_with_media');
+        Route::get('{user}/media', 'media')->name('get_user_tweets_with_media');
     });
 });
