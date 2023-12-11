@@ -19,8 +19,8 @@ class UserResource extends JsonResource
             return $this->lists;
         }, []);
 
-        $lists_subscribtions = $this->whenLoaded('lists_subscribtions', function () {
-            return $this->lists_subscribtions;
+        $listsSubscribtions = $this->whenLoaded('listsSubscribtions', function () {
+            return $this->listsSubscribtions;
         }, []);
 
         $deviceTokens = $this->whenLoaded('deviceTokens', function () {
@@ -47,7 +47,7 @@ class UserResource extends JsonResource
             "subscribers_count" => $this->subscribers_count,
             'available_sections' => $availableSections,
             "lists" => $lists,
-            "lists_subscribtions" => $lists_subscribtions,
+            "listsSubscribtions" => $listsSubscribtions,
             "device_tokens" => $deviceTokens,
             "actions" => $actions
         ];

@@ -145,12 +145,12 @@ class UsersListRepository
 
     public function subscribtions(int $usersListId): Collection
     {
-        $subscribers = $this->usersListSubscribtion->with('users_data')
+        $subscribers = $this->usersListSubscribtion->with('usersData')
             ->where('users_list_id', $usersListId)->get();
 
         $subscribersData = [];
         foreach ($subscribers as $subscriber) {
-            $subscribersData[] = $subscriber->users_data;
+            $subscribersData[] = $subscriber->usersData;
         }
 
         return new Collection($subscribersData);
@@ -158,13 +158,13 @@ class UsersListRepository
 
     public function members(int $usersListId): Collection
     {
-        $members = $this->usersListMember->with('users_data')
+        $members = $this->usersListMember->with('usersData')
             ->where('users_list_id', $usersListId)->get();
 
         $membersData = [];
         foreach ($members as $member) {
-            $member->users_data->users_list_id = $usersListId;
-            $membersData[] = $member->users_data;
+            $member->usersData->users_list_id = $usersListId;
+            $membersData[] = $member->usersData;
         }
 
         return new Collection($membersData);

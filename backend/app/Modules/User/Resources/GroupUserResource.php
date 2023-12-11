@@ -10,7 +10,7 @@ class GroupUserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $userData = $this->resource->users_data;
+        $userData = $this->resource->usersData;
         $groupId = $this->resource->user_group_id;
         $actions = ActionsResource::collection([
             [

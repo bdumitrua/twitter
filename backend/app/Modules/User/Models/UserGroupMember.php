@@ -22,7 +22,7 @@ class UserGroupMember extends Model
         return UserGroupMemberFactory::new();
     }
 
-    public function users_data()
+    public function usersData()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

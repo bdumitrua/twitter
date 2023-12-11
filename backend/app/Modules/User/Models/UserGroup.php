@@ -29,9 +29,9 @@ class UserGroup extends Model
         return $this->hasMany(UserGroupMember::class, 'user_group_id');
     }
 
-    public function members_data()
+    public function membersData()
     {
-        return $this->members()->with('users_data');
+        return $this->members()->with('usersData');
     }
 
     protected static function boot()

@@ -45,7 +45,7 @@ class UserRepository
         $cacheKey = KEY_AUTH_USER_DATA . $userId;
         return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryById($userId)
-                ->with(['lists', 'lists_subscribtions', 'deviceTokens'])
+                ->with(['lists', 'listsSubscribtions', 'deviceTokens'])
                 ->first() ?? new User();
         }, $updateCache);
     }

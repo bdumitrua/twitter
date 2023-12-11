@@ -22,12 +22,12 @@ class UsersListMember extends Model
         return UsersListMemberFactory::new();
     }
 
-    public function lists_data()
+    public function listsData()
     {
         return $this->belongsTo(UsersList::class, 'users_list_id');
     }
 
-    public function users_data()
+    public function usersData()
     {
         return $this->belongsTo(User::class, 'user_id');
     }

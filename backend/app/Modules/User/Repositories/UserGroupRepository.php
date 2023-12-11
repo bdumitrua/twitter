@@ -42,7 +42,7 @@ class UserGroupRepository
     {
         $userGroup = $this->userGroup
             ->withCount(['members'])
-            ->with(['members_data'])
+            ->with(['membersData'])
             ->where('id', '=', $id)
             ->first();
 

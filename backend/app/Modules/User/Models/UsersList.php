@@ -36,14 +36,14 @@ class UsersList extends Model
         return $this->hasMany(UsersListSubscribtion::class, 'users_list_id');
     }
 
-    public function members_data()
+    public function membersData()
     {
-        return $this->members()->with('users_data');
+        return $this->members()->with('usersData');
     }
 
-    public function subscribers_data()
+    public function subscribersData()
     {
-        return $this->subscribers()->with('users_data');
+        return $this->subscribers()->with('usersData');
     }
 
     protected static function boot()

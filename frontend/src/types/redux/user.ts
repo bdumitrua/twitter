@@ -14,7 +14,7 @@ export interface User {
 	subscribtions_count: number;
 	subscribers_count: number;
 	lists: UserList[];
-	lists_subscribtions: ListSubscription[];
+	listsSubscribtions: ListSubscription[];
 	device_tokens: string[];
 }
 
@@ -37,7 +37,7 @@ interface ListSubscription {
 	created_at: string;
 	updated_at: string;
 	deleted_at: string | null;
-	lists_data: ListsData;
+	listsData: ListsData;
 }
 
 interface ListsData {

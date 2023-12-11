@@ -23,12 +23,12 @@ class UserSubscribtion extends Model
         return UserSubscribtionFactory::new();
     }
 
-    public function subscribers_data()
+    public function subscribersData()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function subscribtions_data()
+    public function subscribtionsData()
     {
         return $this->belongsTo(User::class, 'subscriber_id');
     }
