@@ -28,17 +28,29 @@ class PrometheusService
         $this->registry = CollectorRegistry::getDefault();
     }
 
+    /**
+     * @return string
+     */
     public function getMetrics(): string
     {
         $renderer = new RenderTextFormat();
         return $renderer->render($this->registry->getMetricFamilySamples());
     }
 
+    /**
+     * @return void
+     */
     public function clearMetrics(): void
     {
         $this->registry->wipeStorage();
     }
 
+    /**
+     * @param mixed $duration
+     * @param string $routeName
+     * 
+     * @return void
+     */
     public function addResponseTimeHistogram($duration, string $routeName): void
     {
         $histogram = $this->registry->getOrRegisterHistogram(
@@ -51,6 +63,11 @@ class PrometheusService
         $histogram->observe($duration, [$routeName]);
     }
 
+    /**
+     * @param mixed $routeName
+     * 
+     * @return void
+     */
     public function incrementRequestCounter($routeName): void
     {
         $counter = $this->registry->getOrRegisterCounter(
@@ -63,7 +80,13 @@ class PrometheusService
         $counter->inc([$routeName]);
     }
 
-    public function incrementErrorCounter($statusCode, $routeName)
+    /**
+     * @param mixed $statusCode
+     * @param mixed $routeName
+     * 
+     * @return void
+     */
+    public function incrementErrorCounter($statusCode, $routeName): void
     {
         $counter = $this->registry->getOrRegisterCounter(
             $this->countersNamespace,
@@ -74,7 +97,12 @@ class PrometheusService
         $counter->inc([$statusCode, $routeName]);
     }
 
-    public function incrementCacheHit($cacheKey)
+    /**
+     * @param mixed $cacheKey
+     * 
+     * @return void
+     */
+    public function incrementCacheHit($cacheKey): void
     {
         $counter = $this->registry->getOrRegisterCounter(
             $this->countersNamespace,
@@ -85,7 +113,12 @@ class PrometheusService
         $counter->inc([$cacheKey]);
     }
 
-    public function incrementCacheMiss($cacheKey)
+    /**
+     * @param mixed $cacheKey
+     * 
+     * @return void
+     */
+    public function incrementCacheMiss($cacheKey): void
     {
         $counter = $this->registry->getOrRegisterCounter(
             $this->countersNamespace,
@@ -96,7 +129,12 @@ class PrometheusService
         $counter->inc([$cacheKey]);
     }
 
-    public function incrementDatabaseQueryCount($source)
+    /**
+     * @param mixed $source
+     * 
+     * @return void
+     */
+    public function incrementDatabaseQueryCount($source): void
     {
         $counter = $this->registry->getOrRegisterCounter(
             $this->countersNamespace,
@@ -107,6 +145,12 @@ class PrometheusService
         $counter->inc([$source]);
     }
 
+    /**
+     * @param mixed $duration
+     * @param mixed $source
+     * 
+     * @return void
+     */
     public function addDatabaseQueryTimeHistogram($duration, $source): void
     {
         $histogram = $this->registry->getOrRegisterHistogram(
@@ -119,7 +163,12 @@ class PrometheusService
         $histogram->observe($duration, ['source' => $source]);
     }
 
-    public function incrementEntityCreatedCount($entityName)
+    /**
+     * @param mixed $entityName
+     * 
+     * @return void
+     */
+    public function incrementEntityCreatedCount($entityName): void
     {
         $counter = $this->registry->getOrRegisterCounter(
             $this->countersNamespace,
