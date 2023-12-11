@@ -5,6 +5,7 @@ namespace App\Modules\Auth\Models;
 use App\Modules\User\Models\User;
 use App\Prometheus\PrometheusService;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class AuthReset extends Model
 {
@@ -14,12 +15,18 @@ class AuthReset extends Model
         'confirmed'
     ];
 
-    public function user()
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

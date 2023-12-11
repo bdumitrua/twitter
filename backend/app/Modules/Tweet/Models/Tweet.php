@@ -9,6 +9,9 @@ use Database\Factories\TweetFactory;
 use Elastic\ScoutDriverPlus\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Tweet extends Model
 {
@@ -22,77 +25,113 @@ class Tweet extends Model
         'linked_tweet_id'
     ];
 
+    protected static function newFactory()
+    {
+        return TweetFactory::new();
+    }
+
     protected $searchable = [
         'text',
     ];
 
-    public function toSearchableArray()
+    /**
+     * @return array
+     */
+    public function toSearchableArray(): array
     {
         return [
             'text' => $this->text,
         ];
     }
 
-    public function searchableAs()
+    /**
+     * @return string
+     */
+    public function searchableAs(): string
     {
         return 'tweets';
     }
 
-    protected static function newFactory()
-    {
-        return TweetFactory::new();
-    }
-
-    public function author()
+    /**
+     * @return BelongsTo
+     */
+    public function author(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    public function likes()
+    /**
+     * @return HasMany
+     */
+    public function likes(): HasMany
     {
         return $this->hasMany(TweetLike::class, 'tweet_id', 'id');
     }
 
-    public function notices()
+    /**
+     * @return HasMany
+     */
+    public function notices(): HasMany
     {
         return $this->hasMany(TweetNotice::class, 'tweet_id', 'id');
     }
 
-    public function favorites()
+    /**
+     * @return HasMany
+     */
+    public function favorites(): HasMany
     {
         return $this->hasMany(TweetFavorite::class, 'tweet_id', 'id');
     }
 
-    public function linkedTweet()
+    /**
+     * @return BelongsTo
+     */
+    public function linkedTweet(): BelongsTo
     {
         return $this->belongsTo(Tweet::class, 'linked_tweet_id', 'id');
     }
 
-    public function threadChild()
+    /**
+     * @return HasOne
+     */
+    public function threadChild(): HasOne
     {
         return $this->hasOne(Tweet::class, 'linked_tweet_id', 'id')
             ->where('type', 'thread');
     }
 
-    public function replies()
+    /**
+     * @return HasMany
+     */
+    public function replies(): HasMany
     {
         return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
             ->where('type', 'reply');
     }
 
-    public function reposts()
+    /**
+     * @return HasMany
+     */
+    public function reposts(): HasMany
     {
         return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
             ->where('type', 'repost');
     }
 
-    public function quotes()
+    /**
+     * @return HasMany
+     */
+    public function quotes(): HasMany
     {
         return $this->hasMany(Tweet::class, 'linked_tweet_id', 'id')
             ->where('type', 'quote');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

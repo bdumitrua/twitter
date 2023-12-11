@@ -15,7 +15,10 @@ class AuthRegistration extends Model
         'birth_date',
     ];
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

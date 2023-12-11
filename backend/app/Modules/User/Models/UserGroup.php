@@ -6,6 +6,7 @@ use App\Prometheus\PrometheusService;
 use Database\Factories\UserGroupFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 
@@ -24,17 +25,26 @@ class UserGroup extends Model
         return UserGroupFactory::new();
     }
 
-    public function members()
+    /**
+     * @return HasMany
+     */
+    public function members(): HasMany
     {
         return $this->hasMany(UserGroupMember::class, 'user_group_id');
     }
 
-    public function members_data()
+    /**
+     * @return HasMany
+     */
+    public function members_data(): HasMany
     {
         return $this->members()->with('users_data');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

@@ -22,7 +22,10 @@ class TweetLike extends Model
         return TweetLikeFactory::new();
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

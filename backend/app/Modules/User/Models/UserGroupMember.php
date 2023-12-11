@@ -6,6 +6,7 @@ use App\Prometheus\PrometheusService;
 use Database\Factories\UserGroupMemberFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserGroupMember extends Model
@@ -22,12 +23,18 @@ class UserGroupMember extends Model
         return UserGroupMemberFactory::new();
     }
 
-    public function users_data()
+    /**
+     * @return BelongsTo
+     */
+    public function users_data(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

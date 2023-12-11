@@ -6,6 +6,7 @@ use App\Prometheus\PrometheusService;
 use Database\Factories\UsersListFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 
@@ -26,27 +27,42 @@ class UsersList extends Model
         return UsersListFactory::new();
     }
 
-    public function members()
+    /**
+     * @return HasMany
+     */
+    public function members(): HasMany
     {
         return $this->hasMany(UsersListMember::class, 'users_list_id');
     }
 
-    public function subscribers()
+    /**
+     * @return HasMany
+     */
+    public function subscribers(): HasMany
     {
         return $this->hasMany(UsersListSubscribtion::class, 'users_list_id');
     }
 
-    public function members_data()
+    /**
+     * @return HasMany
+     */
+    public function members_data(): HasMany
     {
         return $this->members()->with('users_data');
     }
 
-    public function subscribers_data()
+    /**
+     * @return HasMany
+     */
+    public function subscribers_data(): HasMany
     {
         return $this->subscribers()->with('users_data');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

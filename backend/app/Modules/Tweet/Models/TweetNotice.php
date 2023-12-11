@@ -20,7 +20,10 @@ class TweetNotice extends Model
         'tweet_id',
     ];
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

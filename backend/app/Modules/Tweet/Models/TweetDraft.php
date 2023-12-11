@@ -21,7 +21,10 @@ class TweetDraft extends Model
         return TweetDraftFactory::new();
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

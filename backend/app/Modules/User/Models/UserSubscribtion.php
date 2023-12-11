@@ -7,6 +7,7 @@ use App\Prometheus\PrometheusService;
 use Database\Factories\UserSubscribtionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class UserSubscribtion extends Model
@@ -23,17 +24,26 @@ class UserSubscribtion extends Model
         return UserSubscribtionFactory::new();
     }
 
-    public function subscribers_data()
+    /**
+     * @return BelongsTo
+     */
+    public function subscribers_data(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function subscribtions_data()
+    /**
+     * @return BelongsTo
+     */
+    public function subscribtions_data(): BelongsTo
     {
         return $this->belongsTo(User::class, 'subscriber_id');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 
