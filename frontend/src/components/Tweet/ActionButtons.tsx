@@ -1,4 +1,4 @@
-import { ActionButtonsData } from "@/types/tweet/actionButton";
+import { ActionButtonsData } from "@/types/tweet/tweet";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
