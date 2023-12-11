@@ -6,6 +6,8 @@ import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 
 const ActionButtons: React.FC<ActionButtonsData> = ({ counters, actions }) => {
+	//TODO: Actions
+
 	return (
 		<div className={styles["tweet__counters"]}>
 			<a className={styles["tweet__counter"]} href="#/">

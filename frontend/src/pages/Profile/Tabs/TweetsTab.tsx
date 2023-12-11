@@ -1,12 +1,13 @@
-import Tweet from "../../../components/Tweet/Tweet";
+import FetchTweets from "@/components/FetchTweets/FetchTweets";
 
 const TweetsTab: React.FC = () => {
 	return (
 		<>
-			<Tweet />
-			<Tweet />
-			<Tweet />
-			<Tweet />
+			<FetchTweets
+				queryKey={["tweets-and-replies"]}
+				path="/tweets/feed"
+				// path={`/tweets/user/${currentUser}`}
+			/>
 		</>
 	);
 };

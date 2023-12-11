@@ -5,13 +5,13 @@ export interface Author {
 	avatar: string | null;
 }
 
-export interface Content {
+interface TweetContent {
 	text: string;
 	notices: any[]; // Замените any на более конкретный тип, если у вас есть информация о типе 'notices'.
 	created_at: string;
 }
 
-export interface Counters {
+interface TweetCounters {
 	likes: { count: number };
 	replies: { count: number };
 	reposts: { count: number };
@@ -19,15 +19,15 @@ export interface Counters {
 	favorites: { count: number };
 }
 
-export interface Actions {
-	LikeTweet: { url: string; method: "POST" };
-	DislikeTweet: { url: string; method: "DELETE" };
-	BookmarkTweet: { url: string; method: "POST" };
-	UnbookmarkTweet: { url: string; method: "DELETE" };
-	RepostTweet: { url: string; method: "POST" };
-	UnrepostTweet: { url: string; method: "POST" };
-	QuoteTweet: { url: string; method: "POST" };
-	ShowTweet: { url: string; method: "GET" };
+interface TweetActions {
+	LikeTweet: { url: string; method: string };
+	DislikeTweet: { url: string; method: string };
+	BookmarkTweet: { url: string; method: string };
+	UnbookmarkTweet: { url: string; method: string };
+	RepostTweet: { url: string; method: string };
+	UnrepostTweet: { url: string; method: string };
+	QuoteTweet: { url: string; method: string };
+	ShowTweet: { url: string; method: string };
 }
 
 export interface TweetTypes {
@@ -35,15 +35,15 @@ export interface TweetTypes {
 	key?: number;
 	type: string;
 	author: Author;
-	content: Content;
-	counters: Counters;
-	haveThread: boolean;
-	actions: Actions;
-	related: any[]; // ! ???
-	replies: TweetTypes[]; // ???
+	content: TweetContent;
+	counters: TweetCounters;
+	actions: TweetActions;
+	related: TweetTypes;
+	replies: TweetTypes[];
+	thread: TweetTypes;
 }
 
 export interface ActionButtonsData {
-	counters: Counters;
-	actions: Actions;
+	counters: TweetCounters;
+	actions: TweetActions;
 }
