@@ -7,7 +7,15 @@ use App\Prometheus\PrometheusService;
 use Database\Factories\DeviceTokenFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * * Модель, относящаяся к таблице device_tokens
+ * 
+ * * Необходима для работы с девайс токенами пользователей.
+ * 
+ * * Девайс токены же нужны для отправки уведомлений на устройства пользователей.
+ */
 class DeviceToken extends Model
 {
     use HasFactory;
@@ -22,12 +30,18 @@ class DeviceToken extends Model
         return DeviceTokenFactory::new();
     }
 
-    public function user()
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

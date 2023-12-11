@@ -6,8 +6,16 @@ use App\Modules\User\Models\User;
 use App\Prometheus\PrometheusService;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/**
+ * * Модель, относящаяся к таблице notifications
+ * 
+ * * Необходима для работы с уведомлениями пользователей.
+ * 
+ * * Помимо таблицы в основной бд, уведомления также отправляются и в Firebase, таблица notifications.
+ */
 class Notification extends Model
 {
     use HasFactory;
@@ -23,7 +31,10 @@ class Notification extends Model
         'status'
     ];
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 
@@ -36,7 +47,10 @@ class Notification extends Model
         });
     }
 
-    public function user()
+    /**
+     * @return BelongsTo
+     */
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }
