@@ -1,7 +1,7 @@
 import { TweetTypes } from "@/types/tweet/tweet";
 import { fetchData } from "@/utils/functions/fetchData";
 import { useQuery } from "@tanstack/react-query";
-import TweetTest from "../Tweet/TweetTest";
+import Tweet from "../Tweet/Tweet";
 
 interface FetchTweetsProps {
 	queryKey: string[];
@@ -9,10 +9,10 @@ interface FetchTweetsProps {
 }
 
 const FetchTweets: React.FC<FetchTweetsProps> = ({ queryKey, path }) => {
-	console.log(path);
 	const { data } = useQuery({
 		queryKey: [queryKey],
 		queryFn: () => fetchData(path),
+		refetchOnWindowFocus: false,
 		//enabled: loadMore, // * Запрос активируется, когда loadMore становится true
 	});
 
@@ -20,7 +20,7 @@ const FetchTweets: React.FC<FetchTweetsProps> = ({ queryKey, path }) => {
 		<div>
 			{data ? (
 				data.map((tweet: TweetTypes) => {
-					return <TweetTest key={tweet.id} tweetData={tweet} />;
+					return <Tweet key={tweet.id} tweetData={tweet} />;
 				})
 			) : (
 				<div>Loading...</div>
