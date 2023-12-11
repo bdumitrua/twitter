@@ -38,7 +38,7 @@ class RecentSearchRepository
     {
         $cacheKey = KEY_USER_SEARCH . $userId;
         return $this->getCachedData($cacheKey, null, function () use ($userId) {
-            return $this->recentSearch->with('linked_user')
+            return $this->recentSearch->with('linkedUser')
                 ->where('user_id', $userId)
                 ->latest('updated_at')
                 ->take(10)
