@@ -6,7 +6,7 @@ use App\Modules\Tweet\Models\Tweet;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TweetRepostEvent implements ShouldBroadcast
+class TweetRepostEvent
 {
     public $tweetId;
 
@@ -14,13 +14,5 @@ class TweetRepostEvent implements ShouldBroadcast
         int $tweetId,
     ) {
         $this->tweetId = $tweetId;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }

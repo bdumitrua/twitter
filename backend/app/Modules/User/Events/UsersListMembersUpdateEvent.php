@@ -7,7 +7,7 @@ use App\Modules\User\Models\UsersListSubscribtion;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class UsersListMembersUpdateEvent implements ShouldBroadcast
+class UsersListMembersUpdateEvent
 {
     public $usersListMember;
 
@@ -15,13 +15,5 @@ class UsersListMembersUpdateEvent implements ShouldBroadcast
         UsersListMember $usersListMember,
     ) {
         $this->usersListMember = $usersListMember;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }

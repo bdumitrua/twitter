@@ -6,7 +6,7 @@ use App\Modules\Tweet\Models\TweetFavorite;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class TweetFavoriteEvent implements ShouldBroadcast
+class TweetFavoriteEvent
 {
     public $tweetFavorite;
 
@@ -14,13 +14,5 @@ class TweetFavoriteEvent implements ShouldBroadcast
         TweetFavorite $tweetFavorite
     ) {
         $this->tweetFavorite = $tweetFavorite;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }

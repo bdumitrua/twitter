@@ -7,7 +7,7 @@ use App\Modules\User\Models\UsersList;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class DeletedUsersListEvent implements ShouldBroadcast
+class DeletedUsersListEvent
 {
     public $usersList;
 
@@ -15,13 +15,5 @@ class DeletedUsersListEvent implements ShouldBroadcast
         array $usersList,
     ) {
         $this->usersList = $usersList;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }

@@ -7,7 +7,7 @@ use App\Modules\User\Models\User;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
-class RegistrationStartedEvent implements ShouldBroadcast
+class RegistrationStartedEvent
 {
     public $authRegistration;
 
@@ -15,13 +15,5 @@ class RegistrationStartedEvent implements ShouldBroadcast
         AuthRegistration $authRegistration,
     ) {
         $this->authRegistration = $authRegistration;
-    }
-
-    public function broadcastOn()
-    {
-        // You can implement your sockets logic here
-        // return [
-        //     new PrivateChannel('channel-name'),
-        // ];
     }
 }
