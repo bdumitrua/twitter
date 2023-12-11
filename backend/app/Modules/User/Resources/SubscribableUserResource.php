@@ -6,7 +6,7 @@ use App\Http\Resources\ActionsResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class SearchUserResource extends JsonResource
+class SubscribableUserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
