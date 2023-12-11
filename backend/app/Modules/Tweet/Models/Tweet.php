@@ -45,7 +45,7 @@ class Tweet extends Model
 
     public function author()
     {
-        return $this->hasOne(User::class, 'id', 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     public function likes()
@@ -65,7 +65,7 @@ class Tweet extends Model
 
     public function linkedTweet()
     {
-        return $this->hasOne(Tweet::class, 'id', 'linked_tweet_id');
+        return $this->belongsTo(Tweet::class, 'linked_tweet_id', 'id');
     }
 
     public function threadChild()
