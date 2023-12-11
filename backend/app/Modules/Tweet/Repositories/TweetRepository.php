@@ -252,7 +252,7 @@ class TweetRepository
 
     public function unrepost(int $tweetId, int $authorizedUserId): void
     {
-        $this->tweet->where('user_id', $authorizedUserId)
+        $tweet = $this->tweet->where('user_id', $authorizedUserId)
             ->where('type', 'repost')
             ->where('linked_tweet_id', $tweetId)
             ->first() ?? [];
