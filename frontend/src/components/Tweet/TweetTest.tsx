@@ -1,13 +1,9 @@
 import { TweetTypes } from "@/types/tweet/tweet";
-import comment from "../../assets/images/Tweet/comment.svg";
-import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
-import retweet from "../../assets/images/Tweet/retweet.svg";
-import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
-import UserAvatar from "../UserAvatar/UserAvatar";
-import UserAvatarPlug from "../UserAvatar/UserAvatarPlug";
+import ActionButtons from "./ActionButtons";
 import Author from "./Author";
+import TweetAuthorAvatar from "./TweetAuthorAvatar";
 import TweetThread from "./TweetThread";
 
 const tweetText =
@@ -19,70 +15,33 @@ interface TweetTestProps {
 
 const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 	return (
-		<div className={styles["tweet"]}>
-			{/* <TweetAdditional />  !ТОЛЬКО С tweet_type: repost*/}
-			<div className={styles["tweet__wrapper"]}>
-				<div className={styles["tweet__image"]}>
-					<div className={styles["tweet__author-image"]}>
-						{tweetData.author.avatar ? (
-							<UserAvatar
-								userPhoto={tweetData.author.avatar}
-								link="/profile"
-							/>
-						) : (
-							<UserAvatarPlug userName={tweetData.author.name} />
-						)}
-					</div>
-					{tweetData.haveThread && (
-						<div className={styles["tweet__line"]}></div>
-					)}
-				</div>
-				<div className={styles["tweet__content"]}>
-					<Author
-						author={tweetData.author}
-						createdAt={tweetData.content.created_at}
+		<div className={styles["wrapper"]}>
+			<div className={styles["tweet"]}>
+				{/* <TweetAdditional />  !ТОЛЬКО С tweet_type: repost*/}
+				<div className={styles["tweet__wrapper"]}>
+					<TweetAuthorAvatar
+						authorAvatar={tweetData.author.avatar}
+						authorName={tweetData.author.name}
+						haveThread={tweetData.haveThread}
 					/>
-					<div className={styles["tweet__tweet-body"]}>
-						<span className={styles["tweet__text"]}>
-							{parseHashtags(tweetData.content.text, "feed")}
-						</span>
-					</div>
-					<div className={styles["tweet__counters"]}>
-						<a className={styles["tweet__counter"]} href="#/">
-							<img
-								className={styles["tweet__counter-logo"]}
-								src={comment}
-								alt=""
-							/>
-							{tweetData.counters.replies.count}
-						</a>
-						<a className={styles["tweet__counter"]} href="#/">
-							<img
-								className={styles["tweet__counter-logo"]}
-								src={retweet}
-								alt=""
-							/>
-							{tweetData.counters.reposts.count}
-						</a>
-						<a className={styles["tweet__counter"]} href="#/">
-							<img
-								className={styles["tweet__counter-logo"]}
-								src={unpaintedLike}
-								alt=""
-							/>
-							{tweetData.counters.likes.count}
-						</a>
-						<a className={styles["tweet__counter"]} href="#/">
-							<img
-								className={styles["tweet__conter-logo"]}
-								src={makeRepost}
-								alt=""
-							/>
-						</a>
+					<div className={styles["tweet__content"]}>
+						<Author
+							author={tweetData.author}
+							createdAt={tweetData.content.created_at}
+						/>
+						<div className={styles["tweet__tweet-body"]}>
+							<span className={styles["tweet__text"]}>
+								{parseHashtags(tweetData.content.text, "feed")}
+							</span>
+						</div>
+						<ActionButtons
+							counters={tweetData.counters}
+							actions={tweetData.actions}
+						/>
 					</div>
 				</div>
+				<TweetThread />
 			</div>
-			<TweetThread />
 		</div>
 	);
 };
