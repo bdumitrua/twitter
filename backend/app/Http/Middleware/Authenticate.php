@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Exceptions\InvalidTokenException;
 use Closure;
 use Illuminate\Auth\Middleware\Authenticate as Middleware;
 use Illuminate\Http\Request;
@@ -19,6 +20,7 @@ class Authenticate extends Middleware
      * @return mixed
      *
      * @throws \Illuminate\Auth\AuthenticationException
+     * @throws InvalidTokenException
      */
     public function handle($request, Closure $next, ...$guards)
     {
@@ -28,7 +30,7 @@ class Authenticate extends Middleware
         // Проверка даты инвалидации токена
         if ($user->token_invalid_before && JWTAuth::getPayload(JWTAuth::getToken())->get('iat') < $user->token_invalid_before->timestamp) {
             Auth::logout(true);
-            return response()->json(['error' => 'Token is invalid'], 401);
+            throw new InvalidTokenException();
         }
 
         return $next($request);

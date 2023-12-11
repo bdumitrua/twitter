@@ -14,6 +14,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, ValidatesRequests;
 
+    /**
+     * @param mixed $response
+     * 
+     * @return JsonResponse
+     */
     protected function responseToJSON($response): JsonResponse
     {
         try {
@@ -35,6 +40,11 @@ class Controller extends BaseController
         }
     }
 
+    /**
+     * @param callable $serviceFunction
+     * 
+     * @return JsonResponse
+     */
     protected function handleServiceCall(callable $serviceFunction): JsonResponse
     {
         try {
