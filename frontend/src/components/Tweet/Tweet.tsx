@@ -22,7 +22,7 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 							authorAvatar={tweetData.author.avatar}
 							authorName={tweetData.author.name}
 						/>
-						{tweetData.type === "thread" && (
+						{tweetData.type === "default" && (
 							<div className={styles["tweet__line"]}></div>
 						)}
 					</div>

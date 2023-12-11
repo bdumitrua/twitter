@@ -14,9 +14,10 @@
 		align-items: center;
 		flex-direction: column;
 	}
+
 	&__author-image {
-		width: 55px;
-		height: 55px;
+		min-width: 55px;
+		min-height: 55px;
 	}
 
 	&__line {
