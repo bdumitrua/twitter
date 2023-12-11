@@ -11,6 +11,7 @@ use App\Modules\Tweet\Repositories\TweetRepository;
 use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Repositories\UserRepository;
 use App\Modules\User\Resources\SubscribableUserResource;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -35,28 +36,46 @@ class SearchService
         $this->authorizedUserId = Auth::id();
     }
 
-    public function index()
+    /**
+     * @return JsonResource
+     */
+    public function index(): JsonResource
     {
         return new RecentSearchesResource(
             $this->recentSearchRepository->getByUserId($this->authorizedUserId)
         );
     }
 
-    public function users(SearchRequest $request)
+    /**
+     * @param SearchRequest $request
+     * 
+     * @return JsonResource
+     */
+    public function users(SearchRequest $request): JsonResource
     {
         return SubscribableUserResource::collection(
             $this->userRepository->search($request->search)
         );
     }
 
-    public function tweets(SearchRequest $request)
+    /**
+     * @param SearchRequest $request
+     * 
+     * @return JsonResource
+     */
+    public function tweets(SearchRequest $request): JsonResource
     {
         return TweetResource::collection(
             $this->tweetRepository->search($request->search)
         );
     }
 
-    public function create(RecentSearchRequest $request)
+    /**
+     * @param RecentSearchRequest $request
+     * 
+     * @return void
+     */
+    public function create(RecentSearchRequest $request): void
     {
         $this->logger->info(
             'Creating recentSearchDTO from create request',
@@ -75,7 +94,10 @@ class SearchService
         $this->recentSearchRepository->create($recentSearchDTO);
     }
 
-    public function clear()
+    /**
+     * @return void
+     */
+    public function clear(): void
     {
         $this->logger->info(
             'Clearing user RecentSearch',
