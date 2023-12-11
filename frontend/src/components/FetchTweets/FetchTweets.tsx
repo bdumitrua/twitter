@@ -1,4 +1,4 @@
-import { TweetTypes } from "@/types/tweet";
+import { TweetTypes } from "@/types/tweet/tweet";
 import { fetchData } from "@/utils/functions/fetchData";
 import { useQuery } from "@tanstack/react-query";
 import TweetTest from "../Tweet/TweetTest";
