@@ -19,11 +19,21 @@ class TweetFavoriteService
         $this->authorizedUserId = Auth::id();
     }
 
+    /**
+     * @param Tweet $tweet
+     * 
+     * @return void
+     */
     public function add(Tweet $tweet): void
     {
         $this->tweetFavoriteRepository->add($tweet->id, $this->authorizedUserId);
     }
 
+    /**
+     * @param Tweet $tweet
+     * 
+     * @return void
+     */
     public function remove(Tweet $tweet): void
     {
         $this->tweetFavoriteRepository->remove($tweet->id, $this->authorizedUserId);

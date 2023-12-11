@@ -18,6 +18,11 @@ class TweetDraftRepository
         $this->tweetDraft = $tweetDraft;
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return Collection
+     */
     public function getByUserId(int $userId): Collection
     {
         $cacheKey = KEY_USER_TWEET_DRAFTS . $userId;
@@ -27,6 +32,12 @@ class TweetDraftRepository
         });
     }
 
+    /**
+     * @param string $text
+     * @param int $authorizedUserId
+     * 
+     * @return void
+     */
     public function create(string $text, int $authorizedUserId): void
     {
         $sameDraft = $this->tweetDraft->where('user_id', $authorizedUserId)
@@ -46,6 +57,12 @@ class TweetDraftRepository
         $this->clearUserDraftsCache($authorizedUserId);
     }
 
+    /**
+     * @param array $drafts
+     * @param int $authorizedUserId
+     * 
+     * @return void
+     */
     public function delete(array $drafts, int $authorizedUserId): void
     {
         $this->tweetDraft
@@ -56,6 +73,11 @@ class TweetDraftRepository
         $this->clearUserDraftsCache($authorizedUserId);
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return void
+     */
     protected function clearUserDraftsCache(int $userId): void
     {
         $cacheKey = KEY_USER_TWEET_DRAFTS . $userId;

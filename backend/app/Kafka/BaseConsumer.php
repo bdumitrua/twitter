@@ -16,6 +16,10 @@ abstract class BaseConsumer
     protected string $topicName;
     protected string $consumerGroup;
 
+    /**
+     * @param string $topicName
+     * @param string $consumerGroup
+     */
     public function __construct(string $topicName, string $consumerGroup)
     {
         $this->topicName = $topicName;
@@ -39,6 +43,11 @@ abstract class BaseConsumer
 
     public abstract function consume(): void;
 
+    /**
+     * @param Message $message
+     * 
+     * @return object
+     */
     protected function getMessageBody(Message $message): object
     {
         $messageUUID = $message->getProperty('uuid');
@@ -56,7 +65,12 @@ abstract class BaseConsumer
         return (object)$body;
     }
 
-    protected function acknowledge($message): void
+    /**
+     * @param Message $message
+     * 
+     * @return void
+     */
+    protected function acknowledge(Message $message): void
     {
         $messageUUID = $message->getProperty('uuid');
         $this->consumer->acknowledge($message);

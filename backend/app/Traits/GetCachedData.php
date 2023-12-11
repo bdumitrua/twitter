@@ -9,6 +9,14 @@ use Illuminate\Support\Facades\Cache;
 
 trait GetCachedData
 {
+    /**
+     * @param string $cacheKey
+     * @param int|null $seconds
+     * @param \Closure $callback
+     * @param bool $updateCache
+     * 
+     * @return mixed
+     */
     protected function getCachedData(string $cacheKey, ?int $seconds, \Closure $callback, bool $updateCache = false)
     {
         $prometheusService = app(PrometheusService::class);
@@ -29,6 +37,11 @@ trait GetCachedData
         return Cache::get($cacheKey);
     }
 
+    /**
+     * @param string $cacheKey
+     * 
+     * @return void
+     */
     protected function clearCache(string $cacheKey): void
     {
         Cache::forget($cacheKey);

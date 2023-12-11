@@ -18,6 +18,11 @@ class NotificationRepository
         $this->notification = $notification;
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return Collection
+     */
     public function getByUserId(int $userId): Collection
     {
         $cacheKey = KEY_USER_NOTIFICATIONS . $userId;
@@ -26,6 +31,11 @@ class NotificationRepository
         }, false);
     }
 
+    /**
+     * @param NotificationDTO $notificationDTO
+     * 
+     * @return Notification
+     */
     public function create(NotificationDTO $notificationDTO): Notification
     {
         $data = $notificationDTO->toArray();
@@ -37,6 +47,12 @@ class NotificationRepository
         return $newNotification;
     }
 
+    /**
+     * @param Notification $notification
+     * @param string $newStatus
+     * 
+     * @return void
+     */
     public function update(Notification $notification, string $newStatus): void
     {
         $notification->update([
@@ -46,6 +62,11 @@ class NotificationRepository
         $this->clearUserNotificationsCache($notification->user_id);
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return void
+     */
     protected function clearUserNotificationsCache(int $userId): void
     {
         $cacheKey = KEY_USER_NOTIFICATIONS . $userId;

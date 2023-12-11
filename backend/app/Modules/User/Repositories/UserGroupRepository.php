@@ -25,6 +25,12 @@ class UserGroupRepository
         $this->userGroupMember = $userGroupMember;
     }
 
+    /**
+     * @param int $userGroupId
+     * @param int $userId
+     * 
+     * @return Builder
+     */
     protected function queryByBothIds(int $userGroupId, int $userId): Builder
     {
         return $this->userGroupMember->newQuery()
@@ -32,12 +38,22 @@ class UserGroupRepository
             ->where('user_id', '=', $userId);
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return Builder
+     */
     protected function queryByUserId(int $userId): Builder
     {
         return $this->userGroup->newQuery()
             ->where('user_id', '=', $userId);
     }
 
+    /**
+     * @param int $id
+     * 
+     * @return UserGroup
+     */
     public function getById(int $id): UserGroup
     {
         $userGroup = $this->userGroup
@@ -53,6 +69,12 @@ class UserGroupRepository
         return $userGroup;
     }
 
+    /**
+     * @param int $userId
+     * @param bool $updateCache
+     * 
+     * @return Collection
+     */
     public function getByUserId(int $userId, bool $updateCache = false): Collection
     {
         $cacheKey = KEY_USER_GROUPS . $userId;
@@ -61,6 +83,12 @@ class UserGroupRepository
         }, $updateCache);
     }
 
+    /**
+     * @param UserGroupDTO $dto
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function create(UserGroupDTO $dto, int $userId): void
     {
         $createdUserGroup = $this->userGroup->create([
@@ -74,6 +102,12 @@ class UserGroupRepository
         }
     }
 
+    /**
+     * @param UserGroup $userGroup
+     * @param UserGroupDTO $dto
+     * 
+     * @return void
+     */
     public function update(UserGroup $userGroup, UserGroupDTO $dto): void
     {
         $updatingStatus = $userGroup->update([
@@ -86,6 +120,11 @@ class UserGroupRepository
         }
     }
 
+    /**
+     * @param UserGroup $userGroup
+     * 
+     * @return void
+     */
     public function delete(UserGroup $userGroup): void
     {
         $deletingStatus = $userGroup->delete();
@@ -95,6 +134,12 @@ class UserGroupRepository
         }
     }
 
+    /**
+     * @param int $userGroupId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function addUser(int $userGroupId, int $userId): void
     {
         if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
@@ -105,6 +150,12 @@ class UserGroupRepository
         }
     }
 
+    /**
+     * @param int $userGroupId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function removeUser(int $userGroupId, int $userId): void
     {
         if ($userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first()) {
@@ -112,6 +163,11 @@ class UserGroupRepository
         }
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return void
+     */
     private function clearUserGroupsCache(int $userId): void
     {
         $cacheKey = KEY_USER_GROUPS . (string)$userId;
