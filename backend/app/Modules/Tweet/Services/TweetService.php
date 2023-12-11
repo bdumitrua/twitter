@@ -261,8 +261,8 @@ class TweetService
         $user = $this->userRepository->getById($userId);
 
         return array_merge(
-            $this->pluckKey($user->groups_member, 'user_group_id'),
-            $this->pluckKey($user->groups_creator, 'id')
+            $this->pluckKey($user->groupsMember, 'user_group_id'),
+            $this->pluckKey($user->groupsCreator, 'id')
         );
     }
 

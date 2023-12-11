@@ -10,7 +10,7 @@ class DeletedUsersListsListener
     public function handle($event)
     {
         $usersList = $event->usersList;
-        $topic = 'deleted_users_lists';
+        $topic = 'deletedUsersLists';
 
         Log::info("Creating message in {$topic} topic", $usersList);
         new KafkaProducer($topic, $usersList);

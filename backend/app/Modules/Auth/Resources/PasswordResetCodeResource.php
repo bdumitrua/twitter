@@ -15,13 +15,13 @@ class PasswordResetCodeResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "ConfirmCode",
-                "confirm_password_reset_code",
+                "confirmPasswordResetCode",
                 ['authReset' => $resetId],
             ]
         ]);
 
         return [
-            'reset_id' => $resetId,
+            'resetId' => $resetId,
             'actions' => $actions,
         ];
     }

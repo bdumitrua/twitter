@@ -23,7 +23,7 @@ class RecentSearch extends Model
     /**
      * @return BelongsTo
      */
-    public function linked_user(): BelongsTo
+    public function linkedUser(): BelongsTo
     {
         return $this->belongsTo(User::class, 'linked_user_id');
     }

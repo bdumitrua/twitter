@@ -15,13 +15,13 @@ class RegistrationConfirmedResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "EndRegistration",
-                "end_registration",
+                "endRegistration",
                 ['authRegistration' => $registrationId],
             ]
         ]);
 
         return [
-            'registration_id' => $registrationId,
+            'registrationId' => $registrationId,
             'actions' => $actions,
         ];
     }

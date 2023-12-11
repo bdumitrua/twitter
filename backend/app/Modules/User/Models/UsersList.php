@@ -51,17 +51,17 @@ class UsersList extends Model
     /**
      * @return HasMany
      */
-    public function members_data(): HasMany
+    public function membersData(): HasMany
     {
-        return $this->members()->with('users_data');
+        return $this->members()->with('usersData');
     }
 
     /**
      * @return HasMany
      */
-    public function subscribers_data(): HasMany
+    public function subscribersData(): HasMany
     {
-        return $this->subscribers()->with('users_data');
+        return $this->subscribers()->with('usersData');
     }
 
     /**

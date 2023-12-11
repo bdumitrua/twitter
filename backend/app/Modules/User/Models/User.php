@@ -128,23 +128,23 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @return HasMany
      */
-    public function subscribtions_data(): HasMany
+    public function subscribtionsData(): HasMany
     {
-        return $this->subscribtions()->with('subscribtions_data');
+        return $this->subscribtions()->with('subscribtionsData');
     }
 
     /**
      * @return HasMany
      */
-    public function subscribers_data(): HasMany
+    public function subscribersData(): HasMany
     {
-        return $this->subscribers()->with('subscribers_data');
+        return $this->subscribers()->with('subscribersData');
     }
 
     /**
      * @return HasMany
      */
-    public function groups_creator(): HasMany
+    public function groupsCreator(): HasMany
     {
         return $this->hasMany(UserGroup::class, 'user_id');
     }
@@ -152,7 +152,7 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @return HasMany
      */
-    public function groups_member(): HasMany
+    public function groupsMember(): HasMany
     {
         return $this->hasMany(UserGroupMember::class, 'user_id');
     }
@@ -168,17 +168,9 @@ class User extends Authenticatable implements JWTSubject
     /**
      * @return HasMany
      */
-    public function lists_memberships(): HasMany
+    public function listsSubscribtions(): HasMany
     {
-        return $this->hasMany(UsersListMember::class, 'user_id')->with('lists_data');
-    }
-
-    /**
-     * @return HasMany
-     */
-    public function lists_subscribtions(): HasMany
-    {
-        return $this->hasMany(UsersListSubscribtion::class, 'user_id')->with('lists_data');
+        return $this->hasMany(UsersListSubscribtion::class, 'user_id')->with('listsData');
     }
 
     /**

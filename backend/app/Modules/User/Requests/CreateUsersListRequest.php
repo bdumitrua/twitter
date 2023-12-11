@@ -24,9 +24,9 @@ class CreateUsersListRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string|max:255',
-            'is_private' => 'nullable|boolean',
+            'isPrivate' => 'nullable|integer|min:0|max:1',
             // TODO FILES
-            'bg_image' => 'nullable|string|max:255',
+            'bgImage' => 'nullable|string|max:255',
         ];
     }
 
@@ -40,7 +40,7 @@ class CreateUsersListRequest extends FormRequest
             'description.string'    => 'Описание списка должно быть строкой.',
             'description.max'    => 'Описание списка не может быть длиннее 255 символов.',
 
-            'is_private.boolean'    => 'Приватность должна быть типа boolean (true/false).',
+            'isPrivate.boolean'    => 'Приватность должна быть типа boolean (true/false).',
         ];
     }
 }

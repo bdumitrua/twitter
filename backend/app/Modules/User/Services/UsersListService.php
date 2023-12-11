@@ -75,7 +75,7 @@ class UsersListService
         $this->logger->info('Creating UsersListDTO from create request', $createUsersListRequest->toArray());
         $usersListDTO = $this->createDTO($createUsersListRequest, UsersListDTO::class);
 
-        $this->logger->info('Creating UsersList using UsersListDTO', $usersListDTO->toArray());
+        $this->logger->info('Creating UsersListDTO from create request', $usersListDTO->toArray());
         $this->usersListRepository->create($usersListDTO, $this->authorizedUserId);
     }
 

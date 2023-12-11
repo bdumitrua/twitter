@@ -91,49 +91,49 @@ class TweetResource extends JsonResource
         $actions = [
             [
                 "LikeTweet",
-                "like_tweet",
+                "likeTweet",
                 ["tweet" => $this->id]
             ],
             [
                 "DislikeTweet",
-                "dislike_tweet",
+                "dislikeTweet",
                 ["tweet" => $this->id]
             ],
             [
                 "BookmarkTweet",
-                "add_tweet_to_bookmarks",
+                "addTweetToBookmarks",
                 ["tweet" => $this->id]
             ],
             [
                 "UnbookmarkTweet",
-                "remove_tweet_from_bookmarks",
+                "removeTweetFromBookmarks",
                 ["tweet" => $this->id]
             ],
             [
                 "RepostTweet",
-                "create_tweet",
+                "createTweet",
             ],
             [
                 "UnrepostTweet",
-                "unrepost_tweet",
+                "unrepostTweet",
                 ["tweet" => $this->id]
             ],
             [
                 "QuoteTweet",
-                "create_tweet",
+                "createTweet",
             ],
         ];
 
         if ($isShowing) {
             $actions[] = [
                 'ShareTweet',
-                'get_tweet_by_id',
+                'getTweetById',
                 ["tweet" => $this->id]
             ];
         } else {
             $actions[] = [
                 'ShowTweet',
-                'get_tweet_by_id',
+                'getTweetById',
                 ["tweet" => $this->id]
             ];
         }

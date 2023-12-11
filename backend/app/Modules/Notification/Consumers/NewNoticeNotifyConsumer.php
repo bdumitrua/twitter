@@ -31,7 +31,7 @@ class NewNoticeNotifyConsumer extends BaseConsumer
 
             if (!empty($tweetNotice)) {
                 $notificationDTO = new NotificationDTO();
-                $notificationDTO->type = 'new_notice';
+                $notificationDTO->type = 'newNotice';
                 $notificationDTO->relatedId = $tweetNotice->tweet_id;
                 $notificationDTO->userId = $tweetNotice->user_id;
 

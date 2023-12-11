@@ -10,7 +10,7 @@ class NewSubscribtionsListener
     public function handle($event)
     {
         $userSubscribtion = $event->userSubscribtion->toArray();
-        $topic = 'new_subscribtions';
+        $topic = 'newSubscribtions';
 
         Log::info("Creating message in {$topic} topic", $userSubscribtion);
         new KafkaProducer($topic, $userSubscribtion);

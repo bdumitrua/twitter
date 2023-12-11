@@ -23,12 +23,12 @@ class UserDTO
             'link' => $this->link,
             'email' => $this->email,
             'about' => $this->about,
-            'bgImage' => $this->bgImage,
+            'bg_image' => $this->bgImage,
             'avatar' => $this->avatar,
-            'statusText' => $this->statusText,
-            'siteUrl' => $this->siteUrl,
+            'status_text' => $this->statusText,
+            'site_url' => $this->siteUrl,
             'address' => $this->address,
-            'birthDate' => $this->birthDate,
+            'birth_date' => $this->birthDate,
         ];
     }
 }

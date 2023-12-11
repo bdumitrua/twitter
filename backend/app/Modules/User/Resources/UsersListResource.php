@@ -14,22 +14,22 @@ class UsersListResource extends JsonResource
         $actionsArray = [
             [
                 "SubscribeOnList",
-                "subscribe_to_users_list",
+                "subscribeToUsersList",
                 ["usersList" => $this->id]
             ],
             [
                 "UnsubscribeFromList",
-                "unsubscribe_from_users_list",
+                "unsubscribeFromUsersList",
                 ["usersList" => $this->id]
             ],
             [
                 'GetUserMembers',
-                'get_users_list_members',
+                'getUsersListMembers',
                 ["usersList" => $this->id]
             ],
             [
                 'GetUserSubscribers',
-                'get_users_list_subscribers',
+                'getUsersListSubscribers',
                 ["usersList" => $this->id]
             ],
         ];
@@ -38,7 +38,7 @@ class UsersListResource extends JsonResource
         if ($this->user_id === $authorizedUserId) {
             $actionsArray[] = [
                 "UpdateUsersList",
-                "update_users_list",
+                "updateUsersList",
                 ["usersList" => $this->id]
             ];
         }
@@ -48,14 +48,14 @@ class UsersListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'user_id' => $this->user_id,
+            'userId' => $this->user_id,
             'description' => $this->description,
-            'bg_image' => $this->bg_image,
-            'is_private' => $this->is_private,
+            'bgImage' => $this->bg_image,
+            'isPrivate' => $this->is_private,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'members_count' => $this->members_count ?? 0,
-            'subscribers_count' => $this->subscribers_count ?? 0,
+            'membersCount' => $this->members_count ?? 0,
+            'subscribersCount' => $this->subscribers_count ?? 0,
             'actions' => $actions
         ];
     }

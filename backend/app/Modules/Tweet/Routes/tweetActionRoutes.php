@@ -10,16 +10,16 @@ Route::prefix('tweets/actions')->middleware(['auth:api'])->group(function () {
     // Лайки
     Route::prefix('likes')->controller(TweetLikeController::class)->group(function () {
         // Лайкнуть
-        Route::post('{tweet}', 'add')->name('like_tweet');
+        Route::post('{tweet}', 'add')->name('likeTweet');
         // Убрать лайк
-        Route::delete('{tweet}', 'remove')->name('dislike_tweet');
+        Route::delete('{tweet}', 'remove')->name('dislikeTweet');
     });
 
     // Избранное (т.е. закладки)
     Route::prefix('favorites')->controller(TweetFavoriteController::class)->group(function () {
         // Добавить в избранное
-        Route::post('{tweet}', 'add')->name('add_tweet_to_bookmarks');
+        Route::post('{tweet}', 'add')->name('addTweetToBookmarks');
         // Удалить из избранного
-        Route::delete('{tweet}', 'remove')->name('remove_tweet_from_bookmarks');
+        Route::delete('{tweet}', 'remove')->name('removeTweetFromBookmarks');
     });
 });

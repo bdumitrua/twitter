@@ -10,19 +10,19 @@ class UserGroupResource extends JsonResource
     public function toArray(Request $request): array
     {
         // Только если подгружено ранее (в репозитории)
-        $membersData = $this->whenLoaded('members_data', function () {
-            return GroupUserResource::collection($this->members_data);
+        $membersData = $this->whenLoaded('membersData', function () {
+            return GroupUserResource::collection($this->membersData);
         }, []);
 
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'userId' => $this->user_id,
             'name' => $this->name,
             'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'members_count' => $this->members_count ?? 0,
-            'members_data' => $membersData,
+            'membersCount' => $this->members_count ?? 0,
+            'membersData' => $membersData,
         ];
     }
 }

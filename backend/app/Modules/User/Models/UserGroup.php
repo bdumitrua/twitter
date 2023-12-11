@@ -41,9 +41,9 @@ class UserGroup extends Model
     /**
      * @return HasMany
      */
-    public function members_data(): HasMany
+    public function membersData(): HasMany
     {
-        return $this->members()->with('users_data');
+        return $this->members()->with('usersData');
     }
 
     /**

@@ -7,9 +7,9 @@ use Illuminate\Console\Command;
 
 class NewTweetCreateNoticesConsumerCommand extends Command
 {
-    protected $topic = 'new_tweets';
+    protected $topic = 'newTweets';
     protected $consumerGroup = NewTweetCreateNoticesConsumer::class;
-    protected $signature = 'kafka:consume:new_tweet_create_notices';
+    protected $signature = 'kafka:consume:newTweetCreateNotices';
 
     public function __construct()
     {

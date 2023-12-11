@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class NewUserNotifyConsumerCommand extends Command
 {
-    protected $topic = 'new_users';
+    protected $topic = 'newUsers';
     protected $consumerGroup = NewUserNotifyConsumer::class;
     protected $signature = 'kafka:consume:new_user_notify';
 

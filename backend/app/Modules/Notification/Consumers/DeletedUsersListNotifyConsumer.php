@@ -37,7 +37,7 @@ class DeletedUsersListNotifyConsumer extends BaseConsumer
 
                 foreach ($subscribersIds as $subscriberId) {
                     $notificationDTO = new NotificationDTO();
-                    $notificationDTO->type = 'deleted_users_lists';
+                    $notificationDTO->type = 'deletedUsersLists';
                     $notificationDTO->relatedId = $usersListId;
                     $notificationDTO->userId = $subscriberId;
 

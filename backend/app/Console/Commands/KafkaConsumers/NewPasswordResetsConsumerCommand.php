@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class NewPasswordResetsConsumerCommand extends Command
 {
-    protected $topic = 'password_resets';
+    protected $topic = 'passwordResets';
     protected $consumerGroup = NewPasswordResetsConsumer::class;
     protected $signature = 'kafka:consume:password_reset_mailing';
 

@@ -10,7 +10,7 @@ class NewLikesListener
     public function handle($event)
     {
         $tweetLike = $event->tweetLike->toArray();
-        $topic = 'new_likes';
+        $topic = 'newLikes';
 
         Log::info("Creating message in {$topic} topic", $tweetLike);
         new KafkaProducer($topic, $tweetLike);

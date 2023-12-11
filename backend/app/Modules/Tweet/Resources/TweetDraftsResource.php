@@ -10,17 +10,17 @@ class TweetDraftsResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $drafts = TweetDraftResource::collection($this->resource);
+        $tweetDrafts = TweetDraftResource::collection($this->resource);
 
         $actions = ActionsResource::collection([
             [
                 "DeleteTweetDrafts",
-                "delete_tweet_drafts",
+                "deleteTweetDrafts",
             ],
         ]);
 
         return [
-            'tweet_drafts' => $drafts,
+            'tweetDrafts' => $tweetDrafts,
             'actions' => $actions,
         ];
     }

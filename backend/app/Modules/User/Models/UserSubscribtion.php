@@ -32,7 +32,7 @@ class UserSubscribtion extends Model
     /**
      * @return BelongsTo
      */
-    public function subscribers_data(): BelongsTo
+    public function subscribersData(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -40,7 +40,7 @@ class UserSubscribtion extends Model
     /**
      * @return BelongsTo
      */
-    public function subscribtions_data(): BelongsTo
+    public function subscribtionsData(): BelongsTo
     {
         return $this->belongsTo(User::class, 'subscriber_id');
     }

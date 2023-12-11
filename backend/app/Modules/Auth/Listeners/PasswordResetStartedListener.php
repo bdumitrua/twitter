@@ -11,7 +11,7 @@ class PasswordResetStartedListener
     {
         $authReset = $event->authReset->toArray();
         $email = $event->email;
-        $topic = 'password_resets';
+        $topic = 'passwordResets';
 
         $mergedData = array_merge(
             $authReset,

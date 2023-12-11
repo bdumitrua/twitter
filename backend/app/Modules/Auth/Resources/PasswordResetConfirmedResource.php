@@ -15,13 +15,13 @@ class PasswordResetConfirmedResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "EndPasswordReset",
-                "end_password_reset",
+                "endPasswordReset",
                 ['authReset' => $resetId],
             ]
         ]);
 
         return [
-            'reset_id' => $resetId,
+            'resetId' => $resetId,
             'actions' => $actions,
         ];
     }

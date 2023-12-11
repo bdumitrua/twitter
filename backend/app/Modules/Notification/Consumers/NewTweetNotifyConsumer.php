@@ -37,7 +37,7 @@ class NewTweetNotifyConsumer extends BaseConsumer
 
                 foreach ($subscrubersIds as $subscriberId) {
                     $notificationDTO = new NotificationDTO();
-                    $notificationDTO->type = 'new_tweet';
+                    $notificationDTO->type = 'newTweet';
                     $notificationDTO->relatedId = $tweetId;
                     $notificationDTO->userId = $subscriberId;
 

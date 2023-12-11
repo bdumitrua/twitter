@@ -15,12 +15,12 @@ class RecentSearchesResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "ClearRecentSearches",
-                "clear_authorized_user_recent_searches",
+                "clearAuthorizedUserRecentSearches",
             ],
         ]);
 
         return [
-            'recent_searches' => $recentSearches,
+            'recentSearches' => $recentSearches,
             'actions' => $actions
         ];
     }

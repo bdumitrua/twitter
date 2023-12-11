@@ -35,7 +35,7 @@ class NewLikesNotifyConsumer extends BaseConsumer
                 $likedTweetAuthor = Tweet::find($tweetId)->user_id;
 
                 $notificationDTO = new NotificationDTO();
-                $notificationDTO->type = 'new_like';
+                $notificationDTO->type = 'newLike';
                 $notificationDTO->relatedId = $tweetId;
                 $notificationDTO->userId = $likedTweetAuthor;
 

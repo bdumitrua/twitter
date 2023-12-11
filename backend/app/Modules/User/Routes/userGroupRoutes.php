@@ -6,21 +6,21 @@ use Illuminate\Support\Facades\Route;
 
 Route::prefix('users/groups')->middleware(['auth:api'])->controller(UserGroupController::class)->group(function () {
     // Получить мои группы 
-    Route::get('/', 'index')->name('get_user_groups');
+    Route::get('/', 'index')->name('getUserGroups');
     // Создать группу
-    Route::post('/', 'create')->name('create_user_group');
+    Route::post('/', 'create')->name('createUserGroup');
 
     Route::middleware(['checkRights:userGroup'])->group(function () {
         // Получить мои группы 
-        Route::get('{userGroup}', 'show')->name('show_user_group');
+        Route::get('{userGroup}', 'show')->name('showUserGroup');
         // Изменить данные группы
-        Route::patch('{userGroup}', 'update')->name('update_user_group');
+        Route::patch('{userGroup}', 'update')->name('updateUserGroup');
         // Удалить группу
-        Route::delete('{userGroup}', 'destroy')->name('destroy_user_group');
+        Route::delete('{userGroup}', 'destroy')->name('destroyUserGroup');
 
         // Добавить пользователя в группу
-        Route::post('/members/{userGroup}/{user}', 'add')->name('add_user_to_user_group');
+        Route::post('/members/{userGroup}/{user}', 'add')->name('addUserToUserGroup');
         // Удалить пользователя из группы
-        Route::delete('/members/{userGroup}/{user}', 'remove')->name('remove_user_from_user_group');
+        Route::delete('/members/{userGroup}/{user}', 'remove')->name('removeUserFromUserGroup');
     });
 });

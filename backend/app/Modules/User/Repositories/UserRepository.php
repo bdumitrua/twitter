@@ -61,7 +61,7 @@ class UserRepository
         $cacheKey = KEY_AUTH_USER_DATA . $userId;
         return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryById($userId)
-                ->with(['lists', 'lists_subscribtions', 'deviceTokens'])
+                ->with(['lists', 'listsSubscribtions', 'deviceTokens'])
                 ->first() ?? new User();
         }, $updateCache);
     }
@@ -92,8 +92,6 @@ class UserRepository
         $dtoProperties = get_object_vars($dto);
 
         foreach ($dtoProperties as $property => $value) {
-            $property = Str::snake($property);
-
             if (!empty($value)) {
                 $user->$property = $property === 'password'
                     ? Hash::make($value)

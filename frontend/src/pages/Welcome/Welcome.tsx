@@ -18,7 +18,7 @@ const Welcome: React.FC = () => {
 	);
 
 	useEffect(() => {
-		if (!user && Cookies.get("access_token") && !error) {
+		if (!user && Cookies.get("accessToken") && !error) {
 			dispatch(getMeAsync());
 		}
 		if (user) {

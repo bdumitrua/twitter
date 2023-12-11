@@ -19,8 +19,8 @@ class UserResource extends JsonResource
             return $this->lists;
         }, []);
 
-        $lists_subscribtions = $this->whenLoaded('lists_subscribtions', function () {
-            return $this->lists_subscribtions;
+        $listsSubscribtions = $this->whenLoaded('listsSubscribtions', function () {
+            return $this->listsSubscribtions;
         }, []);
 
         $deviceTokens = $this->whenLoaded('deviceTokens', function () {
@@ -36,19 +36,19 @@ class UserResource extends JsonResource
             'link' => $this->link,
             'email' => $this->email,
             'about' => $this->about,
-            'bg_image' => $this->bg_image,
+            'bgImage' => $this->bg_image,
             'avatar' => $this->avatar,
-            'status_text' => $this->status_text,
-            'site_url' => $this->site_url,
+            'statusText' => $this->status_text,
+            'siteUrl' => $this->site_url,
             'address' => $this->address,
-            'birth_date' => $this->birth_date,
+            'birthDate' => $this->birth_date,
             'created_at' => $this->created_at,
-            "subscribtions_count" => $this->subscribtions_count,
-            "subscribers_count" => $this->subscribers_count,
-            'available_sections' => $availableSections,
+            "subscribtionsCount" => $this->subscribtions_count,
+            "subscribersCount" => $this->subscribers_count,
+            'availableSections' => $availableSections,
             "lists" => $lists,
-            "lists_subscribtions" => $lists_subscribtions,
-            "device_tokens" => $deviceTokens,
+            "listsSubscribtions" => $listsSubscribtions,
+            "deviceTokens" => $deviceTokens,
             "actions" => $actions
         ];
     }
@@ -58,32 +58,32 @@ class UserResource extends JsonResource
         $actions = [
             [
                 "GetUserTweets",
-                "get_user_tweets",
+                "getUserTweets",
                 ["user" => $this->id]
             ],
             [
                 "GetUserReplies",
-                "get_user_replies",
+                "getUserReplies",
                 ["user" => $this->id]
             ],
             [
                 "GetUserLikedTweets",
-                "get_user_likes",
+                "getUserLikes",
                 ["user" => $this->id]
             ],
             [
                 "GetUserTweetsWithMedia",
-                "get_user_tweets_with_media",
+                "getUserTweetsWithMedia",
                 ["user" => $this->id]
             ],
             [
                 "GetUserSubscribtions",
-                "get_user_subscribtions",
+                "getUserSubscribtions",
                 ["user" => $this->id]
             ],
             [
                 "GetUserSubscribers",
-                "get_user_subscribers",
+                "getUserSubscribers",
                 ["user" => $this->id]
             ],
         ];
@@ -91,23 +91,23 @@ class UserResource extends JsonResource
         if ($isAuthorizedUser) {
             $actions[] = [
                 "GetUserBookmarks",
-                "get_authorized_user_bookmarks",
+                "getAuthorizedUserBookmarks",
             ];
 
             $actions[] = [
                 "UpdateProfileData",
-                "update_user_data",
+                "updateUserData",
             ];
         } else {
             $actions[] = [
                 "SubscribeOnUser",
-                "subscribe_on_user",
+                "subscribeOnUser",
                 ["user" => $this->id]
             ];
 
             $actions[] = [
                 "UnsubscribeFromUser",
-                "unsubscribe_from_user",
+                "unsubscribeFromUser",
                 ["user" => $this->id]
             ];
         }

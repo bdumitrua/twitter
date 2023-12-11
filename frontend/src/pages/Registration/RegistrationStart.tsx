@@ -28,14 +28,14 @@ const RegistrationStart: React.FC = () => {
 			startRegisterAsync({
 				name: data.name,
 				email: data.email,
-				birth_date: data.birth_date,
+				birthDate: data.birthDate,
 			})
 		);
 		if (response.meta.requestStatus === "fulfilled") {
 			const queryParams = new URLSearchParams({
 				name: data.name,
 				email: data.email,
-				birth_date: data.birth_date,
+				birthDate: data.birthDate,
 			}).toString();
 			navigate(
 				`/registration/confirm/${response.payload}?${queryParams}`
@@ -94,8 +94,8 @@ const RegistrationStart: React.FC = () => {
 			<InputField
 				label="Дата рождения"
 				type="date"
-				name="birth_date"
-				error={errors?.birth_date?.message?.toString()}
+				name="birthDate"
+				error={errors?.birthDate?.message?.toString()}
 				rules={{
 					required: "Дата обязательна к заполнению.",
 				}}

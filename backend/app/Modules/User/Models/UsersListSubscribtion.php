@@ -31,7 +31,7 @@ class UsersListSubscribtion extends Model
     /**
      * @return BelongsTo
      */
-    public function lists_data(): BelongsTo
+    public function listsData(): BelongsTo
     {
         return $this->belongsTo(UsersList::class, 'users_list_id');
     }
@@ -39,7 +39,7 @@ class UsersListSubscribtion extends Model
     /**
      * @return BelongsTo
      */
-    public function users_data(): BelongsTo
+    public function usersData(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }

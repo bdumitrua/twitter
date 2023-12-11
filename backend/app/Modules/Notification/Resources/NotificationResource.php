@@ -26,7 +26,7 @@ class NotificationResource extends JsonResource
             $actions = ActionsResource::collection([
                 [
                     "UpdateNotificationStatus",
-                    "update_notification",
+                    "updateNotification",
                     ["notification" => $this->uuid],
                     ['available_statuses' => $availableStatuses]
                 ],
@@ -35,9 +35,9 @@ class NotificationResource extends JsonResource
 
         return [
             'uuid' => $this->uuid,
-            'user_id' => $this->user_id,
+            'userId' => $this->user_id,
             'type' => $this->type,
-            'related_id' => $this->related_id,
+            'relatedId' => $this->related_id,
             'status' => $this->status,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,

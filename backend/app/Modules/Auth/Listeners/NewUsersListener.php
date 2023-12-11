@@ -10,7 +10,7 @@ class NewUsersListener
     public function handle($event)
     {
         $user = $event->user->toArray();
-        $topic = 'new_users';
+        $topic = 'newUsers';
 
         Log::info("Creating message in {$topic} topic", $user);
         new KafkaProducer($topic, $user);

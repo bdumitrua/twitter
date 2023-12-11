@@ -7,7 +7,7 @@ use Illuminate\Console\Command;
 
 class NewRegistrationsConsumerCommand extends Command
 {
-    protected $topic = 'new_registrations';
+    protected $topic = 'newRegistrations';
     protected $consumerGroup = NewRegistrationsConsumer::class;
     protected $signature = 'kafka:consume:new_registration_mailing';
 

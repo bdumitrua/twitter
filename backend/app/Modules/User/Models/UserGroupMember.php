@@ -31,7 +31,7 @@ class UserGroupMember extends Model
     /**
      * @return BelongsTo
      */
-    public function users_data(): BelongsTo
+    public function usersData(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id', 'id');
     }

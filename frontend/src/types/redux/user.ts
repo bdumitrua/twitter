@@ -4,27 +4,27 @@ export interface User {
 	link: string;
 	email: string;
 	about: string | null;
-	bg_image: string | null;
+	bgImage: string | null;
 	avatar: string | null;
-	status_text: string | null;
-	site_url: string | null;
+	statusText: string | null;
+	siteUrl: string | null;
 	address: string | null;
-	birth_date: string;
+	birthDate: string;
 	created_at: string;
-	subscribtions_count: number;
-	subscribers_count: number;
+	subscribtionsCount: number;
+	subscribersCount: number;
 	lists: UserList[];
-	lists_subscribtions: ListSubscription[];
-	device_tokens: string[];
+	listsSubscribtions: ListSubscription[];
+	deviceTokens: string[];
 }
 
 interface UserList {
 	id: number;
 	name: string;
-	user_id: number;
+	userId: number;
 	description: string;
-	bg_image: string;
-	is_private: boolean; // предполагается, что это булево значение
+	bgImage: string;
+	isPrivate: boolean; // предполагается, что это булево значение
 	created_at: string;
 	updated_at: string;
 	deleted_at: string | null;
@@ -32,21 +32,21 @@ interface UserList {
 
 interface ListSubscription {
 	id: number;
-	user_id: number;
+	userId: number;
 	users_list_id: number;
 	created_at: string;
 	updated_at: string;
 	deleted_at: string | null;
-	lists_data: ListsData;
+	listsData: ListsData;
 }
 
 interface ListsData {
 	id: number;
 	name: string;
-	user_id: number;
+	userId: number;
 	description: string;
-	bg_image: string;
-	is_private: boolean; // предполагается, что это булево значение
+	bgImage: string;
+	isPrivate: boolean; // предполагается, что это булево значение
 	created_at: string;
 	updated_at: string;
 	deleted_at: string | null;

@@ -15,13 +15,13 @@ class RegistrationCodeResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "ConfirmCode",
-                "confirm_registration_code",
+                "confirmRegistrationCode",
                 ['authRegistration' => $registrationId],
             ]
         ]);
 
         return [
-            'registration_id' => $registrationId,
+            'registrationId' => $registrationId,
             'actions' => $actions,
         ];
     }

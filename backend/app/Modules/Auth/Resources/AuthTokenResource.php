@@ -14,22 +14,22 @@ class AuthTokenResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "GetAuthorizedUserData",
-                "get_authorized_user_data"
+                "getAuthorizedUserData"
             ],
             [
                 "Logout",
-                "auth_logout"
+                "authLogout"
             ],
             [
                 "RefreshToken",
-                "auth_refresh_token"
+                "authRefreshToken"
             ],
         ]);
 
         return [
-            'token_type' => 'bearer',
-            'access_token' => $this->resource,
-            'expires_in' => Auth::factory()->getTTL() * 60,
+            'tokenType' => 'bearer',
+            'accessToken' => $this->resource,
+            'expiresIn' => Auth::factory()->getTTL() * 60,
             'actions' => $actions
         ];
     }

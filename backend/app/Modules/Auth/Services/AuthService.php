@@ -45,7 +45,7 @@ class AuthService
             'code' => $registrationCode,
             'name' => $request->name,
             'email' => $userEmail,
-            'birth_date' => $request->birth_date,
+            'birth_date' => $request->birthDate,
         ]);
 
         return new RegistrationCodeResource($registrationData->id);

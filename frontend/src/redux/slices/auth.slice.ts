@@ -6,10 +6,10 @@ import AuthService from "../services/auth.service";
 export const loginAsync = createAsyncThunk<string, LoginPayload>(
 	"auth/login",
 	async ({ email, password }) => {
-		const access_token = await AuthService.login(email, password);
+		const accessToken = await AuthService.login(email, password);
 
-		saveToken(access_token);
-		return access_token;
+		saveToken(accessToken);
+		return accessToken;
 	}
 );
 
@@ -21,7 +21,7 @@ export const saveToken = (token: string) => {
 };
 
 const initialState: AuthState = {
-	accessToken: Cookies.get("access_token") || null,
+	accessToken: Cookies.get("accessToken") || null,
 	loading: false,
 	error: null,
 	loggedIn: false,
@@ -56,7 +56,7 @@ const authSlice = createSlice({
 				(state: AuthState, action: PayloadAction<string>) => {
 					state.loading = false;
 					state.accessToken = action.payload;
-					Cookies.set("access_token", action.payload, {
+					Cookies.set("accessToken", action.payload, {
 						expires: 14,
 					});
 					state.error = null;
