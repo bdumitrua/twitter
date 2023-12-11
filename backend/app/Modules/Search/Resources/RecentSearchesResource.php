@@ -20,7 +20,7 @@ class RecentSearchesResource extends JsonResource
         ]);
 
         return [
-            'recent_searches' => $recentSearches,
+            'recentSearches' => $recentSearches,
             'actions' => $actions
         ];
     }

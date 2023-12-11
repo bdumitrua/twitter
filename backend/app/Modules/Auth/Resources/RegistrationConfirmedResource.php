@@ -21,7 +21,7 @@ class RegistrationConfirmedResource extends JsonResource
         ]);
 
         return [
-            'registration_id' => $registrationId,
+            'registrationId' => $registrationId,
             'actions' => $actions,
         ];
     }

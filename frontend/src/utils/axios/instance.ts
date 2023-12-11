@@ -9,7 +9,7 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.defaults.headers.common["Authorization"] =
-	"Bearer " + Cookies.get("access_token");
+	"Bearer " + Cookies.get("accessToken");
 
 // Создаем перехватчик ответов
 axiosInstance.interceptors.response.use(
@@ -22,7 +22,7 @@ axiosInstance.interceptors.response.use(
 		if (error.config && error.response && error.response.status === 401) {
 			// Сохраняем оригинальный запрос
 			const originalRequest = error.config;
-			const token: string | undefined = Cookies.get("access_token");
+			const token: string | undefined = Cookies.get("accessToken");
 
 			if (token) {
 				try {
@@ -32,13 +32,13 @@ axiosInstance.interceptors.response.use(
 					);
 
 					// Обновляем токен в хранилище
-					Cookies.set("access_token", response.data.access_token, {
+					Cookies.set("accessToken", response.data.accessToken, {
 						expires: 14,
 					});
 
 					// Обновляем токен в заголовке авторизации
 					axiosInstance.defaults.headers.common["Authorization"] =
-						"Bearer " + Cookies.get("access_token");
+						"Bearer " + Cookies.get("accessToken");
 
 					// Повторяем оригинальный запрос с новым токеном
 					return axiosInstance(originalRequest);

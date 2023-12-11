@@ -5,15 +5,15 @@ const AuthService = {
 	login: async (email: string, password: string): Promise<string> => {
 		try {
 			const response = await axiosInstance.post<{
-				access_token: string;
+				accessToken: string;
 			}>("/auth/login", {
 				email,
 				password,
 			});
 			axiosInstance.defaults.headers.common["Authorization"] =
-				"Bearer " + response.data.access_token;
+				"Bearer " + response.data.accessToken;
 
-			return response.data.access_token;
+			return response.data.accessToken;
 		} catch (error: any) {
 			if (error.response) {
 				console.error(error.response.status, error.response.data);

@@ -16,12 +16,12 @@ class UserGroupResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'userId' => $this->user_id,
             'name' => $this->name,
             'description' => $this->description,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'members_count' => $this->members_count ?? 0,
+            'membersCount' => $this->members_count ?? 0,
             'membersData' => $membersData,
         ];
     }

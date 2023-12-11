@@ -25,7 +25,7 @@ class DeviceTokenResource extends JsonResource
 
         return [
             'id' => $this->id,
-            'user_id' => $this->user_id,
+            'userId' => $this->user_id,
             'token' => $this->token,
             'actions' => $actions,
         ];

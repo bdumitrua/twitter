@@ -48,14 +48,14 @@ class UsersListResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'user_id' => $this->user_id,
+            'userId' => $this->user_id,
             'description' => $this->description,
-            'bg_image' => $this->bg_image,
-            'is_private' => $this->is_private,
+            'bgImage' => $this->bg_image,
+            'isPrivate' => $this->is_private,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'members_count' => $this->members_count ?? 0,
-            'subscribers_count' => $this->subscribers_count ?? 0,
+            'membersCount' => $this->members_count ?? 0,
+            'subscribersCount' => $this->subscribers_count ?? 0,
             'actions' => $actions
         ];
     }

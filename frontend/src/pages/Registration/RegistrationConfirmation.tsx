@@ -25,7 +25,7 @@ const RegistrationConfirmation = () => {
 	const queryParams: URLSearchParams = new URLSearchParams(location.search);
 	const name: string | null = queryParams.get("name");
 	const email: string | null = queryParams.get("email");
-	const birthDate: string | null = queryParams.get("birth_date");
+	const birthDate: string | null = queryParams.get("birthDate");
 
 	const handleConfirmRegistration: () => void = () => {
 		navigate(`/registration/code/${registrationId}`);
@@ -57,7 +57,7 @@ const RegistrationConfirmation = () => {
 			<InputField
 				label="Дата рождения"
 				type="text"
-				name="birth_date"
+				name="birthDate"
 				defaultValue={formatDate(birthDate)}
 				trigger={trigger}
 				control={control}

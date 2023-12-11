@@ -12,7 +12,7 @@ export interface RegisterState {
 export interface RegisterStartPayload {
 	name: string;
 	email: string;
-	birth_date: string;
+	birthDate: string;
 }
 
 export interface RegisterCodePayload {

@@ -12,12 +12,12 @@ import RegisterService from "../services/register.service";
 export const startRegisterAsync = createAsyncThunk<
 	number,
 	RegisterStartPayload
->("register/start", async ({ name, email, birth_date }) => {
+>("register/start", async ({ name, email, birthDate }) => {
 	try {
 		const registrationId = await RegisterService.registerStart(
 			name,
 			email,
-			birth_date
+			birthDate
 		);
 		return registrationId;
 	} catch (error: any) {

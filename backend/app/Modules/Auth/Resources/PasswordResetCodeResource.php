@@ -21,7 +21,7 @@ class PasswordResetCodeResource extends JsonResource
         ]);
 
         return [
-            'reset_id' => $resetId,
+            'resetId' => $resetId,
             'actions' => $actions,
         ];
     }

@@ -4,14 +4,14 @@ const RegisterService = {
 	registerStart: async (
 		name: string,
 		email: string,
-		birth_date: string
+		birthDate: string
 	): Promise<number> => {
 		const response = await axiosInstance.post("auth/registration/start", {
 			name,
 			email,
-			birth_date,
+			birthDate,
 		});
-		return response.data.registration_id; // предполагая, что сервер возвращает число
+		return response.data.registrationId; // предполагая, что сервер возвращает число
 	},
 	registerCode: async (code: string, registerId: number) => {
 		const response = await axiosInstance.post(

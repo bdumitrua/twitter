@@ -27,9 +27,9 @@ class AuthTokenResource extends JsonResource
         ]);
 
         return [
-            'token_type' => 'bearer',
-            'access_token' => $this->resource,
-            'expires_in' => Auth::factory()->getTTL() * 60,
+            'tokenType' => 'bearer',
+            'accessToken' => $this->resource,
+            'expiresIn' => Auth::factory()->getTTL() * 60,
             'actions' => $actions
         ];
     }
