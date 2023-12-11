@@ -54,6 +54,9 @@ class TweetService
      * Для ленты - кэш на 15 сек
      */
 
+    /**
+     * @return JsonResource
+     */
     public function feed(): JsonResource
     {
         return TweetResource::collection(
@@ -61,6 +64,11 @@ class TweetService
         );
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return JsonResource
+     */
     public function user(User $user): JsonResource
     {
         $userTweets = $this->tweetRepository->getByUserId($user->id);
@@ -69,6 +77,11 @@ class TweetService
         return TweetResource::collection($userTweets);
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return JsonResource
+     */
     public function replies(User $user): JsonResource
     {
         $userReplies = $this->tweetRepository->getUserReplies($user->id);
@@ -78,6 +91,11 @@ class TweetService
     }
 
     // ! DOESN'T WORK
+    /**
+     * @param User $user
+     * 
+     * @return JsonResource
+     */
     public function media(User $user): JsonResource
     {
         throw new UnavailableMethodException('Media request doesn\'t work at the moment');
@@ -88,6 +106,11 @@ class TweetService
         return TweetResource::collection($userTweetsWithMedia);
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return JsonResource
+     */
     public function likes(User $user): JsonResource
     {
         $userLikedTweets = $this->tweetRepository->getUserLikedTweets($user->id);
@@ -96,6 +119,9 @@ class TweetService
         return TweetResource::collection($userLikedTweets);
     }
 
+    /**
+     * @return JsonResource
+     */
     public function bookmarks(): JsonResource
     {
         $userLikedTweets = $this->tweetRepository->getUserBookmarks($this->authorizedUserId);
@@ -104,6 +130,11 @@ class TweetService
         return TweetResource::collection($userLikedTweets);
     }
 
+    /**
+     * @param UsersList $usersList
+     * 
+     * @return JsonResource
+     */
     public function list(UsersList $usersList): JsonResource
     {
         $usersList = $this->usersListService->filterPrivateLists(new Collection([$usersList]), $this->authorizedUserId)->first();
@@ -118,6 +149,11 @@ class TweetService
         return TweetResource::collection($tweets);
     }
 
+    /**
+     * @param Tweet $tweet
+     * 
+     * @return JsonResource
+     */
     public function show(Tweet $tweet): JsonResource
     {
         $tweet = $this->tweetRepository->getById($tweet->id);
@@ -130,6 +166,11 @@ class TweetService
         return new TweetResource($tweetAfterFiltering->first());
     }
 
+    /**
+     * @param TweetRequest $tweetRequest
+     * 
+     * @return void
+     */
     public function create(TweetRequest $tweetRequest): void
     {
         $this->logger->info('Validating tweet type data', $tweetRequest->toArray());
@@ -143,6 +184,11 @@ class TweetService
         $this->tweetRepository->create($tweetDTO);
     }
 
+    /**
+     * @param CreateThreadRequest $сreateThreadRequest
+     * 
+     * @return void
+     */
     public function thread(CreateThreadRequest $сreateThreadRequest): void
     {
         $tweetsData = $сreateThreadRequest->tweets;
@@ -164,18 +210,35 @@ class TweetService
         $this->tweetRepository->createThread($tweetDTOs);
     }
 
+    /**
+     * @param Tweet $tweet
+     * @param Request $request
+     * 
+     * @return void
+     */
     public function destroy(Tweet $tweet, Request $request): void
     {
         $this->logger->info('Deleting tweet', array_merge($tweet->toArray(), ['ip' => $request->ip()]));
         $this->tweetRepository->destroy($tweet);
     }
 
+    /**
+     * @param Tweet $tweet
+     * @param Request $request
+     * 
+     * @return void
+     */
     public function unrepost(Tweet $tweet, Request $request): void
     {
         $this->logger->info("Deleting repost of tweet {$tweet->id}", ['userId' => $this->authorizedUserId, 'ip' => $request->ip()]);
         $this->tweetRepository->unrepost($tweet->id, $this->authorizedUserId);
     }
 
+    /**
+     * @param Collection $tweets
+     * 
+     * @return Collection
+     */
     protected function filterTweetsByGroup(Collection $tweets): Collection
     {
         $groupIds = [];
@@ -188,6 +251,11 @@ class TweetService
         });
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return array
+     */
     protected function getUserGroupIds(int $userId): array
     {
         $user = $this->userRepository->getById($userId);
@@ -198,6 +266,11 @@ class TweetService
         );
     }
 
+    /**
+     * @param TweetRequest $tweetRequest
+     * 
+     * @return void
+     */
     private function validateTweetTypeData(TweetRequest $tweetRequest): void
     {
         if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
@@ -205,6 +278,11 @@ class TweetService
         }
     }
 
+    /**
+     * @param TweetRequest $tweetRequest
+     * 
+     * @return void
+     */
     private function validateTweetText(TweetRequest $tweetRequest): void
     {
         if (empty($tweetRequest->text) && $tweetRequest->type !== 'repost') {
@@ -212,6 +290,12 @@ class TweetService
         }
     }
 
+    /**
+     * @param mixed $relation
+     * @param string $key
+     * 
+     * @return array
+     */
     private function pluckKey($relation, string $key): array
     {
         return $relation->pluck($key)->toArray();

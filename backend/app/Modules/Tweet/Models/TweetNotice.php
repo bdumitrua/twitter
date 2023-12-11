@@ -12,6 +12,15 @@ use Illuminate\Database\Eloquent\Model;
     то для него создана только таблица и модель, без путей, сервиса и т.д.
 */
 
+/**
+ * * Модель, относящаяся к таблице tweet_notices
+ * 
+ * * Необходима для работы с упоминаниями пользователей в твитах.
+ * 
+ *  Т.к. упоминание можно только создать (изменить логически нельзя, 
+ *  а для удаления необходимо изменить твит (что на данный момент невозможно сделать)),
+ *  то для него создана только таблица и модель, без путей, сервиса и т.д.
+ */
 class TweetNotice extends Model
 {
     protected $fillable = [
@@ -20,7 +29,10 @@ class TweetNotice extends Model
         'tweet_id',
     ];
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

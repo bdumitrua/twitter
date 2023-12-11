@@ -32,6 +32,12 @@ class UsersListRepository
         $this->usersListSubscribtion = $usersListSubscribtion;
     }
 
+    /**
+     * @param int $usersListId
+     * @param int $userId
+     * 
+     * @return Builder
+     */
     protected function queryUserMembership(int $usersListId, int $userId): Builder
     {
         return $this->usersListMember->newQuery()
@@ -39,6 +45,12 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
+    /**
+     * @param int $usersListId
+     * @param int $userId
+     * 
+     * @return Builder
+     */
     protected function queryUserSubscribtion(int $usersListId, int $userId): Builder
     {
         return $this->usersListSubscribtion->newQuery()
@@ -46,6 +58,11 @@ class UsersListRepository
             ->where('user_id', '=', $userId);
     }
 
+    /**
+     * @param int $usersListId
+     * 
+     * @return array
+     */
     public function getUsersListMembersIds(int $usersListId): array
     {
         $cacheKey = KEY_USERS_LIST_MEMBERS . $usersListId;
@@ -55,6 +72,12 @@ class UsersListRepository
         });
     }
 
+    /**
+     * @param int $userId
+     * @param bool $updateCache
+     * 
+     * @return array
+     */
     public function getUserListsIds(int $userId, bool $updateCache = false): array
     {
         $cacheKey = KEY_USER_LISTS . $userId;
@@ -77,6 +100,12 @@ class UsersListRepository
         }, $updateCache);
     }
 
+    /**
+     * @param int $usersListId
+     * @param bool $updateCache
+     * 
+     * @return UsersList
+     */
     public function getById(int $usersListId, bool $updateCache = false): UsersList
     {
         $cacheKey = KEY_USERS_LIST_SHOW_DATA . $usersListId;
@@ -94,12 +123,23 @@ class UsersListRepository
         return $usersList;
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return Collection
+     */
     public function getByUserId(int $userId): Collection
     {
         $listsIds = $this->getUserListsIds($userId);
         return $this->getListsData($listsIds);
     }
 
+    /**
+     * @param UsersListDTO $dto
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function create(UsersListDTO $dto, int $userId): void
     {
         $data = $dto->toArray();
@@ -114,6 +154,12 @@ class UsersListRepository
         }
     }
 
+    /**
+     * @param UsersList $usersList
+     * @param UsersListDTO $dto
+     * 
+     * @return void
+     */
     public function update(UsersList $usersList, UsersListDTO $dto): void
     {
         // TODO вынести в трейт
@@ -131,6 +177,11 @@ class UsersListRepository
         }
     }
 
+    /**
+     * @param UsersList $usersList
+     * 
+     * @return void
+     */
     public function delete(UsersList $usersList): void
     {
         $usersListData = $usersList->toArray();
@@ -143,6 +194,11 @@ class UsersListRepository
         }
     }
 
+    /**
+     * @param int $usersListId
+     * 
+     * @return Collection
+     */
     public function subscribtions(int $usersListId): Collection
     {
         $subscribers = $this->usersListSubscribtion->with('usersData')
@@ -156,6 +212,11 @@ class UsersListRepository
         return new Collection($subscribersData);
     }
 
+    /**
+     * @param int $usersListId
+     * 
+     * @return Collection
+     */
     public function members(int $usersListId): Collection
     {
         $members = $this->usersListMember->with('usersData')
@@ -170,6 +231,12 @@ class UsersListRepository
         return new Collection($membersData);
     }
 
+    /**
+     * @param int $usersListId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function addMember(int $usersListId, int $userId): void
     {
         if (empty($this->queryUserMembership($usersListId, $userId)->exists())) {
@@ -184,6 +251,12 @@ class UsersListRepository
         }
     }
 
+    /**
+     * @param int $usersListId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function removeMember(int $usersListId, int $userId): void
     {
         if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
@@ -195,6 +268,12 @@ class UsersListRepository
         }
     }
 
+    /**
+     * @param int $usersListId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function subscribe(int $usersListId, int $userId): void
     {
         if (empty($this->queryUserSubscribtion($usersListId, $userId)->exists())) {
@@ -209,6 +288,12 @@ class UsersListRepository
         }
     }
 
+    /**
+     * @param int $usersListId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function unsubscribe(int $usersListId, int $userId): void
     {
         if (!empty($usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first())) {
@@ -221,6 +306,11 @@ class UsersListRepository
         }
     }
 
+    /**
+     * @param array $usersListsIds
+     * 
+     * @return Collection
+     */
     protected function getListsData(array $usersListsIds): Collection
     {
         return new Collection(array_map(function ($usersListId) {
@@ -228,6 +318,11 @@ class UsersListRepository
         }, $usersListsIds));
     }
 
+    /**
+     * @param int $usersListId
+     * 
+     * @return UsersList
+     */
     protected function getUsersListData(int $usersListId): UsersList
     {
         $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
@@ -236,12 +331,22 @@ class UsersListRepository
         });
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return void
+     */
     protected function clearUserCache(int $userId): void
     {
         $cacheKey = KEY_USER_LISTS . $userId;
         $this->clearCache($cacheKey);
     }
 
+    /**
+     * @param int $usersListId
+     * 
+     * @return void
+     */
     protected function clearListCache(int $usersListId): void
     {
         $cacheKey = KEY_USERS_LIST_SHOW_DATA . $usersListId;
@@ -251,6 +356,11 @@ class UsersListRepository
         $this->clearCache($cacheKey);
     }
 
+    /**
+     * @param int $usersListId
+     * 
+     * @return void
+     */
     protected function clearListMembersCache(int $usersListId): void
     {
         $cacheKey = KEY_USERS_LIST_MEMBERS . $usersListId;

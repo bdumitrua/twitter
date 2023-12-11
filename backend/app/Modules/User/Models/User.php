@@ -12,9 +12,17 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Tymon\JWTAuth\Contracts\JWTSubject;
 use Elastic\ScoutDriverPlus\Searchable;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * * Модель, относящаяся к таблице users
+ * 
+ * * Необходима для работы с основными данными пользователей и выстраивания связей.
+ * 
+ * * Также, соответственно, отвечает за аутентификацию пользователей и валидацию JWT токенов.
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, Searchable, SoftDeletes;
@@ -52,7 +60,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array
      */
-    public function toSearchableArray()
+    public function toSearchableArray(): array
     {
         return [
             'name' => $this->name,
@@ -60,7 +68,10 @@ class User extends Authenticatable implements JWTSubject
         ];
     }
 
-    public function searchableAs()
+    /**
+     * @return string
+     */
+    public function searchableAs(): string
     {
         return 'users';
     }
@@ -80,7 +91,7 @@ class User extends Authenticatable implements JWTSubject
      *
      * @return array
      */
-    public function getJWTCustomClaims()
+    public function getJWTCustomClaims(): array
     {
         return [];
     }
@@ -90,57 +101,88 @@ class User extends Authenticatable implements JWTSubject
         return UserFactory::new();
     }
 
-    public function deviceTokens()
+    /**
+     * @return HasMany
+     */
+    public function deviceTokens(): HasMany
     {
         return $this->hasMany(DeviceToken::class, 'user_id', 'id');
     }
 
-    public function subscribtions()
+    /**
+     * @return HasMany
+     */
+    public function subscribtions(): HasMany
     {
         return $this->hasMany(UserSubscribtion::class, 'subscriber_id', 'id');
     }
 
-    public function subscribers()
+    /**
+     * @return HasMany
+     */
+    public function subscribers(): HasMany
     {
         return $this->hasMany(UserSubscribtion::class, 'user_id', 'id');
     }
 
-    public function subscribtionsData()
+    /**
+     * @return HasMany
+     */
+    public function subscribtionsData(): HasMany
     {
         return $this->subscribtions()->with('subscribtionsData');
     }
 
-    public function subscribersData()
+    /**
+     * @return HasMany
+     */
+    public function subscribersData(): HasMany
     {
         return $this->subscribers()->with('subscribersData');
     }
 
-    public function groupsCreator()
+    /**
+     * @return HasMany
+     */
+    public function groupsCreator(): HasMany
     {
         return $this->hasMany(UserGroup::class, 'user_id');
     }
 
     public function groupsMember()
+    /**
+     * @return HasMany
+     */
+    public function groupsMember(): HasMany
     {
         return $this->hasMany(UserGroupMember::class, 'user_id');
     }
 
-    public function lists()
+    /**
+     * @return HasMany
+     */
+    public function lists(): HasMany
     {
         return $this->hasMany(UsersList::class, 'user_id');
     }
 
-    public function listsSubscribtions()
+    public function listsSubscribtions(): HasMany
     {
         return $this->hasMany(UsersListSubscribtion::class, 'user_id')->with('listsData');
     }
 
-    public function notifications()
+    /**
+     * @return HasMany
+     */
+    public function notifications(): HasMany
     {
         return $this->hasMany(Notification::class, 'user_id', 'id');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

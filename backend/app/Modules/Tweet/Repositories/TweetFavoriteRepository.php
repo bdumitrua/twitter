@@ -16,20 +16,36 @@ class TweetFavoriteRepository
         $this->tweetFavorite = $tweetFavorite;
     }
 
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return Builder
+     */
     protected function queryByBothIds(int $tweetId, int $userId): Builder
     {
-        return $this->tweetFavorite->newQuery()
-            ->where([
-                'tweet_id' => $tweetId,
-                'user_id' => $userId,
-            ]);
+        return $this->tweetFavorite->newQuery()->where([
+            'tweet_id' => $tweetId,
+            'user_id' => $userId,
+        ]);
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return Collection
+     */
     public function getByUserId(int $userId): Collection
     {
         return $this->tweetFavorite->where('user_id', '=', $userId)->get();
     }
 
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function add(int $tweetId, int $userId): void
     {
         if (empty($this->queryByBothIds($tweetId, $userId)->first())) {
@@ -40,6 +56,12 @@ class TweetFavoriteRepository
         }
     }
 
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function remove(int $tweetId, int $userId): void
     {
         $tweetFavorite = $this->tweetFavorite->where([

@@ -30,6 +30,11 @@ use Tymon\JWTAuth\Exceptions\TokenBlacklistedException;
 
 class AuthService
 {
+    /**
+     * @param CreateUserRequest $request
+     * 
+     * @return JsonResource
+     */
     public function registrationStart(CreateUserRequest $request): JsonResource
     {
         $registrationCode = $this->createUniqueCode();
@@ -46,6 +51,14 @@ class AuthService
         return new RegistrationCodeResource($registrationData->id);
     }
 
+    /**
+     * @param AuthRegistration $authRegistration
+     * @param AuthConfirmCodeRequest $request
+     * 
+     * @return JsonResource
+     * 
+     * @throws IncorrectCodeException
+     */
     public function registrationConfirm(AuthRegistration $authRegistration, AuthConfirmCodeRequest $request): JsonResource
     {
         $registrationId = $authRegistration->id;
@@ -61,6 +74,14 @@ class AuthService
         return new RegistrationConfirmedResource($registrationId);
     }
 
+    /**
+     * @param AuthRegistration $authRegistration
+     * @param PasswordRequest $request
+     * 
+     * @return void
+     * 
+     * @throws CodeNotConfirmedException
+     */
     public function registrationEnd(AuthRegistration $authRegistration, PasswordRequest $request): void
     {
         if (empty($authRegistration->confirmed)) {
@@ -89,6 +110,13 @@ class AuthService
         AuthRegistration::where('email', $userEmail)->delete();
     }
 
+    /**
+     * @param CheckEmailRequest $request
+     * 
+     * @return JsonResource
+     * 
+     * @throws NotFoundException
+     */
     public function resetCheck(CheckEmailRequest $request): JsonResource
     {
         $email = $request->email;
@@ -109,7 +137,15 @@ class AuthService
         return new PasswordResetCodeResource($resetData->id);
     }
 
-    public function resetConfirm(AuthReset $authReset, AuthConfirmCodeRequest $request)
+    /**
+     * @param AuthReset $authReset
+     * @param AuthConfirmCodeRequest $request
+     * 
+     * @return JsonResource
+     * 
+     * @throws IncorrectCodeException
+     */
+    public function resetConfirm(AuthReset $authReset, AuthConfirmCodeRequest $request): JsonResource
     {
         $resetId = $authReset->id;
         Log::info('Confirming reset code', ['id' => $resetId]);
@@ -124,7 +160,15 @@ class AuthService
         return new PasswordResetConfirmedResource($resetId);
     }
 
-    public function resetEnd(AuthReset $authReset, PasswordRequest $request)
+    /**
+     * @param AuthReset $authReset
+     * @param PasswordRequest $request
+     * 
+     * @return void
+     * 
+     * @throws CodeNotConfirmedException
+     */
+    public function resetEnd(AuthReset $authReset, PasswordRequest $request): void
     {
         if (empty($authReset->confirmed)) {
             throw new CodeNotConfirmedException();
@@ -143,6 +187,13 @@ class AuthService
     }
 
 
+    /**
+     * @param LoginRequest $request
+     * 
+     * @return JsonResource
+     * 
+     * @throws InvalidCredetialsException
+     */
     public function login(LoginRequest $request): JsonResource
     {
         $credentials = $request->only('email', 'password');
@@ -155,12 +206,22 @@ class AuthService
         return new AuthTokenResource($token);
     }
 
+    /**
+     * @param mixed $request
+     * 
+     * @return void
+     */
     public function logout($request): void
     {
         Auth::logout();
         Log::info('User exited from account', ['user' => Auth::user(), 'ip' => $request->ip()]);
     }
 
+    /**
+     * @return JsonResource
+     * 
+     * @throws InvalidTokenException
+     */
     public function refresh(): JsonResource
     {
         try {
@@ -172,6 +233,9 @@ class AuthService
         }
     }
 
+    /**
+     * @return string
+     */
     protected function createUniqueCode(): string
     {
         return '11111';

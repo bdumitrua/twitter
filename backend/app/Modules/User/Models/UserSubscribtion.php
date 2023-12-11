@@ -7,8 +7,14 @@ use App\Prometheus\PrometheusService;
 use Database\Factories\UserSubscribtionFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * * Модель, относящаяся к таблице user_subscribtions
+ * 
+ * * Необходима для хранения списка подписчиков пользователей.
+ */
 class UserSubscribtion extends Model
 {
     use HasFactory, SoftDeletes;
@@ -23,17 +29,26 @@ class UserSubscribtion extends Model
         return UserSubscribtionFactory::new();
     }
 
-    public function subscribersData()
+    /**
+     * @return BelongsTo
+     */
+    public function subscribersData(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    public function subscribtionsData()
+    /**
+     * @return BelongsTo
+     */
+    public function subscribtionsData(): BelongsTo
     {
         return $this->belongsTo(User::class, 'subscriber_id');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

@@ -6,8 +6,14 @@ use App\Prometheus\PrometheusService;
 use Database\Factories\UsersListMemberFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * * Модель, относящаяся к таблице users_list_members
+ * 
+ * * Необходима для хранения списка отслеживаемых пользователей (мемберов).
+ */
 class UsersListMember extends Model
 {
     use HasFactory, SoftDeletes;
@@ -22,17 +28,26 @@ class UsersListMember extends Model
         return UsersListMemberFactory::new();
     }
 
-    public function listsData()
+    /**
+     * @return BelongsTo
+     */
+    public function listsData(): BelongsTo
     {
         return $this->belongsTo(UsersList::class, 'users_list_id');
     }
 
-    public function usersData()
+    /**
+     * @return BelongsTo
+     */
+    public function usersData(): BelongsTo
     {
         return $this->belongsTo(User::class, 'user_id');
     }
 
-    protected static function boot()
+    /**
+     * @return void
+     */
+    protected static function boot(): void
     {
         parent::boot();
 

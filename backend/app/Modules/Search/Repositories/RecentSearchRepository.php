@@ -19,6 +19,12 @@ class RecentSearchRepository
         $this->recentSearch = $recentSearch;
     }
 
+    /**
+     * @param int $authorizedUserId
+     * @param int $linkedUserId
+     * 
+     * @return Builder
+     */
     protected function queryByLinkedId(int $authorizedUserId, int $linkedUserId): Builder
     {
         return $this->recentSearch->newQuery()
@@ -26,6 +32,12 @@ class RecentSearchRepository
             ->where('linked_user_id', $linkedUserId);
     }
 
+    /**
+     * @param int $authorizedUserId
+     * @param string $text
+     * 
+     * @return Builder
+     */
     protected function queryByText(int $authorizedUserId, string $text): Builder
     {
         return $this->recentSearch->newQuery()
@@ -34,6 +46,12 @@ class RecentSearchRepository
             ->whereNull('linked_user_id');
     }
 
+    /**
+     * @param int $userId
+     * @param bool $updateCache
+     * 
+     * @return Collection
+     */
     public function getByUserId(int $userId, $updateCache = false): Collection
     {
         $cacheKey = KEY_USER_SEARCH . $userId;
@@ -46,6 +64,11 @@ class RecentSearchRepository
         }, $updateCache);
     }
 
+    /**
+     * @param RecentSearchDTO $recentSearchDTO
+     * 
+     * @return void
+     */
     public function create(RecentSearchDTO $recentSearchDTO): void
     {
         $oldRecentSearch = null;
@@ -73,12 +96,22 @@ class RecentSearchRepository
         $this->clearUserRecentCache($recentSearchDTO->userId);
     }
 
+    /**
+     * @param int $authorizedUserId
+     * 
+     * @return void
+     */
     public function clear(int $authorizedUserId): void
     {
         $this->recentSearch->where('user_id', $authorizedUserId)->delete();
         $this->clearUserRecentCache($authorizedUserId);
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return void
+     */
     protected function clearUserRecentCache(int $userId): void
     {
         $cacheKey = KEY_USER_SEARCH . $userId;

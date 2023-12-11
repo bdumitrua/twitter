@@ -9,6 +9,12 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 
 trait CreateDTO
 {
+    /**
+     * @param Request $request
+     * @param string $dtoClass
+     * 
+     * @return mixed
+     */
     protected function createDTO(Request $request, string $dtoClass)
     {
         $filteredRequestData = array_filter($request->all());
