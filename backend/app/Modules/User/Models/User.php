@@ -149,7 +149,6 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(UserGroup::class, 'user_id');
     }
 
-    public function groupsMember()
     /**
      * @return HasMany
      */
@@ -166,6 +165,9 @@ class User extends Authenticatable implements JWTSubject
         return $this->hasMany(UsersList::class, 'user_id');
     }
 
+    /**
+     * @return HasMany
+     */
     public function listsSubscribtions(): HasMany
     {
         return $this->hasMany(UsersListSubscribtion::class, 'user_id')->with('listsData');
