@@ -13,9 +13,11 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 class CheckEntityRights
 {
     /**
-     * Handle an incoming request.
-     *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param Request $request
+     * @param Closure $next
+     * @param string $entityName
+     * 
+     * @return Response
      */
     public function handle(Request $request, Closure $next, string $entityName): Response
     {

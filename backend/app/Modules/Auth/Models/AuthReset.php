@@ -20,7 +20,7 @@ class AuthReset extends Model
         'confirmed'
     ];
 
-    /**
+   /**
      * @return BelongsTo
      */
     public function user(): BelongsTo

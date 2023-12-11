@@ -9,6 +9,11 @@ use Illuminate\Support\Facades\Route;
 
 class ActionsResource extends JsonResource
 {
+    /**
+     * @param Request $request
+     * 
+     * @return array
+     */
     public function toArray(Request $request): array
     {
         $actionName = $this->resource[0];
@@ -30,6 +35,11 @@ class ActionsResource extends JsonResource
         return $response;
     }
 
+    /**
+     * @param mixed $resource
+     * 
+     * @return object
+     */
     public static function collection($resource): object
     {
         // Для формирования удобного массива с ключ => данные
@@ -47,6 +57,11 @@ class ActionsResource extends JsonResource
         return (object) $new;
     }
 
+    /**
+     * @param string $routeName
+     * 
+     * @return string
+     */
     protected function getRouteMethod(string $routeName): string
     {
         $route = Route::getRoutes()->getByName($routeName);

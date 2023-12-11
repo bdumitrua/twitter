@@ -6,6 +6,14 @@ use App\Helpers\FileGeneratorHelper;
 
 trait FileGeneratorTrait
 {
+    /**
+     * @param mixed $moduleName
+     * @param mixed $folderName
+     * @param mixed $fileName
+     * @param mixed $entityName
+     * 
+     * @return string
+     */
     private function generateFileContent($moduleName, $folderName, $fileName, $entityName): string
     {
         $methodName = "get" . ucfirst($entityName) . "Content";

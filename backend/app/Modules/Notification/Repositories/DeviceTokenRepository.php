@@ -14,12 +14,23 @@ class DeviceTokenRepository
         $this->deviceToken = $deviceToken;
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return Collection
+     */
     public function getByUserId(int $userId): Collection
     {
         return $this->deviceToken->where('user_id', '=', $userId)
             ->orderBy('created_at', 'desc')->get();
     }
 
+    /**
+     * @param int $userId
+     * @param string $token
+     * 
+     * @return void
+     */
     public function create(int $userId, string $token): void
     {
         $this->deviceToken->firstOrCreate([
@@ -28,12 +39,23 @@ class DeviceTokenRepository
         ]);
     }
 
+    /**
+     * @param DeviceToken $deviceToken
+     * @param string $token
+     * 
+     * @return void
+     */
     public function update(DeviceToken $deviceToken, string $token): void
     {
         $deviceToken->token = $token;
         $deviceToken->save();
     }
 
+    /**
+     * @param DeviceToken $deviceToken
+     * 
+     * @return void
+     */
     public function delete(DeviceToken $deviceToken): void
     {
         $deviceToken->delete();

@@ -25,6 +25,9 @@ class TweetDraftService
         $this->authorizedUserId = Auth::id();
     }
 
+    /**
+     * @return JsonResource
+     */
     public function index(): JsonResource
     {
         return new TweetDraftsResource(
@@ -32,12 +35,22 @@ class TweetDraftService
         );
     }
 
+    /**
+     * @param CreateTweetDraftRequest $request
+     * 
+     * @return void
+     */
     public function create(CreateTweetDraftRequest $request): void
     {
         $this->logger->info('Creating tweet draft from create request', $request->toArray());
         $this->tweetDraftRepository->create($request->text, $this->authorizedUserId);
     }
 
+    /**
+     * @param RemoveTweetDraftsRequest $request
+     * 
+     * @return void
+     */
     public function delete(RemoveTweetDraftsRequest $request): void
     {
         $this->tweetDraftRepository->delete($request->drafts, $this->authorizedUserId);

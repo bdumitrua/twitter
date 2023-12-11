@@ -8,6 +8,10 @@ use Illuminate\Support\Str;
 
 class KafkaProducer
 {
+    /**
+     * @param string $topicName
+     * @param mixed $messageData
+     */
     public function __construct(string $topicName, $messageData)
     {
         $connectionFactory = new RdKafkaConnectionFactory([

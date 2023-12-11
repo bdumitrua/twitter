@@ -19,11 +19,21 @@ class TweetLikeService
         $this->authorizedUserId = Auth::id();
     }
 
+    /**
+     * @param Tweet $tweet
+     * 
+     * @return void
+     */
     public function add(Tweet $tweet): void
     {
         $this->tweetLikeRepository->add($tweet->id, $this->authorizedUserId);
     }
 
+    /**
+     * @param Tweet $tweet
+     * 
+     * @return void
+     */
     public function remove(Tweet $tweet): void
     {
         $this->tweetLikeRepository->remove($tweet->id, $this->authorizedUserId);

@@ -31,6 +31,9 @@ class UserGroupService
         $this->logger = $logger;
     }
 
+    /**
+     * @return JsonResource
+     */
     public function index(): JsonResource
     {
         return UserGroupResource::collection(
@@ -38,6 +41,11 @@ class UserGroupService
         );
     }
 
+    /**
+     * @param UserGroup $userGroup
+     * 
+     * @return JsonResource
+     */
     public function show(UserGroup $userGroup): JsonResource
     {
         return new UserGroupResource(
@@ -45,6 +53,11 @@ class UserGroupService
         );
     }
 
+    /**
+     * @param CreateUserGroupRequest $createUserGroupRequest
+     * 
+     * @return void
+     */
     public function create(CreateUserGroupRequest $createUserGroupRequest): void
     {
         $this->logger->info('Creating UserGroupDTO from create request', $createUserGroupRequest->toArray());
@@ -54,6 +67,12 @@ class UserGroupService
         $this->userGroupRepository->create($userGroupDTO, Auth::id());
     }
 
+    /**
+     * @param UserGroup $userGroup
+     * @param UpdateUserGroupRequest $updateUserGroupRequest
+     * 
+     * @return void
+     */
     public function update(UserGroup $userGroup, UpdateUserGroupRequest $updateUserGroupRequest): void
     {
         $this->logger->info('Creating UserGroupDTO from update request', $updateUserGroupRequest->toArray());
@@ -69,17 +88,35 @@ class UserGroupService
         $this->userGroupRepository->update($userGroup, $userGroupDTO);
     }
 
+    /**
+     * @param UserGroup $userGroup
+     * @param Request $request
+     * 
+     * @return void
+     */
     public function destroy(UserGroup $userGroup, Request $request): void
     {
         $this->logger->info('Deleting UserGroup', array_merge($userGroup->toArray(), ['ip' => $request->ip()]));
         $this->userGroupRepository->delete($userGroup);
     }
 
+    /**
+     * @param UserGroup $userGroup
+     * @param User $user
+     * 
+     * @return void
+     */
     public function add(UserGroup $userGroup, User $user): void
     {
         $this->userGroupRepository->addUser($userGroup->id, $user->id);
     }
 
+    /**
+     * @param UserGroup $userGroup
+     * @param User $user
+     * 
+     * @return void
+     */
     public function remove(UserGroup $userGroup, User $user): void
     {
         $this->userGroupRepository->removeUser($userGroup->id, $user->id);

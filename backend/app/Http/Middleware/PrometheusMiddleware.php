@@ -13,12 +13,21 @@ class PrometheusMiddleware
     protected $prometheusService;
     protected $stopwatch;
 
+    /**
+     * @param PrometheusService $prometheusService
+     */
     public function __construct(PrometheusService $prometheusService)
     {
         $this->prometheusService = $prometheusService;
         $this->stopwatch = new Stopwatch();
     }
 
+    /**
+     * @param Request $request
+     * @param Closure $next
+     * 
+     * @return Response
+     */
     public function handle(Request $request, Closure $next): Response
     {
         $routeName = $request->route()->getName();
