@@ -10,7 +10,7 @@ use App\Modules\Search\Resources\RecentSearchesResource;
 use App\Modules\Tweet\Repositories\TweetRepository;
 use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Repositories\UserRepository;
-use App\Modules\User\Resources\ShortUserResource;
+use App\Modules\User\Resources\SearchUserResource;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -44,7 +44,7 @@ class SearchService
 
     public function users(SearchRequest $request)
     {
-        return ShortUserResource::collection(
+        return SearchUserResource::collection(
             $this->userRepository->search($request->search)
         );
     }

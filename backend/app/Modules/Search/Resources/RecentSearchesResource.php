@@ -3,7 +3,6 @@
 namespace App\Modules\Search\Resources;
 
 use App\Http\Resources\ActionsResource;
-use App\Modules\User\Resources\ShortUserResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 

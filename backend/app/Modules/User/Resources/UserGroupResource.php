@@ -11,7 +11,7 @@ class UserGroupResource extends JsonResource
     {
         // Только если подгружено ранее (в репозитории)
         $membersData = $this->whenLoaded('members_data', function () {
-            return ShortUserResource::collection($this->members_data);
+            return GroupUserResource::collection($this->members_data);
         }, []);
 
         return [

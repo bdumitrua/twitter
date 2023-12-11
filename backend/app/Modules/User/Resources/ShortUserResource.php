@@ -12,7 +12,7 @@ class ShortUserResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->description,
+            'about' => $this->about,
             'link' => $this->link,
             'avatar' => $this->avatar,
         ];
