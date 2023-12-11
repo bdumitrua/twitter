@@ -1,9 +1,6 @@
-.wrapper {
-	border-bottom: 1px solid $gray;
-}
-
 .tweet {
 	padding: 4px 20px;
+	border-bottom: 1px solid $gray;
 
 	&__wrapper {
 		display: flex;
@@ -16,6 +13,10 @@
 		display: flex;
 		align-items: center;
 		flex-direction: column;
+	}
+	&__author-image {
+		width: 55px;
+		height: 55px;
 	}
 
 	&__line {
