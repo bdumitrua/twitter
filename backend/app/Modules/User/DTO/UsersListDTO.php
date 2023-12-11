@@ -14,8 +14,8 @@ class UsersListDTO
         return [
             'name' => $this->name,
             'description' => $this->description,
-            'bgImage' => $this->bgImage,
-            'isPrivate' => $this->name,
+            'bg_image' => $this->bgImage,
+            'is_private' => $this->isPrivate,
         ];
     }
 }

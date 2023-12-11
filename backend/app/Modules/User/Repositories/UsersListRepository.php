@@ -102,14 +102,12 @@ class UsersListRepository
 
     public function create(UsersListDTO $dto, int $userId): void
     {
-        $createdUsersList = $this->usersList->create([
-            'user_id' => $userId,
-            'name' => $dto->name,
-            'description' => $dto->description,
-            'is_private' => $dto->isPrivate,
-            // TODO FILES
-            'bg_image' => $dto->bgImage,
-        ]);
+        $data = $dto->toArray();
+        $data = array_filter($data, fn ($value) => !is_null($value));
+        $data = array_merge($data, ['user_id' => $userId]);
+
+        // TODO FILES
+        $createdUsersList = $this->usersList->create($data);
 
         if (!empty($createdUsersList)) {
             $this->clearUserCache($userId);
@@ -118,14 +116,15 @@ class UsersListRepository
 
     public function update(UsersList $usersList, UsersListDTO $dto): void
     {
-        $updatingStatus = $usersList->update([
-            'name' => $dto->name ?? $usersList->name,
-            'description' => $dto->description ?? $usersList->description,
-            'is_private' => $dto->isPrivate ?? $usersList->isPrivate,
-            // TODO FILES
-            'bg_image' => $dto->bgImage ?? $usersList->bgImage,
-        ]);
+        // TODO вынести в трейт
+        $dtoProperties = get_object_vars($dto);
+        foreach ($dtoProperties as $property => $value) {
+            if (!empty($value)) {
+                $usersList->$property = $value;
+            }
+        }
 
+        $updatingStatus = $usersList->save();
 
         if (!empty($updatingStatus)) {
             $this->clearListCache($usersList->id);

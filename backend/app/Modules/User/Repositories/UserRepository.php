@@ -64,8 +64,6 @@ class UserRepository
         $dtoProperties = get_object_vars($dto);
 
         foreach ($dtoProperties as $property => $value) {
-            $property = Str::snake($property);
-
             if (!empty($value)) {
                 $user->$property = $property === 'password'
                     ? Hash::make($value)
