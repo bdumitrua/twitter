@@ -9,6 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Str;
 
+/**
+ * * Модель, относящаяся к таблице notifications
+ * 
+ * * Необходима для работы с уведомлениями пользователей.
+ * 
+ * * Помимо таблицы в основной бд, уведомления также отправляются и в Firebase, таблица notifications.
+ */
 class Notification extends Model
 {
     use HasFactory;

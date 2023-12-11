@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * * Модель, относящаяся к таблице user_group
+ * 
+ * * Необходима для работы с личными группами пользователей.
+ */
 class UserGroup extends Model
 {
     use HasFactory, SoftDeletes;

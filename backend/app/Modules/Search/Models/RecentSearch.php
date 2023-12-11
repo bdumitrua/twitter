@@ -7,6 +7,11 @@ use App\Prometheus\PrometheusService;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
+/**
+ * * Модель, относящаяся к таблице recent_searches
+ * 
+ * * Необходима для работы с недавним поиском пользователей.
+ */
 class RecentSearch extends Model
 {
     protected $fillable = [

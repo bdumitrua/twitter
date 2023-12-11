@@ -6,6 +6,11 @@ use App\Modules\Auth\Events\RegistrationStartedEvent;
 use App\Prometheus\PrometheusService;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * * Модель, относящаяся к таблице auth_registrations
+ * 
+ * * Необходима для хранения промежуточных данных в процессе регистрации новых пользователей.
+ */
 class AuthRegistration extends Model
 {
     protected $fillable = [

@@ -7,6 +7,11 @@ use Database\Factories\TweetFavoriteFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * * Модель, относящаяся к таблице tweet_favorites
+ * 
+ * * Необходима для работы с избранными твитами пользователей.
+ */
 class TweetFavorite extends Model
 {
     use HasFactory;

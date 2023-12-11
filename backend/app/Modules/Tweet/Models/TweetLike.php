@@ -8,6 +8,11 @@ use Database\Factories\TweetLikeFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * * Модель, относящаяся к таблице tweet_likes
+ * 
+ * * Необходима для работы с лайкнутыми твитами пользователей.
+ */
 class TweetLike extends Model
 {
     use HasFactory;

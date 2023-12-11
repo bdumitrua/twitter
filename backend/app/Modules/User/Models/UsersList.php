@@ -10,6 +10,11 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * * Модель, относящаяся к таблице users_lists
+ * 
+ * * Необходима для работы со списками пользователей.
+ */
 class UsersList extends Model
 {
     use HasFactory, SoftDeletes;

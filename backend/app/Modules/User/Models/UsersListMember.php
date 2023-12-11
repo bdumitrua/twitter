@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * * Модель, относящаяся к таблице users_list_members
+ * 
+ * * Необходима для хранения списка отслеживаемых пользователей (мемберов).
+ */
 class UsersListMember extends Model
 {
     use HasFactory, SoftDeletes;

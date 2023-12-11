@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * * Модель, относящаяся к таблице user_group_members
+ * 
+ * * Необходима для хранения списка участников (мемберов) группы.
+ */
 class UserGroupMember extends Model
 {
     use HasFactory, SoftDeletes;

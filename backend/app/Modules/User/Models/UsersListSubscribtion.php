@@ -9,6 +9,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
+/**
+ * * Модель, относящаяся к таблице users_list_subscribtions
+ * 
+ * * Необходима для хранения списка подписчиков (читателей) списка.
+ */
 class UsersListSubscribtion extends Model
 {
     use HasFactory, SoftDeletes;

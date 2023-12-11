@@ -13,6 +13,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
+/**
+ * * Модель, относящаяся к таблице tweets
+ * 
+ * * Необходима для работы с основными данными твитов и образования связей.
+ */
 class Tweet extends Model
 {
     use HasFactory, Searchable;

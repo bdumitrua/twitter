@@ -7,6 +7,11 @@ use Database\Factories\TweetDraftFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+/**
+ * * Модель, относящаяся к таблице tweet_drafts
+ * 
+ * * Необходима для работы с черновиками твитов пользователей.
+ */
 class TweetDraft extends Model
 {
     use HasFactory;

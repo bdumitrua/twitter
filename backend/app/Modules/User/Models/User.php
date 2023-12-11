@@ -16,6 +16,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Cache;
 
+/**
+ * * Модель, относящаяся к таблице users
+ * 
+ * * Необходима для работы с основными данными пользователей и выстраивания связей.
+ * 
+ * * Также, соответственно, отвечает за аутентификацию пользователей и валидацию JWT токенов.
+ */
 class User extends Authenticatable implements JWTSubject
 {
     use HasFactory, Notifiable, Searchable, SoftDeletes;
