@@ -19,6 +19,12 @@ class TweetLikeRepository
         $this->tweetRepository = $tweetRepository;
     }
 
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return Builder
+     */
     protected function queryByBothIds(int $tweetId, int $userId): Builder
     {
         return $this->tweetLike->newQuery()->where([
@@ -27,11 +33,22 @@ class TweetLikeRepository
         ]);
     }
 
+    /**
+     * @param int $userId
+     * 
+     * @return Collection
+     */
     public function getByUserId(int $userId): Collection
     {
         return $this->tweetLike->where('user_id', '=', $userId)->get();
     }
 
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function add(int $tweetId, int $userId): void
     {
         if (empty($this->queryByBothIds($tweetId, $userId)->first())) {
@@ -42,6 +59,12 @@ class TweetLikeRepository
         }
     }
 
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return void
+     */
     public function remove(int $tweetId, int $userId): void
     {
         $tweetLike = $this->queryByBothIds($tweetId, $userId)->first();
