@@ -7,9 +7,9 @@ use Illuminate\Console\Command;
 
 class NewLikesNotifyConsumerCommand extends Command
 {
-    protected $topic = 'new_likes';
+    protected $topic = 'newLikes';
     protected $consumerGroup = NewLikesNotifyConsumer::class;
-    protected $signature = 'kafka:consume:new_likes_notify';
+    protected $signature = 'kafka:consume:newLikesNotify';
 
     public function __construct()
     {

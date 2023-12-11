@@ -10,7 +10,7 @@ class RegistrationStartedListener
     public function handle($event)
     {
         $authRegistration = $event->authRegistration->toArray();
-        $topic = 'new_registrations';
+        $topic = 'newRegistrations';
 
         Log::info("Creating message in {$topic} topic", $authRegistration);
         new KafkaProducer($topic, $authRegistration);

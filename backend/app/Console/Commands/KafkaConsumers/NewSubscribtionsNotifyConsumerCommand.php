@@ -7,9 +7,9 @@ use Illuminate\Console\Command;
 
 class NewSubscribtionsNotifyConsumerCommand extends Command
 {
-    protected $topic = 'new_subscribtions';
+    protected $topic = 'newSubscribtions';
     protected $consumerGroup = NewSubscribtionsNotifyConsumer::class;
-    protected $signature = 'kafka:consume:new_subscribtion_notify';
+    protected $signature = 'kafka:consume:newSubscribtionNotify';
 
     public function __construct()
     {

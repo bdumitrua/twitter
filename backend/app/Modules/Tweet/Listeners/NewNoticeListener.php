@@ -10,7 +10,7 @@ class NewNoticeListener
     public function handle($event)
     {
         $tweetNotice = $event->tweetNotice->toArray();
-        $topic = 'new_notices';
+        $topic = 'newNotices';
 
         Log::info("Creating message in {$topic} topic", $tweetNotice);
         new KafkaProducer($topic, $tweetNotice);

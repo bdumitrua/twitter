@@ -7,9 +7,9 @@ use Illuminate\Console\Command;
 
 class DeletedUsersListNotifyConsumerCommand extends Command
 {
-    protected $topic = 'deleted_users_lists';
+    protected $topic = 'deletedUsersLists';
     protected $consumerGroup = DeletedUsersListNotifyConsumer::class;
-    protected $signature = 'kafka:consume:deleted_users_list_notify';
+    protected $signature = 'kafka:consume:deletedUsersListNotify';
 
     public function __construct()
     {
