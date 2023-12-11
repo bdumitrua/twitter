@@ -24,7 +24,7 @@ class UserGroupMember extends Model
 
     public function users_data()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id', 'id');
     }
 
     protected static function boot()
