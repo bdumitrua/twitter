@@ -13,7 +13,7 @@ class ListUserResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "AddUserToList",
-                "add_member_to_users_list",
+                "addMemberToUsersList",
                 [
                     "user" => $this->id,
                     "usersList" => $this->users_list_id,
@@ -21,7 +21,7 @@ class ListUserResource extends JsonResource
             ],
             [
                 "RemoveUserFromList",
-                "remove_member_from_users_list",
+                "removeMemberFromUsersList",
                 [
                     "user" => $this->id,
                     "usersList" => $this->users_list_id,

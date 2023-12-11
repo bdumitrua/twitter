@@ -15,7 +15,7 @@ class RegistrationConfirmedResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "EndRegistration",
-                "end_registration",
+                "endRegistration",
                 ['authRegistration' => $registrationId],
             ]
         ]);

@@ -8,12 +8,12 @@ use App\Modules\User\Controllers\UserController;
 
 Route::prefix('users')->controller(UserController::class)->group(function () {
     // Получить данные по id пользователя
-    Route::get('{user}', 'show')->name('show_user');
+    Route::get('{user}', 'show')->name('showUser');
 
     Route::middleware(['auth:api'])->group(function () {
         // Получить данные своего аккаунта
-        Route::get('/', 'index')->name('get_authorized_user_data');
+        Route::get('/', 'index')->name('getAuthorizedUserData');
         // Изменить данные аккаунта
-        Route::patch('/', 'update')->name('update_user_data');
+        Route::patch('/', 'update')->name('updateUserData');
     });
 });

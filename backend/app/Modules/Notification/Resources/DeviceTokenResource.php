@@ -13,12 +13,12 @@ class DeviceTokenResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "UpdateDeviceToken",
-                "update_device_token",
+                "updateDeviceToken",
                 ["deviceToken" => $this->id]
             ],
             [
                 "DeleteDeviceToken",
-                "delete_device_token",
+                "deleteDeviceToken",
                 ["deviceToken" => $this->id]
             ],
         ]);

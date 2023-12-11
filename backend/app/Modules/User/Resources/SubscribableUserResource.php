@@ -13,12 +13,12 @@ class SubscribableUserResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "SubscribeOnUser",
-                "subscribe_on_user",
+                "subscribeOnUser",
                 ["user" => $this->id]
             ],
             [
                 "UnsubscribeFromUser",
-                "unsubscribe_from_user",
+                "unsubscribeFromUser",
                 ["user" => $this->id]
             ]
         ]);

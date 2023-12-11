@@ -7,13 +7,13 @@ use App\Modules\Search\Controllers\SearchController;
 
 Route::prefix('search')->middleware(['auth:api'])->controller(SearchController::class)->group(function () {
     // Получить свои недавние поиски
-    Route::get('/', 'index')->name('get_authorized_user_recent_searches');
+    Route::get('/', 'index')->name('getAuthorizedUserRecentSearches');
     // Поиск по имени/ссылке пользователя
-    Route::get('users', 'users')->name('global_search_users');
+    Route::get('users', 'users')->name('globalSearchUsers');
     // Поиск по содержимому твита
-    Route::get('tweets', 'tweets')->name('global_search_tweets');
+    Route::get('tweets', 'tweets')->name('globalSearchTweets');
     // Создать недавний поиск
-    Route::post('/', 'create')->name('create_user_recent_search');
+    Route::post('/', 'create')->name('createUserRecentSearch');
     // Удалить свои поиски
-    Route::delete('/', 'clear')->name('clear_authorized_user_recent_searches');
+    Route::delete('/', 'clear')->name('clearAuthorizedUserRecentSearches');
 });

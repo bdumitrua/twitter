@@ -14,15 +14,15 @@ class AuthTokenResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "GetAuthorizedUserData",
-                "get_authorized_user_data"
+                "getAuthorizedUserData"
             ],
             [
                 "Logout",
-                "auth_logout"
+                "authLogout"
             ],
             [
                 "RefreshToken",
-                "auth_refresh_token"
+                "authRefreshToken"
             ],
         ]);
 

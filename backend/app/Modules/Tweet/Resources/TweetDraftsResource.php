@@ -15,7 +15,7 @@ class TweetDraftsResource extends JsonResource
         $actions = ActionsResource::collection([
             [
                 "DeleteTweetDrafts",
-                "delete_tweet_drafts",
+                "deleteTweetDrafts",
             ],
         ]);
 

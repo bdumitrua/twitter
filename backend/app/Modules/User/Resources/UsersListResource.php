@@ -14,22 +14,22 @@ class UsersListResource extends JsonResource
         $actionsArray = [
             [
                 "SubscribeOnList",
-                "subscribe_to_users_list",
+                "subscribeToUsersList",
                 ["usersList" => $this->id]
             ],
             [
                 "UnsubscribeFromList",
-                "unsubscribe_from_users_list",
+                "unsubscribeFromUsersList",
                 ["usersList" => $this->id]
             ],
             [
                 'GetUserMembers',
-                'get_users_list_members',
+                'getUsersListMembers',
                 ["usersList" => $this->id]
             ],
             [
                 'GetUserSubscribers',
-                'get_users_list_subscribers',
+                'getUsersListSubscribers',
                 ["usersList" => $this->id]
             ],
         ];
@@ -38,7 +38,7 @@ class UsersListResource extends JsonResource
         if ($this->user_id === $authorizedUserId) {
             $actionsArray[] = [
                 "UpdateUsersList",
-                "update_users_list",
+                "updateUsersList",
                 ["usersList" => $this->id]
             ];
         }

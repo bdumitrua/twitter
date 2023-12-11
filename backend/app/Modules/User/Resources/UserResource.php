@@ -58,32 +58,32 @@ class UserResource extends JsonResource
         $actions = [
             [
                 "GetUserTweets",
-                "get_user_tweets",
+                "getUserTweets",
                 ["user" => $this->id]
             ],
             [
                 "GetUserReplies",
-                "get_user_replies",
+                "getUserReplies",
                 ["user" => $this->id]
             ],
             [
                 "GetUserLikedTweets",
-                "get_user_likes",
+                "getUserLikes",
                 ["user" => $this->id]
             ],
             [
                 "GetUserTweetsWithMedia",
-                "get_user_tweets_with_media",
+                "getUserTweetsWithMedia",
                 ["user" => $this->id]
             ],
             [
                 "GetUserSubscribtions",
-                "get_user_subscribtions",
+                "getUserSubscribtions",
                 ["user" => $this->id]
             ],
             [
                 "GetUserSubscribers",
-                "get_user_subscribers",
+                "getUserSubscribers",
                 ["user" => $this->id]
             ],
         ];
@@ -91,23 +91,23 @@ class UserResource extends JsonResource
         if ($isAuthorizedUser) {
             $actions[] = [
                 "GetUserBookmarks",
-                "get_authorized_user_bookmarks",
+                "getAuthorizedUserBookmarks",
             ];
 
             $actions[] = [
                 "UpdateProfileData",
-                "update_user_data",
+                "updateUserData",
             ];
         } else {
             $actions[] = [
                 "SubscribeOnUser",
-                "subscribe_on_user",
+                "subscribeOnUser",
                 ["user" => $this->id]
             ];
 
             $actions[] = [
                 "UnsubscribeFromUser",
-                "unsubscribe_from_user",
+                "unsubscribeFromUser",
                 ["user" => $this->id]
             ];
         }
