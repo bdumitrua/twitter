@@ -25,7 +25,7 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 							authorName={tweetData.author.name}
 						/>
 						{(tweetData.type === "thread" ||
-							tweetData.type === "default") && (
+							tweetData.type === "reply") && (
 							<div className={styles["tweet__line"]}></div>
 						)}
 					</div>
@@ -46,7 +46,7 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 						/>
 					</div>
 				</div>
-				{tweetData.type === "default" && <TweetReplyBranch />}
+				{tweetData.type === "reply" && <TweetReplyBranch />}
 				{tweetData.type === "thread" && (
 					<TweetThread
 						authorAvatar={tweetData.author.avatar}
