@@ -1,13 +1,18 @@
 import FetchTweets from "@/components/FetchTweets/FetchTweets";
+import { fetchData } from "@/utils/functions/fetchData";
+import { useQuery } from "@tanstack/react-query";
 
 const TweetsTab: React.FC = () => {
+	const { data } = useQuery({
+		queryKey: ["tweets-tab"],
+		queryFn: () => fetchData("/tweets/feed"),
+		refetchOnWindowFocus: false,
+		//enabled: loadMore, // * Запрос активируется, когда loadMore становится true
+	});
+
 	return (
 		<>
-			<FetchTweets
-				queryKey={["tweets-and-replies"]}
-				path="/tweets/feed"
-				// path={`/tweets/user/${currentUser}`}
-			/>
+			<FetchTweets tweets={data} />
 		</>
 	);
 };

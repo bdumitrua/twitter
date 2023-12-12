@@ -1,7 +1,12 @@
 import shadedLike from "../../assets/images/Tweet/shadedLike.svg";
 import styles from "../../assets/styles/components/Tweet/TweetAdditional.module.scss";
 
-const TweetAdditional: React.FC = () => {
+interface TweetAdditionalProps {
+	type: string;
+	name: string;
+}
+
+const TweetAdditional: React.FC<TweetAdditionalProps> = ({ type, name }) => {
 	return (
 		<div className={styles["tweet__additional"]}>
 			<div className={styles["tweet__type"]}>
@@ -11,7 +16,7 @@ const TweetAdditional: React.FC = () => {
 					alt=""
 				/>
 			</div>
-			<span>Kieron Dotson and Zack John liked</span>
+			<span>{name} retweeted</span>
 		</div>
 	);
 };

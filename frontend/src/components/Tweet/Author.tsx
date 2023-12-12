@@ -12,7 +12,7 @@ const Author: React.FC<AuthorProps> = ({ author }) => {
 		<div className={styles["tweet__user-info"]}>
 			<span className={styles["tweet__username"]}>{author.name}</span>
 			<Link
-				to={`/profile/${author.link}`}
+				to={`/profile/${author.id}`}
 				className={styles["tweet__nickname"]}
 			>
 				@{author.link}

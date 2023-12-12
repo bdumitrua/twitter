@@ -1,12 +1,10 @@
 import { useState } from "react";
 
 import styles from "../../assets/styles/pages/TweetPage/TweetPage.module.scss";
-import TweetAdditional from "../../components/Tweet/TweetAdditional";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
 import RetweetModal from "./RetweetModal";
 
-import FetchTweets from "@/components/FetchTweets/FetchTweets";
 import arrow from "../../assets/images/Tweet/arrow.svg";
 import comment from "../../assets/images/Tweet/comment.svg";
 import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
@@ -33,7 +31,7 @@ const TweetPage: React.FC = () => {
 	return (
 		<>
 			<div className={styles["tweet"]}>
-				<TweetAdditional />
+				{/* TODO <TweetAdditional /> */}
 				<div className={styles["tweet__upper"]}>
 					<div className={styles["tweet__user"]}>
 						<UserAvatar userPhoto={userPhoto} link="/profile" />
@@ -116,11 +114,6 @@ const TweetPage: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<FetchTweets
-				queryKey={["tweets-and-replies"]}
-				path="/tweets/feed"
-				// path={`/tweets/user/${currentUser}/replies`}
-			/>
 
 			<RetweetModal
 				onClose={() => setShowModal(false)}

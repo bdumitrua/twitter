@@ -17,7 +17,9 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 	return (
 		<div className={styles["wrapper"]}>
 			<div className={styles["tweet"]}>
-				{tweetData.type === "repost" && <TweetAdditional />}
+				{tweetData.type === "repost" && (
+					<TweetAdditional type={"repost"} name={"Dima Boo"} />
+				)}
 				<div className={styles["tweet__wrapper"]}>
 					<div className={styles["tweet__image"]}>
 						<TweetAuthorAvatar
@@ -34,7 +36,11 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 							author={tweetData.author}
 							created_at={tweetData.content.created_at}
 						/>
-						{tweetData.type === "reply" && <TweetReply />}
+						{tweetData.type === "reply" && (
+							<TweetReply
+								replyTo={tweetData.related.author.link}
+							/>
+						)}
 						<div className={styles["tweet__tweet-body"]}>
 							<span className={styles["tweet__text"]}>
 								{parseHashtags(tweetData.content.text, "feed")}
