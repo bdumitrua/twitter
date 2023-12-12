@@ -5,6 +5,8 @@ import ActionButtons from "./ActionButtons";
 import Author from "./Author";
 import TweetAdditional from "./TweetAdditional";
 import TweetAuthorAvatar from "./TweetAuthorAvatar";
+import TweetReply from "./TweetReply";
+import TweetReplyBranch from "./TweetReplyBranch";
 import TweetThread from "./TweetThread";
 
 interface TweetTestProps {
@@ -22,7 +24,7 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 							authorAvatar={tweetData.author.avatar}
 							authorName={tweetData.author.name}
 						/>
-						{tweetData.type === "default" && (
+						{tweetData.type === "thread" && (
 							<div className={styles["tweet__line"]}></div>
 						)}
 					</div>
@@ -31,6 +33,7 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 							author={tweetData.author}
 							createdAt={tweetData.content.created_at}
 						/>
+						{tweetData.type === "default" && <TweetReply />}
 						<div className={styles["tweet__tweet-body"]}>
 							<span className={styles["tweet__text"]}>
 								{parseHashtags(tweetData.content.text, "feed")}
@@ -42,7 +45,8 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 						/>
 					</div>
 				</div>
-				{tweetData.type === "default" && (
+				{tweetData.type === "reply" && <TweetReplyBranch />}
+				{tweetData.type === "thread" && (
 					<TweetThread
 						authorAvatar={tweetData.author.avatar}
 						authorName={tweetData.author.name}

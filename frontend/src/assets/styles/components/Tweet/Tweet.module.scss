@@ -59,4 +59,19 @@
 	&__thread {
 		max-width: 37px;
 	}
+
+	&__reply {
+		display: flex;
+		gap: 5px;
+		@include text-dark-gray(16px, 400);
+	}
+
+	&__reply-tag {
+		@include text-activity(16, 400);
+	}
+
+	&__reply-branch-dots {
+		width: 55px;
+		@include flex-center;
+	}
 }
