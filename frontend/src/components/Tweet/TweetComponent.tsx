@@ -9,11 +9,11 @@ import TweetReply from "./TweetReply";
 import TweetReplyBranch from "./TweetReplyBranch";
 import TweetThread from "./TweetThread";
 
-interface TweetTestProps {
+interface TweetProps {
 	tweetData: Tweet;
 }
 
-const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
+const TweetTest: React.FC<TweetProps> = ({ tweetData }) => {
 	return (
 		<div className={styles["wrapper"]}>
 			<div className={styles["tweet"]}>
