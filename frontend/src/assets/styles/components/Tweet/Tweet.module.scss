@@ -1,6 +1,6 @@
 .tweet {
-	border-bottom: 1px solid $gray;
 	padding: 12px 20px;
+	border-bottom: 1px solid $gray;
 
 	&__wrapper {
 		display: flex;
@@ -61,17 +61,23 @@
 	}
 
 	&__reply {
+		@include text-dark-gray(16px, 400);
 		display: flex;
 		gap: 5px;
-		@include text-dark-gray(16px, 400);
 	}
 
 	&__reply-tag {
 		@include text-activity(16, 400);
 	}
 
+	&__reply-branch {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
 	&__reply-branch-dots {
-		width: 55px;
 		@include flex-center;
+		width: 55px;
 	}
 }

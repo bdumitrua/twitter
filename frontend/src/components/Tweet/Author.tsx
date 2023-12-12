@@ -1,15 +1,13 @@
+import { Author } from "@/types/tweet/tweet";
 import { Link } from "react-router-dom";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 
-interface Author {
-	author: {
-		name: string;
-		link: string;
-	};
+interface AuthorProps {
+	author: Author;
 	createdAt: string;
 }
 
-const Author: React.FC<Author> = ({ author }) => {
+const Author: React.FC<AuthorProps> = ({ author }) => {
 	return (
 		<div className={styles["tweet__user-info"]}>
 			<span className={styles["tweet__username"]}>{author.name}</span>

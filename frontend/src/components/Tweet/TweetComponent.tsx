@@ -24,7 +24,8 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 							authorAvatar={tweetData.author.avatar}
 							authorName={tweetData.author.name}
 						/>
-						{tweetData.type === "thread" && (
+						{(tweetData.type === "thread" ||
+							tweetData.type === "default") && (
 							<div className={styles["tweet__line"]}></div>
 						)}
 					</div>
@@ -33,7 +34,7 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 							author={tweetData.author}
 							createdAt={tweetData.content.created_at}
 						/>
-						{tweetData.type === "default" && <TweetReply />}
+						{tweetData.type === "reply" && <TweetReply />}
 						<div className={styles["tweet__tweet-body"]}>
 							<span className={styles["tweet__text"]}>
 								{parseHashtags(tweetData.content.text, "feed")}
@@ -45,7 +46,7 @@ const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {
 						/>
 					</div>
 				</div>
-				{tweetData.type === "reply" && <TweetReplyBranch />}
+				{tweetData.type === "default" && <TweetReplyBranch />}
 				{tweetData.type === "thread" && (
 					<TweetThread
 						authorAvatar={tweetData.author.avatar}
