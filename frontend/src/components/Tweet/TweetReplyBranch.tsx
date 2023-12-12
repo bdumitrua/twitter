@@ -1,6 +1,6 @@
 import dots from "@/assets/images/Tweet/dots.svg";
 import { Link } from "react-router-dom";
-import styles from "../../assets/styles/components/Tweet/TweetThread.module.scss";
+import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 
 const TweetReplyBranch: React.FC = () => {
 	return (
