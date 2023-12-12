@@ -10,7 +10,7 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 RUN docker-php-ext-install sockets
 
 # Redis 
-RUN pecl install redis && docker-php-ext-enable redis
+RUN pecl install redis-6.0.2 && docker-php-ext-enable redis
 
 # Kafka 
 RUN pecl install rdkafka && docker-php-ext-enable rdkafka
