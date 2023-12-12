@@ -1,4 +1,4 @@
-import { TweetTypes } from "@/types/tweet/tweet";
+import { Tweet } from "@/types/tweet/tweet";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
 import ActionButtons from "./ActionButtons";
@@ -10,7 +10,7 @@ import TweetReplyBranch from "./TweetReplyBranch";
 import TweetThread from "./TweetThread";
 
 interface TweetTestProps {
-	tweetData: TweetTypes;
+	tweetData: Tweet;
 }
 
 const TweetTest: React.FC<TweetTestProps> = ({ tweetData }) => {

@@ -1,7 +1,7 @@
-import { TweetTypes } from "@/types/tweet/tweet";
+import { Tweet } from "@/types/tweet/tweet";
 import { fetchData } from "@/utils/functions/fetchData";
 import { useQuery } from "@tanstack/react-query";
-import Tweet from "../Tweet/Tweet";
+import TweetComponent from "../Tweet/TweetComponent";
 
 interface FetchTweetsProps {
 	queryKey: string[];
@@ -19,8 +19,8 @@ const FetchTweets: React.FC<FetchTweetsProps> = ({ queryKey, path }) => {
 	return (
 		<div>
 			{data ? (
-				data.map((tweet: TweetTypes) => {
-					return <Tweet key={tweet.id} tweetData={tweet} />;
+				data.map((tweet: Tweet) => {
+					return <TweetComponent key={tweet.id} tweetData={tweet} />;
 				})
 			) : (
 				<div>Loading...</div>
