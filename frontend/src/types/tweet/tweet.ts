@@ -1,13 +1,19 @@
 export interface Author {
 	id: number;
 	name: string;
+	about: string;
 	link: string;
 	avatar: string | null;
 }
 
+interface Notice {
+	link: string;
+	userId: number;
+}
+
 interface TweetContent {
 	text: string;
-	notices: any[]; // Замените any на более конкретный тип, если у вас есть информация о типе 'notices'.
+	notices: Notice[];
 	created_at: string;
 }
 
@@ -30,7 +36,7 @@ interface TweetActions {
 	ShowTweet: { url: string; method: string };
 }
 
-export interface TweetTypes {
+export interface Tweet {
 	id: number;
 	key?: number;
 	type: string;
@@ -38,9 +44,9 @@ export interface TweetTypes {
 	content: TweetContent;
 	counters: TweetCounters;
 	actions: TweetActions;
-	related: TweetTypes;
-	replies: TweetTypes[];
-	thread: TweetTypes;
+	related: Tweet;
+	replies: Tweet[];
+	thread: Tweet;
 }
 
 export interface ActionButtonsData {
