@@ -25,7 +25,10 @@ services:
             DB_DATABASE: twitter
             DB_USERNAME: root
             DB_PASSWORD: root
-
+        deploy:
+            resources:
+                limits:
+                    cpus: "4.0"
         ports:
             - 8000:8000
             - 1025:1025
@@ -37,9 +40,9 @@ services:
             - redis
             - elasticsearch
             - kafka
-            - kibana
+            # - kibana
             - prometheus
-            - grafana
+            # - grafana
 
         networks:
             - app
@@ -90,6 +93,10 @@ services:
             KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
         volumes:
             - /var/run/docker.sock:/var/run/docker.sock
+        deploy:
+            resources:
+                limits:
+                    cpus: "1.0"
         networks:
             - app
         depends_on:
@@ -109,24 +116,30 @@ services:
         environment:
             - "discovery.type=single-node"
             - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        deploy:
+            resources:
+                limits:
+                    cpus: "1.0"
         ports:
             - 9200:9200
             - 9300:9300
         networks:
             - app
 
-    kibana:
-        image: docker.elastic.co/kibana/kibana:8.10.1
-        environment:
-            - ELASTICSEARCH_URL=http://elasticsearch:9200
-        ports:
-            - "5601:5601"
-        # volumes:
-        #     - ./kibana.yml:/usr/share/kibana/config/kibana.yml
-        networks:
-            - app
-        depends_on:
-            - elasticsearch
+    # kibana:
+    #     image: docker.elastic.co/kibana/kibana:8.10.1
+    #     environment:
+    #         - ELASTICSEARCH_URL=http://elasticsearch:9200
+    #     ports:
+    #         - "5601:5601"
+    #     deploy:
+    #         resources:
+    #             limits:
+    #                 cpus: "1.0"
+    #     networks:
+    #         - app
+    #     depends_on:
+    #         - elasticsearch
 
     prometheus:
         image: prom/prometheus
@@ -137,27 +150,27 @@ services:
         networks:
             - app
 
-    grafana:
-        image: grafana/grafana
-        ports:
-            - 3100:3000
-        volumes:
-            - grafana_data:/var/lib/grafana
-        environment:
-            - GF_SECURITY_ADMIN_PASSWORD=admin
-        networks:
-            - app
+    # grafana:
+    #     image: grafana/grafana
+    #     ports:
+    #         - 3100:3000
+    #     volumes:
+    #         - grafana_data:/var/lib/grafana
+    #     environment:
+    #         - GF_SECURITY_ADMIN_PASSWORD=admin
+    #     networks:
+    #         - app
 
-    redis_exporter:
-        image: oliver006/redis_exporter
-        environment:
-            REDIS_ADDR: redis:6379
-        ports:
-            - 9121:9121
-        depends_on:
-            - redis
-        networks:
-            - app
+    # redis_exporter:
+    #     image: oliver006/redis_exporter
+    #     environment:
+    #         REDIS_ADDR: redis:6379
+    #     ports:
+    #         - 9121:9121
+    #     depends_on:
+    #         - redis
+    #     networks:
+    #         - app
 
 networks:
     app:
@@ -166,4 +179,4 @@ networks:
 volumes:
     node_modules:
     vendor:
-    grafana_data:
+    # grafana_data:

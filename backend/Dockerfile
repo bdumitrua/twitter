@@ -19,7 +19,7 @@ WORKDIR /app/backend
 
 COPY . .
 
-RUN composer install
+RUN composer install --no-scripts
 
 COPY ./kafka_consumers.conf /etc/supervisor/conf.d/kafka_consumers.conf
 COPY ./start.sh /app/backend/start.sh

@@ -29,7 +29,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-
         DB::listen(function ($query) {
             /** @var PrometheusService */
             $prometheusService = app(PrometheusService::class);
