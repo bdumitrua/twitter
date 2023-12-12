@@ -48,6 +48,10 @@ axiosInstance.interceptors.response.use(
 			}
 		}
 
+		if (error.config && error.response && error.response.status === 403) {
+			Cookies.remove("accessToken");
+		}
+
 		return Promise.reject(error);
 	}
 );
