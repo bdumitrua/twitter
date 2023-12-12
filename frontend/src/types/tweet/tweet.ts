@@ -1,7 +1,7 @@
 export interface Author {
 	id: number;
 	name: string;
-	about: string;
+	about: string | null;
 	link: string;
 	avatar: string | null;
 }
@@ -46,7 +46,6 @@ export interface Tweet {
 	actions: TweetActions;
 	related: Tweet;
 	replies: Tweet[];
-	thread: Tweet;
 }
 
 export interface ActionButtonsData {

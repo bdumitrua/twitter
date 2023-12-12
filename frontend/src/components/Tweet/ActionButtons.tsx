@@ -24,7 +24,7 @@ const ActionButtons: React.FC<ActionButtonsData> = ({ counters, actions }) => {
 					src={retweet}
 					alt=""
 				/>
-				{counters.reposts.count}
+				{counters.reposts.count + counters.quotes.count}
 			</a>
 			<a className={styles["tweet__counter"]} href="#/">
 				<img

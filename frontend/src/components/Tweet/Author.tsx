@@ -4,7 +4,7 @@ import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 
 interface AuthorProps {
 	author: Author;
-	createdAt: string;
+	created_at: string;
 }
 
 const Author: React.FC<AuthorProps> = ({ author }) => {
@@ -19,7 +19,7 @@ const Author: React.FC<AuthorProps> = ({ author }) => {
 			</Link>
 			<span className={styles["tweet__hours"]}>
 				·12h{" "}
-				{/* Сделать функцию подсчета прошедшего времени с момента выхода поста*/}
+				{/* TODO: Сделать функцию подсчета прошедшего времени с момента выхода поста*/}
 			</span>
 		</div>
 	);

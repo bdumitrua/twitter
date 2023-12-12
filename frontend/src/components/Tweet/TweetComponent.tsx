@@ -9,11 +9,11 @@ import TweetReply from "./TweetReply";
 import TweetReplyBranch from "./TweetReplyBranch";
 import TweetThread from "./TweetThread";
 
-interface TweetProps {
+interface TweetComponentProps {
 	tweetData: Tweet;
 }
 
-const TweetTest: React.FC<TweetProps> = ({ tweetData }) => {
+const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 	return (
 		<div className={styles["wrapper"]}>
 			<div className={styles["tweet"]}>
@@ -32,7 +32,7 @@ const TweetTest: React.FC<TweetProps> = ({ tweetData }) => {
 					<div className={styles["tweet__content"]}>
 						<Author
 							author={tweetData.author}
-							createdAt={tweetData.content.created_at}
+							created_at={tweetData.content.created_at}
 						/>
 						{tweetData.type === "reply" && <TweetReply />}
 						<div className={styles["tweet__tweet-body"]}>
@@ -58,4 +58,4 @@ const TweetTest: React.FC<TweetProps> = ({ tweetData }) => {
 	);
 };
 
-export default TweetTest;
+export default TweetComponent;
