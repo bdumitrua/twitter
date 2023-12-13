@@ -1,46 +1,63 @@
+import comment from "@/assets/images/Tweet/comment.svg";
+import makeRepost from "@/assets/images/Tweet/makeRepost.svg";
+import paintedLike from "@/assets/images/Tweet/paintedLike.svg";
+import retweet from "@/assets/images/Tweet/retweet.svg";
+import unpaintedLike from "@/assets/images/Tweet/unpaintedLike.svg";
+import styles from "@/assets/styles/components/Tweet/Tweet.module.scss";
 import { ActionButtonsData } from "@/types/tweet/tweet";
-import comment from "../../assets/images/Tweet/comment.svg";
-import makeRepost from "../../assets/images/Tweet/makeRepost.svg";
-import retweet from "../../assets/images/Tweet/retweet.svg";
-import unpaintedLike from "../../assets/images/Tweet/unpaintedLike.svg";
-import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
+import axiosInstance from "@/utils/axios/instance";
+import { useState } from "react";
 
 const ActionButtons: React.FC<ActionButtonsData> = ({ counters, actions }) => {
 	//TODO: Actions
 
+	const [isLiked, setIsLiked] = useState(false);
+
+	const handleLike = async () => {
+		setIsLiked(!isLiked); // Оптимистичное обновление
+		const action = isLiked ? actions.DislikeTweet : actions.LikeTweet;
+		try {
+			await axiosInstance({ method: action.method, url: action.url });
+			// Дополнительно обновить счетчики если нужно
+		} catch (error) {
+			setIsLiked(!isLiked); // Возврат в исходное состояние в случае ошибки
+			console.error(error);
+		}
+	};
+
 	return (
 		<div className={styles["tweet__counters"]}>
-			<a className={styles["tweet__counter"]} href="#/">
+			<button className={styles["tweet__counter"]}>
 				<img
 					className={styles["tweet__counter-logo"]}
 					src={comment}
 					alt=""
 				/>
 				{counters.replies.count}
-			</a>
-			<a className={styles["tweet__counter"]} href="#/">
+			</button>
+			<button className={styles["tweet__counter"]}>
 				<img
 					className={styles["tweet__counter-logo"]}
 					src={retweet}
 					alt=""
 				/>
 				{counters.reposts.count + counters.quotes.count}
-			</a>
-			<a className={styles["tweet__counter"]} href="#/">
+			</button>
+			<button className={styles["tweet__counter"]} onClick={handleLike}>
 				<img
 					className={styles["tweet__counter-logo"]}
-					src={unpaintedLike}
+					src={isLiked ? paintedLike : unpaintedLike}
 					alt=""
 				/>
 				{counters.likes.count}
-			</a>
-			<a className={styles["tweet__counter"]} href="#/">
+			</button>
+			<button className={styles["tweet__counter"]}>
 				<img
 					className={styles["tweet__conter-logo"]}
 					src={makeRepost}
 					alt=""
 				/>
-			</a>
+			</button>
 		</div>
 	);
 };
