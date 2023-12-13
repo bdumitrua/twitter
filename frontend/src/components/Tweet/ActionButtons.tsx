@@ -14,13 +14,12 @@ const ActionButtons: React.FC<ActionButtonsData> = ({ counters, actions }) => {
 	const [isLiked, setIsLiked] = useState(false);
 
 	const handleLike = async () => {
-		setIsLiked(!isLiked); // Оптимистичное обновление
+		setIsLiked(!isLiked);
 		const action = isLiked ? actions.DislikeTweet : actions.LikeTweet;
 		try {
 			await axiosInstance({ method: action.method, url: action.url });
-			// Дополнительно обновить счетчики если нужно
 		} catch (error) {
-			setIsLiked(!isLiked); // Возврат в исходное состояние в случае ошибки
+			setIsLiked(!isLiked);
 			console.error(error);
 		}
 	};
@@ -49,7 +48,7 @@ const ActionButtons: React.FC<ActionButtonsData> = ({ counters, actions }) => {
 					src={isLiked ? paintedLike : unpaintedLike}
 					alt=""
 				/>
-				{counters.likes.count}
+				{counters.likes.count + (isLiked ? 1 : 0)}
 			</button>
 			<button className={styles["tweet__counter"]}>
 				<img
