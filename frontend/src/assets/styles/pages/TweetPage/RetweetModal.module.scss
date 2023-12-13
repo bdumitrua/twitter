@@ -6,6 +6,9 @@
 
 .modal {
 	@include modal();
+	max-width: 430px;
+	max-height: 900px;
+	margin: 0 auto;
 
 	&__retweet-icon {
 		width: 24px;

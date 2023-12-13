@@ -58,6 +58,14 @@
 		color: $dark-gray;
 	}
 
+	&__counter-active {
+		display: flex;
+		align-items: center;
+		min-width: 40px;
+		gap: 4px;
+		color: $green;
+	}
+
 	&__thread {
 		max-width: 37px;
 	}

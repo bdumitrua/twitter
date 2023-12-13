@@ -8,7 +8,6 @@ import Author from "./Author";
 import TweetAdditional from "./TweetAdditional";
 import TweetAuthorAvatar from "./TweetAuthorAvatar";
 import TweetReply from "./TweetReply";
-import TweetReplyBranch from "./TweetReplyBranch";
 import TweetThread from "./TweetThread";
 
 interface TweetComponentProps {
@@ -16,21 +15,24 @@ interface TweetComponentProps {
 }
 
 const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
-	const [showModal, setShowModal] = useState<boolean>(false);
-	const [isReposted, setIsReposted] = useState(false);
+	const [showRepostModal, setShowRepostModal] = useState<boolean>(false);
+	const [isReposted, setIsReposted] = useState<boolean>(false);
 
 	return (
 		<div className={styles["wrapper"]}>
 			<div className={styles["tweet"]}>
 				{tweetData.type === "repost" && (
-					<TweetAdditional type={"repost"} name={"Dima Boo"} />
+					<TweetAdditional
+						type={tweetData.type}
+						name={tweetData.author.name}
+					/>
 				)}
 				<div className={styles["tweet__wrapper"]}>
 					<div className={styles["tweet__image"]}>
 						<TweetAuthorAvatar
-							authorAvatar={tweetData.author.avatar}
-							authorName={tweetData.author.name}
 							authorId={tweetData.author.id}
+							authorName={tweetData.author.name}
+							authorAvatar={tweetData.author.avatar}
 						/>
 						{(tweetData.type === "thread" ||
 							tweetData.type === "reply") && (
@@ -44,6 +46,7 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 						/>
 						{tweetData.type === "reply" && (
 							<TweetReply
+								userId={tweetData.related.author.id}
 								replyTo={tweetData.related.author.link}
 							/>
 						)}
@@ -55,12 +58,14 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 						<ActionButtons
 							counters={tweetData.counters}
 							actions={tweetData.actions}
-							setShowModal={setShowModal}
+							setShowRepostModal={setShowRepostModal}
 							isReposted={isReposted}
 						/>
 					</div>
 				</div>
-				{tweetData.type === "reply" && <TweetReplyBranch />}
+				{/* {tweetData.type === "reply" && (
+					<TweetMapReplies replies={tweetData.replies} />
+				)} */}
 				{tweetData.type === "thread" && (
 					<TweetThread
 						authorAvatar={tweetData.author.avatar}
@@ -70,8 +75,8 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 				)}
 			</div>
 			<RetweetModal
-				onClose={() => setShowModal(false)}
-				showModal={showModal}
+				onClose={() => setShowRepostModal(false)}
+				showRepostModal={showRepostModal}
 				actions={tweetData.actions}
 				isReposted={isReposted}
 				setIsReposted={setIsReposted}

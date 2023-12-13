@@ -4,9 +4,10 @@ import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 
 interface TweetReplyProps {
 	replyTo: string;
+	userId: number;
 }
 
-const TweetReply: React.FC<TweetReplyProps> = ({ replyTo }) => {
+const TweetReply: React.FC<TweetReplyProps> = ({ replyTo, userId }) => {
 	return (
 		<span className={styles["tweet__reply"]}>
 			Replying to{" "}

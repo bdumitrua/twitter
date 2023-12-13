@@ -10,7 +10,12 @@ interface AuthorProps {
 const Author: React.FC<AuthorProps> = ({ author }) => {
 	return (
 		<div className={styles["tweet__user-info"]}>
-			<span className={styles["tweet__username"]}>{author.name}</span>
+			<Link
+				to={`/profile/${author.id}`}
+				className={styles["tweet__username"]}
+			>
+				{author.name}
+			</Link>
 			<Link
 				to={`/profile/${author.id}`}
 				className={styles["tweet__nickname"]}

@@ -6,49 +6,38 @@ import repost from "@/assets/images/Tweet/retweet.svg";
 import unpaintedLike from "@/assets/images/Tweet/unpaintedLike.svg";
 import styles from "@/assets/styles/components/Tweet/Tweet.module.scss";
 import { TweetActions, TweetCounters } from "@/types/tweet/tweet";
-import axiosInstance from "@/utils/axios/instance";
+import { handleAction } from "@/utils/functions/handleAction";
 import { useState } from "react";
 
 interface ActionButtonsProps {
 	counters: TweetCounters;
 	actions: TweetActions;
-	setShowModal: (value: boolean) => void;
+	setShowRepostModal: (value: boolean) => void;
 	isReposted: boolean;
 }
 
 const ActionButtons: React.FC<ActionButtonsProps> = ({
 	counters,
 	actions,
-	setShowModal,
+	setShowRepostModal,
 	isReposted,
 }) => {
 	//TODO: Actions
-
 	const [isLiked, setIsLiked] = useState(false);
 	const [isBookmarked, setIsBookmarked] = useState(false);
 
 	const handleLike = async () => {
-		setIsLiked(!isLiked);
-		const action = isLiked ? actions.DislikeTweet : actions.LikeTweet;
-		try {
-			await axiosInstance({ method: action.method, url: action.url });
-		} catch (error) {
-			setIsLiked(!isLiked);
-			console.error(error);
-		}
+		handleAction(isLiked, setIsLiked, {
+			checkAction: actions.LikeTweet,
+			uncheckAction: actions.DislikeTweet,
+		});
 	};
 
 	const handleBookmark = async () => {
-		setIsBookmarked(!isBookmarked);
-		const action = isBookmarked
-			? actions.UnbookmarkTweet
-			: actions.BookmarkTweet;
-		try {
-			await axiosInstance({ method: action.method, url: action.url });
-		} catch (error) {
-			setIsBookmarked(!isBookmarked);
-			console.error(error);
-		}
+		handleAction(isBookmarked, setIsBookmarked, {
+			checkAction: actions.BookmarkTweet,
+			uncheckAction: actions.UnbookmarkTweet,
+		});
 	};
 
 	return (
@@ -62,8 +51,12 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 				{counters.replies.count}
 			</button>
 			<button
-				className={styles["tweet__counter"]}
-				onClick={() => setShowModal(true)}
+				className={
+					isReposted
+						? styles["tweet__counter-active"]
+						: styles["tweet__counter"]
+				}
+				onClick={() => setShowRepostModal(true)}
 			>
 				<img
 					className={styles["tweet__counter-logo"]}

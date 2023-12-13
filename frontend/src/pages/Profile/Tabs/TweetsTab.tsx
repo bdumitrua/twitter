@@ -8,8 +8,6 @@ const TweetsTab: React.FC = () => {
 	const location = useLocation();
 	const userId = getSubstring(location.pathname, "/", 2);
 
-	console.log(userId);
-
 	const { data } = useQuery({
 		queryKey: ["tweets-tab"],
 		queryFn: () => fetchData(`/api/tweets/user/${userId}`),

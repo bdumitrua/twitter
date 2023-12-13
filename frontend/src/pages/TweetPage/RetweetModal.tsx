@@ -1,6 +1,7 @@
 import styles from "../../assets/styles/pages/TweetPage/RetweetModal.module.scss";
 
 import { TweetActions } from "@/types/tweet/tweet";
+import { handleAction } from "@/utils/functions/handleAction";
 import axios from "axios";
 import rectangle from "../../assets/images/Tweet/rectangle.svg";
 import retweet from "../../assets/images/Tweet/retweet.svg";
@@ -8,7 +9,7 @@ import retweetWithComment from "../../assets/images/Tweet/retweetWithComment.svg
 
 interface RetweetModalProps {
 	onClose: () => void;
-	showModal: boolean;
+	showRepostModal: boolean;
 	actions: TweetActions;
 	isReposted: boolean;
 	setIsReposted: (value: boolean) => void;
@@ -16,7 +17,7 @@ interface RetweetModalProps {
 
 const RetweetModal: React.FC<RetweetModalProps> = ({
 	onClose,
-	showModal,
+	showRepostModal,
 	actions,
 	isReposted,
 	setIsReposted,
@@ -24,16 +25,11 @@ const RetweetModal: React.FC<RetweetModalProps> = ({
 	// TODO: Разобраться с логикой репостов
 
 	const handleRepost = async () => {
-		setIsReposted(!isReposted); // Оптимистичное обновление
-		const action = isReposted ? actions.UnrepostTweet : actions.RepostTweet;
-		try {
-			await axios({ method: action.method, url: action.url });
-
-			onClose;
-		} catch (error) {
-			setIsReposted(!isReposted); // Возврат в исходное состояние в случае ошибки
-			console.error(error);
-		}
+		handleAction(isReposted, setIsReposted, {
+			checkAction: actions.RepostTweet,
+			uncheckAction: actions.UnrepostTweet,
+		});
+		onClose;
 	};
 
 	const handleQuote = async () => {
@@ -50,12 +46,12 @@ const RetweetModal: React.FC<RetweetModalProps> = ({
 
 	return (
 		<>
-			{showModal && (
+			{showRepostModal && (
 				<div className={styles["overlay"]} onClick={onClose}></div>
 			)}
 			<div
 				className={`${styles["modal"]} ${
-					showModal && styles["modal__open"]
+					showRepostModal && styles["modal__open"]
 				}`}
 			>
 				<div className={styles["modal__wrapper"]}>
