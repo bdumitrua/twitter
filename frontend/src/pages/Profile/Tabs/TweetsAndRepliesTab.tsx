@@ -5,7 +5,7 @@ import { useQuery } from "@tanstack/react-query";
 const TweetsAndRepliesTab: React.FC = () => {
 	const { data } = useQuery({
 		queryKey: ["tweets-and-replies"],
-		queryFn: () => fetchData("/tweets/feed"),
+		queryFn: () => fetchData("/api/tweets/feed"),
 		refetchOnWindowFocus: false,
 		//enabled: loadMore, // * Запрос активируется, когда loadMore становится true
 	});

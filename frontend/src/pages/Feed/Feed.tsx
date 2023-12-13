@@ -6,7 +6,7 @@ import styles from "../../assets/styles/pages/Feed.module.scss";
 const Feed: React.FC = () => {
 	const { data } = useQuery({
 		queryKey: ["feed"],
-		queryFn: () => fetchData("/tweets/feed"),
+		queryFn: () => fetchData("/api/tweets/feed"),
 		refetchOnWindowFocus: false,
 		//enabled: loadMore, // * Запрос активируется, когда loadMore становится true
 	});
