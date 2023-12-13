@@ -17,7 +17,7 @@ interface TweetContent {
 	created_at: string;
 }
 
-interface TweetCounters {
+export interface TweetCounters {
 	likes: { count: number };
 	replies: { count: number };
 	reposts: { count: number };
@@ -25,7 +25,7 @@ interface TweetCounters {
 	favorites: { count: number };
 }
 
-interface TweetActions {
+export interface TweetActions {
 	LikeTweet: { url: string; method: string };
 	DislikeTweet: { url: string; method: string };
 	BookmarkTweet: { url: string; method: string };

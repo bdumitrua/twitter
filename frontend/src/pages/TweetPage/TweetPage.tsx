@@ -3,7 +3,6 @@ import { useState } from "react";
 import styles from "../../assets/styles/pages/TweetPage/TweetPage.module.scss";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
-import RetweetModal from "./RetweetModal";
 
 import arrow from "../../assets/images/Tweet/arrow.svg";
 import comment from "../../assets/images/Tweet/comment.svg";
@@ -115,10 +114,10 @@ const TweetPage: React.FC = () => {
 				</div>
 			</div>
 
-			<RetweetModal
+			{/* <RetweetModal
 				onClose={() => setShowModal(false)}
 				showModal={showModal}
-			/>
+			/> */}
 		</>
 	);
 };

@@ -1,4 +1,6 @@
+import RetweetModal from "@/pages/TweetPage/RetweetModal";
 import { Tweet } from "@/types/tweet/tweet";
+import { useState } from "react";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
 import ActionButtons from "./ActionButtons";
@@ -14,6 +16,9 @@ interface TweetComponentProps {
 }
 
 const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
+	const [showModal, setShowModal] = useState<boolean>(false);
+	const [isReposted, setIsReposted] = useState(false);
+
 	return (
 		<div className={styles["wrapper"]}>
 			<div className={styles["tweet"]}>
@@ -49,6 +54,8 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 						<ActionButtons
 							counters={tweetData.counters}
 							actions={tweetData.actions}
+							setShowModal={setShowModal}
+							isReposted={isReposted}
 						/>
 					</div>
 				</div>
@@ -60,6 +67,13 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 					/>
 				)}
 			</div>
+			<RetweetModal
+				onClose={() => setShowModal(false)}
+				showModal={showModal}
+				actions={tweetData.actions}
+				isReposted={isReposted}
+				setIsReposted={setIsReposted}
+			/>
 		</div>
 	);
 };

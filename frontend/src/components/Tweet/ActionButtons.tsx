@@ -1,14 +1,27 @@
 import comment from "@/assets/images/Tweet/comment.svg";
 import makeRepost from "@/assets/images/Tweet/makeRepost.svg";
 import paintedLike from "@/assets/images/Tweet/paintedLike.svg";
-import retweet from "@/assets/images/Tweet/retweet.svg";
+import paintedRepost from "@/assets/images/Tweet/paintedRetweet.svg";
+import repost from "@/assets/images/Tweet/retweet.svg";
 import unpaintedLike from "@/assets/images/Tweet/unpaintedLike.svg";
 import styles from "@/assets/styles/components/Tweet/Tweet.module.scss";
-import { ActionButtonsData } from "@/types/tweet/tweet";
+import { TweetActions, TweetCounters } from "@/types/tweet/tweet";
 import axiosInstance from "@/utils/axios/instance";
 import { useState } from "react";
 
-const ActionButtons: React.FC<ActionButtonsData> = ({ counters, actions }) => {
+interface ActionButtonsProps {
+	counters: TweetCounters;
+	actions: TweetActions;
+	setShowModal: (value: boolean) => void;
+	isReposted: boolean;
+}
+
+const ActionButtons: React.FC<ActionButtonsProps> = ({
+	counters,
+	actions,
+	setShowModal,
+	isReposted,
+}) => {
 	//TODO: Actions
 
 	const [isLiked, setIsLiked] = useState(false);
@@ -34,13 +47,18 @@ const ActionButtons: React.FC<ActionButtonsData> = ({ counters, actions }) => {
 				/>
 				{counters.replies.count}
 			</button>
-			<button className={styles["tweet__counter"]}>
+			<button
+				className={styles["tweet__counter"]}
+				onClick={() => setShowModal(true)}
+			>
 				<img
 					className={styles["tweet__counter-logo"]}
-					src={retweet}
+					src={isReposted ? paintedRepost : repost}
 					alt=""
 				/>
-				{counters.reposts.count + counters.quotes.count}
+				{counters.reposts.count +
+					counters.quotes.count +
+					(isReposted ? 1 : 0)}
 			</button>
 			<button className={styles["tweet__counter"]} onClick={handleLike}>
 				<img

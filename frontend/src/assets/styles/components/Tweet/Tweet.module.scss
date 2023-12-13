@@ -53,6 +53,7 @@
 	&__counter {
 		display: flex;
 		align-items: center;
+		min-width: 40px;
 		gap: 4px;
 		color: $dark-gray;
 	}
