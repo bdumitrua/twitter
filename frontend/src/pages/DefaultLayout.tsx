@@ -1,3 +1,4 @@
+import styles from "@/assets/styles/DefaultLayout.scss";
 import useScrollToTop from "@/utils/hooks/useScrollToTop";
 import { Outlet } from "react-router-dom";
 import Footer from "../components/Footer/Footer";
@@ -9,7 +10,7 @@ const DefaultLayout: React.FC = () => {
 	useScrollToTop();
 
 	return (
-		<div>
+		<div className={styles["default-layout"]}>
 			<Header haveUnwatched={haveUnwatched} />
 			<Outlet />
 			<Footer />
