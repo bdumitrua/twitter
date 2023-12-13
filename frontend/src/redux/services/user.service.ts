@@ -5,7 +5,7 @@ import axiosInstance from "@/utils/axios/instance";
 const UserService = {
 	getMe: async (): Promise<User> => {
 		try {
-			const response = await axiosInstance.get<User>("/users");
+			const response = await axiosInstance.get<User>("/api/users");
 
 			return response.data;
 		} catch (error: any) {

@@ -6,16 +6,19 @@ const RegisterService = {
 		email: string,
 		birthDate: string
 	): Promise<number> => {
-		const response = await axiosInstance.post("auth/registration/start", {
-			name,
-			email,
-			birthDate,
-		});
+		const response = await axiosInstance.post(
+			"/api/auth/registration/start",
+			{
+				name,
+				email,
+				birthDate,
+			}
+		);
 		return response.data.registrationId; // предполагая, что сервер возвращает число
 	},
 	registerCode: async (code: string, registerId: number) => {
 		const response = await axiosInstance.post(
-			`auth/registration/confirm/${registerId}`,
+			`/api/auth/registration/confirm/${registerId}`,
 			{
 				code,
 			}
@@ -24,7 +27,7 @@ const RegisterService = {
 	},
 	register: async (password: string, registerId: number) => {
 		const response = await axiosInstance.post(
-			`auth/registration/end/${registerId}`,
+			`/api/auth/registration/end/${registerId}`,
 			{
 				password,
 			}
