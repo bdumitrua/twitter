@@ -27,10 +27,9 @@ class TweetResource extends JsonResource
             ? new TweetResource($this->linkedTweetData)
             : [];
 
-        // Только если подгружено ранее (в репозитории)
-        $replies = $this->whenLoaded('replies', function () {
-            return TweetResource::collection($this->replies);
-        }, []);
+        $replies = !empty((array)$this->replies)
+            ? TweetResource::collection($this->replies)
+            : [];
 
         $relatedData = $this->prepareRelatedData($linkedTweetData, $thread) ?? [];
         $counters = $this->prepareCounters();
