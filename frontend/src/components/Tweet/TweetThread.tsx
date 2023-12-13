@@ -6,16 +6,21 @@ import UserAvatarPlug from "../UserAvatar/UserAvatarPlug";
 interface ThreadProps {
 	authorAvatar: string | null;
 	authorName: string;
+	authorId: number;
 }
 
-const TweetThread: React.FC<ThreadProps> = ({ authorAvatar, authorName }) => {
+const TweetThread: React.FC<ThreadProps> = ({
+	authorAvatar,
+	authorName,
+	authorId,
+}) => {
 	return (
 		<div className={styles["tweet__thread"]}>
 			<div className={styles["tweet__thread-avatar"]}>
 				{authorAvatar ? (
-					<UserAvatar userPhoto={authorAvatar} link="/profile" />
+					<UserAvatar userPhoto={authorAvatar} authorId={1} />
 				) : (
-					<UserAvatarPlug userName={authorName} />
+					<UserAvatarPlug authorId={authorId} userName={authorName} />
 				)}
 			</div>
 			<Link to="/tweet" className={styles["tweet__show-thread"]}>

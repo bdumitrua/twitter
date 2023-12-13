@@ -1,3 +1,4 @@
+import CreateTweet from "@/pages/CreateTweet/CreateTweet";
 import { RootState } from "@/redux/store";
 import { User } from "@/types/redux/user";
 import { ReactNode } from "react";
@@ -58,11 +59,15 @@ const router = createBrowserRouter([
 				element: <TweetPage />,
 			},
 			{
-				path: "/profile",
+				path: "/create",
+				element: <CreateTweet />,
+			},
+			{
+				path: "/profile/:id",
 				element: <Profile />,
 				children: [
 					{
-						path: "/profile",
+						path: "/profile/:id",
 						element: <Navigate to="tweets" />,
 					},
 					{

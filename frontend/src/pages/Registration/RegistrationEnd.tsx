@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { NavigateFunction, useNavigate } from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
-import { getLastEntry } from "../../utils/functions/getLastEntry";
+import { getSubstring } from "../../utils/functions/getSubstring";
 import { passwordRules } from "../../utils/inputRules";
 
 const RegistrationEnd = () => {
@@ -25,7 +25,7 @@ const RegistrationEnd = () => {
 	const navigate: NavigateFunction = useNavigate();
 	const dispatch = useDispatch<AppDispatch>();
 
-	const registrationId: number = getLastEntry(location.pathname, "/");
+	const registrationId: number = getSubstring(location.pathname, "/");
 
 	const error: RegisterError | null = useSelector(
 		(state: RootState) => state.register.error

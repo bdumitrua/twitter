@@ -6,7 +6,7 @@ import {
 	RegisterState,
 } from "@/types/redux/register";
 import { AnyAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { getLastEntry } from "../../utils/functions/getLastEntry";
+import { getSubstring } from "../../utils/functions/getSubstring";
 import RegisterService from "../services/register.service";
 
 export const startRegisterAsync = createAsyncThunk<
@@ -92,7 +92,7 @@ const handleRejected = (state: RegisterState, action: AnyAction) => {
 	if (action.error) {
 		state.error = {
 			message: action.error.message,
-			status: getLastEntry(action.error.message, " "),
+			status: getSubstring(action.error.message, " "),
 		};
 	}
 };

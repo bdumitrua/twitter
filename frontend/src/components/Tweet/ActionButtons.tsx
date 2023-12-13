@@ -25,6 +25,7 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 	//TODO: Actions
 
 	const [isLiked, setIsLiked] = useState(false);
+	const [isBookmarked, setIsBookmarked] = useState(false);
 
 	const handleLike = async () => {
 		setIsLiked(!isLiked);
@@ -33,6 +34,19 @@ const ActionButtons: React.FC<ActionButtonsProps> = ({
 			await axiosInstance({ method: action.method, url: action.url });
 		} catch (error) {
 			setIsLiked(!isLiked);
+			console.error(error);
+		}
+	};
+
+	const handleBookmark = async () => {
+		setIsBookmarked(!isBookmarked);
+		const action = isBookmarked
+			? actions.UnbookmarkTweet
+			: actions.BookmarkTweet;
+		try {
+			await axiosInstance({ method: action.method, url: action.url });
+		} catch (error) {
+			setIsBookmarked(!isBookmarked);
 			console.error(error);
 		}
 	};

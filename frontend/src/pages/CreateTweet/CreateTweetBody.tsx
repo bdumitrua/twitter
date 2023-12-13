@@ -6,11 +6,10 @@ import {
 	updateTweetBodyLength,
 } from "../../redux/slices/createTweet.slice";
 
+import UserAvatarPlug from "@/components/UserAvatar/UserAvatarPlug";
 import { AppDispatch } from "@/redux/store";
 import cancelTweetButton from "../../assets/images/Pages/CreateTweet/cancelTweetButton.svg";
-import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweetBody.module.scss";
-import UserAvatar from "../../components/UserAvatar/UserAvatar";
 
 interface CreateTweetBodyProps {
 	placeholder?: string;
@@ -46,7 +45,7 @@ const CreateTweetBody: React.FC<CreateTweetBodyProps> = ({
 			<div className={styles["body__input-container"]}>
 				<div className={styles["body__avatar-group"]}>
 					<div className={styles["body__avatar"]}>
-						<UserAvatar userPhoto={userPhoto} link="/profile" />
+						<UserAvatarPlug authorId={1} userName="Duma" />
 					</div>
 					{showLine && (
 						<div className={styles["body__avatar-line"]} />

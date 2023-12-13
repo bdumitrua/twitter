@@ -14,7 +14,7 @@ import {
 } from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
 import { codeRegisterAsync } from "../../redux/slices/register.slice";
-import { getLastEntry } from "../../utils/functions/getLastEntry";
+import { getSubstring } from "../../utils/functions/getSubstring";
 import { codeRules } from "../../utils/inputRules";
 
 const RegistrationCode = () => {
@@ -30,7 +30,7 @@ const RegistrationCode = () => {
 	const location: Location<any> = useLocation();
 	const dispatch = useDispatch<AppDispatch>();
 
-	const registrationId: number = getLastEntry(location.pathname, "/");
+	const registrationId: number = getSubstring(location.pathname, "/");
 	const error: RegisterError | null = useSelector(
 		(state: RootState) => state.register.error
 	);

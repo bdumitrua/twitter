@@ -5,18 +5,20 @@ import UserAvatarPlug from "../UserAvatar/UserAvatarPlug";
 interface TweetAuthorAvatarProps {
 	authorAvatar: string | null;
 	authorName: string;
+	authorId: number;
 }
 
 const TweetAuthorAvatar: React.FC<TweetAuthorAvatarProps> = ({
 	authorAvatar,
 	authorName,
+	authorId,
 }) => {
 	return (
 		<div className={styles["tweet__author-image"]}>
 			{authorAvatar ? (
-				<UserAvatar userPhoto={authorAvatar} link="/profile" />
+				<UserAvatar userPhoto={authorAvatar} authorId={authorId} />
 			) : (
-				<UserAvatarPlug userName={authorName} />
+				<UserAvatarPlug authorId={authorId} userName={authorName} />
 			)}
 		</div>
 	);

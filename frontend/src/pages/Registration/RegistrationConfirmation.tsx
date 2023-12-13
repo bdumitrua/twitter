@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { formatDate } from "@/utils/functions/formatDate";
-import { getLastEntry } from "@/utils/functions/getLastEntry";
+import { getSubstring } from "@/utils/functions/getSubstring";
 import { FieldValues, useForm } from "react-hook-form";
 import {
 	Location,
@@ -20,7 +20,7 @@ const RegistrationConfirmation = () => {
 
 	const location: Location<any> = useLocation();
 	const navigate: NavigateFunction = useNavigate();
-	const registrationId: number = getLastEntry(location.pathname, "/");
+	const registrationId: number = getSubstring(location.pathname, "/");
 
 	const queryParams: URLSearchParams = new URLSearchParams(location.search);
 	const name: string | null = queryParams.get("name");

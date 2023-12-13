@@ -30,6 +30,7 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 						<TweetAuthorAvatar
 							authorAvatar={tweetData.author.avatar}
 							authorName={tweetData.author.name}
+							authorId={tweetData.author.id}
 						/>
 						{(tweetData.type === "thread" ||
 							tweetData.type === "reply") && (
@@ -64,6 +65,7 @@ const TweetComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 					<TweetThread
 						authorAvatar={tweetData.author.avatar}
 						authorName={tweetData.author.name}
+						authorId={tweetData.author.id}
 					/>
 				)}
 			</div>
