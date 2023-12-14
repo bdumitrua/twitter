@@ -13,6 +13,7 @@ services:
             - /etc/letsencrypt/:/etc/letsencrypt/
         depends_on:
             - frontend
+        restart: unless-stopped
         networks:
             - app
 
@@ -40,10 +41,7 @@ services:
             - redis
             - elasticsearch
             - kafka
-            # - kibana
             - prometheus
-            # - grafana
-
         networks:
             - app
 
@@ -74,6 +72,7 @@ services:
             - 3306:3306
         volumes:
             - .dbdata:/var/lib/mysql
+        restart: unless-stopped
         networks:
             - app
 
@@ -81,6 +80,7 @@ services:
         image: redis
         ports:
             - 6379:6379
+        restart: unless-stopped
         networks:
             - app
 
@@ -97,6 +97,7 @@ services:
             resources:
                 limits:
                     cpus: "1.0"
+        restart: unless-stopped
         networks:
             - app
         depends_on:
@@ -123,6 +124,7 @@ services:
         ports:
             - 9200:9200
             - 9300:9300
+        restart: unless-stopped
         networks:
             - app
 
@@ -143,10 +145,11 @@ services:
 
     prometheus:
         image: prom/prometheus
-        ports:
-            - 9090:9090
         volumes:
             - ./prometheus.yml:/etc/prometheus/prometheus.yml
+        ports:
+            - 9090:9090
+        restart: unless-stopped
         networks:
             - app
 
