@@ -23,20 +23,20 @@ class TweetLikeService
     /**
      * @param Tweet $tweet
      * 
-     * @return void
+     * @return Response
      */
-    public function add(Tweet $tweet): void
+    public function add(Tweet $tweet): Response
     {
-        $this->tweetLikeRepository->add($tweet->id, $this->authorizedUserId);
+        return $this->tweetLikeRepository->add($tweet->id, $this->authorizedUserId);
     }
 
 
     /**
      * @param Tweet $tweet
      * 
-     * @return Response|null
+     * @return Response
      */
-    public function remove(Tweet $tweet): ?Response
+    public function remove(Tweet $tweet): Response
     {
         return $this->tweetLikeRepository->remove($tweet->id, $this->authorizedUserId);
     }

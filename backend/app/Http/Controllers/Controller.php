@@ -32,8 +32,10 @@ class Controller extends BaseController
             }
 
             if ($response instanceof Response) {
+                $code = $response->getStatusCode();
                 $content = empty($response->getContent()) ? null : $response->getContent();
-                return response()->json($content, $response->getStatusCode());
+
+                return response()->json($content, $code);
             }
 
             return response()->json(null, 200);
