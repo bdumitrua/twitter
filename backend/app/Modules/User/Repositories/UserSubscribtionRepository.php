@@ -55,6 +55,12 @@ class UserSubscribtionRepository
             ->get();
     }
 
+    /**
+     * @param int $userId
+     * @param int $subscriberId
+     * 
+     * @return UserSubscribtion|null
+     */
     public function getByBothIds(int $userId, int $subscriberId): ?UserSubscribtion
     {
         return $this->queryByBothIds($userId, $subscriberId)->first();

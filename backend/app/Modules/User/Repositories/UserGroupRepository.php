@@ -3,12 +3,14 @@
 namespace App\Modules\User\Repositories;
 
 use App\Exceptions\NotFoundException;
+use App\Helpers\ResponseHelper;
 use App\Modules\User\DTO\UserGroupDTO;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 
 class UserGroupRepository
 {
@@ -84,6 +86,17 @@ class UserGroupRepository
     }
 
     /**
+     * @param int $userGroupId
+     * @param int $userId
+     * 
+     * @return UserGroupMember|null
+     */
+    public function getByBothIds(int $userGroupId, int $userId): ?UserGroupMember
+    {
+        return $this->queryByBothIds($userGroupId, $userId)->first();
+    }
+
+    /**
      * @param UserGroupDTO $dto
      * @param int $userId
      * 
@@ -138,29 +151,37 @@ class UserGroupRepository
      * @param int $userGroupId
      * @param int $userId
      * 
-     * @return void
+     * @return Response
      */
-    public function addUser(int $userGroupId, int $userId): void
+    public function addUser(int $userGroupId, int $userId): Response
     {
-        if (empty($this->queryByBothIds($userGroupId, $userId)->exists())) {
+        $groupMemberExists = $this->queryByBothIds($userGroupId, $userId)->exists();
+        if (!$groupMemberExists) {
             $this->userGroupMember->create([
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId
             ]);
         }
+
+        return ResponseHelper::okResponse(!$groupMemberExists);
     }
 
     /**
      * @param int $userGroupId
      * @param int $userId
      * 
-     * @return void
+     * @return Response
      */
-    public function removeUser(int $userGroupId, int $userId): void
+    public function removeUser(int $userGroupId, int $userId): Response
     {
-        if ($userGroupMember = $this->queryByBothIds($userGroupId, $userId)->first()) {
+        $userGroupMember = $this->getByBothIds($userGroupId, $userId);
+        $groupMemberExists = !empty($userGroupMember);
+
+        if ($groupMemberExists) {
             $userGroupMember->delete();
         }
+
+        return ResponseHelper::okResponse($groupMemberExists);
     }
 
     /**
