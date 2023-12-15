@@ -7,7 +7,8 @@ use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Foundation\Validation\ValidatesRequests;
 use Illuminate\Http\JsonResponse;
-use Symfony\Component\HttpFoundation\Response;
+use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Controller extends BaseController
@@ -22,19 +23,20 @@ class Controller extends BaseController
     protected function responseToJSON($response): JsonResponse
     {
         try {
-            if (isset($response['error'])) {
-                return response()->json(['error' => $response['error'], 'bugtrace' => debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 7)], $response['code']);
+            if (empty($response)) {
+                return response(null, 200);
             }
 
-            if (isset($response['message'])) {
-                return response()->json(['message' => $response['message']], $response['code']);
+            if ($response instanceof JsonResource) {
+                return response()->json($response);
             }
 
-            if ($response) {
-                return response()->json($response, 200);
+            if ($response instanceof Response) {
+                $content = empty($response->getContent()) ? null : $response->getContent();
+                return response()->json($content, $response->getStatusCode());
             }
 
-            return response()->json(["message" => "success"], 200);
+            return response()->json(null, 200);
         } catch (\Exception $error) {
             return response()->json(['error' => $error->getMessage()], 500);
         }

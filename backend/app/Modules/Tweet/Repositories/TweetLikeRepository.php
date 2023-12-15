@@ -66,7 +66,7 @@ class TweetLikeRepository
      * @param int $tweetId
      * @param int $userId
      * 
-     * @return void
+     * @return Response|null
      */
     public function remove(int $tweetId, int $userId): ?Response
     {
