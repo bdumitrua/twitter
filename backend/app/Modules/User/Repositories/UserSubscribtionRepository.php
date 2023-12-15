@@ -2,9 +2,11 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Helpers\ResponseHelper;
 use App\Modules\User\Models\UserSubscribtion;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 
 class UserSubscribtionRepository
 {
@@ -53,32 +55,45 @@ class UserSubscribtionRepository
             ->get();
     }
 
-    /**
-     * @param int $userId
-     * @param int $subscriberId
-     * 
-     * @return void
-     */
-    public function create(int $userId, int $subscriberId): void
+    public function getByBothIds(int $userId, int $subscriberId): ?UserSubscribtion
     {
-        if (empty($this->queryByBothIds($userId, $subscriberId)->exists())) {
-            $this->userSubscribtion->create([
-                'subscriber_id' => $subscriberId,
-                'user_id' => $userId
-            ]);
-        }
+        return $this->queryByBothIds($userId, $subscriberId)->first();
     }
 
     /**
      * @param int $userId
      * @param int $subscriberId
      * 
-     * @return void
+     * @return Response
      */
-    public function remove(int $userId, int $subscriberId): void
+    public function create(int $userId, int $subscriberId): Response
     {
-        if ($subscribtion = $this->queryByBothIds($userId, $subscriberId)->first()) {
-            $subscribtion->delete();
+        $subscribtionExists = $this->queryByBothIds($userId, $subscriberId)->exists();
+        if (!$subscribtionExists) {
+            $this->userSubscribtion->create([
+                'subscriber_id' => $subscriberId,
+                'user_id' => $userId,
+            ]);
         }
+
+        return ResponseHelper::okResponse(!$subscribtionExists);
+    }
+
+    /**
+     * @param int $userId
+     * @param int $subscriberId
+     * 
+     * @return Response
+     */
+    public function remove(int $userId, int $subscriberId): Response
+    {
+        $userSubscribtion = $this->getByBothIds($userId, $subscriberId);
+        $subscribtionExists = !empty($userSubscribtion);
+
+        if ($subscribtionExists) {
+            $userSubscribtion->delete();
+        }
+
+        return ResponseHelper::okResponse($subscribtionExists);
     }
 }
