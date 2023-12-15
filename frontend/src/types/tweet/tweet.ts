@@ -1,4 +1,4 @@
-export interface Author {
+export interface TweetAuthor {
 	id: number;
 	name: string;
 	about: string | null;
@@ -40,7 +40,7 @@ export interface Tweet {
 	id: number;
 	key?: number;
 	type: string;
-	author: Author;
+	author: TweetAuthor;
 	content: TweetContent;
 	counters: TweetCounters;
 	actions: TweetActions;

@@ -1,4 +1,5 @@
 import { Tweet } from "@/types/tweet/tweet";
+import ReplyComponent from "../Tweet/ReplyComponent";
 import TweetComponent from "../Tweet/TweetComponent";
 
 interface FetchTweetsProps {
@@ -9,8 +10,22 @@ const FetchTweets: React.FC<FetchTweetsProps> = ({ tweets }) => {
 	return (
 		<div>
 			{tweets ? (
-				tweets.map((tweet: Tweet) => {
-					return <TweetComponent key={tweet.id} tweetData={tweet} />;
+				tweets.map((tweetData: Tweet) => {
+					if (tweetData.type === "reply") {
+						return (
+							<ReplyComponent
+								key={`reply-${tweetData.id}`}
+								tweetData={tweetData}
+							/>
+						);
+					} else {
+						return (
+							<TweetComponent
+								key={`any-${tweetData.id}`}
+								tweetData={tweetData}
+							/>
+						);
+					}
 				})
 			) : (
 				<div>Loading...</div>

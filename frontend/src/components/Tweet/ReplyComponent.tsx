@@ -5,17 +5,15 @@ import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
 import ActionButtons from "./ActionButtons";
 import Author from "./Author";
-import TweetAdditional from "./TweetAdditional";
 import TweetAuthorAvatar from "./TweetAuthorAvatar";
-import TweetReply from "./TweetReply";
-import TweetThread from "./TweetThread";
+import TweetComponent from "./TweetComponent";
 
 interface TweetComponentProps {
 	tweetData: Tweet;
 	replyTo?: TweetAuthor;
 }
 
-const TweetComponent: React.FC<TweetComponentProps> = ({
+const ReplyComponent: React.FC<TweetComponentProps> = ({
 	tweetData,
 	replyTo,
 }) => {
@@ -24,42 +22,27 @@ const TweetComponent: React.FC<TweetComponentProps> = ({
 
 	return (
 		<>
-			<div
-				className={
-					tweetData.type === "reply"
-						? styles["wrapper-reply"]
-						: styles["wrapper"]
-				}
-			>
+			<div className={styles["wrapper"]}>
 				<div className={styles["tweet"]}>
-					{tweetData.type === "repost" && (
-						<TweetAdditional
-							type={tweetData.type}
-							name={tweetData.author.name}
-						/>
-					)}
 					<div className={styles["tweet__wrapper"]}>
 						<div className={styles["tweet__image"]}>
 							<TweetAuthorAvatar
-								authorId={tweetData.author.id}
-								authorName={tweetData.author.name}
-								authorAvatar={tweetData.author.avatar}
+								authorId={tweetData.related.author.id}
+								authorName={tweetData.related.author.name}
+								authorAvatar={tweetData.related.author.avatar}
 							/>
-							{tweetData.type === "thread" && (
+							{tweetData.type === "reply" && (
 								<div className={styles["tweet__line"]}></div>
 							)}
 						</div>
 						<div className={styles["tweet__content"]}>
 							<Author
-								author={tweetData.author}
-								created_at={tweetData.content.created_at}
+								author={tweetData.related.author}
+								created_at={
+									tweetData.related.content.created_at
+								}
 							/>
-							{tweetData.type === "reply" && (
-								<TweetReply
-									userId={tweetData.related.author.id}
-									replyTo={tweetData.related.author.link}
-								/>
-							)}
+
 							<div className={styles["tweet__tweet-body"]}>
 								<span className={styles["tweet__text"]}>
 									{parseHashtags(
@@ -69,19 +52,15 @@ const TweetComponent: React.FC<TweetComponentProps> = ({
 								</span>
 							</div>
 							<ActionButtons
-								counters={tweetData.counters}
-								actions={tweetData.actions}
+								counters={tweetData.related.counters}
+								actions={tweetData.related.actions}
 								setShowRepostModal={setShowRepostModal}
 								isReposted={isReposted}
 							/>
 						</div>
 					</div>
-					{tweetData.type === "thread" && (
-						<TweetThread
-							authorAvatar={tweetData.author.avatar}
-							authorName={tweetData.author.name}
-							authorId={tweetData.author.id}
-						/>
+					{tweetData.type === "reply" && (
+						<TweetComponent tweetData={tweetData} />
 					)}
 				</div>
 				<RetweetModal
@@ -96,4 +75,4 @@ const TweetComponent: React.FC<TweetComponentProps> = ({
 	);
 };
 
-export default TweetComponent;
+export default ReplyComponent;

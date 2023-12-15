@@ -1,6 +1,4 @@
-import dots from "@/assets/images/Tweet/dots.svg";
 import { Tweet } from "@/types/tweet/tweet";
-import { Link } from "react-router-dom";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 import TweetComponent from "./TweetComponent";
 
@@ -13,17 +11,17 @@ const TweetMapReplies: React.FC<Replies> = ({ replies }) => {
 		<div className={styles["tweet__reply-branch"]}>
 			{replies ? (
 				replies.map((reply) => {
-					return <TweetComponent tweetData={reply} />;
+					return <TweetComponent key={reply.id} tweetData={reply} />;
 				})
 			) : (
 				<p>Loading...</p>
 			)}
-			<div className={styles["tweet__reply-branch-dots"]}>
+			{/* <div className={styles["tweet__reply-branch-dots"]}>
 				<img src={dots} alt="" />
 			</div>
 			<Link to="/tweet" className={styles["tweet__show-thread"]}>
 				len more reply
-			</Link>
+			</Link> */}
 		</div>
 	);
 };

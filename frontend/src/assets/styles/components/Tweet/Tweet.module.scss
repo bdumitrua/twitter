@@ -1,7 +1,13 @@
-.tweet {
+.wrapper {
 	padding: 12px 20px;
 	border-bottom: 1px solid $gray;
+}
 
+.wrapper-reply {
+	padding: 0;
+}
+
+.tweet {
 	&__wrapper {
 		display: flex;
 		gap: 8px;

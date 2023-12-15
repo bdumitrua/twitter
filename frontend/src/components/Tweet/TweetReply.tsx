@@ -3,8 +3,8 @@ import { Link } from "react-router-dom";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 
 interface TweetReplyProps {
-	replyTo: string;
-	userId: number;
+	replyTo: string | undefined;
+	userId: number | undefined;
 }
 
 const TweetReply: React.FC<TweetReplyProps> = ({ replyTo, userId }) => {

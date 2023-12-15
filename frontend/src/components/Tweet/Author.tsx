@@ -1,9 +1,9 @@
-import { Author } from "@/types/tweet/tweet";
+import { TweetAuthor } from "@/types/tweet/tweet";
 import { Link } from "react-router-dom";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 
 interface AuthorProps {
-	author: Author;
+	author: TweetAuthor;
 	created_at: string;
 }
 
