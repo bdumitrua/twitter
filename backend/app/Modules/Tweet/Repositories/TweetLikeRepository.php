@@ -2,9 +2,12 @@
 
 namespace App\Modules\Tweet\Repositories;
 
+use App\Helpers\ResponseHelper;
 use App\Modules\Tweet\Models\TweetLike;
+use App\Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 
 class TweetLikeRepository
 {
@@ -65,12 +68,15 @@ class TweetLikeRepository
      * 
      * @return void
      */
-    public function remove(int $tweetId, int $userId): void
+    public function remove(int $tweetId, int $userId): ?Response
     {
         $tweetLike = $this->queryByBothIds($tweetId, $userId)->first();
+        $likeExists = !empty($tweetLike);
 
-        if (!empty($tweetLike)) {
+        if ($likeExists) {
             $tweetLike->delete();
         }
+
+        return ResponseHelper::okResponse(!$likeExists);
     }
 }
