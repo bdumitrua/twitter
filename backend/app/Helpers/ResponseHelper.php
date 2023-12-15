@@ -6,9 +6,9 @@ use Illuminate\Http\Response;
 
 class ResponseHelper
 {
-    public static function okResponse(bool $content = true): Response
+    public static function okResponse(bool $didAction = true): Response
     {
-        return $content
+        return $didAction
             ? self::successResponse()
             : self::noContent();
     }
