@@ -2,9 +2,11 @@
 
 namespace App\Modules\Tweet\Repositories;
 
+use App\Helpers\ResponseHelper;
 use App\Modules\Tweet\Models\TweetFavorite;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 
 class TweetFavoriteRepository
 {
@@ -44,33 +46,47 @@ class TweetFavoriteRepository
      * @param int $tweetId
      * @param int $userId
      * 
-     * @return void
+     * @return TweetFavorite|null
      */
-    public function add(int $tweetId, int $userId): void
+    public function getByBothIds(int $tweetId, int $userId): ?TweetFavorite
     {
-        if (empty($this->queryByBothIds($tweetId, $userId)->first())) {
-            $this->tweetFavorite->create([
-                'tweet_id' => $tweetId,
-                'user_id' => $userId,
-            ]);
-        }
+        return $this->queryByBothIds($tweetId, $userId)->first();
     }
 
     /**
      * @param int $tweetId
      * @param int $userId
      * 
-     * @return void
+     * @return Response
      */
-    public function remove(int $tweetId, int $userId): void
+    public function add(int $tweetId, int $userId): Response
     {
-        $tweetFavorite = $this->tweetFavorite->where([
-            'tweet_id' => $tweetId,
-            'user_id' => $userId,
-        ])->first();
+        $favoriteExists = $this->queryByBothIds($tweetId, $userId)->exists();
+        if (!$favoriteExists) {
+            $this->tweetFavorite->create([
+                'tweet_id' => $tweetId,
+                'user_id' => $userId,
+            ]);
+        }
 
-        if (!empty($tweetFavorite)) {
+        return ResponseHelper::okResponse(!$favoriteExists);
+    }
+
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return Response
+     */
+    public function remove(int $tweetId, int $userId): Response
+    {
+        $tweetFavorite = $this->getByBothIds($tweetId, $userId);
+        $favoriteExists = !empty($tweetFavorite);
+
+        if ($favoriteExists) {
             $tweetFavorite->delete();
         }
+
+        return ResponseHelper::okResponse($favoriteExists);
     }
 }

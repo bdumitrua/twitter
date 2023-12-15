@@ -46,6 +46,12 @@ class TweetLikeRepository
         return $this->tweetLike->where('user_id', '=', $userId)->get();
     }
 
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return TweetLike|null
+     */
     public function getByBothIds(int $tweetId, int $userId): ?TweetLike
     {
         return $this->queryByBothIds($tweetId, $userId)->first();
