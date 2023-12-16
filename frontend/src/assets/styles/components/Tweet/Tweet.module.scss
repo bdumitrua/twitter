@@ -36,11 +36,20 @@
 
 	&__user-info {
 		display: flex;
+		flex-shrink: 1;
+		max-width: 100%;
 		gap: 5px;
 	}
 
 	&__username {
 		@include text-black(16px, 700);
+	}
+
+	&__username,
+	&__nickname {
+		white-space: nowrap;
+		max-width: 36%;
+		overflow: hidden;
 	}
 
 	&__nickname,

@@ -1,5 +1,5 @@
 import RetweetModal from "@/pages/TweetPage/RetweetModal";
-import { Tweet, TweetAuthor } from "@/types/tweet/tweet";
+import { Tweet } from "@/types/tweet/tweet";
 import { useState } from "react";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
@@ -10,13 +10,9 @@ import TweetComponent from "./TweetComponent";
 
 interface TweetComponentProps {
 	tweetData: Tweet;
-	replyTo?: TweetAuthor;
 }
 
-const ReplyComponent: React.FC<TweetComponentProps> = ({
-	tweetData,
-	replyTo,
-}) => {
+const ReplyComponent: React.FC<TweetComponentProps> = ({ tweetData }) => {
 	const [showRepostModal, setShowRepostModal] = useState<boolean>(false);
 	const [isReposted, setIsReposted] = useState<boolean>(false);
 

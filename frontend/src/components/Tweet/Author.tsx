@@ -1,4 +1,5 @@
 import { TweetAuthor } from "@/types/tweet/tweet";
+import { calculateTimePassed } from "@/utils/functions/calculateTimePassed";
 import { Link } from "react-router-dom";
 import styles from "../../assets/styles/components/Tweet/Tweet.module.scss";
 
@@ -7,7 +8,7 @@ interface AuthorProps {
 	created_at: string;
 }
 
-const Author: React.FC<AuthorProps> = ({ author }) => {
+const Author: React.FC<AuthorProps> = ({ author, created_at }) => {
 	return (
 		<div className={styles["tweet__user-info"]}>
 			<Link
@@ -23,8 +24,7 @@ const Author: React.FC<AuthorProps> = ({ author }) => {
 				@{author.link}
 			</Link>
 			<span className={styles["tweet__hours"]}>
-				·12h{" "}
-				{/* TODO: Сделать функцию подсчета прошедшего времени с момента выхода поста*/}
+				· {calculateTimePassed(created_at)}
 			</span>
 		</div>
 	);
