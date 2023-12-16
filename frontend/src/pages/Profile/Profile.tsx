@@ -22,7 +22,7 @@ const tabs: Tabs[] = [
 	{ name: "Likes", value: "likes" },
 ];
 
-const Profile = () => {
+const Profile: React.FC = () => {
 	const [activeTab, setActiveTab] = useState<string>("tweets");
 
 	const handleTabClick = (value: string) => {
@@ -41,10 +41,7 @@ const Profile = () => {
 					<div className={styles["profile__bar"]}>
 						<div className={styles["profile__upper"]}>
 							<div className={styles["profile__avatar"]}>
-								<UserAvatar
-									userPhoto={userPhoto}
-									link="/profile"
-								/>
+								<UserAvatar userId={1} userPhoto={userPhoto} />
 							</div>
 							<button className={styles["profile__edit-button"]}>
 								Edit profile

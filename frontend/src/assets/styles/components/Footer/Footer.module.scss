@@ -1,6 +1,7 @@
 .footer {
 	@include flex-between;
 	width: 100%;
+	max-width: 430px;
 	background-color: $white;
 	padding: 16px 40px;
 	border-top: 1px solid $gray;

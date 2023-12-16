@@ -6,22 +6,24 @@ import {
 	updateTweetBodyLength,
 } from "../../redux/slices/createTweet.slice";
 
+import UserAvatarPlug from "@/components/UserAvatar/UserAvatarPlug";
 import { AppDispatch } from "@/redux/store";
+import { User } from "@/types/redux/user";
 import cancelTweetButton from "../../assets/images/Pages/CreateTweet/cancelTweetButton.svg";
-import userPhoto from "../../assets/images/Tweet/pictureExample.jpg";
 import styles from "../../assets/styles/pages/CreateTweet/CreateTweetBody.module.scss";
-import UserAvatar from "../../components/UserAvatar/UserAvatar";
 
 interface CreateTweetBodyProps {
 	placeholder?: string;
 	showCloseButton?: boolean;
 	id: number;
+	authorizedUser: User | null;
 }
 
 const CreateTweetBody: React.FC<CreateTweetBodyProps> = ({
 	placeholder,
 	showCloseButton,
 	id,
+	authorizedUser,
 }) => {
 	const dispatch = useDispatch<AppDispatch>();
 	const [showLine, setShowLine] = useState<boolean>(false);
@@ -46,7 +48,10 @@ const CreateTweetBody: React.FC<CreateTweetBodyProps> = ({
 			<div className={styles["body__input-container"]}>
 				<div className={styles["body__avatar-group"]}>
 					<div className={styles["body__avatar"]}>
-						<UserAvatar userPhoto={userPhoto} link="/profile" />
+						<UserAvatarPlug
+							authorId={authorizedUser?.id}
+							userName={authorizedUser?.name}
+						/>
 					</div>
 					{showLine && (
 						<div className={styles["body__avatar-line"]} />

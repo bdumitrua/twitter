@@ -1,12 +1,23 @@
-import Tweet from "../../../components/Tweet/Tweet";
+import FetchTweets from "@/components/FetchTweets/FetchTweets";
+import { fetchData } from "@/utils/functions/fetchData";
+import { getSubstring } from "@/utils/functions/getSubstring";
+import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 const TweetsTab: React.FC = () => {
+	const location = useLocation();
+	const userId = getSubstring(location.pathname, "/", 2);
+
+	const { data } = useQuery({
+		queryKey: ["tweets-tab"],
+		queryFn: () => fetchData(`/api/tweets/user/${userId}`),
+		refetchOnWindowFocus: false,
+		//enabled: loadMore, // * Запрос активируется, когда loadMore становится true
+	});
+
 	return (
 		<>
-			<Tweet />
-			<Tweet />
-			<Tweet />
-			<Tweet />
+			<FetchTweets tweets={data} />
 		</>
 	);
 };

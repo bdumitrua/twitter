@@ -1,11 +1,8 @@
 import { useState } from "react";
 
 import styles from "../../assets/styles/pages/TweetPage/TweetPage.module.scss";
-import Tweet from "../../components/Tweet/Tweet";
-import TweetAdditional from "../../components/Tweet/TweetAdditional";
 import UserAvatar from "../../components/UserAvatar/UserAvatar";
 import { parseHashtags } from "../../utils/functions/parseHashtags";
-import RetweetModal from "./RetweetModal";
 
 import arrow from "../../assets/images/Tweet/arrow.svg";
 import comment from "../../assets/images/Tweet/comment.svg";
@@ -33,10 +30,10 @@ const TweetPage: React.FC = () => {
 	return (
 		<>
 			<div className={styles["tweet"]}>
-				<TweetAdditional />
+				{/* TODO <TweetAdditional /> */}
 				<div className={styles["tweet__upper"]}>
 					<div className={styles["tweet__user"]}>
-						<UserAvatar userPhoto={userPhoto} link="/profile" />
+						<UserAvatar userId={1} userPhoto={userPhoto} />
 						<div className={styles["tweet__names"]}>
 							<span className={styles["tweet__username"]}>
 								Martha Craig
@@ -116,15 +113,11 @@ const TweetPage: React.FC = () => {
 					</div>
 				</div>
 			</div>
-			<Tweet />
-			<Tweet />
-			<Tweet />
-			<Tweet />
 
-			<RetweetModal
+			{/* <RetweetModal
 				onClose={() => setShowModal(false)}
 				showModal={showModal}
-			/>
+			/> */}
 		</>
 	);
 };

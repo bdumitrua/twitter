@@ -52,12 +52,15 @@ const Header: React.FC<HeaderProps> = (props) => {
 						</div>
 					) : (
 						<div className={styles["header__burger-icon"]}>
-							<UserAvatarPlug />
+							<UserAvatarPlug
+								authorId={authorizedUser?.id}
+								userName={authorizedUser?.name}
+							/>
 						</div>
 					)}
-					<div>
+					<Link to="/">
 						<img src={twitterLogo} alt="" />
-					</div>
+					</Link>
 					<div>
 						<img src={somthingIcon} alt="" />
 					</div>

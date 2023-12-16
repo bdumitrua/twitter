@@ -1,14 +1,17 @@
 .wrapper {
 	border-bottom: 1px solid $gray;
+	padding: 12px 20px 4px;
+}
+
+.wrapper-reply {
+	padding: 0;
 }
 
 .tweet {
-	padding: 4px 20px;
-
 	&__wrapper {
 		display: flex;
 		gap: 8px;
-		margin-bottom: 4px;
+		margin-bottom: 2px;
 	}
 
 	&__image {
@@ -18,8 +21,14 @@
 		flex-direction: column;
 	}
 
+	&__author-image {
+		min-width: 55px;
+		min-height: 55px;
+	}
+
 	&__line {
 		width: 2px;
+		margin-top: 2px;
 		height: 100%;
 		background-color: $gray;
 		border-radius: 1px;
@@ -27,11 +36,20 @@
 
 	&__user-info {
 		display: flex;
+		flex-shrink: 1;
+		max-width: 100%;
 		gap: 5px;
 	}
 
 	&__username {
 		@include text-black(16px, 700);
+	}
+
+	&__username,
+	&__nickname {
+		white-space: nowrap;
+		max-width: 36%;
+		overflow: hidden;
 	}
 
 	&__nickname,
@@ -45,12 +63,48 @@
 
 	&__counters {
 		display: flex;
+		margin-bottom: 8px;
 		gap: 44px;
 	}
 
 	&__counter {
 		display: flex;
+		align-items: center;
+		min-width: 40px;
 		gap: 4px;
 		color: $dark-gray;
+	}
+
+	&__counter-active {
+		display: flex;
+		align-items: center;
+		min-width: 40px;
+		gap: 4px;
+		color: $green;
+	}
+
+	&__thread {
+		max-width: 37px;
+	}
+
+	&__reply {
+		@include text-dark-gray(16px, 400);
+		display: flex;
+		gap: 5px;
+	}
+
+	&__reply-tag {
+		@include text-activity(16, 400);
+	}
+
+	&__reply-branch {
+		display: flex;
+		justify-content: flex-start;
+		align-items: center;
+	}
+
+	&__reply-branch-dots {
+		@include flex-center;
+		width: 55px;
 	}
 }

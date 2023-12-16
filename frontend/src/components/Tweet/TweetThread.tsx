@@ -1,15 +1,28 @@
 import { Link } from "react-router-dom";
-import userPhoto from "../../assets/images/Tweet/userPhoto.svg";
 import styles from "../../assets/styles/components/Tweet/TweetThread.module.scss";
+import UserAvatar from "../UserAvatar/UserAvatar";
+import UserAvatarPlug from "../UserAvatar/UserAvatarPlug";
 
-const TweetThread: React.FC = () => {
+interface ThreadProps {
+	authorAvatar: string | null;
+	authorName: string;
+	authorId: number;
+}
+
+const TweetThread: React.FC<ThreadProps> = ({
+	authorAvatar,
+	authorName,
+	authorId,
+}) => {
 	return (
 		<div className={styles["tweet__thread"]}>
-			<img
-				className={styles["tweet__thread-user-avatar"]}
-				src={userPhoto}
-				alt=""
-			/>
+			<div className={styles["tweet__thread-avatar"]}>
+				{authorAvatar ? (
+					<UserAvatar userId={authorId} userPhoto={authorAvatar} />
+				) : (
+					<UserAvatarPlug authorId={authorId} userName={authorName} />
+				)}
+			</div>
 			<Link to="/tweet" className={styles["tweet__show-thread"]}>
 				Show this Thread
 			</Link>

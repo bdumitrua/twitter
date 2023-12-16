@@ -6,7 +6,7 @@ const AuthService = {
 		try {
 			const response = await axiosInstance.post<{
 				accessToken: string;
-			}>("/auth/login", {
+			}>("/api/auth/login", {
 				email,
 				password,
 			});
