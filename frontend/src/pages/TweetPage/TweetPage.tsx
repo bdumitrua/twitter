@@ -33,7 +33,7 @@ const TweetPage: React.FC = () => {
 				{/* TODO <TweetAdditional /> */}
 				<div className={styles["tweet__upper"]}>
 					<div className={styles["tweet__user"]}>
-						<UserAvatar userPhoto={userPhoto} authorId={1} />
+						<UserAvatar userId={1} userPhoto={userPhoto} />
 						<div className={styles["tweet__names"]}>
 							<span className={styles["tweet__username"]}>
 								Martha Craig

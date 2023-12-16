@@ -18,7 +18,7 @@ const TweetThread: React.FC<ThreadProps> = ({
 		<div className={styles["tweet__thread"]}>
 			<div className={styles["tweet__thread-avatar"]}>
 				{authorAvatar ? (
-					<UserAvatar authorId={1} userPhoto={authorAvatar} />
+					<UserAvatar userId={authorId} userPhoto={authorAvatar} />
 				) : (
 					<UserAvatarPlug authorId={authorId} userName={authorName} />
 				)}

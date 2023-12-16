@@ -41,10 +41,7 @@ const Profile: React.FC = () => {
 					<div className={styles["profile__bar"]}>
 						<div className={styles["profile__upper"]}>
 							<div className={styles["profile__avatar"]}>
-								<UserAvatar
-									userPhoto={userPhoto}
-									authorId={1}
-								/>
+								<UserAvatar userId={1} userPhoto={userPhoto} />
 							</div>
 							<button className={styles["profile__edit-button"]}>
 								Edit profile

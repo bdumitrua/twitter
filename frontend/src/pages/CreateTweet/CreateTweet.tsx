@@ -4,21 +4,22 @@ import { useDispatch, useSelector } from "react-redux";
 import {
 	addTweetBody,
 	selectTweetBodies,
-} from "../../redux/slices/createTweet.slice";
+} from "@/redux/slices/createTweet.slice";
 
-import styles from "../../assets/styles/pages/CreateTweet/CreateTweet.module.scss";
+import styles from "@/assets/styles/pages/CreateTweet/CreateTweet.module.scss";
 import AddButton from "./AddButton";
 import CreateTweetBody from "./CreateTweetBody";
 import CreateTweetModal from "./CreateTweetModal";
 import TickIcon from "./TickIcon";
 
+import gifIcon from "@/assets/images/Pages/CreateTweet/gifIcon.svg";
+import groupIcon from "@/assets/images/Pages/CreateTweet/groupIcon.svg";
+import imageIcon from "@/assets/images/Pages/CreateTweet/imageIcon.svg";
+import locationIcon from "@/assets/images/Pages/CreateTweet/locationIcon.svg";
+import statsIcon from "@/assets/images/Pages/CreateTweet/statsIcon.svg";
 import { AppDispatch, RootState } from "@/redux/store";
 import { TweetBody } from "@/types/redux/createTweet";
-import gifIcon from "../../assets/images/Pages/CreateTweet/gifIcon.svg";
-import groupIcon from "../../assets/images/Pages/CreateTweet/groupIcon.svg";
-import imageIcon from "../../assets/images/Pages/CreateTweet/imageIcon.svg";
-import locationIcon from "../../assets/images/Pages/CreateTweet/locationIcon.svg";
-import statsIcon from "../../assets/images/Pages/CreateTweet/statsIcon.svg";
+import { User } from "@/types/redux/user";
 
 interface FirstCreateProps {
 	placeholder: string;
@@ -32,6 +33,10 @@ const CreateTweet = () => {
 	const tweetBodies: TweetBody[] = useSelector(selectTweetBodies);
 	const currentId: number = useSelector(
 		(state: RootState) => state.createTweet.currentId
+	);
+
+	const authorizedUser: User | null = useSelector(
+		(state: RootState) => state.user.authorizedUser
 	);
 
 	const charCount: number = useSelector((state: RootState) => {
@@ -78,8 +83,12 @@ const CreateTweet = () => {
 		<>
 			<div className={styles["create"]}>
 				<div className={styles["create__bodies"]}>
-					{tweetBodies.map((props) => (
-						<CreateTweetBody key={props.id} {...props} />
+					{tweetBodies.map((tweetBody) => (
+						<CreateTweetBody
+							key={tweetBody.id}
+							{...tweetBody}
+							authorizedUser={authorizedUser}
+						/>
 					))}
 				</div>
 				<div className={styles["create__bars"]}>

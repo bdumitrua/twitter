@@ -10,9 +10,7 @@ const UserAvatarPlug: React.FC<UserAvatarPlugProps> = ({
 	userName,
 	authorId,
 }) => {
-	if (userName === undefined) {
-		return null;
-	} else if (authorId === undefined) {
+	if (!userName || !authorId) {
 		return null;
 	}
 

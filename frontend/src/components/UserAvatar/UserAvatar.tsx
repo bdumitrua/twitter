@@ -4,15 +4,12 @@ import styles from "../../assets/styles/components/UserAvatar/UserAvatar.module.
 
 interface UserAvatarProps {
 	userPhoto: string;
-	authorId: number;
+	userId: number;
 }
 
-const UserAvatar: React.FC<UserAvatarProps> = ({ userPhoto, authorId }) => {
+const UserAvatar: React.FC<UserAvatarProps> = ({ userPhoto, userId }) => {
 	return (
-		<Link
-			to={`/profile/${authorId}`}
-			className={styles["user-avatar__link"]}
-		>
+		<Link to={`/profile/${userId}`} className={styles["user-avatar__link"]}>
 			<img className={styles["user-avatar"]} src={userPhoto} alt="" />
 		</Link>
 	);

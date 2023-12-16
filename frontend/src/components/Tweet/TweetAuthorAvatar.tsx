@@ -16,7 +16,7 @@ const TweetAuthorAvatar: React.FC<TweetAuthorAvatarProps> = ({
 	return (
 		<div className={styles["tweet__author-image"]}>
 			{authorAvatar ? (
-				<UserAvatar userPhoto={authorAvatar} authorId={authorId} />
+				<UserAvatar userPhoto={authorAvatar} userId={authorId} />
 			) : (
 				<UserAvatarPlug authorId={authorId} userName={authorName} />
 			)}
