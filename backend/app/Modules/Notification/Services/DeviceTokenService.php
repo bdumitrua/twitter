@@ -74,7 +74,10 @@ class DeviceTokenService
      */
     public function delete(DeviceToken $deviceToken, Request $request): void
     {
-        $this->logger->info('Deleting deviceToken', array_merge($deviceToken->toArray(), ['ip' => $request->ip()]));
+        $this->logger->info(
+            'Deleting deviceToken',
+            array_merge($deviceToken->toArray(), ['ip' => $request->ip()])
+        );
         $this->deviceTokenRepository->delete($deviceToken);
     }
 }
