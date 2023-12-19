@@ -389,7 +389,7 @@ class TweetRepository
         });
 
         if (!empty($tweet)) {
-            $tweet->author = $this->userRepository->getById($tweet->user_id);
+            $tweet->author = $this->userRepository->getUserData($tweet->user_id);
 
             // * По задумке так нельзя
             // Но инжектировать либо прокидывать через цепочку из десятка методов не хочется

@@ -11,6 +11,7 @@ use App\Traits\UpdateFromDTO;
 use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -21,15 +22,18 @@ class UserRepository
     protected User $user;
     protected UsersListRepository $usersListRepository;
     protected DeviceTokenRepository $deviceTokenRepository;
+    protected UserSubscribtionRepository $userSubscribtionRepository;
 
     public function __construct(
         User $user,
         UsersListRepository $usersListRepository,
         DeviceTokenRepository $deviceTokenRepository,
+        UserSubscribtionRepository $userSubscribtionRepository,
     ) {
         $this->user = $user;
         $this->usersListRepository = $usersListRepository;
         $this->deviceTokenRepository = $deviceTokenRepository;
+        $this->userSubscribtionRepository = $userSubscribtionRepository;
     }
 
     /**
@@ -75,11 +79,28 @@ class UserRepository
 
     /**
      * @param int $userId
+     * 
+     * @return User
+     */
+    public function getById(int $userId): User
+    {
+        $user = $this->getUserData($userId);
+
+        $authorizedUserId = Auth::id();
+        if (!empty($authorizedUserId)) {
+            $user->imSubscribed = !empty($this->userSubscribtionRepository->getByBothIds($userId, $authorizedUserId));
+        }
+
+        return $user;
+    }
+
+    /**
+     * @param int $userId
      * @param bool $updateCache
      * 
      * @return User
      */
-    public function getById(int $userId, bool $updateCache = false): User
+    public function getUserData(int $userId, bool $updateCache = false): User
     {
         $cacheKey = KEY_USER_DATA . $userId;
         $user = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
@@ -101,7 +122,7 @@ class UserRepository
      */
     public function update(int $userId, UserDTO $dto): void
     {
-        $user = $this->getById($userId);
+        $user = $this->getUserData($userId);
         $savingStatus = $this->updateUserFromDto($user, $dto);
 
         if (!empty($savingStatus)) {

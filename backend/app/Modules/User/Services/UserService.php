@@ -57,7 +57,7 @@ class UserService
         $this->logger->info('Creating UserDTO from update request', $userUpdateRequest->toArray());
         $userDTO = $this->createDTO($userUpdateRequest, UserDTO::class);
 
-        $authorizedUser = $this->userRepository->getById($this->authorizedUserId);
+        $authorizedUser = $this->userRepository->getUserData($this->authorizedUserId);
         $this->logger->info(
             'Updating User using UserDTO',
             [
