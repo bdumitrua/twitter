@@ -16,6 +16,7 @@ use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -141,42 +142,42 @@ class UsersListService
      * @param UsersList $usersList
      * @param User $user
      * 
-     * @return void
+     * @return Response
      */
-    public function add(UsersList $usersList, User $user): void
+    public function add(UsersList $usersList, User $user): Response
     {
-        $this->usersListRepository->addMember($usersList->id, $user->id);
+        return $this->usersListRepository->addMember($usersList->id, $user->id);
     }
 
     /**
      * @param UsersList $usersList
      * @param User $user
      * 
-     * @return void
+     * @return Response
      */
-    public function remove(UsersList $usersList, User $user): void
+    public function remove(UsersList $usersList, User $user): Response
     {
-        $this->usersListRepository->removeMember($usersList->id, $user->id);
+        return $this->usersListRepository->removeMember($usersList->id, $user->id);
     }
 
     /**
      * @param UsersList $usersList
      * 
-     * @return void
+     * @return Response
      */
-    public function subscribe(UsersList $usersList): void
+    public function subscribe(UsersList $usersList): Response
     {
-        $this->usersListRepository->subscribe($usersList->id, $this->authorizedUserId);
+        return $this->usersListRepository->subscribe($usersList->id, $this->authorizedUserId);
     }
 
     /**
      * @param UsersList $usersList
      * 
-     * @return void
+     * @return Response
      */
-    public function unsubscribe(UsersList $usersList): void
+    public function unsubscribe(UsersList $usersList): Response
     {
-        $this->usersListRepository->unsubscribe($usersList->id, $this->authorizedUserId);
+        return $this->usersListRepository->unsubscribe($usersList->id, $this->authorizedUserId);
     }
 
     /**

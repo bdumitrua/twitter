@@ -5,16 +5,19 @@ namespace App\Modules\User\Services;
 use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserSubscribtionRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class UserSubscribtionService
 {
-    protected $userSubscribtionRepository;
+    protected UserSubscribtionRepository $userSubscribtionRepository;
+    protected ?int $authorizedUserId;
 
     public function __construct(
         UserSubscribtionRepository $userSubscribtionRepository,
     ) {
         $this->userSubscribtionRepository = $userSubscribtionRepository;
+        $this->authorizedUserId = Auth::id();
     }
 
     /**
@@ -40,20 +43,20 @@ class UserSubscribtionService
     /**
      * @param User $user
      * 
-     * @return void
+     * @return Response
      */
-    public function add(User $user): void
+    public function add(User $user): Response
     {
-        $this->userSubscribtionRepository->create($user->id, Auth::id());
+        return $this->userSubscribtionRepository->create($user->id, $this->authorizedUserId);
     }
 
     /**
      * @param User $user
      * 
-     * @return void
+     * @return Response
      */
-    public function remove(User $user): void
+    public function remove(User $user): Response
     {
-        $this->userSubscribtionRepository->remove($user->id, Auth::id());
+        return $this->userSubscribtionRepository->remove($user->id, $this->authorizedUserId);
     }
 }

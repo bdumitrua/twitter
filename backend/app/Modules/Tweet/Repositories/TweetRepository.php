@@ -288,15 +288,17 @@ class TweetRepository
     /**
      * @param TweetDTO $tweetDTO
      * 
-     * @return void
+     * @return Tweet
      */
-    public function create(TweetDTO $tweetDTO): void
+    public function create(TweetDTO $tweetDTO): Tweet
     {
         $data = $tweetDTO->toArray();
         $data = array_filter($data, fn ($value) => !is_null($value));
 
         $tweet = $this->tweet->create($data);
         $this->clearUserTweetsCache($tweet->user_id);
+
+        return $tweet;
     }
 
     /**
@@ -307,19 +309,12 @@ class TweetRepository
     public function createThread(array $tweetDTOs): void
     {
         $previousTweetId = null;
-        $userId = $tweetDTOs[0]->userId;
-
         foreach ($tweetDTOs as $tweetDTO) {
-            $data = $tweetDTO->toArray();
-            $data['linked_tweet_id'] = $previousTweetId;
-            $data = array_filter($data, fn ($value) => !is_null($value));
-
-            $tweet = $this->tweet->create($data);
+            $tweetDTO->linkedTweetId = $previousTweetId;
+            $tweet = $this->create($tweetDTO);
 
             $previousTweetId = $tweet->id;
         }
-
-        $this->clearUserTweetsCache($userId);
     }
 
     /**

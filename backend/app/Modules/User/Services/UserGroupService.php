@@ -13,6 +13,7 @@ use App\Modules\User\Resources\UserGroupResource;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -104,21 +105,21 @@ class UserGroupService
      * @param UserGroup $userGroup
      * @param User $user
      * 
-     * @return void
+     * @return Response
      */
-    public function add(UserGroup $userGroup, User $user): void
+    public function add(UserGroup $userGroup, User $user): Response
     {
-        $this->userGroupRepository->addUser($userGroup->id, $user->id);
+        return $this->userGroupRepository->addUser($userGroup->id, $user->id);
     }
 
     /**
      * @param UserGroup $userGroup
      * @param User $user
      * 
-     * @return void
+     * @return Response
      */
-    public function remove(UserGroup $userGroup, User $user): void
+    public function remove(UserGroup $userGroup, User $user): Response
     {
-        $this->userGroupRepository->removeUser($userGroup->id, $user->id);
+        return $this->userGroupRepository->removeUser($userGroup->id, $user->id);
     }
 }

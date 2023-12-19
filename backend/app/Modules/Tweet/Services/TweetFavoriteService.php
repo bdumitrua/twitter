@@ -5,6 +5,7 @@ namespace App\Modules\Tweet\Services;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetFavoriteRepository;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class TweetFavoriteService
@@ -22,20 +23,20 @@ class TweetFavoriteService
     /**
      * @param Tweet $tweet
      * 
-     * @return void
+     * @return Response
      */
-    public function add(Tweet $tweet): void
+    public function add(Tweet $tweet): Response
     {
-        $this->tweetFavoriteRepository->add($tweet->id, $this->authorizedUserId);
+        return $this->tweetFavoriteRepository->add($tweet->id, $this->authorizedUserId);
     }
 
     /**
      * @param Tweet $tweet
      * 
-     * @return void
+     * @return Response
      */
-    public function remove(Tweet $tweet): void
+    public function remove(Tweet $tweet): Response
     {
-        $this->tweetFavoriteRepository->remove($tweet->id, $this->authorizedUserId);
+        return $this->tweetFavoriteRepository->remove($tweet->id, $this->authorizedUserId);
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Modules\User\Repositories;
 
 use App\Exceptions\NotFoundException;
+use App\Helpers\ResponseHelper;
 use App\Modules\User\DTO\UsersListDTO;
 use App\Modules\User\Events\DeletedUsersListEvent;
 use App\Modules\User\Models\UsersList;
@@ -11,6 +12,7 @@ use App\Modules\User\Models\UsersListSubscribtion;
 use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 
 class UsersListRepository
 {
@@ -196,20 +198,13 @@ class UsersListRepository
 
     /**
      * @param int $usersListId
+     * @param int $userId
      * 
-     * @return Collection
+     * @return UsersListMember|null
      */
-    public function subscribtions(int $usersListId): Collection
+    public function getMembershipByBothIds(int $usersListId, int $userId): ?UsersListMember
     {
-        $subscribers = $this->usersListSubscribtion->with('usersData')
-            ->where('users_list_id', $usersListId)->get();
-
-        $subscribersData = [];
-        foreach ($subscribers as $subscriber) {
-            $subscribersData[] = $subscriber->usersData;
-        }
-
-        return new Collection($subscribersData);
+        return $this->queryUserMembership($usersListId, $userId)->first();
     }
 
     /**
@@ -235,11 +230,12 @@ class UsersListRepository
      * @param int $usersListId
      * @param int $userId
      * 
-     * @return void
+     * @return Response
      */
-    public function addMember(int $usersListId, int $userId): void
+    public function addMember(int $usersListId, int $userId): Response
     {
-        if (empty($this->queryUserMembership($usersListId, $userId)->exists())) {
+        $listMemberExists = $this->queryUserMembership($usersListId, $userId)->exists();
+        if (!$listMemberExists) {
             $addMember = $this->usersListMember->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
@@ -249,34 +245,71 @@ class UsersListRepository
                 $this->clearListMembersCache($usersListId);
             }
         }
+
+        return ResponseHelper::okResponse(!$listMemberExists);
     }
 
     /**
      * @param int $usersListId
      * @param int $userId
      * 
-     * @return void
+     * @return Response
      */
-    public function removeMember(int $usersListId, int $userId): void
+    public function removeMember(int $usersListId, int $userId): Response
     {
-        if (!empty($usersListMember = $this->queryUserMembership($usersListId, $userId)->first())) {
+        $usersListMember = $this->getMembershipByBothIds($usersListId, $userId);
+        $listMemberExists = !empty($usersListMember);
+
+        if ($listMemberExists) {
             $removeMemberStatus = $usersListMember->delete();
 
             if (!empty($removeMemberStatus)) {
                 $this->clearListMembersCache($usersListId);
             }
         }
+
+        return ResponseHelper::okResponse($listMemberExists);
     }
 
     /**
      * @param int $usersListId
      * @param int $userId
      * 
-     * @return void
+     * @return UsersListSubscribtion|null
      */
-    public function subscribe(int $usersListId, int $userId): void
+    public function getUserSubscribtionByBothIds(int $usersListId, int $userId): ?UsersListSubscribtion
     {
-        if (empty($this->queryUserSubscribtion($usersListId, $userId)->exists())) {
+        return $this->queryUserSubscribtion($usersListId, $userId)->first();
+    }
+
+    /**
+     * @param int $usersListId
+     * 
+     * @return Collection
+     */
+    public function subscribtions(int $usersListId): Collection
+    {
+        $subscribers = $this->usersListSubscribtion->with('usersData')
+            ->where('users_list_id', $usersListId)->get();
+
+        $subscribersData = [];
+        foreach ($subscribers as $subscriber) {
+            $subscribersData[] = $subscriber->usersData;
+        }
+
+        return new Collection($subscribersData);
+    }
+
+    /**
+     * @param int $usersListId
+     * @param int $userId
+     * 
+     * @return Response
+     */
+    public function subscribe(int $usersListId, int $userId): Response
+    {
+        $listSubscribtionExists = $this->queryUserSubscribtion($usersListId, $userId)->exists();
+        if (!$listSubscribtionExists) {
             $usersListSubscribtion = $this->usersListSubscribtion->create([
                 'users_list_id' => $usersListId,
                 'user_id' => $userId
@@ -286,24 +319,30 @@ class UsersListRepository
                 $this->clearUserCache($userId);
             }
         }
+
+        return ResponseHelper::okResponse(!$listSubscribtionExists);
     }
 
     /**
      * @param int $usersListId
      * @param int $userId
      * 
-     * @return void
+     * @return Response
      */
-    public function unsubscribe(int $usersListId, int $userId): void
+    public function unsubscribe(int $usersListId, int $userId): Response
     {
-        if (!empty($usersListSubscribtion = $this->queryUserSubscribtion($usersListId, $userId)->first())) {
-            $usersListId = $usersListSubscribtion->users_list_id;
+        $usersListSubscribtion = $this->getUserSubscribtionByBothIds($usersListId, $userId);
+        $listSubscribtionExists = !empty($usersListSubscribtion);
+
+        if ($listSubscribtionExists) {
             $deletingStatus = $usersListSubscribtion->delete();
 
             if (!empty($deletingStatus)) {
                 $this->clearUserCache($userId);
             }
         }
+
+        return ResponseHelper::okResponse($listSubscribtionExists);
     }
 
     /**

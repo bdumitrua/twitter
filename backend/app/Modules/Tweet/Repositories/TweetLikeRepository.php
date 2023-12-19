@@ -2,9 +2,12 @@
 
 namespace App\Modules\Tweet\Repositories;
 
+use App\Helpers\ResponseHelper;
 use App\Modules\Tweet\Models\TweetLike;
+use App\Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Response;
 
 class TweetLikeRepository
 {
@@ -47,30 +50,47 @@ class TweetLikeRepository
      * @param int $tweetId
      * @param int $userId
      * 
-     * @return void
+     * @return TweetLike|null
      */
-    public function add(int $tweetId, int $userId): void
+    public function getByBothIds(int $tweetId, int $userId): ?TweetLike
     {
-        if (empty($this->queryByBothIds($tweetId, $userId)->first())) {
-            $this->tweetLike->create([
-                'tweet_id' => $tweetId,
-                'user_id' => $userId,
-            ]);
-        }
+        return $this->queryByBothIds($tweetId, $userId)->first();
     }
 
     /**
      * @param int $tweetId
      * @param int $userId
      * 
-     * @return void
+     * @return Response
      */
-    public function remove(int $tweetId, int $userId): void
+    public function add(int $tweetId, int $userId): Response
     {
-        $tweetLike = $this->queryByBothIds($tweetId, $userId)->first();
+        $likeExists = $this->queryByBothIds($tweetId, $userId)->exists();
+        if (!$likeExists) {
+            $this->tweetLike->create([
+                'tweet_id' => $tweetId,
+                'user_id' => $userId,
+            ]);
+        }
 
-        if (!empty($tweetLike)) {
+        return ResponseHelper::okResponse(!$likeExists);
+    }
+
+    /**
+     * @param int $tweetId
+     * @param int $userId
+     * 
+     * @return Response
+     */
+    public function remove(int $tweetId, int $userId): Response
+    {
+        $tweetLike = $this->getByBothIds($tweetId, $userId);
+        $likeExists = !empty($tweetLike);
+
+        if ($likeExists) {
             $tweetLike->delete();
         }
+
+        return ResponseHelper::okResponse($likeExists);
     }
 }
