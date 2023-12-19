@@ -54,7 +54,7 @@ class Controller extends BaseController
     {
         return response()->json(
             ['error' => $message],
-            $code
+            empty($code) ? Response::HTTP_BAD_REQUEST : $code
         );
     }
 

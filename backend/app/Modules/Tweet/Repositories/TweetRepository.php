@@ -50,41 +50,31 @@ class TweetRepository
     }
 
     /**
-     * @return Builder
-     */
-    protected function baseQuery(): Builder
-    {
-        return $this->tweet->newQuery()
-            ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
-            ->orderBy('created_at', 'desc');
-    }
-
-    /**
-     * @param mixed $tweetId
+     * @param int $tweetId
      * 
      * @return Builder
      */
-    protected function queryById($tweetId): Builder
+    protected function queryById(int $tweetId): Builder
     {
-        return $this->baseQuery()->where('id', '=', $tweetId);
+        return $this->tweet->newQuery()->where('id', '=', $tweetId);
     }
 
     /**
-     * @param mixed $userId
+     * @param int $userId
      * 
      * @return Builder
      */
-    protected function queryByUserId($userId): Builder
+    protected function queryByUserId(int $userId): Builder
     {
-        return $this->baseQuery()->where('user_id', '=', $userId);
+        return $this->tweet->newQuery()->where('user_id', '=', $userId);
     }
 
     /**
-     * @param mixed $userId
+     * @param int $userId
      * 
      * @return Builder
      */
-    protected function queryLikedByUserId($userId): Builder
+    protected function queryLikedByUserId(int $userId): Builder
     {
         return $this->tweetLike->newQuery()
             ->where('user_id', '=', $userId)
@@ -92,11 +82,11 @@ class TweetRepository
     }
 
     /**
-     * @param mixed $userId
+     * @param int $userId
      * 
      * @return Builder
      */
-    protected function queryBookmarksByUserId($userId): Builder
+    protected function queryBookmarksByUserId(int $userId): Builder
     {
         return $this->tweetFavorite->newQuery()
             ->where('user_id', '=', $userId)
@@ -362,9 +352,13 @@ class TweetRepository
      */
     public function getTweetsData(array $tweetsIds): Collection
     {
-        return new Collection(array_map(function ($tweetId) {
+        $tweets = new Collection(array_map(function ($tweetId) {
             return $this->getTweetData($tweetId);
         }, $tweetsIds));
+
+        return $tweets->sortByDesc(function ($tweet) {
+            return $tweet->created_at;
+        })->values();
     }
 
     /**
@@ -376,7 +370,9 @@ class TweetRepository
     {
         $cacheKey = KEY_TWEET_DATA . $tweetId;
         return $this->getCachedData($cacheKey, $this->getTweetCacheTime($tweetId), function () use ($tweetId) {
-            return $this->queryById($tweetId)->first();
+            return $this->queryById($tweetId)
+                ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
+                ->first();
         });
     }
 
@@ -427,7 +423,7 @@ class TweetRepository
      */
     protected function getFeedQuery(array $userIds, array $groupIds): Builder
     {
-        return $this->baseQuery()
+        return $this->tweet
             ->whereIn('user_id', $userIds)
             ->where(function (Builder $query) use ($groupIds) {
                 $query->whereNull('user_group_id')
@@ -527,6 +523,8 @@ class TweetRepository
      */
     private function loadRepliesData(Tweet &$tweet): void
     {
+        // Поскольку реплаи это вещь довольно динамичная, то нет смысла её кэшировать,
+        // соответственно берём айдишники через связь и не паримся
         $tweetRepliesIds = $this->pluckKey($tweet->replies()->take(15)->get(['id']), 'id');
         $tweet->replies = $this->getTweetsData($tweetRepliesIds);
     }
@@ -538,6 +536,9 @@ class TweetRepository
      */
     private function findThreadStartId(int $tweetId): int
     {
+        // Поскольку твиты удалять нельзя на данный момент, то можно условно бессрочно кэшировать
+        // А также мы заодно заранее прогреваем кэш данными всех твитов треда,
+        // т.к. они всё равно будут позже добавлены при сборке ответа.
         $cacheKey = KEY_TWEET_THREAD_START_ID . $tweetId;
         return $this->getCachedData($cacheKey, null, function () use ($tweetId) {
             $tweet = $this->getTweetData($tweetId);
@@ -557,7 +558,7 @@ class TweetRepository
     private function buildThread(int $tweetId, int $startTweetId = null): Tweet
     {
         /* 
-            Запрос сначала берёт данные конкретного нашего твита, а затем 
+            Запрос сначала берёт id нашего твита, а затем 
             рекурсивно берёт все твитты, которые ссылаются на данный твит по id
         */
         $sql = "
@@ -579,7 +580,7 @@ class TweetRepository
             WHERE 
                 t.type = 'thread'
         )
-        SELECT * FROM ThreadChain;
+        SELECT id FROM ThreadChain;
         ";
 
         $sqlData = DB::select($sql, ['startTweetId' => $tweetId]);
@@ -611,14 +612,10 @@ class TweetRepository
         }
 
         if (empty($startTweetId)) {
-            $thread = $tweets->filter(function ($tweet) {
-                return $tweet->linked_tweet_id === null;
-            });
-
-            return $thread->first();
-        } else {
-            return $tweets->firstWhere('id', '>', $startTweetId) ?? new Tweet();
+            return $tweets->firstWhere('linked_tweet_id', null) ?? new Tweet();
         }
+
+        return $tweets->firstWhere('id', '>', $startTweetId) ?? new Tweet();
     }
 
     /**
