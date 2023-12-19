@@ -353,7 +353,9 @@ class TweetRepository
     public function getTweetsData(array $tweetsIds): Collection
     {
         $tweets = new Collection(array_map(function ($tweetId) {
-            return $this->getTweetData($tweetId);
+            if (!empty($tweet = $this->getTweetData($tweetId))) {
+                return $tweet;
+            }
         }, $tweetsIds));
 
         return $tweets->sortByDesc(function ($tweet) {
@@ -364,9 +366,9 @@ class TweetRepository
     /**
      * @param int $tweetId
      * 
-     * @return Tweet
+     * @return Tweet|null
      */
-    public function getTweetData(int $tweetId): Tweet
+    public function getTweetData(int $tweetId): ?Tweet
     {
         $cacheKey = KEY_TWEET_DATA . $tweetId;
         return $this->getCachedData($cacheKey, $this->getTweetCacheTime($tweetId), function () use ($tweetId) {
@@ -469,8 +471,10 @@ class TweetRepository
                 $threadStartId = $this->findThreadStartId($tweetId);
                 $thread = $this->buildThread($threadStartId);
 
-                $result->push($thread);
-                $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread);
+                if (!empty($thread)) {
+                    $result->push($thread);
+                    $this->addThreadTweetIdsToProcessed($processedTweetIds, $thread);
+                }
             } else {
                 $this->loadLinkedTweetData($tweet);
                 $result->push($tweet);
@@ -553,9 +557,9 @@ class TweetRepository
      * @param int $tweetId
      * @param int|null $startTweetId
      * 
-     * @return Tweet
+     * @return Tweet|array
      */
-    private function buildThread(int $tweetId, int $startTweetId = null): Tweet
+    private function buildThread(int $tweetId, int $startTweetId = null): Tweet|array
     {
         /* 
             Запрос сначала берёт id нашего твита, а затем 
@@ -595,9 +599,9 @@ class TweetRepository
      * @param Collection $tweets
      * @param int|null $startTweetId
      * 
-     * @return Tweet
+     * @return Tweet|array
      */
-    private function buildNestedThread(Collection $tweets, int $startTweetId = null): Tweet
+    private function buildNestedThread(Collection $tweets, int $startTweetId = null): Tweet|array
     {
         $tweetsById = [];
         foreach ($tweets as $tweet) {
@@ -612,10 +616,10 @@ class TweetRepository
         }
 
         if (empty($startTweetId)) {
-            return $tweets->firstWhere('linked_tweet_id', null) ?? new Tweet();
+            return $tweets->firstWhere('linked_tweet_id', null) ?? [];
         }
 
-        return $tweets->firstWhere('id', '>', $startTweetId) ?? new Tweet();
+        return $tweets->firstWhere('id', '>', $startTweetId) ?? [];
     }
 
     /**

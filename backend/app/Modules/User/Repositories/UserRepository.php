@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Exceptions\NotFoundException;
 use App\Modules\Notification\Repositories\DeviceTokenRepository;
 use App\Modules\User\DTO\UserDTO;
 use App\Modules\User\Models\User;
@@ -81,9 +82,15 @@ class UserRepository
     public function getById(int $userId, bool $updateCache = false): User
     {
         $cacheKey = KEY_USER_DATA . $userId;
-        return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
-            return $this->queryById($userId)->first() ?? new User();
+        $user = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+            return $this->queryById($userId)->first();
         }, $updateCache);
+
+        if (empty($user)) {
+            throw new NotFoundException('User');
+        }
+
+        return $user;
     }
 
     /**
