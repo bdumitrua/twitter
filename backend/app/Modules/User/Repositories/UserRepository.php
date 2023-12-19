@@ -2,9 +2,11 @@
 
 namespace App\Modules\User\Repositories;
 
+use App\Modules\Notification\Repositories\DeviceTokenRepository;
 use App\Modules\User\DTO\UserDTO;
 use App\Modules\User\Models\User;
 use App\Traits\GetCachedData;
+use App\Traits\UpdateFromDTO;
 use Elastic\ScoutDriverPlus\Support\Query;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,14 +15,20 @@ use Illuminate\Support\Str;
 
 class UserRepository
 {
-    use GetCachedData;
+    use GetCachedData, UpdateFromDTO;
 
     protected User $user;
+    protected UsersListRepository $usersListRepository;
+    protected DeviceTokenRepository $deviceTokenRepository;
 
     public function __construct(
         User $user,
+        UsersListRepository $usersListRepository,
+        DeviceTokenRepository $deviceTokenRepository,
     ) {
         $this->user = $user;
+        $this->usersListRepository = $usersListRepository;
+        $this->deviceTokenRepository = $deviceTokenRepository;
     }
 
     /**
@@ -58,12 +66,10 @@ class UserRepository
      */
     public function getAuthorizedUser(int $userId, bool $updateCache = false): User
     {
-        $cacheKey = KEY_AUTH_USER_DATA . $userId;
-        return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
-            return $this->queryById($userId)
-                ->with(['lists', 'listsSubscribtions', 'deviceTokens'])
-                ->first() ?? new User();
-        }, $updateCache);
+        $authorizedUser = $this->getById($userId, $updateCache);
+        $this->assembleAuthorizedUser($authorizedUser);
+
+        return $authorizedUser;
     }
 
     /**
@@ -89,21 +95,22 @@ class UserRepository
     public function update(int $userId, UserDTO $dto): void
     {
         $user = $this->getById($userId);
-        $dtoProperties = get_object_vars($dto);
-
-        foreach ($dtoProperties as $property => $value) {
-            if (!empty($value)) {
-                $user->$property = $property === 'password'
-                    ? Hash::make($value)
-                    : $value;
-            }
-        }
-
-        $savingStatus = $user->save();
+        $savingStatus = $this->updateUserFromDto($user, $dto);
 
         if (!empty($savingStatus)) {
             $this->clearUserDataCache($user->id);
         }
+    }
+
+    /**
+     * @param User $authorizedUser
+     * 
+     * @return void
+     */
+    public function assembleAuthorizedUser(User &$authorizedUser): void
+    {
+        $authorizedUser->deviceTokens = $this->deviceTokenRepository->getByUserId($authorizedUser->id);
+        $authorizedUser->lists = $this->usersListRepository->getByUserId($authorizedUser->id);
     }
 
     /**
