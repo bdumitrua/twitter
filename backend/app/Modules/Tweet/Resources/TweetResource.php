@@ -79,7 +79,8 @@ class TweetResource extends JsonResource
                 'count' => $this->quotes_count
             ],
             'favorites' => [
-                'count' => $this->favorites_count
+                'count' => $this->favorites_count,
+                'active' => $this->isFavorite ?? false
             ],
         ];
     }

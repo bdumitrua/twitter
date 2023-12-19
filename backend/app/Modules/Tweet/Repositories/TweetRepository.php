@@ -30,6 +30,7 @@ class TweetRepository
     protected TweetLikeRepository $tweetLikeRepository;
     protected UsersListRepository $usersListRepository;
     protected UserGroupRepository $userGroupRepository;
+    protected TweetFavoriteRepository $tweetFavoriteRepository;
     protected UserSubscribtionRepository $userSubscribtionRepository;
 
     public function __construct(
@@ -40,6 +41,7 @@ class TweetRepository
         TweetLikeRepository $tweetLikeRepository,
         UsersListRepository $usersListRepository,
         UserGroupRepository $userGroupRepository,
+        TweetFavoriteRepository $tweetFavoriteRepository,
         UserSubscribtionRepository $userSubscribtionRepository,
     ) {
         $this->tweet = $tweet;
@@ -49,6 +51,7 @@ class TweetRepository
         $this->tweetLikeRepository = $tweetLikeRepository;
         $this->usersListRepository = $usersListRepository;
         $this->userGroupRepository = $userGroupRepository;
+        $this->tweetFavoriteRepository = $tweetFavoriteRepository;
         $this->userSubscribtionRepository = $userSubscribtionRepository;
     }
 
@@ -392,6 +395,7 @@ class TweetRepository
             // Но инжектировать либо прокидывать через цепочку из десятка методов не хочется
             $authorizedUserId = Auth::id();
             if (!empty($authorizedUserId)) {
+                $tweet->isFavorite = !empty($this->tweetFavoriteRepository->getByBothIds($tweetId, $authorizedUserId));
                 $tweet->isLiked = !empty($this->tweetLikeRepository->getByBothIds($tweetId, $authorizedUserId));
                 $tweet->isReposted = $this->queryFindRepost($authorizedUserId, $tweetId)->exists();
             }
