@@ -372,9 +372,15 @@ class TweetRepository
     {
         $cacheKey = KEY_TWEET_DATA . $tweetId;
         return $this->getCachedData($cacheKey, $this->getTweetCacheTime($tweetId), function () use ($tweetId) {
-            return $this->queryById($tweetId)
+            $tweet = $this->queryById($tweetId)
                 ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
                 ->first();
+
+            if (!empty($tweet)) {
+                $tweet->author = $this->userRepository->getById($tweet->user_id);
+            }
+
+            return $tweet;
         });
     }
 

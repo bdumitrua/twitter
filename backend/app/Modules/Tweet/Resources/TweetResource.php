@@ -12,13 +12,14 @@ class TweetResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        // Подгружаем
+        // Всегда добавляется на этапе сборки
         $author = new ShortUserResource($this->author);
+
+        // Может добавиться на этапе сборки
         $notices = !empty((array)$this->notices)
             ? TweetNoticeResource::collection($this->notices)
             : [];
 
-        // Может добавиться на этапе сборки
         $thread = !empty((array)$this->thread)
             ? new TweetResource($this->thread)
             : [];
