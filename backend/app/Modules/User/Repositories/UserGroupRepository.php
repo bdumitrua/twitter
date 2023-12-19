@@ -8,13 +8,14 @@ use App\Modules\User\DTO\UserGroupDTO;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use App\Traits\GetCachedData;
+use App\Traits\UpdateFromDTO;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 
 class UserGroupRepository
 {
-    use GetCachedData;
+    use GetCachedData, UpdateFromDTO;
 
     protected UserGroup $userGroup;
     protected UserGroupMember $userGroupMember;
@@ -123,10 +124,7 @@ class UserGroupRepository
      */
     public function update(UserGroup $userGroup, UserGroupDTO $dto): void
     {
-        $updatingStatus = $userGroup->update([
-            'name' => $dto->name ?? $userGroup->name,
-            'description' => $dto->description ?? $userGroup->description
-        ]);
+        $updatingStatus = $this->updateFromDto($userGroup, $dto);
 
         if (!empty($updatingStatus)) {
             $this->clearUserGroupsCache($userGroup->user_id);

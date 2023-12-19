@@ -16,7 +16,7 @@ trait UpdateFromDTO
     {
         $dtoProperties = get_object_vars($dto);
         foreach ($dtoProperties as $property => $value) {
-            if (!empty($value)) {
+            if ($value !== null) {
                 $entity->$property = $value;
             }
         }
