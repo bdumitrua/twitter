@@ -143,7 +143,7 @@ class TweetRepository
             );
 
             return $this->pluckKey(
-                $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get(),
+                $this->getFeedQuery($subscribedUserIds, $userGroupIds)->get('id'),
                 'id'
             );
         }, $updateCache);
@@ -267,7 +267,7 @@ class TweetRepository
             );
 
             return $this->pluckKey(
-                $this->getFeedQuery($membersIds, $userGroupIds)->get(),
+                $this->getFeedQuery($membersIds, $userGroupIds)->get('id'),
                 'id'
             );
         }, $updateCache);
@@ -332,8 +332,8 @@ class TweetRepository
     public function unrepost(int $tweetId, int $authorizedUserId): void
     {
         $tweet = $this->tweet->where('user_id', $authorizedUserId)
-            ->where('type', 'repost')
             ->where('linked_tweet_id', $tweetId)
+            ->where('type', 'repost')
             ->first() ?? [];
 
         if (!empty($tweet)) {
