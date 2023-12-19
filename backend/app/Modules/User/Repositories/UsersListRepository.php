@@ -10,13 +10,14 @@ use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListMember;
 use App\Modules\User\Models\UsersListSubscribtion;
 use App\Traits\GetCachedData;
+use App\Traits\UpdateFromDTO;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 
 class UsersListRepository
 {
-    use GetCachedData;
+    use GetCachedData, UpdateFromDTO;
 
     protected int $usersListCacheTime = 5 * 60;
 
@@ -164,15 +165,7 @@ class UsersListRepository
      */
     public function update(UsersList $usersList, UsersListDTO $dto): void
     {
-        // TODO вынести в трейт
-        $dtoProperties = get_object_vars($dto);
-        foreach ($dtoProperties as $property => $value) {
-            if (!empty($value)) {
-                $usersList->$property = $value;
-            }
-        }
-
-        $updatingStatus = $usersList->save();
+        $updatingStatus = $this->updateFromDto($usersList, $dto);
 
         if (!empty($updatingStatus)) {
             $this->clearListCache($usersList->id);
@@ -214,8 +207,10 @@ class UsersListRepository
      */
     public function members(int $usersListId): Collection
     {
-        $members = $this->usersListMember->with('usersData')
-            ->where('users_list_id', $usersListId)->get();
+        $members = $this->usersListMember
+            ->with('usersData')
+            ->where('users_list_id', $usersListId)
+            ->get();
 
         $membersData = [];
         foreach ($members as $member) {
@@ -289,8 +284,10 @@ class UsersListRepository
      */
     public function subscribtions(int $usersListId): Collection
     {
-        $subscribers = $this->usersListSubscribtion->with('usersData')
-            ->where('users_list_id', $usersListId)->get();
+        $subscribers = $this->usersListSubscribtion
+            ->with('usersData')
+            ->where('users_list_id', $usersListId)
+            ->get();
 
         $subscribersData = [];
         foreach ($subscribers as $subscriber) {
