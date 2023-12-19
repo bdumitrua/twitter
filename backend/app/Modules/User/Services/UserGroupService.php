@@ -23,6 +23,7 @@ class UserGroupService
 
     protected UserGroupRepository $userGroupRepository;
     protected LogManager $logger;
+    protected ?int $authorizedUserId;
 
     public function __construct(
         UserGroupRepository $userGroupRepository,
@@ -30,6 +31,7 @@ class UserGroupService
     ) {
         $this->userGroupRepository = $userGroupRepository;
         $this->logger = $logger;
+        $this->authorizedUserId = Auth::id();
     }
 
     /**
@@ -38,7 +40,7 @@ class UserGroupService
     public function index(): JsonResource
     {
         return UserGroupResource::collection(
-            $this->userGroupRepository->getByUserId(Auth::id())
+            $this->userGroupRepository->getByUserId($this->authorizedUserId)
         );
     }
 
@@ -65,7 +67,7 @@ class UserGroupService
         $userGroupDTO = $this->createDTO($createUserGroupRequest, UserGroupDTO::class);
 
         $this->logger->info('Creating UserGroup using UserGroupDTO', $userGroupDTO->toArray());
-        $this->userGroupRepository->create($userGroupDTO, Auth::id());
+        $this->userGroupRepository->create($userGroupDTO, $this->authorizedUserId);
     }
 
     /**

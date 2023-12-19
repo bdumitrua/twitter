@@ -20,11 +20,11 @@ class Controller extends BaseController
      * 
      * @return JsonResponse
      */
-    protected function responseToJSON($response): JsonResponse
+    private function responseToJSON($response): JsonResponse
     {
         try {
             if (empty($response)) {
-                return response(null, 200);
+                return response()->json(null, 200);
             }
 
             if ($response instanceof JsonResource) {
@@ -40,8 +40,22 @@ class Controller extends BaseController
 
             return response()->json(null, 200);
         } catch (\Exception $error) {
-            return response()->json(['error' => $error->getMessage()], 500);
+            return $this->responseToError($error->getMessage(), Response::HTTP_BAD_GATEWAY);
         }
+    }
+
+    /**
+     * @param string $message
+     * @param int $code
+     * 
+     * @return JsonResponse
+     */
+    private function responseToError(string $message, int $code): JsonResponse
+    {
+        return response()->json(
+            ['error' => $message],
+            empty($code) ? Response::HTTP_BAD_REQUEST : $code
+        );
     }
 
     /**
@@ -55,15 +69,20 @@ class Controller extends BaseController
             $response = $serviceFunction();
             return $this->responseToJSON($response);
         } catch (HttpException $exception) {
-            return $this->responseToJSON([
-                'error' => $exception->getMessage(),
-                'code' => $exception->getStatusCode()
-            ]);
+            return $this->responseToError(
+                $exception->getMessage(),
+                $exception->getStatusCode()
+            );
+        } catch (\Exception $exception) {
+            return $this->responseToError(
+                $exception->getMessage(),
+                $exception->getCode()
+            );
         } catch (\Throwable $exception) {
-            return $this->responseToJSON([
-                'error' => $exception->getMessage(),
-                'code' => Response::HTTP_BAD_GATEWAY
-            ]);
+            return $this->responseToError(
+                $exception->getMessage(),
+                Response::HTTP_BAD_GATEWAY
+            );
         }
     }
 }

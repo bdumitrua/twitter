@@ -8,7 +8,7 @@ use Kreait\Firebase\Database;
 class FirebaseService
 {
     protected Database $database;
-    protected $tableName;
+    protected string $tableName;
 
     public function __construct()
     {

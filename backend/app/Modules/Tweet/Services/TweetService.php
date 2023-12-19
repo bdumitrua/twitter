@@ -15,6 +15,7 @@ use App\Modules\Tweet\Requests\TweetRequest;
 use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UsersList;
+use App\Modules\User\Repositories\UserGroupRepository;
 use App\Modules\User\Repositories\UserRepository;
 use App\Modules\User\Services\UsersListService;
 use App\Traits\CreateDTO;
@@ -27,6 +28,7 @@ class TweetService
 {
     use CreateDTO;
 
+    protected UserGroupRepository $userGroupRepository;
     protected UsersListService $usersListService;
     protected TweetRepository $tweetRepository;
     protected UserRepository $userRepository;
@@ -34,11 +36,13 @@ class TweetService
     protected ?int $authorizedUserId;
 
     public function __construct(
+        UserGroupRepository $userGroupRepository,
         UsersListService $usersListService,
         TweetRepository $tweetRepository,
         UserRepository $userRepository,
         LogManager $logger,
     ) {
+        $this->userGroupRepository = $userGroupRepository;
         $this->usersListService = $usersListService;
         $this->tweetRepository = $tweetRepository;
         $this->userRepository = $userRepository;
@@ -47,18 +51,11 @@ class TweetService
     }
 
     /**
-     * Для пользователя - кэш на 5 минут, при создании - рекэш на 30 мин
-     * 
-     * Для списков - кэш на 15 сек
-     * 
-     * Для ленты - кэш на 15 сек
-     */
-
-    /**
      * @return JsonResource
      */
     public function feed(): JsonResource
     {
+        // Фильтр по группам происходит в репозитории (в самом запросе)
         return TweetResource::collection(
             $this->tweetRepository->getUserFeed($this->authorizedUserId)
         );
@@ -137,16 +134,19 @@ class TweetService
      */
     public function list(UsersList $usersList): JsonResource
     {
-        $usersList = $this->usersListService->filterPrivateLists(new Collection([$usersList]), $this->authorizedUserId)->first();
+        $usersList = $this->usersListService->filterPrivateLists(
+            new Collection([$usersList]),
+            $this->authorizedUserId
+        )->first();
 
         if (empty($usersList)) {
             throw new AccessDeniedException();
         }
 
-        $usersListFeed = $this->tweetRepository->getFeedByUsersList($usersList, $this->authorizedUserId);
-        $tweets = $this->filterTweetsByGroup($usersListFeed, $this->authorizedUserId);
-
-        return TweetResource::collection($tweets);
+        // Фильтр по группам происходит в репозитории (в самом запросе)
+        return TweetResource::collection(
+            $this->tweetRepository->getFeedByUsersList($usersList, $this->authorizedUserId)
+        );
     }
 
     /**
@@ -157,13 +157,16 @@ class TweetService
     public function show(Tweet $tweet): JsonResource
     {
         $tweet = $this->tweetRepository->getById($tweet->id);
-        $tweetAfterFiltering = $this->filterTweetsByGroup(new Collection([$tweet]), $this->authorizedUserId);
+        $tweetAfterFiltering = $this->filterTweetsByGroup(
+            new Collection([$tweet]),
+            $this->authorizedUserId
+        )->first();
 
-        if (empty($tweetAfterFiltering->first())) {
+        if (empty($tweetAfterFiltering)) {
             throw new NotFoundException('Tweet');
         }
 
-        return new TweetResource($tweetAfterFiltering->first());
+        return new TweetResource($tweetAfterFiltering);
     }
 
     /**
@@ -242,28 +245,13 @@ class TweetService
     protected function filterTweetsByGroup(Collection $tweets): Collection
     {
         $groupIds = [];
-        if ($this->authorizedUserId) {
-            $groupIds = $this->getUserGroupIds($this->authorizedUserId);
+        if (!empty($this->authorizedUserId)) {
+            $groupIds = $this->userGroupRepository->getUserAvailableGroupsIds($this->authorizedUserId);
         }
 
         return $tweets->filter(function ($tweet) use ($groupIds) {
             return is_object($tweet) && (is_null($tweet->user_group_id) || in_array($tweet->user_group_id, $groupIds));
         });
-    }
-
-    /**
-     * @param int $userId
-     * 
-     * @return array
-     */
-    protected function getUserGroupIds(int $userId): array
-    {
-        $user = $this->userRepository->getById($userId);
-
-        return array_merge(
-            $this->pluckKey($user->groupsMember, 'user_group_id'),
-            $this->pluckKey($user->groupsCreator, 'id')
-        );
     }
 
     /**
@@ -288,16 +276,5 @@ class TweetService
         if (empty($tweetRequest->text) && $tweetRequest->type !== 'repost') {
             throw new UnprocessableContentException('Tweet text is required');
         }
-    }
-
-    /**
-     * @param mixed $relation
-     * @param string $key
-     * 
-     * @return array
-     */
-    private function pluckKey($relation, string $key): array
-    {
-        return $relation->pluck($key)->toArray();
     }
 }

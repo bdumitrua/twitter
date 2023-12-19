@@ -8,13 +8,14 @@ use App\Modules\User\DTO\UserGroupDTO;
 use App\Modules\User\Models\UserGroup;
 use App\Modules\User\Models\UserGroupMember;
 use App\Traits\GetCachedData;
+use App\Traits\UpdateFromDTO;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
 
 class UserGroupRepository
 {
-    use GetCachedData;
+    use GetCachedData, UpdateFromDTO;
 
     protected UserGroup $userGroup;
     protected UserGroupMember $userGroupMember;
@@ -27,6 +28,29 @@ class UserGroupRepository
         $this->userGroupMember = $userGroupMember;
     }
 
+
+    /**
+     * @param int $userId
+     * 
+     * @return Builder
+     */
+    protected function queryByUserId(int $userId): Builder
+    {
+        return $this->userGroup->newQuery()
+            ->where('user_id', '=', $userId);
+    }
+
+    /**
+     * @param int $userId
+     * 
+     * @return Builder
+     */
+    protected function queryGroupsMembership(int $userId): Builder
+    {
+        return $this->userGroupMember->newQuery()
+            ->where('user_id', $userId);
+    }
+
     /**
      * @param int $userGroupId
      * @param int $userId
@@ -37,17 +61,6 @@ class UserGroupRepository
     {
         return $this->userGroupMember->newQuery()
             ->where('user_group_id', '=', $userGroupId)
-            ->where('user_id', '=', $userId);
-    }
-
-    /**
-     * @param int $userId
-     * 
-     * @return Builder
-     */
-    protected function queryByUserId(int $userId): Builder
-    {
-        return $this->userGroup->newQuery()
             ->where('user_id', '=', $userId);
     }
 
@@ -83,6 +96,22 @@ class UserGroupRepository
         return $this->getCachedData($cacheKey, null, function () use ($userId) {
             return $this->queryByUserId($userId)->get();
         }, $updateCache);
+    }
+
+    /**
+     * @param int $userId
+     * 
+     * @return array
+     */
+    public function getUserAvailableGroupsIds(int $userId): array
+    {
+        $cacheKey = KEY_USER_GROUPS_IDS . $userId;
+        return $this->getCachedData($cacheKey, 60 * 60, function () use ($userId) {
+            $creator = $this->getByUserId($userId)->pluck('id')->toArray();
+            $member = $this->queryGroupsMembership($userId)->pluck('user_group_id')->toArray();
+
+            return array_merge($creator, $member);
+        });
     }
 
     /**
@@ -123,10 +152,7 @@ class UserGroupRepository
      */
     public function update(UserGroup $userGroup, UserGroupDTO $dto): void
     {
-        $updatingStatus = $userGroup->update([
-            'name' => $dto->name ?? $userGroup->name,
-            'description' => $dto->description ?? $userGroup->description
-        ]);
+        $updatingStatus = $this->updateFromDto($userGroup, $dto);
 
         if (!empty($updatingStatus)) {
             $this->clearUserGroupsCache($userGroup->user_id);
@@ -161,6 +187,8 @@ class UserGroupRepository
                 'user_group_id' => $userGroupId,
                 'user_id' => $userId
             ]);
+
+            $this->clearUserGroupIdsCache($userId);
         }
 
         return ResponseHelper::okResponse(!$groupMemberExists);
@@ -179,6 +207,8 @@ class UserGroupRepository
 
         if ($groupMemberExists) {
             $userGroupMember->delete();
+
+            $this->clearUserGroupIdsCache($userId);
         }
 
         return ResponseHelper::okResponse($groupMemberExists);
@@ -191,7 +221,20 @@ class UserGroupRepository
      */
     private function clearUserGroupsCache(int $userId): void
     {
-        $cacheKey = KEY_USER_GROUPS . (string)$userId;
+        $cacheKey = KEY_USER_GROUPS . $userId;
+        $this->clearCache($cacheKey);
+
+        $this->clearUserGroupIdsCache($userId);
+    }
+
+    /**
+     * @param int $userId
+     * 
+     * @return void
+     */
+    private function clearUserGroupIdsCache(int $userId): void
+    {
+        $cacheKey = KEY_USER_GROUPS_IDS . $userId;
         $this->clearCache($cacheKey);
     }
 }

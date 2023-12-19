@@ -5,27 +5,21 @@ namespace App\Modules\User\Resources;
 use App\Http\Resources\ActionsResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Support\Facades\Auth;
 
 class UserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $isAuthorizedUser = $this->whenLoaded('deviceTokens', function () {
-            return true;
-        }, false);
+        $isAuthorizedUser = Auth::id() === $this->id;
 
+        $lists = !empty((array)$this->lists)
+            ? UsersListResource::collection($this->lists)
+            : [];
 
-        $lists = $this->whenLoaded('lists', function () {
-            return $this->lists;
-        }, []);
-
-        $listsSubscribtions = $this->whenLoaded('listsSubscribtions', function () {
-            return $this->listsSubscribtions;
-        }, []);
-
-        $deviceTokens = $this->whenLoaded('deviceTokens', function () {
-            return $this->deviceTokens;
-        }, []);
+        $deviceTokens = !empty((array)$this->deviceTokens)
+            ? $this->deviceTokens
+            : [];
 
         $actions = $this->prepareActions($isAuthorizedUser);
         $availableSections = $this->prepareAvailableSections($isAuthorizedUser);
@@ -47,7 +41,6 @@ class UserResource extends JsonResource
             "subscribersCount" => $this->subscribers_count,
             'availableSections' => $availableSections,
             "lists" => $lists,
-            "listsSubscribtions" => $listsSubscribtions,
             "deviceTokens" => $deviceTokens,
             "actions" => $actions
         ];

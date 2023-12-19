@@ -91,6 +91,9 @@ class AppServiceProvider extends ServiceProvider
         // Массив групп пользователя
         define('KEY_USER_GROUPS', 'user_groups:');
 
+        // Массив id групп пользователя и групп, на которые он подписан
+        define('KEY_USER_GROUPS_IDS', 'user_groups_ids:');
+
         // Массив id списков, в которых пользователь создатель/подписчик
         define('KEY_USER_LISTS', 'user_lists:');
 
