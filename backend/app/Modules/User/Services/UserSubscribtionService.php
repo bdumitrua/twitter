@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Services;
 
+use App\Modules\Notification\Services\NotificationsSubscribtionService;
 use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserSubscribtionRepository;
 use Illuminate\Database\Eloquent\Collection;
@@ -10,12 +11,15 @@ use Illuminate\Support\Facades\Auth;
 
 class UserSubscribtionService
 {
+    protected NotificationsSubscribtionService $notificationsSubscribtionService;
     protected UserSubscribtionRepository $userSubscribtionRepository;
     protected ?int $authorizedUserId;
 
     public function __construct(
+        NotificationsSubscribtionService $notificationsSubscribtionService,
         UserSubscribtionRepository $userSubscribtionRepository,
     ) {
+        $this->notificationsSubscribtionService = $notificationsSubscribtionService;
         $this->userSubscribtionRepository = $userSubscribtionRepository;
         $this->authorizedUserId = Auth::id();
     }
@@ -57,6 +61,9 @@ class UserSubscribtionService
      */
     public function remove(User $user): Response
     {
+        // Отключаем подписку на уведомления о новых твитах (независимо от её наличия всё отработает нормально)
+        $this->notificationsSubscribtionService->unsubscribe($user);
+        // После чего отписываемся уже от самого пользователя
         return $this->userSubscribtionRepository->remove($user->id, $this->authorizedUserId);
     }
 }
