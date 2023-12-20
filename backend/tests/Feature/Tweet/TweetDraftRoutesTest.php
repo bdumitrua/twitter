@@ -2,7 +2,6 @@
 
 namespace Tests\Feature\Notification;
 
-use App\Modules\Notification\Resources\TweetDraftResource;
 use App\Modules\Tweet\Models\TweetDraft;
 use App\Modules\Tweet\Resources\TweetDraftsResource;
 use App\Modules\User\Models\User;
