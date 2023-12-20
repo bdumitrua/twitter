@@ -5,6 +5,7 @@ namespace App\Modules\User\Models;
 use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Notification\Models\DeviceToken;
 use App\Modules\Notification\Models\Notification;
+use App\Modules\Notification\Models\NotificationsSubscribtion;
 use App\Prometheus\PrometheusService;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -123,6 +124,14 @@ class User extends Authenticatable implements JWTSubject
     public function subscribers(): HasMany
     {
         return $this->hasMany(UserSubscribtion::class, 'user_id', 'id');
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function subscribersOnNewTweets(): HasMany
+    {
+        return $this->hasMany(NotificationsSubscribtion::class, 'user_id', 'id');
     }
 
     /**

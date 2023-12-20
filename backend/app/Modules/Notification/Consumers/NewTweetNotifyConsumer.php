@@ -32,8 +32,8 @@ class NewTweetNotifyConsumer extends BaseConsumer
 
             if (!empty($tweetData)) {
                 $tweetId = $tweetData->id;
-                $userWithSubscribers = User::find($tweetData->user_id)->with(['subscribers'])->first();
-                $subscrubersIds = $userWithSubscribers->subscribers->pluck('subscriber_id');
+                $userWithSubscribers = User::find($tweetData->user_id)->with(['subscribersOnNewTweets'])->first();
+                $subscrubersIds = $userWithSubscribers->subscribersOnNewTweets->pluck('subscriber_id');
 
                 foreach ($subscrubersIds as $subscriberId) {
                     $notificationDTO = new NotificationDTO();
