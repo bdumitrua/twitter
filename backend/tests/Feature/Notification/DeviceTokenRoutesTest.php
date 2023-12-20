@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Notifications;
+namespace Tests\Feature\Notification;
 
 use App\Modules\Notification\Models\DeviceToken;
 use App\Modules\Notification\Resources\DeviceTokenResource;

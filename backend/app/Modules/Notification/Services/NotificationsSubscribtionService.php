@@ -44,7 +44,7 @@ class NotificationsSubscribtionService
     public function subscribe(User $user): Response
     {
         if (empty($this->userSubscribtionRepository->getByBothIds($user->id, $this->authorizedUserId))) {
-            return ResponseHelper::noContent();
+            return ResponseHelper::forbiddenRequest();
         }
 
         return $this->notificationsSubscribtionRepository->subscribe($user->id, $this->authorizedUserId);
