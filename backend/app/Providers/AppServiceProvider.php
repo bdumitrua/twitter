@@ -12,8 +12,6 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
-    private bool $constansDefined;
-
     /**
      * Register any application services.
      */
@@ -42,11 +40,11 @@ class AppServiceProvider extends ServiceProvider
         });
 
         if (!defined('KEY_WITH_RELATIONS')) {
-            $this->constansDefined = $this->defineCacheKeysConstants() ?? false;
+            $this->defineCacheKeysConstants();
         }
     }
 
-    private function defineCacheKeysConstants(): ?bool
+    private function defineCacheKeysConstants(): void
     {
         /*
         *   Общие ключи
@@ -128,7 +126,5 @@ class AppServiceProvider extends ServiceProvider
 
         // Лента списка
         define('KEY_USERS_LIST_FEED', 'users_list_feed:');
-
-        return true;
     }
 }
