@@ -2,7 +2,7 @@
 
 namespace App\Modules\Tweet\Models;
 
-use App\Modules\User\Events\TweetNoticeEvent;
+use App\Modules\Tweet\Events\TweetNoticeEvent;
 use App\Prometheus\PrometheusService;
 use Illuminate\Database\Eloquent\Model;
 
