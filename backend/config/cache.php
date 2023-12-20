@@ -43,6 +43,11 @@ return [
             'path' => storage_path('framework/cache/data'),
             'lock_path' => storage_path('framework/cache/data'),
         ],
+
+        'array' => [
+            'driver' => 'array',
+            'serialize' => false,
+        ],
     ],
 
     /*
