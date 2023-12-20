@@ -17,23 +17,23 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    protected $user;
+    protected $authorizedUser;
     protected $anotherUser;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
+        $this->authorizedUser = User::factory()->create();
         $this->anotherUser = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->actingAs($this->authorizedUser, 'api');
     }
 
     public function test_notifications_subscribe_route_basic(): void
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
-            'subscriber_id' => $this->user->id
+            'subscriber_id' => $this->authorizedUser->id
         ]);
 
         $response = $this->postJson(
@@ -47,7 +47,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
-            'subscriber_id' => $this->user->id
+            'subscriber_id' => $this->authorizedUser->id
         ]);
 
         $response = $this->postJson(
@@ -70,7 +70,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
-            'subscriber_id' => $this->user->id
+            'subscriber_id' => $this->authorizedUser->id
         ]);
 
         $this->postJson(
@@ -88,7 +88,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
-            'subscriber_id' => $this->user->id
+            'subscriber_id' => $this->authorizedUser->id
         ]);
 
         $this->postJson(
@@ -107,7 +107,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
-            'subscriber_id' => $this->user->id
+            'subscriber_id' => $this->authorizedUser->id
         ]);
 
         $this->postJson(
@@ -134,7 +134,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
-            'subscriber_id' => $this->user->id
+            'subscriber_id' => $this->authorizedUser->id
         ]);
 
         $response = $this->deleteJson(
@@ -148,7 +148,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
-            'subscriber_id' => $this->user->id
+            'subscriber_id' => $this->authorizedUser->id
         ]);
 
         $this->postJson(

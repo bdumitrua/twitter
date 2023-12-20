@@ -19,14 +19,14 @@ class SearchRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    protected $user;
+    protected $authorizedUser;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->authorizedUser = User::factory()->create();
+        $this->actingAs($this->authorizedUser, 'api');
     }
 
     protected function getSearchObject(): array
@@ -43,12 +43,12 @@ class SearchRoutesTest extends TestCase
     {
         $searchedUser = User::factory()->create();
         RecentSearch::factory()->create([
-            'user_id' => $this->user->id,
+            'user_id' => $this->authorizedUser->id,
             'linked_user_id' => $searchedUser->id
         ]);
 
         $recentSearches = RecentSearch::with('linkedUser')
-            ->where('user_id', $this->user->id)
+            ->where('user_id', $this->authorizedUser->id)
             ->latest('updated_at')
             ->get();
 
@@ -131,7 +131,7 @@ class SearchRoutesTest extends TestCase
     public function test_clear_authorized_user_recent_searches_basic(): void
     {
         RecentSearch::factory(3)->create([
-            'user_id' => $this->user->id
+            'user_id' => $this->authorizedUser->id
         ]);
 
         $response = $this->deleteJson(route('clearAuthorizedUserRecentSearches'));

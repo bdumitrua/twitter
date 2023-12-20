@@ -16,14 +16,14 @@ class DeviceTokenRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    protected $user;
+    protected $authorizedUser;
 
     public function setUp(): void
     {
         parent::setUp();
 
-        $this->user = User::factory()->create();
-        $this->actingAs($this->user, 'api');
+        $this->authorizedUser = User::factory()->create();
+        $this->actingAs($this->authorizedUser, 'api');
     }
 
     protected function getTokenObject(): array
@@ -39,7 +39,7 @@ class DeviceTokenRoutesTest extends TestCase
     public function test_get_authorized_user_tokens_route_basic(): void
     {
         $deviceTokens = DeviceToken::factory(2)->create([
-            'user_id' => $this->user->id,
+            'user_id' => $this->authorizedUser->id,
         ]);
 
         $response = $this->get(route('getAuthorizedUserDeviceTokens'));
