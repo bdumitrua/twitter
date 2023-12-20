@@ -30,11 +30,21 @@ class NotificationsSubscribtionService
         $this->authorizedUserId = Auth::id();
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return Response
+     */
     public function subscribe(User $user): Response
     {
         return $this->notificationsSubscribtionRepository->subscribe($user->id, $this->authorizedUserId);
     }
 
+    /**
+     * @param User $user
+     * 
+     * @return Response
+     */
     public function unsubscribe(User $user): Response
     {
         return $this->notificationsSubscribtionRepository->unsubscribe($user->id, $this->authorizedUserId);

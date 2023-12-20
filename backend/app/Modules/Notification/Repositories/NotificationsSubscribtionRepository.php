@@ -22,6 +22,12 @@ class NotificationsSubscribtionRepository
         $this->notificationsSubscribtion = $notificationsSubscribtion;
     }
 
+    /**
+     * @param int $userId
+     * @param int $subscriberId
+     * 
+     * @return Builder
+     */
     protected function queryByBothIds(int $userId, int $subscriberId): Builder
     {
         return $this->notificationsSubscribtion->newQuery()
@@ -29,6 +35,12 @@ class NotificationsSubscribtionRepository
             ->where('user_id', '=', $userId);
     }
 
+    /**
+     * @param int $userId
+     * @param int $subscriberId
+     * 
+     * @return Response
+     */
     public function subscribe(int $userId, int $subscriberId): Response
     {
         $subscribtionExists = $this->queryByBothIds($userId, $subscriberId)->exists();
@@ -42,6 +54,12 @@ class NotificationsSubscribtionRepository
         return ResponseHelper::okResponse(!$subscribtionExists);
     }
 
+    /**
+     * @param int $userId
+     * @param int $subscriberId
+     * 
+     * @return Response
+     */
     public function unsubscribe(int $userId, int $subscriberId): Response
     {
         $notificationsSubscribtion = $this->queryByBothIds($userId, $subscriberId)->first();
