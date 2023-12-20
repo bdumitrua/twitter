@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\User\Listeners;
+namespace App\Modules\Notification\Listeners;
 
 class NewNotificationListener
 {

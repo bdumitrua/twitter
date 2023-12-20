@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\User\Listeners;
+namespace App\Modules\Tweet\Listeners;
 
 use App\Kafka\KafkaProducer;
 use Illuminate\Support\Facades\Log;
