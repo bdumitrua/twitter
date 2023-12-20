@@ -147,10 +147,7 @@ class TweetRepository
     {
         $cacheKey = KEY_AUTH_USER_FEED . $userId;
         $userFeedTweetsIds = $this->getCachedData($cacheKey, 5, function () use ($userId) {
-            $subscribedUserIds = $this->pluckKey(
-                $this->userSubscribtionRepository->getSubscribtions($userId),
-                'user_id'
-            );
+            $subscribedUserIds = $this->userSubscribtionRepository->getSubscribtionsIds($userId);
             $userGroupIds = $this->pluckKey(
                 $this->userGroupRepository->getByUserId($userId),
                 'id'

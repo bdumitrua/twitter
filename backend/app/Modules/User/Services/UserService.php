@@ -2,6 +2,7 @@
 
 namespace App\Modules\User\Services;
 
+use App\Exceptions\NotFoundException;
 use App\Modules\User\DTO\UserDTO;
 use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserRepository;
@@ -51,6 +52,8 @@ class UserService
      * @param UserUpdateRequest $userUpdateRequest
      * 
      * @return void
+     * 
+     * @throws NotFoundException
      */
     public function update(UserUpdateRequest $userUpdateRequest): void
     {

@@ -34,25 +34,29 @@ class UserSubscribtionRepository
     /**
      * @param int $userId
      * 
-     * @return Collection
+     * @return array
      */
-    public function getSubscribtions(int $userId): Collection
+    public function getSubscribtionsIds(int $userId): array
     {
         return $this->userSubscribtion
             ->where('subscriber_id', '=', $userId)
-            ->get();
+            ->get()
+            ->pluck('user_id')
+            ->toArray();
     }
 
     /**
      * @param int $userId
      * 
-     * @return Collection
+     * @return array
      */
-    public function getSubscribers(int $userId): Collection
+    public function getSubscribersIds(int $userId): array
     {
         return $this->userSubscribtion
             ->where('user_id', '=', $userId)
-            ->get();
+            ->get()
+            ->pluck('subscriber_id')
+            ->toArray();
     }
 
     /**
