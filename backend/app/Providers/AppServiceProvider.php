@@ -12,6 +12,8 @@ use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    private bool $constansDefined;
+
     /**
      * Register any application services.
      */
@@ -39,10 +41,12 @@ class AppServiceProvider extends ServiceProvider
             $prometheusService->addDatabaseQueryTimeHistogram($executionTimeInSeconds, $source);
         });
 
-        $this->defineCacheKeysConstants();
+        if (!defined('KEY_WITH_RELATIONS')) {
+            $this->constansDefined = $this->defineCacheKeysConstants() ?? false;
+        }
     }
 
-    private function defineCacheKeysConstants(): void
+    private function defineCacheKeysConstants(): ?bool
     {
         /*
         *   Общие ключи
@@ -124,5 +128,7 @@ class AppServiceProvider extends ServiceProvider
 
         // Лента списка
         define('KEY_USERS_LIST_FEED', 'users_list_feed:');
+
+        return true;
     }
 }
