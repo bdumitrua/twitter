@@ -6,6 +6,7 @@ use App\Kafka\BaseConsumer;
 use App\Modules\Tweet\Models\TweetNotice;
 use App\Modules\User\Models\User;
 use Illuminate\Log\LogManager;
+use stdClass;
 
 class NewTweetCreateNoticesConsumer extends BaseConsumer
 {
@@ -27,7 +28,7 @@ class NewTweetCreateNoticesConsumer extends BaseConsumer
             $message = $this->consumer->receive();
             $newTweet = $this->getMessageBody($message);
 
-            if (!empty($newTweet) && $newTweet->type !== 'repost') {
+            if (!empty($newTweet) && !($newTweet instanceof stdClass) && $newTweet->type !== 'repost') {
                 try {
                     $tweetText = $newTweet->text;
                     $tweetId = $newTweet->id;

@@ -40,6 +40,7 @@ class UserResource extends JsonResource
             "subscribtionsCount" => $this->subscribtions_count,
             "subscribersCount" => $this->subscribers_count,
             "imSubscribed" => $this->imSubscribed ?? false,
+            "imSubscribedOnNotifications" => $this->imSubscribedOnNotifications ?? false,
             "availableSections" => $availableSections,
             "lists" => $lists,
             "deviceTokens" => $deviceTokens,
@@ -102,6 +103,18 @@ class UserResource extends JsonResource
             $actions[] = [
                 "UnsubscribeFromUser",
                 "unsubscribeFromUser",
+                ["user" => $this->id]
+            ];
+
+            $actions[] = [
+                "SubscribeToUserNewTweets",
+                "userSubscribtionOnNotifications",
+                ["user" => $this->id]
+            ];
+
+            $actions[] = [
+                "UnsubscribeToUserNewTweets",
+                "userUnsubscribtionFromNotifications",
                 ["user" => $this->id]
             ];
         }
