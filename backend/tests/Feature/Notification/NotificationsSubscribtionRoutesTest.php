@@ -18,25 +18,26 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     use RefreshDatabase, WithFaker;
 
     protected $user;
+    protected $anotherUser;
 
     public function setUp(): void
     {
         parent::setUp();
 
         $this->user = User::factory()->create();
+        $this->anotherUser = User::factory()->create();
         $this->actingAs($this->user, 'api');
     }
 
     public function test_notifications_subscribe_route_basic(): void
     {
-        $anotherUser = User::factory()->create();
         UserSubscribtion::create([
-            'user_id' => $anotherUser->id,
+            'user_id' => $this->anotherUser->id,
             'subscriber_id' => $this->user->id
         ]);
 
         $response = $this->postJson(
-            route('userSubscribtionOnNotifications', ['user' => $anotherUser->id])
+            route('userSubscribtionOnNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response->assertStatus(200);
@@ -44,9 +45,8 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 
     public function test_notifications_subscribe_route_incorrect_request_target(): void
     {
-        $anotherUser = User::factory()->create();
         UserSubscribtion::create([
-            'user_id' => $anotherUser->id,
+            'user_id' => $this->anotherUser->id,
             'subscriber_id' => $this->user->id
         ]);
 
@@ -59,9 +59,8 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 
     public function test_notifications_subscribe_route_without_base_subscribtion(): void
     {
-        $anotherUser = User::factory()->create();
         $response = $this->postJson(
-            route('userSubscribtionOnNotifications', ['user' => $anotherUser->id])
+            route('userSubscribtionOnNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
@@ -69,18 +68,17 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 
     public function test_notifications_subscribe_route_repeated(): void
     {
-        $anotherUser = User::factory()->create();
         UserSubscribtion::create([
-            'user_id' => $anotherUser->id,
+            'user_id' => $this->anotherUser->id,
             'subscriber_id' => $this->user->id
         ]);
 
         $this->postJson(
-            route('userSubscribtionOnNotifications', ['user' => $anotherUser->id])
+            route('userSubscribtionOnNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response = $this->postJson(
-            route('userSubscribtionOnNotifications', ['user' => $anotherUser->id])
+            route('userSubscribtionOnNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response->assertStatus(204);
@@ -88,18 +86,17 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 
     public function test_notifications_unsubscribe_route_basic(): void
     {
-        $anotherUser = User::factory()->create();
         UserSubscribtion::create([
-            'user_id' => $anotherUser->id,
+            'user_id' => $this->anotherUser->id,
             'subscriber_id' => $this->user->id
         ]);
 
         $this->postJson(
-            route('userSubscribtionOnNotifications', ['user' => $anotherUser->id])
+            route('userSubscribtionOnNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response = $this->deleteJson(
-            route('userUnsubscribtionFromNotifications', ['user' => $anotherUser->id])
+            route('userUnsubscribtionFromNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response->assertStatus(200);
@@ -108,14 +105,13 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 
     public function test_notifications_unsubscribe_route_incorrect_request_target(): void
     {
-        $anotherUser = User::factory()->create();
         UserSubscribtion::create([
-            'user_id' => $anotherUser->id,
+            'user_id' => $this->anotherUser->id,
             'subscriber_id' => $this->user->id
         ]);
 
         $this->postJson(
-            route('userSubscribtionOnNotifications', ['user' => $anotherUser->id])
+            route('userSubscribtionOnNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response = $this->deleteJson(
@@ -127,9 +123,8 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 
     public function test_notifications_unsubscribe_route_without_base_subscribtion(): void
     {
-        $anotherUser = User::factory()->create();
         $response = $this->deleteJson(
-            route('userUnsubscribtionFromNotifications', ['user' => $anotherUser->id])
+            route('userUnsubscribtionFromNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response->assertStatus(204);
@@ -137,14 +132,13 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 
     public function test_notifications_unsubscribe_route_without_notification_subscribtion(): void
     {
-        $anotherUser = User::factory()->create();
         UserSubscribtion::create([
-            'user_id' => $anotherUser->id,
+            'user_id' => $this->anotherUser->id,
             'subscriber_id' => $this->user->id
         ]);
 
         $response = $this->deleteJson(
-            route('userUnsubscribtionFromNotifications', ['user' => $anotherUser->id])
+            route('userUnsubscribtionFromNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response->assertStatus(204);
@@ -152,22 +146,21 @@ class NotificationsSubscribtionRoutesTest extends TestCase
 
     public function test_notifications_unsubscribe_route_repeated(): void
     {
-        $anotherUser = User::factory()->create();
         UserSubscribtion::create([
-            'user_id' => $anotherUser->id,
+            'user_id' => $this->anotherUser->id,
             'subscriber_id' => $this->user->id
         ]);
 
         $this->postJson(
-            route('userSubscribtionOnNotifications', ['user' => $anotherUser->id])
+            route('userSubscribtionOnNotifications', ['user' => $this->anotherUser->id])
         );
 
         $this->deleteJson(
-            route('userUnsubscribtionFromNotifications', ['user' => $anotherUser->id])
+            route('userUnsubscribtionFromNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response = $this->deleteJson(
-            route('userUnsubscribtionFromNotifications', ['user' => $anotherUser->id])
+            route('userUnsubscribtionFromNotifications', ['user' => $this->anotherUser->id])
         );
 
         $response->assertStatus(204);
