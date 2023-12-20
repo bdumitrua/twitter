@@ -18,7 +18,7 @@ class NotificationService
     private NotificationRepository $notificationRepository;
     protected LogManager $logger;
     protected FirebaseService $firebaseService;
-    private ?int $authorizedUserId;
+    protected ?int $authorizedUserId;
 
     public function __construct(
         NotificationRepository $notificationRepository,
