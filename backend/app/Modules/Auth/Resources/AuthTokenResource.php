@@ -11,7 +11,7 @@ class AuthTokenResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $actions = ActionsResource::collection([
+        $actions = (array) ActionsResource::collection([
             [
                 "GetAuthorizedUserData",
                 "getAuthorizedUserData"

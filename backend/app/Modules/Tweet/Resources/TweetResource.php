@@ -85,7 +85,7 @@ class TweetResource extends JsonResource
         ];
     }
 
-    private function prepareActions(): object
+    private function prepareActions(): array
     {
         $isShowing = $this->whenLoaded('replies', function () {
             return true;
@@ -141,6 +141,6 @@ class TweetResource extends JsonResource
             ];
         }
 
-        return ActionsResource::collection($actions);
+        return (array) ActionsResource::collection($actions);
     }
 }

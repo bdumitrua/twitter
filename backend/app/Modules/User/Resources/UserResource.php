@@ -47,7 +47,7 @@ class UserResource extends JsonResource
         ];
     }
 
-    private function prepareActions(bool $isAuthorizedUser): object
+    private function prepareActions(bool $isAuthorizedUser): array
     {
         $actions = [
             [
@@ -106,7 +106,7 @@ class UserResource extends JsonResource
             ];
         }
 
-        return ActionsResource::collection($actions);
+        return (array) ActionsResource::collection($actions);
     }
 
     private function prepareAvailableSections(bool $isAuthorizedUser): array

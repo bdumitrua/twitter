@@ -10,7 +10,7 @@ class ListUserResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $actions = ActionsResource::collection([
+        $actions = (array) ActionsResource::collection([
             [
                 "AddUserToList",
                 "addMemberToUsersList",
