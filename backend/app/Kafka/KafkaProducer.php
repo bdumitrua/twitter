@@ -2,6 +2,7 @@
 
 namespace App\Kafka;
 
+use App\Helpers\AppEnvironmentHelper;
 use Enqueue\RdKafka\RdKafkaConnectionFactory;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -14,6 +15,10 @@ class KafkaProducer
      */
     public function __construct(string $topicName, $messageData)
     {
+        if (AppEnvironmentHelper::isTesting()) {
+            return;
+        }
+
         $connectionFactory = new RdKafkaConnectionFactory([
             'global' => [
                 'metadata.broker.list' => config('kafka.broker_list'),
