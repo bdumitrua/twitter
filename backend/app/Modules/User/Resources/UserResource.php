@@ -104,6 +104,18 @@ class UserResource extends JsonResource
                 "unsubscribeFromUser",
                 ["user" => $this->id]
             ];
+
+            $actions[] = [
+                "SubscribeToUserNewTweets",
+                "userSubscribtionOnNotifications",
+                ["user" => $this->id]
+            ];
+
+            $actions[] = [
+                "UnsubscribeToUserNewTweets",
+                "userUnsubscribtionFromNotifications",
+                ["user" => $this->id]
+            ];
         }
 
         return ActionsResource::collection($actions);
