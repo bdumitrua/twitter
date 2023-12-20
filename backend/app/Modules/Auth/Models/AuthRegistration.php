@@ -4,6 +4,8 @@ namespace App\Modules\Auth\Models;
 
 use App\Modules\Auth\Events\RegistrationStartedEvent;
 use App\Prometheus\PrometheusService;
+use Database\Factories\AuthRegistrationFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -13,12 +15,20 @@ use Illuminate\Database\Eloquent\Model;
  */
 class AuthRegistration extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'code',
         'name',
         'email',
         'birth_date',
+        'confirmed'
     ];
+
+    protected static function newFactory()
+    {
+        return AuthRegistrationFactory::new();
+    }
 
     /**
      * @return void

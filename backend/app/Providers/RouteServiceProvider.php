@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Modules\Auth\Controllers\AuthController;
+use DirectoryIterator;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Foundation\Support\Providers\RouteServiceProvider as ServiceProvider;
 use Illuminate\Http\Request;
@@ -9,6 +11,7 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Facades\Route;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
+use Symfony\Component\Routing\Exception\RouteNotFoundException;
 
 class RouteServiceProvider extends ServiceProvider
 {
@@ -26,9 +29,9 @@ class RouteServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        RateLimiter::for('api', function (Request $request) {
-            return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
-        });
+        // RateLimiter::for('api', function (Request $request) {
+        //     return Limit::perMinute(60)->by($request->user()?->id ?: $request->ip());
+        // });
 
         $this->routes(function () {
             Route::middleware('api')
@@ -46,17 +49,25 @@ class RouteServiceProvider extends ServiceProvider
     {
         $moduleDir = app_path('Modules');
 
-        foreach (new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($moduleDir),
-            RecursiveIteratorIterator::SELF_FIRST
-        ) as $fileInfo) {
-            if ($fileInfo->isFile() && $fileInfo->getExtension() === 'php') {
-                $moduleRoutes = $fileInfo->getPathname();
+        // Перебираем все папки модулей
+        foreach (new DirectoryIterator($moduleDir) as $moduleInfo) {
+            if ($moduleInfo->isDir() && !$moduleInfo->isDot()) {
+                $routesDir = $moduleInfo->getPathname() . '/Routes';
 
-                // Подключите маршруты из модуля с префиксом и middleware 'api'
-                Route::prefix('api')
-                    ->middleware('api')
-                    ->group($moduleRoutes);
+                // Проверяем, существует ли папка Routes в модуле
+                if (is_dir($routesDir)) {
+                    // Перебираем все файлы в папке Routes
+                    foreach (new DirectoryIterator($routesDir) as $fileInfo) {
+                        if ($fileInfo->isFile() && $fileInfo->getExtension() === 'php') {
+                            $moduleRoutes = $fileInfo->getPathname();
+
+                            // Подключаем маршруты из модуля с префиксом и middleware 'api'
+                            Route::prefix('api')
+                                ->middleware('api')
+                                ->group($moduleRoutes);
+                        }
+                    }
+                }
             }
         }
     }

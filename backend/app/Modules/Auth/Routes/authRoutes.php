@@ -17,7 +17,7 @@ Route::prefix('auth')->controller(AuthController::class)->group(function () {
 
     Route::prefix('reset')->group(function () {
         // Проверить существование аккаунта по почте
-        Route::get('check', 'resetCheck')->name('checkEmailForPasswordReset');
+        Route::post('check', 'resetCheck')->name('checkEmailForPasswordReset');
         // Подтвердить сборс пароля кодом
         Route::post('confirm/{authReset}', 'resetConfirm')->name('confirmPasswordResetCode');
         // Изменить пароль аккаунта

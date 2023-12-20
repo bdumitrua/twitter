@@ -39,6 +39,7 @@ class AppServiceProvider extends ServiceProvider
             $prometheusService->addDatabaseQueryTimeHistogram($executionTimeInSeconds, $source);
         });
 
+        // На тестах ломается, так что сделал костыль
         if (!defined('KEY_WITH_RELATIONS')) {
             $this->defineCacheKeysConstants();
         }
