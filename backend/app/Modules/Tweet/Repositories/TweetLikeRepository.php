@@ -12,14 +12,11 @@ use Illuminate\Http\Response;
 class TweetLikeRepository
 {
     protected TweetLike $tweetLike;
-    protected TweetRepository $tweetRepository;
 
     public function __construct(
         TweetLike $tweetLike,
-        TweetRepository $tweetRepository,
     ) {
         $this->tweetLike = $tweetLike;
-        $this->tweetRepository = $tweetRepository;
     }
 
     /**

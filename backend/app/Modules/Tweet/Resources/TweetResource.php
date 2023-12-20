@@ -65,19 +65,22 @@ class TweetResource extends JsonResource
     {
         return [
             'likes' => [
-                'count' => $this->likes_count
+                'count' => $this->likes_count,
+                'active' => $this->isLiked ?? false
             ],
             'replies' => [
                 'count' => $this->replies_count
             ],
             'reposts' => [
-                'count' => $this->reposts_count
+                'count' => $this->reposts_count,
+                'active' => $this->isReposted ?? false
             ],
             'quotes' => [
                 'count' => $this->quotes_count
             ],
             'favorites' => [
-                'count' => $this->favorites_count
+                'count' => $this->favorites_count,
+                'active' => $this->isFavorite ?? false
             ],
         ];
     }

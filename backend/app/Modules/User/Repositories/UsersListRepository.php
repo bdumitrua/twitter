@@ -14,6 +14,7 @@ use App\Traits\UpdateFromDTO;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class UsersListRepository
 {
@@ -121,6 +122,11 @@ class UsersListRepository
 
         if (empty($usersList)) {
             throw new NotFoundException('List');
+        }
+
+        $authorizedUserId = Auth::id();
+        if (!empty($authorizedUserId)) {
+            $usersList->imSubscribed = !empty($this->queryUserSubscribtion($usersListId, $authorizedUserId));
         }
 
         return $usersList;
@@ -350,16 +356,18 @@ class UsersListRepository
     protected function getListsData(array $usersListsIds): Collection
     {
         return new Collection(array_map(function ($usersListId) {
-            return $this->getUsersListData($usersListId);
+            if (!empty($usersList = $this->getUsersListData($usersListId))) {
+                return $usersList;
+            }
         }, $usersListsIds));
     }
 
     /**
      * @param int $usersListId
      * 
-     * @return UsersList
+     * @return UsersList|null
      */
-    protected function getUsersListData(int $usersListId): UsersList
+    protected function getUsersListData(int $usersListId): ?UsersList
     {
         $cacheKey = KEY_USERS_LIST_DATA . $usersListId;
         return $this->getCachedData($cacheKey, $this->usersListCacheTime, function () use ($usersListId) {

@@ -17,6 +17,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Elastic\ScoutDriverPlus\Support\Query;
+use Illuminate\Support\Facades\Auth;
 
 class TweetRepository
 {
@@ -26,8 +27,10 @@ class TweetRepository
     protected TweetLike $tweetLike;
     protected TweetFavorite $tweetFavorite;
     protected UserRepository $userRepository;
+    protected TweetLikeRepository $tweetLikeRepository;
     protected UsersListRepository $usersListRepository;
     protected UserGroupRepository $userGroupRepository;
+    protected TweetFavoriteRepository $tweetFavoriteRepository;
     protected UserSubscribtionRepository $userSubscribtionRepository;
 
     public function __construct(
@@ -35,17 +38,20 @@ class TweetRepository
         TweetLike $tweetLike,
         TweetFavorite $tweetFavorite,
         UserRepository $userRepository,
+        TweetLikeRepository $tweetLikeRepository,
         UsersListRepository $usersListRepository,
         UserGroupRepository $userGroupRepository,
+        TweetFavoriteRepository $tweetFavoriteRepository,
         UserSubscribtionRepository $userSubscribtionRepository,
     ) {
-
         $this->tweet = $tweet;
         $this->tweetLike = $tweetLike;
         $this->tweetFavorite = $tweetFavorite;
         $this->userRepository = $userRepository;
+        $this->tweetLikeRepository = $tweetLikeRepository;
         $this->usersListRepository = $usersListRepository;
         $this->userGroupRepository = $userGroupRepository;
+        $this->tweetFavoriteRepository = $tweetFavoriteRepository;
         $this->userSubscribtionRepository = $userSubscribtionRepository;
     }
 
@@ -91,6 +97,14 @@ class TweetRepository
         return $this->tweetFavorite->newQuery()
             ->where('user_id', '=', $userId)
             ->latest();
+    }
+
+    protected function queryFindRepost(int $userId, int $tweetId): Builder
+    {
+        return $this->tweet->newQuery()
+            ->where('user_id', $userId)
+            ->where('linked_tweet_id', $tweetId)
+            ->where('type', 'repost');
     }
 
     /**
@@ -331,10 +345,7 @@ class TweetRepository
      */
     public function unrepost(int $tweetId, int $authorizedUserId): void
     {
-        $tweet = $this->tweet->where('user_id', $authorizedUserId)
-            ->where('linked_tweet_id', $tweetId)
-            ->where('type', 'repost')
-            ->first() ?? [];
+        $tweet = $this->queryFindRepost($authorizedUserId, $tweetId)->first() ?? [];
 
         if (!empty($tweet)) {
             $repostTweetId = $tweet->id;
@@ -371,17 +382,26 @@ class TweetRepository
     public function getTweetData(int $tweetId): ?Tweet
     {
         $cacheKey = KEY_TWEET_DATA . $tweetId;
-        return $this->getCachedData($cacheKey, $this->getTweetCacheTime($tweetId), function () use ($tweetId) {
-            $tweet = $this->queryById($tweetId)
+        $tweet = $this->getCachedData($cacheKey, $this->getTweetCacheTime($tweetId), function () use ($tweetId) {
+            return $this->queryById($tweetId)
                 ->withCount(['likes', 'favorites', 'reposts', 'replies', 'quotes'])
                 ->first();
-
-            if (!empty($tweet)) {
-                $tweet->author = $this->userRepository->getById($tweet->user_id);
-            }
-
-            return $tweet;
         });
+
+        if (!empty($tweet)) {
+            $tweet->author = $this->userRepository->getUserData($tweet->user_id);
+
+            // * По задумке так нельзя
+            // Но инжектировать либо прокидывать через цепочку из десятка методов не хочется
+            $authorizedUserId = Auth::id();
+            if (!empty($authorizedUserId)) {
+                $tweet->isFavorite = !empty($this->tweetFavoriteRepository->getByBothIds($tweetId, $authorizedUserId));
+                $tweet->isLiked = !empty($this->tweetLikeRepository->getByBothIds($tweetId, $authorizedUserId));
+                $tweet->isReposted = $this->queryFindRepost($authorizedUserId, $tweetId)->exists();
+            }
+        }
+
+        return $tweet;
     }
 
     /**

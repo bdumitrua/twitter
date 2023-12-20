@@ -56,7 +56,6 @@ class UsersListService
     public function show(UsersList $usersList): JsonResource
     {
         $usersList = $this->usersListRepository->getById($usersList->id);
-
         $filteredUsersList = $this->filterPrivateLists(new Collection([$usersList]), $this->authorizedUserId)->first();
 
         if (empty($filteredUsersList)) {

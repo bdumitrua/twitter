@@ -39,7 +39,8 @@ class UserResource extends JsonResource
             'created_at' => $this->created_at,
             "subscribtionsCount" => $this->subscribtions_count,
             "subscribersCount" => $this->subscribers_count,
-            'availableSections' => $availableSections,
+            "imSubscribed" => $this->imSubscribed ?? false,
+            "availableSections" => $availableSections,
             "lists" => $lists,
             "deviceTokens" => $deviceTokens,
             "actions" => $actions

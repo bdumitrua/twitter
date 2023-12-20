@@ -56,6 +56,7 @@ class UsersListResource extends JsonResource
             'updated_at' => $this->updated_at,
             'membersCount' => $this->members_count ?? 0,
             'subscribersCount' => $this->subscribers_count ?? 0,
+            'imSubscribed' => $this->imSubscribed ?? false,
             'actions' => $actions
         ];
     }
