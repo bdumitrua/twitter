@@ -4,6 +4,7 @@ namespace App\Modules\User\Repositories;
 
 use App\Exceptions\NotFoundException;
 use App\Modules\Notification\Repositories\DeviceTokenRepository;
+use App\Modules\Notification\Repositories\NotificationsSubscribtionRepository;
 use App\Modules\User\DTO\UserDTO;
 use App\Modules\User\Models\User;
 use App\Traits\GetCachedData;
@@ -23,17 +24,20 @@ class UserRepository
     protected UsersListRepository $usersListRepository;
     protected DeviceTokenRepository $deviceTokenRepository;
     protected UserSubscribtionRepository $userSubscribtionRepository;
+    protected NotificationsSubscribtionRepository $notificationsSubscribtionRepository;
 
     public function __construct(
         User $user,
         UsersListRepository $usersListRepository,
         DeviceTokenRepository $deviceTokenRepository,
         UserSubscribtionRepository $userSubscribtionRepository,
+        NotificationsSubscribtionRepository $notificationsSubscribtionRepository,
     ) {
         $this->user = $user;
         $this->usersListRepository = $usersListRepository;
         $this->deviceTokenRepository = $deviceTokenRepository;
         $this->userSubscribtionRepository = $userSubscribtionRepository;
+        $this->notificationsSubscribtionRepository = $notificationsSubscribtionRepository;
     }
 
     /**
@@ -89,6 +93,7 @@ class UserRepository
         $authorizedUserId = Auth::id();
         if (!empty($authorizedUserId)) {
             $user->imSubscribed = !empty($this->userSubscribtionRepository->getByBothIds($userId, $authorizedUserId));
+            $user->imSubscribedOnNotifications = !empty($this->notificationsSubscribtionRepository->getByBothIds($userId, $authorizedUserId));
         }
 
         return $user;

@@ -40,6 +40,7 @@ class UserResource extends JsonResource
             "subscribtionsCount" => $this->subscribtions_count,
             "subscribersCount" => $this->subscribers_count,
             "imSubscribed" => $this->imSubscribed ?? false,
+            "imSubscribedOnNotifications" => $this->imSubscribedOnNotifications ?? false,
             "availableSections" => $availableSections,
             "lists" => $lists,
             "deviceTokens" => $deviceTokens,
