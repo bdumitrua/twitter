@@ -4,6 +4,8 @@ namespace App\Modules\Search\Models;
 
 use App\Modules\User\Models\User;
 use App\Prometheus\PrometheusService;
+use Database\Factories\RecentSearchFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -14,11 +16,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  */
 class RecentSearch extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'text',
         'user_id',
         'linked_user_id'
     ];
+
+    protected static function newFactory()
+    {
+        return RecentSearchFactory::new();
+    }
 
     /**
      * @return BelongsTo
