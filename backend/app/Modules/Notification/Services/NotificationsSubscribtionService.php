@@ -5,6 +5,7 @@ namespace App\Modules\Notification\Services;
 use App\Modules\Notification\Models\DeviceToken;
 use Illuminate\Http\Request;
 use App\Modules\Notification\Repositories\DeviceTokenRepository;
+use App\Modules\Notification\Repositories\NotificationsSubscribtionRepository;
 use App\Modules\Notification\Requests\DeviceTokenRequest;
 use App\Modules\Notification\Resources\DeviceTokenResource;
 use App\Modules\User\Models\User;
@@ -16,23 +17,26 @@ use Illuminate\Support\Facades\Auth;
 
 class NotificationsSubscribtionService
 {
+    protected NotificationsSubscribtionRepository $notificationsSubscribtionRepository;
     protected LogManager $logger;
     protected ?int $authorizedUserId;
 
     public function __construct(
+        NotificationsSubscribtionRepository $notificationsSubscribtionRepository,
         LogManager $logger,
     ) {
+        $this->notificationsSubscribtionRepository = $notificationsSubscribtionRepository;
         $this->logger = $logger;
         $this->authorizedUserId = Auth::id();
     }
 
-    public function subscribe(User $user)
+    public function subscribe(User $user): Response
     {
-        // 
+        return $this->notificationsSubscribtionRepository->subscribe($user->id, $this->authorizedUserId);
     }
 
-    public function unsubscribe(User $user)
+    public function unsubscribe(User $user): Response
     {
-        // 
+        return $this->notificationsSubscribtionRepository->unsubscribe($user->id, $this->authorizedUserId);
     }
 }
