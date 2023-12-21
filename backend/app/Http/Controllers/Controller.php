@@ -74,10 +74,9 @@ class Controller extends BaseController
                 $exception->getStatusCode()
             );
         } catch (\Exception $exception) {
-            die(var_dump($exception->getMessage()));
             return $this->responseToError(
                 $exception->getMessage(),
-                $exception->getCode()
+                418
             );
         } catch (\Throwable $exception) {
             return $this->responseToError(
