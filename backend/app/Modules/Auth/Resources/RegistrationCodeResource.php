@@ -12,7 +12,7 @@ class RegistrationCodeResource extends JsonResource
     public function toArray(Request $request): array
     {
         $registrationId = $this->resource;
-        $actions = ActionsResource::collection([
+        $actions = (array) ActionsResource::collection([
             [
                 "ConfirmCode",
                 "confirmRegistrationCode",

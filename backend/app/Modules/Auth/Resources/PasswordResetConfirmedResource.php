@@ -12,7 +12,7 @@ class PasswordResetConfirmedResource extends JsonResource
     public function toArray(Request $request): array
     {
         $resetId = $this->resource;
-        $actions = ActionsResource::collection([
+        $actions = (array) ActionsResource::collection([
             [
                 "EndPasswordReset",
                 "endPasswordReset",

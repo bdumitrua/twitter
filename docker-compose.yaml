@@ -21,18 +21,12 @@ services:
         build:
             context: ./backend
             dockerfile: Dockerfile
-        environment:
-            DB_HOST: mysql
-            DB_DATABASE: twitter
-            DB_USERNAME: root
-            DB_PASSWORD: root
         deploy:
             resources:
                 limits:
                     cpus: "4.0"
         ports:
             - 8000:8000
-            - 1025:1025
         volumes:
             - ./backend:/app/backend
             - vendor:/app/backend/vendor

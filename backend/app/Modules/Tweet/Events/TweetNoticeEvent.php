@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\User\Events;
+namespace App\Modules\Tweet\Events;
 
 use App\Modules\Tweet\Models\TweetNotice;
 use App\Modules\User\Models\User;

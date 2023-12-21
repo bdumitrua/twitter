@@ -23,7 +23,7 @@ class NotificationResource extends JsonResource
         }
 
         if (!empty($availableStatuses)) {
-            $actions = ActionsResource::collection([
+            $actions = (array) ActionsResource::collection([
                 [
                     "UpdateNotificationStatus",
                     "updateNotification",

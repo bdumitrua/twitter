@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Modules\User\Events;
+namespace App\Modules\Tweet\Events;
 
 use App\Modules\Tweet\Models\TweetFavorite;
 use Illuminate\Broadcasting\PrivateChannel;

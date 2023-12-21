@@ -12,7 +12,7 @@ class GroupUserResource extends JsonResource
     {
         $userData = $this->resource->usersData;
         $groupId = $this->resource->user_group_id;
-        $actions = ActionsResource::collection([
+        $actions = (array) ActionsResource::collection([
             [
                 "AddUserToGroup",
                 "addUserToUserGroup",

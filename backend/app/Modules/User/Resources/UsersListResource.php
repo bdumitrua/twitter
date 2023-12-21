@@ -43,7 +43,7 @@ class UsersListResource extends JsonResource
             ];
         }
 
-        $actions = ActionsResource::collection($actionsArray);
+        $actions = (array) ActionsResource::collection($actionsArray);
 
         return [
             'id' => $this->id,

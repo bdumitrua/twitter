@@ -29,8 +29,7 @@ class NewRegistrationsConsumer extends BaseConsumer
                 $email = $authRegistration->email;
                 $code = $authRegistration->code;
 
-                $this->logger->info('Sending password reset code', ['email' => $email]);
-                echo "Sending password reset code {$email}";
+                $this->logger->info('Sending registration code', ['email' => $email]);
                 Mail::to($email)->send(new RegistrationCodeMail($code));
 
                 $this->acknowledge($message);

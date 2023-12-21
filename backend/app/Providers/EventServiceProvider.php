@@ -4,29 +4,25 @@ namespace App\Providers;
 
 use App\Modules\Auth\Events\PasswordResetStartedEvent;
 use App\Modules\Auth\Events\RegistrationStartedEvent;
+use App\Modules\Auth\Listeners\PasswordResetStartedListener;
+use App\Modules\Auth\Listeners\RegistrationStartedListener;
+use App\Modules\Tweet\Events\NewTweetEvent;
+use App\Modules\Tweet\Events\TweetFavoriteEvent;
+use App\Modules\Tweet\Events\TweetLikeEvent;
+use App\Modules\Tweet\Events\TweetNoticeEvent;
+use App\Modules\Tweet\Events\TweetReplyEvent;
+use App\Modules\Tweet\Events\TweetRepostEvent;
+use App\Modules\Tweet\Listeners\NewLikesListener;
+use App\Modules\Tweet\Listeners\NewNoticeListener;
+use App\Modules\Tweet\Listeners\NewTweetsListener;
 use App\Modules\User\Events\DeletedUsersListEvent;
-use App\Modules\User\Events\NewTweetEvent;
-use App\Modules\User\Events\TweetFavoriteEvent;
-use App\Modules\User\Events\TweetLikeEvent;
-use App\Modules\User\Events\TweetReplyEvent;
-use App\Modules\User\Events\TweetRepostEvent;
 use App\Modules\User\Events\UserGroupMembersUpdateEvent;
-use App\Modules\User\Events\TweetNoticeEvent;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Events\UserSubscribtionEvent;
 use App\Modules\User\Listeners\DeletedUsersListsListener;
-use App\Modules\User\Listeners\NewLikesListener;
-use App\Modules\User\Listeners\NewNoticeListener;
 use App\Modules\User\Listeners\NewSubscribtionsListener;
-use App\Modules\User\Listeners\NewTweetsListener;
-use App\Modules\User\Listeners\NewUsersListener;
-use App\Modules\User\Listeners\PasswordResetStartedListener;
-use App\Modules\User\Listeners\RegistrationStartedListener;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
