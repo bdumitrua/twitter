@@ -19,8 +19,8 @@ class UserGroupResource extends JsonResource
             'userId' => $this->user_id,
             'name' => $this->name,
             'description' => $this->description,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => $this->created_at->toW3cString(),
+            'updated_at' => $this->updated_at->toW3cString(),
             'membersCount' => $this->members_count ?? 0,
             'membersData' => $membersData,
         ];

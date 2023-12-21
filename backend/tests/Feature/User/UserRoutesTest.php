@@ -2,12 +2,7 @@
 
 namespace Tests\Feature\Notification;
 
-use App\Modules\Notification\Models\DeviceToken;
-use App\Modules\Notification\Resources\DeviceTokenResource;
 use App\Modules\User\Models\User;
-use App\Modules\User\Models\UserSubscribtion;
-use App\Modules\User\Repositories\UserRepository;
-use App\Modules\User\Resources\ShortUserResource;
 use App\Modules\User\Resources\UserResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;

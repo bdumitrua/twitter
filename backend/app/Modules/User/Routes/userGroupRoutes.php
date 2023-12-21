@@ -11,7 +11,7 @@ Route::prefix('users/groups')->middleware(['auth:api'])->controller(UserGroupCon
     Route::post('/', 'create')->name('createUserGroup');
 
     Route::middleware(['checkRights:userGroup'])->group(function () {
-        // Получить мои группы 
+        // Получить группу по id 
         Route::get('{userGroup}', 'show')->name('showUserGroup');
         // Изменить данные группы
         Route::patch('{userGroup}', 'update')->name('updateUserGroup');
