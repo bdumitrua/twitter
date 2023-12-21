@@ -14,11 +14,11 @@ class UserResource extends JsonResource
         $isAuthorizedUser = Auth::id() === $this->id;
 
         $lists = !empty((array)$this->lists)
-            ? UsersListResource::collection($this->lists)
+            ? UsersListResource::collection($this->lists)->resolve()
             : [];
 
         $deviceTokens = !empty((array)$this->deviceTokens)
-            ? $this->deviceTokens
+            ? $this->deviceTokens->toArray()
             : [];
 
         $actions = $this->prepareActions($isAuthorizedUser);
@@ -36,7 +36,7 @@ class UserResource extends JsonResource
             'siteUrl' => $this->site_url,
             'address' => $this->address,
             'birthDate' => $this->birth_date,
-            'created_at' => $this->created_at,
+            'created_at' => $this->created_at->toW3cString(),
             "subscribtionsCount" => $this->subscribtions_count,
             "subscribersCount" => $this->subscribers_count,
             "imSubscribed" => $this->imSubscribed ?? false,
