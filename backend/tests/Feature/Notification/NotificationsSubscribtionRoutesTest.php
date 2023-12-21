@@ -2,8 +2,6 @@
 
 namespace Tests\Feature\Notification;
 
-use App\Modules\Notification\Models\DeviceToken;
-use App\Modules\Notification\Resources\DeviceTokenResource;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserSubscribtion;
 use Illuminate\Database\Eloquent\Collection;

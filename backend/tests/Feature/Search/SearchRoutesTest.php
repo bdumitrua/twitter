@@ -2,11 +2,8 @@
 
 namespace Tests\Feature\Notifications;
 
-use App\Modules\Notification\Models\DeviceToken;
-use App\Modules\Notification\Resources\DeviceTokenResource;
 use App\Modules\Search\Models\RecentSearch;
 use App\Modules\Search\Resources\RecentSearchesResource;
-use App\Modules\Search\Resources\RecentSearchResource;
 use App\Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
