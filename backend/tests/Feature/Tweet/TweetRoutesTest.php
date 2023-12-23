@@ -146,6 +146,28 @@ class TweetRoutesTest extends TestCase
         $response->assertStatus(422);
     }
 
+    public function test_create_repost_tweet_alternative_route_basic(): void
+    {
+        $tweetToRepost = $this->createFactoryTweet();
+        $response = $this->postJson(
+            route('repostTweet', ['tweet' => $tweetToRepost->id]),
+        );
+
+        $response->assertStatus(200);
+    }
+
+    public function test_create_repost_tweet_alternative_route_invalid_request_target(): void
+    {
+        $this->createFactoryTweet();
+        $tweetId = Tweet::latest()->first()->id + 10;
+
+        $response = $this->postJson(
+            route('repostTweet', ['tweet' => $tweetId]),
+        );
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
     public function test_create_reply_tweet_route_basic(): void
     {
         $type = 'reply';
