@@ -257,4 +257,93 @@ class TweetRoutesTest extends TestCase
 
         $response->assertStatus(422);
     }
+
+    public function test_create_thread_route_basic(): void
+    {
+        $group = $this->createFactoryGroup($this->authorizedUser->id);
+        $tweets = [];
+        for ($i = 0; $i < 5; $i++) {
+            $tweets[] = [
+                'text' => $this->generateText()
+            ];
+        }
+
+        $response = $this->postJson(
+            route('createThread'),
+            [
+                'tweets' => $tweets,
+                'userGroupId' => $group->id
+            ]
+        );
+
+        $response->assertStatus(200);
+    }
+
+    public function test_create_thread_route_with_an_empty_text(): void
+    {
+        $group = $this->createFactoryGroup($this->authorizedUser->id);
+        $tweets = [];
+        for ($i = 0; $i < 5; $i++) {
+            $tweets[] = [
+                'text' => $this->generateText()
+            ];
+        }
+
+        unset($tweets[4]['text']);
+
+        $response = $this->postJson(
+            route('createThread'),
+            [
+                'tweets' => $tweets,
+                'userGroupId' => $group->id
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    public function test_create_thread_route_invalid_group_id(): void
+    {
+        $this->createFactoryGroup($this->authorizedUser->id);
+        $groupId = UserGroup::latest()->first()->id + 10;
+        $tweets = [];
+        for ($i = 0; $i < 5; $i++) {
+            $tweets[] = [
+                'text' => $this->generateText()
+            ];
+        }
+
+        $response = $this->postJson(
+            route('createThread'),
+            [
+                'tweets' => $tweets,
+                'userGroupId' => $groupId
+            ]
+        );
+
+        $response->assertStatus(422);
+    }
+
+    public function test_create_thread_route_with_any_type(): void
+    {
+        $type = 'repost';
+        $group = $this->createFactoryGroup($this->authorizedUser->id);
+        $tweets = [];
+        for ($i = 0; $i < 5; $i++) {
+            $tweets[] = [
+                'type' => $type,
+                'text' => $this->generateText()
+            ];
+        }
+
+        $response = $this->postJson(
+            route('createThread'),
+            [
+                'tweets' => $tweets,
+                'userGroupId' => $group->id
+            ]
+        );
+
+        $response->assertStatus(200);
+    }
 }
