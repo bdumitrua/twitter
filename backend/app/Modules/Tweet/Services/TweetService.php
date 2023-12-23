@@ -10,6 +10,7 @@ use App\Modules\Tweet\DTO\TweetDTO;
 use Illuminate\Http\Request;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetRepository;
+use App\Modules\Tweet\Requests\CreateRepostRequest;
 use App\Modules\Tweet\Requests\CreateThreadRequest;
 use App\Modules\Tweet\Requests\TweetRequest;
 use App\Modules\Tweet\Resources\TweetResource;
@@ -21,6 +22,7 @@ use App\Modules\User\Services\UsersListService;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -185,6 +187,25 @@ class TweetService
 
         $this->logger->info('Creating tweet from tweetDTO', $tweetDTO->toArray());
         $this->tweetRepository->create($tweetDTO);
+    }
+
+    /**
+     * @param Tweet $tweet
+     * 
+     * @return Response
+     */
+    public function repost(Tweet $tweet): Response
+    {
+        $tweetDTO = new TweetDTO(
+            $this->authorizedUserId,
+            [
+                'type' => 'repost',
+                'linkedTweetId' => $tweet->id
+            ]
+        );
+
+        $this->logger->info('Creating repost from tweetDTO', $tweetDTO->toArray());
+        return $this->tweetRepository->repost($tweetDTO);
     }
 
     /**

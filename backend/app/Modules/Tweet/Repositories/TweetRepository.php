@@ -2,6 +2,7 @@
 
 namespace App\Modules\Tweet\Repositories;
 
+use App\Helpers\ResponseHelper;
 use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Elastic\ScoutDriverPlus\Support\Query;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class TweetRepository
@@ -300,6 +302,23 @@ class TweetRepository
         $this->clearUserTweetsCache($tweet->user_id);
 
         return $tweet;
+    }
+
+    /**
+     * @param TweetDTO $tweetDTO
+     * 
+     * @return Response
+     */
+    public function repost(TweetDTO $tweetDTO): Response
+    {
+        $tweet = $this->queryFindRepost($tweetDTO->userId, $tweetDTO->linkedTweetId)->first() ?? [];
+
+        if (!empty($tweet)) {
+            return ResponseHelper::noContent();
+        }
+
+        $this->create($tweetDTO);
+        return ResponseHelper::okResponse();
     }
 
     /**

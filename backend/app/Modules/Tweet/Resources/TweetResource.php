@@ -114,7 +114,8 @@ class TweetResource extends JsonResource
             ],
             [
                 "RepostTweet",
-                "createTweet",
+                "repostTweet",
+                ["tweet" => $this->id]
             ],
             [
                 "UnrepostTweet",

@@ -20,6 +20,8 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
         Route::post('create', 'create')->name('createTweet');
         // Создать тред
         Route::post('thread', 'thread')->name('createThread');
+        // Сделать репост твита
+        Route::post('repost/{tweet}', 'repost')->name('repostTweet');
         // Удалить репост
         Route::delete('unrepost/{tweet}', 'unrepost')->name('unrepostTweet');
         Route::middleware(['checkRights:tweet'])->group(function () {

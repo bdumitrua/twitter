@@ -5,6 +5,7 @@ namespace App\Modules\Tweet\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Tweet\Models\Tweet;
+use App\Modules\Tweet\Requests\CreateRepostRequest;
 use App\Modules\Tweet\Requests\CreateThreadRequest;
 use App\Modules\Tweet\Requests\TweetRequest;
 use App\Modules\Tweet\Services\TweetService;
@@ -82,6 +83,13 @@ class TweetController extends Controller
     {
         return $this->handleServiceCall(function () use ($tweetRequest) {
             return $this->tweetService->create($tweetRequest);
+        });
+    }
+
+    public function repost(Tweet $tweet): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($tweet) {
+            return $this->tweetService->repost($tweet);
         });
     }
 
