@@ -37,9 +37,27 @@ class TweetRoutesTest extends TestCase
         return null;
     }
 
-    protected function createFactoryTweet(): Tweet
+    protected function createTweet($data = []): Tweet
     {
-        return Tweet::factory()->create();
+        return Tweet::factory()->create($data);
+    }
+
+    protected function createRepost(): Tweet
+    {
+        $tweetToRepost = $this->createTweet();
+
+        return Tweet::factory()->create([
+            'type' => 'repost',
+            'user_id' => $this->authorizedUser->id,
+            'linked_tweet_id' => $tweetToRepost->id
+        ]);
+    }
+
+    protected function getInvalidTweetId(): int
+    {
+        $this->createTweet();
+
+        return Tweet::latest()->first()->id + 10;
     }
 
     protected function createFactoryGroup($userId): UserGroup
@@ -94,9 +112,9 @@ class TweetRoutesTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_create_repost_tweet_basic(): void
+    public function test_repost_tweet_basic(): void
     {
-        $tweetToRepost = $this->createFactoryTweet();
+        $tweetToRepost = $this->createTweet();
         $response = $this->postJson(
             route('repostTweet', ['tweet' => $tweetToRepost->id]),
         );
@@ -104,11 +122,9 @@ class TweetRoutesTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_create_repost_tweet_invalid_request_target(): void
+    public function test_repost_tweet_invalid_request_target(): void
     {
-        $this->createFactoryTweet();
-        $tweetId = Tweet::latest()->first()->id + 10;
-
+        $tweetId = $this->getInvalidTweetId();
         $response = $this->postJson(
             route('repostTweet', ['tweet' => $tweetId]),
         );
@@ -116,11 +132,41 @@ class TweetRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
+    public function test_unrepost_tweet_basic(): void
+    {
+        $tweet = $this->createRepost();
+        $response = $this->delete(
+            route('unrepostTweet', ['tweet' => $tweet->linked_tweet_id]),
+        );
+
+        $response->assertStatus(200);
+    }
+
+    public function test_unrepost_tweet_invalid_request_target(): void
+    {
+        $response = $this->delete(
+            route('unrepostTweet', ['tweet' => $this->getInvalidTweetId()]),
+        );
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+
+    public function test_unrepost_tweet_without_repost(): void
+    {
+        $tweet = $this->createTweet();
+        $response = $this->delete(
+            route('unrepostTweet', ['tweet' => $tweet->id]),
+        );
+
+        $response->assertStatus(204);
+    }
+
     public function test_create_reply_tweet_route_basic(): void
     {
         $type = 'reply';
         $text = $this->generateText();
-        $tweetToRepost = $this->createFactoryTweet();
+        $tweetToRepost = $this->createTweet();
 
         $response = $this->postJson(
             route('createTweet'),
@@ -138,7 +184,7 @@ class TweetRoutesTest extends TestCase
     {
         $type = 'reply';
         $text = $this->getEmptyText();
-        $tweetToRepost = $this->createFactoryTweet();
+        $tweetToRepost = $this->createTweet();
 
         $response = $this->postJson(
             route('createTweet'),
@@ -156,9 +202,7 @@ class TweetRoutesTest extends TestCase
     {
         $type = 'reply';
         $text = $this->generateText();
-
-        $this->createFactoryTweet();
-        $tweetId = Tweet::latest()->first()->id + 10;
+        $tweetId = $this->getInvalidTweetId();
 
         $response = $this->postJson(
             route('createTweet'),
@@ -176,7 +220,7 @@ class TweetRoutesTest extends TestCase
     {
         $type = 'quote';
         $text = $this->generateText();
-        $tweetToRepost = $this->createFactoryTweet();
+        $tweetToRepost = $this->createTweet();
 
         $response = $this->postJson(
             route('createTweet'),
@@ -194,7 +238,7 @@ class TweetRoutesTest extends TestCase
     {
         $type = 'quote';
         $text = $this->getEmptyText();
-        $tweetToRepost = $this->createFactoryTweet();
+        $tweetToRepost = $this->createTweet();
 
         $response = $this->postJson(
             route('createTweet'),
@@ -212,9 +256,7 @@ class TweetRoutesTest extends TestCase
     {
         $type = 'quote';
         $text = $this->generateText();
-
-        $this->createFactoryTweet();
-        $tweetId = Tweet::latest()->first()->id + 10;
+        $tweetId = $this->getInvalidTweetId();
 
         $response = $this->postJson(
             route('createTweet'),
@@ -315,5 +357,40 @@ class TweetRoutesTest extends TestCase
         );
 
         $response->assertStatus(200);
+    }
+
+    public function test_delete_tweet_basic(): void
+    {
+        $tweet = $this->createTweet([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $response = $this->delete(
+            route('deleteTweet', ['tweet' => $tweet->id]),
+        );
+
+        $response->assertStatus(200);
+    }
+
+    public function test_delete_tweet_invalid_request_target(): void
+    {
+        $response = $this->delete(
+            route('deleteTweet', ['tweet' => $this->getInvalidTweetId()]),
+        );
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    public function test_delete_tweet_of_another_user(): void
+    {
+        $tweet = $this->createTweet([
+            'user_id' => $this->anotherUser->id
+        ]);
+
+        $response = $this->delete(
+            route('deleteTweet', ['tweet' => $tweet->id]),
+        );
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }

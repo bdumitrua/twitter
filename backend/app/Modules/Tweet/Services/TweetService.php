@@ -249,12 +249,12 @@ class TweetService
      * @param Tweet $tweet
      * @param Request $request
      * 
-     * @return void
+     * @return Response
      */
-    public function unrepost(Tweet $tweet, Request $request): void
+    public function unrepost(Tweet $tweet, Request $request): Response
     {
         $this->logger->info("Deleting repost of tweet {$tweet->id}", ['userId' => $this->authorizedUserId, 'ip' => $request->ip()]);
-        $this->tweetRepository->unrepost($tweet->id, $this->authorizedUserId);
+        return $this->tweetRepository->unrepost($tweet->id, $this->authorizedUserId);
     }
 
     /**

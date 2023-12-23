@@ -357,19 +357,22 @@ class TweetRepository
      * @param int $tweetId
      * @param int $authorizedUserId
      * 
-     * @return void
+     * @return Response
      */
-    public function unrepost(int $tweetId, int $authorizedUserId): void
+    public function unrepost(int $tweetId, int $authorizedUserId): Response
     {
         $tweet = $this->queryFindRepost($authorizedUserId, $tweetId)->first() ?? [];
 
-        if (!empty($tweet)) {
-            $repostTweetId = $tweet->id;
-            $tweet->delete();
-
-            $this->clearTweetCache($repostTweetId);
-            $this->clearUserTweetsCache($authorizedUserId);
+        if (empty($tweet)) {
+            return ResponseHelper::noContent();
         }
+
+        $repostTweetId = $tweet->id;
+        $tweet->delete();
+        $this->clearTweetCache($repostTweetId);
+        $this->clearUserTweetsCache($authorizedUserId);
+
+        return ResponseHelper::okResponse();
     }
 
     /**
