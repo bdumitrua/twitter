@@ -94,59 +94,7 @@ class TweetRoutesTest extends TestCase
         $response->assertStatus(422);
     }
 
-    public function test_create_repost_tweet_route_basic(): void
-    {
-        $type = 'repost';
-        $tweetToRepost = $this->createFactoryTweet();
-
-        $response = $this->postJson(
-            route('createTweet'),
-            [
-                'type' => $type,
-                'linkedTweetId' => $tweetToRepost->id
-            ]
-        );
-
-        $response->assertStatus(200);
-    }
-
-    public function test_create_repost_tweet_route_with_text(): void
-    {
-        $type = 'repost';
-        $tweetToRepost = $this->createFactoryTweet();
-        $text = $this->generateText();
-
-        $response = $this->postJson(
-            route('createTweet'),
-            [
-                'text' => $text,
-                'type' => $type,
-                'linkedTweetId' => $tweetToRepost->id
-            ]
-        );
-
-        $response->assertStatus(200);
-    }
-
-    public function test_create_repost_tweet_route_invalid_linked_tweet_id(): void
-    {
-        $type = 'repost';
-
-        $this->createFactoryTweet();
-        $tweetId = Tweet::latest()->first()->id + 10;
-
-        $response = $this->postJson(
-            route('createTweet'),
-            [
-                'type' => $type,
-                'linkedTweetId' => $tweetId
-            ]
-        );
-
-        $response->assertStatus(422);
-    }
-
-    public function test_create_repost_tweet_alternative_route_basic(): void
+    public function test_create_repost_tweet_basic(): void
     {
         $tweetToRepost = $this->createFactoryTweet();
         $response = $this->postJson(
@@ -156,7 +104,7 @@ class TweetRoutesTest extends TestCase
         $response->assertStatus(200);
     }
 
-    public function test_create_repost_tweet_alternative_route_invalid_request_target(): void
+    public function test_create_repost_tweet_invalid_request_target(): void
     {
         $this->createFactoryTweet();
         $tweetId = Tweet::latest()->first()->id + 10;

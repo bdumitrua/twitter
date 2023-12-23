@@ -14,9 +14,9 @@ class TweetRequest extends FormRequest
     public function rules()
     {
         return [
-            'text' => 'nullable|string|max:255',
+            'text' => 'required|string|max:255',
             'userGroupId' => 'nullable|exists:user_groups,id',
-            'type' => 'nullable|in:repost,reply,quote',
+            'type' => 'nullable|in:reply,quote',
             'linkedTweetId' => 'nullable|exists:tweets,id',
         ];
     }
