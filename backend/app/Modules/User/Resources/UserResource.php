@@ -108,13 +108,13 @@ class UserResource extends JsonResource
 
             $actions[] = [
                 "SubscribeToUserNewTweets",
-                "userSubscribtionOnNotifications",
+                "subscribeOnUserNotification",
                 ["user" => $this->id]
             ];
 
             $actions[] = [
                 "UnsubscribeToUserNewTweets",
-                "userUnsubscribtionFromNotifications",
+                "unsubscribeFromUserNotification",
                 ["user" => $this->id]
             ];
         }
