@@ -189,7 +189,7 @@ class UsersListService
     {
         return $usersLists->filter(function ($usersList) use ($userId) {
             return !($usersList->is_private)
-                || in_array($userId, $this->usersListRepository->getUserListsIds($userId));
+                || in_array($usersList->id, $this->usersListRepository->getUserListsIds($userId));
         });
     }
 }

@@ -13,11 +13,11 @@ class TweetResource extends JsonResource
     public function toArray(Request $request): array
     {
         // Всегда добавляется на этапе сборки
-        $author = new ShortUserResource($this->author);
+        $author = (new ShortUserResource($this->author))->resolve();
 
         // Может добавиться на этапе сборки
         $notices = !empty((array)$this->notices)
-            ? TweetNoticeResource::collection($this->notices)
+            ? TweetNoticeResource::collection($this->notices)->resolve()
             : [];
 
         $thread = !empty((array)$this->thread)
@@ -29,7 +29,7 @@ class TweetResource extends JsonResource
             : [];
 
         $replies = !empty((array)$this->replies)
-            ? TweetResource::collection($this->replies)
+            ? TweetResource::collection($this->replies)->resolve()
             : [];
 
         $relatedData = $this->prepareRelatedData($linkedTweetData, $thread) ?? [];
@@ -43,7 +43,7 @@ class TweetResource extends JsonResource
             'content' => [
                 'text' => $this->text,
                 'notices' => $notices,
-                'created_at' => $this->created_at,
+                'created_at' => $this->created_at->toW3cString(),
             ],
             'counters' => $counters,
             'related' => $relatedData,
@@ -65,21 +65,21 @@ class TweetResource extends JsonResource
     {
         return [
             'likes' => [
-                'count' => $this->likes_count,
+                'count' => $this->likes_count ?? 0,
                 'active' => $this->isLiked ?? false
             ],
             'replies' => [
-                'count' => $this->replies_count
+                'count' => $this->replies_count ?? 0,
             ],
             'reposts' => [
-                'count' => $this->reposts_count,
+                'count' => $this->reposts_count ?? 0,
                 'active' => $this->isReposted ?? false
             ],
             'quotes' => [
-                'count' => $this->quotes_count
+                'count' => $this->quotes_count ?? 0,
             ],
             'favorites' => [
-                'count' => $this->favorites_count,
+                'count' => $this->favorites_count ?? 0,
                 'active' => $this->isFavorite ?? false
             ],
         ];
@@ -87,10 +87,6 @@ class TweetResource extends JsonResource
 
     private function prepareActions(): array
     {
-        $isShowing = $this->whenLoaded('replies', function () {
-            return true;
-        }, false);
-
         $actions = [
             [
                 "LikeTweet",
@@ -126,21 +122,12 @@ class TweetResource extends JsonResource
                 "QuoteTweet",
                 "createTweet",
             ],
-        ];
-
-        if ($isShowing) {
-            $actions[] = [
+            [
                 'ShareTweet',
                 'getTweetById',
                 ["tweet" => $this->id]
-            ];
-        } else {
-            $actions[] = [
-                'ShowTweet',
-                'getTweetById',
-                ["tweet" => $this->id]
-            ];
-        }
+            ],
+        ];
 
         return (array) ActionsResource::collection($actions);
     }
