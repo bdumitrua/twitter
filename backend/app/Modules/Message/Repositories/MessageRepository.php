@@ -2,15 +2,16 @@
 
 namespace App\Modules\Message\Repositories;
 
+use App\Modules\Message\Models\Chat;
 use App\Modules\Message\Models\Message;
 
 class MessageRepository
 {
-    protected Message $message;
+    protected Chat $chat;
 
     public function __construct(
-        Message $message
+        Chat $chat
     ) {
-        $this->message = $message;
+        $this->chat = $chat;
     }
 }

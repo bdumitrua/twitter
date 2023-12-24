@@ -4,8 +4,6 @@ namespace App\Modules\Message\Services;
 
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use App\Modules\Message\Models\Message;
 use App\Modules\Message\Repositories\MessageRepository;
 use App\Modules\Message\Requests\MessageRequest;
 use App\Modules\User\Models\User;
@@ -34,12 +32,12 @@ class MessageService
         //
     }
 
-    public function read(Message $message)
+    public function read(int $messageId)
     {
         // 
     }
 
-    public function delete(Message $message)
+    public function delete(int $messageId)
     {
         // 
     }
