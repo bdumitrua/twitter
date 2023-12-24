@@ -44,7 +44,7 @@ class UserSubscribtionRoutesTest extends TestCase
             route('getUserSubscribtions', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_get_authorized_user_base_subscribtions_route_empty(): void
@@ -56,7 +56,7 @@ class UserSubscribtionRoutesTest extends TestCase
             route('getUserSubscribtions', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_get_authorized_user_base_subscribers_route_basic(): void
@@ -74,7 +74,7 @@ class UserSubscribtionRoutesTest extends TestCase
             route('getUserSubscribers', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_get_authorized_user_base_subscribers_route_empty(): void
@@ -86,7 +86,7 @@ class UserSubscribtionRoutesTest extends TestCase
             route('getUserSubscribers', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_base_subscribe_route_basic(): void
@@ -95,7 +95,7 @@ class UserSubscribtionRoutesTest extends TestCase
             route('subscribeOnUser', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_base_subscribe_route_incorrect_request_target(): void
@@ -117,7 +117,7 @@ class UserSubscribtionRoutesTest extends TestCase
             route('subscribeOnUser', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_base_unsubscribe_route_basic(): void
@@ -130,7 +130,7 @@ class UserSubscribtionRoutesTest extends TestCase
             route('unsubscribeFromUser', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
 
@@ -153,7 +153,7 @@ class UserSubscribtionRoutesTest extends TestCase
             route('unsubscribeFromUser', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_base_unsubscribe_route_repeated(): void
@@ -168,6 +168,6 @@ class UserSubscribtionRoutesTest extends TestCase
             route('unsubscribeFromUser', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 }

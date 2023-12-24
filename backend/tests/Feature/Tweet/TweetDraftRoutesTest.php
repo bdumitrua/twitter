@@ -45,7 +45,7 @@ class TweetDraftRoutesTest extends TestCase
         $response = $this->get(route('getAuthorizedUserDrafts'));
         $createdResources = TweetDraftsResource::make(collect($tweetDrafts))->resolve();
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_get_authorized_user_drafts_route_empty(): void
@@ -54,7 +54,7 @@ class TweetDraftRoutesTest extends TestCase
         $response = $this->get(route('getAuthorizedUserDrafts'));
         $createdResources = TweetDraftsResource::collection(collect($tweetDrafts))->resolve();
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_create_tweet_draft_route_basic(): void
@@ -64,7 +64,7 @@ class TweetDraftRoutesTest extends TestCase
             $this->getTextObject()
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_tweet_draft_route_incorrect_request(): void
@@ -74,7 +74,7 @@ class TweetDraftRoutesTest extends TestCase
             $this->getInvalidTextObject()
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_tweet_draft_route_with_same_text(): void
@@ -85,7 +85,7 @@ class TweetDraftRoutesTest extends TestCase
             ['text' => $tweetDraft->text]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_delete_tweet_draft_route_basic(): void
@@ -97,7 +97,7 @@ class TweetDraftRoutesTest extends TestCase
             ['drafts' => $draftsIds]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_delete_tweet_draft_route_incorrect_request_target(): void
@@ -107,6 +107,6 @@ class TweetDraftRoutesTest extends TestCase
             ['drafts' => [123, 124, 125]]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 }

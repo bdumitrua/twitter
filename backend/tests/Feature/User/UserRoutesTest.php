@@ -29,14 +29,14 @@ class UserRoutesTest extends TestCase
         $this->actingAs($this->authorizedUser, 'api');
         $response = $this->get(route('getAuthorizedUserData'));
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_get_authorized_user_data_route_without_authorization(): void
     {
         $response = $this->get(route('getAuthorizedUserData'));
 
-        $response->assertStatus(401);
+        $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
     public function test_get_user_data_by_id_route_basic(): void
@@ -47,7 +47,7 @@ class UserRoutesTest extends TestCase
 
         $createdResource = UserResource::make($this->authorizedUser)->resolve();
 
-        $response->assertStatus(200)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
     public function test_get_user_data_by_id_route_incorrect_request_target(): void
@@ -70,7 +70,7 @@ class UserRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_update_user_data_route_incorrect_request(): void
@@ -84,7 +84,7 @@ class UserRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_update_user_data_route_empty_request(): void
@@ -94,6 +94,6 @@ class UserRoutesTest extends TestCase
             route('updateUserData')
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 }

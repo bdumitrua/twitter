@@ -52,7 +52,7 @@ class AuthRoutesTest extends TestCase
         $createdResource = RegistrationCodeResource::make($createdRegistration->id)->resolve();
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJson($createdResource);
     }
 
@@ -61,7 +61,7 @@ class AuthRoutesTest extends TestCase
         $startRegistrationData = $this->generateIncorrectStartRegistrationData();
 
         $response = $this->postJson(route('startRegistration'), $startRegistrationData);
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_registration_confirm_route_basic(): void
@@ -75,7 +75,7 @@ class AuthRoutesTest extends TestCase
         $createdResource = RegistrationConfirmedResource::make($authRegistration->id)->resolve();
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJson($createdResource);
     }
 
@@ -87,7 +87,7 @@ class AuthRoutesTest extends TestCase
             ['code' => '1']
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_registration_confirm_route_incorrect_code(): void
@@ -110,7 +110,7 @@ class AuthRoutesTest extends TestCase
             ['password' => '12341234']
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_registration_end_route_code_not_confirmed(): void
@@ -132,7 +132,7 @@ class AuthRoutesTest extends TestCase
             ['password' => 'short']
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_reset_start_route_basic(): void
@@ -147,7 +147,7 @@ class AuthRoutesTest extends TestCase
         $createdResource = PasswordResetCodeResource::make($createdReset->id)->resolve();
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJson($createdResource);
     }
 
@@ -159,7 +159,7 @@ class AuthRoutesTest extends TestCase
             ['email' => 'NotAnEmail']
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_reset_start_route_incorrect_email(): void
@@ -185,7 +185,7 @@ class AuthRoutesTest extends TestCase
         $createdResource = PasswordResetConfirmedResource::make($authReset->id)->resolve();
 
         $response
-            ->assertStatus(200)
+            ->assertStatus(Response::HTTP_OK)
             ->assertJson($createdResource);
     }
 
@@ -198,7 +198,7 @@ class AuthRoutesTest extends TestCase
             ['code' => '1']
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_reset_confirm_code_route_incorrect_code(): void
@@ -225,7 +225,7 @@ class AuthRoutesTest extends TestCase
             ['password' => '12341234']
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_reset_end_route_incorrect_request(): void
@@ -240,7 +240,7 @@ class AuthRoutesTest extends TestCase
             ['password' => 'short']
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_reset_end_route_code_not_confirmed(): void
@@ -274,7 +274,7 @@ class AuthRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_login_route_incorrect_request(): void
@@ -289,7 +289,7 @@ class AuthRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_login_route_invalid_credentials(): void

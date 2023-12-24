@@ -38,7 +38,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
             route('subscribeOnUserNotification', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_notifications_subscribe_route_incorrect_request_target(): void
@@ -88,7 +88,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
             route('subscribeOnUserNotification', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_notifications_unsubscribe_route_basic(): void
@@ -106,7 +106,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
             route('unsubscribeFromUserNotification', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
 
@@ -144,7 +144,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
             route('unsubscribeFromUserNotification', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_notifications_unsubscribe_route_without_notification_subscribtion(): void
@@ -158,7 +158,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
             route('unsubscribeFromUserNotification', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_notifications_unsubscribe_route_repeated(): void
@@ -180,6 +180,6 @@ class NotificationsSubscribtionRoutesTest extends TestCase
             route('unsubscribeFromUserNotification', ['user' => $this->anotherUser->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 }

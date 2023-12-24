@@ -40,7 +40,7 @@ class UsersListRoutesTest extends TestCase
         $createdResource = UsersListResource::collection($usersLists)->resolve();
         $response = $this->get(route('getAuthorizedUserUsersLists'));
 
-        $response->assertStatus(200)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
     public function test_get_my_lists_route_empty(): void
@@ -49,7 +49,7 @@ class UsersListRoutesTest extends TestCase
         $createdResource = UserGroupResource::collection($usersLists)->resolve();
         $response = $this->get(route('getAuthorizedUserUsersLists'));
 
-        $response->assertStatus(200)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
     public function test_create_users_list_route_basic(): void
@@ -60,7 +60,7 @@ class UsersListRoutesTest extends TestCase
             ['name' => $name],
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_users_list_route_incorrect_request(): void
@@ -71,7 +71,7 @@ class UsersListRoutesTest extends TestCase
             ['desription' => $desription]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_show_users_list_route_basic(): void
@@ -87,7 +87,7 @@ class UsersListRoutesTest extends TestCase
             route('showUsersList', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(200)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
     public function test_show_users_list_route_incorrect_request_target(): void
@@ -125,7 +125,7 @@ class UsersListRoutesTest extends TestCase
             ['name' => $this->faker->words(3, true)]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_update_users_list_route_incorrect_request(): void
@@ -138,7 +138,7 @@ class UsersListRoutesTest extends TestCase
             ['name' => 1234]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_update_users_list_route_another_user_list(): void
@@ -163,7 +163,7 @@ class UsersListRoutesTest extends TestCase
             route('deleteUsersList', ['usersList' => $usersList->id]),
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_delete_users_list_route_incorrect_request_target(): void
@@ -203,7 +203,7 @@ class UsersListRoutesTest extends TestCase
             ]),
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_add_member_to_list_route_another_user_list(): void
@@ -296,7 +296,7 @@ class UsersListRoutesTest extends TestCase
             ]),
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
 
@@ -432,7 +432,7 @@ class UsersListRoutesTest extends TestCase
             route('getUsersListMembers', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount(1);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(1);
     }
 
     public function test_get_list_members_empty(): void
@@ -445,7 +445,7 @@ class UsersListRoutesTest extends TestCase
             route('getUsersListMembers', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_list_subscribers_basic(): void
@@ -465,7 +465,7 @@ class UsersListRoutesTest extends TestCase
             route('getUsersListSubscribers', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount(1);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(1);
     }
 
     public function test_get_list_subscribers_empty(): void
@@ -479,7 +479,7 @@ class UsersListRoutesTest extends TestCase
             route('getUsersListSubscribers', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_subscribe_on_list_route_basic(): void
@@ -492,7 +492,7 @@ class UsersListRoutesTest extends TestCase
             route('subscribeToUsersList', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_subscribe_on_list_route_repeat(): void
@@ -509,7 +509,7 @@ class UsersListRoutesTest extends TestCase
             route('subscribeToUsersList', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_subscribe_on_list_route_invalid_request_target(): void
@@ -551,7 +551,7 @@ class UsersListRoutesTest extends TestCase
             route('unsubscribeFromUsersList', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_unsubscribe_from_list_route_repeat(): void
@@ -572,7 +572,7 @@ class UsersListRoutesTest extends TestCase
             route('unsubscribeFromUsersList', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_unsubscribe_from_list_route_without_subscribtion(): void
@@ -585,7 +585,7 @@ class UsersListRoutesTest extends TestCase
             route('unsubscribeFromUsersList', ['usersList' => $usersList->id])
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_unsubscribe_from_list_route_invalid_request_target(): void

@@ -45,7 +45,7 @@ class DeviceTokenRoutesTest extends TestCase
         $response = $this->get(route('getAuthorizedUserDeviceTokens'));
         $createdResources = DeviceTokenResource::collection(collect($deviceTokens))->resolve();
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_get_authorized_user_tokens_route_empty(): void
@@ -54,7 +54,7 @@ class DeviceTokenRoutesTest extends TestCase
         $response = $this->get(route('getAuthorizedUserDeviceTokens'));
         $createdResources = DeviceTokenResource::collection(collect($deviceTokens))->resolve();
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_create_device_token_route_basic(): void
@@ -64,7 +64,7 @@ class DeviceTokenRoutesTest extends TestCase
             $this->getTokenObject()
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_device_token_route_incorrect_request(): void
@@ -74,7 +74,7 @@ class DeviceTokenRoutesTest extends TestCase
             $this->getInvalidTokenObject()
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_update_device_token_route_basic(): void
@@ -85,7 +85,7 @@ class DeviceTokenRoutesTest extends TestCase
             $this->getTokenObject()
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_update_device_token_route_incorrect_request(): void
@@ -96,7 +96,7 @@ class DeviceTokenRoutesTest extends TestCase
             $this->getInvalidTokenObject()
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_update_device_token_route_incorrect_request_target(): void
@@ -117,7 +117,7 @@ class DeviceTokenRoutesTest extends TestCase
             route('deleteDeviceToken', ['deviceToken' => $deviceToken->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_delete_device_token_route_incorrect_request_target(): void

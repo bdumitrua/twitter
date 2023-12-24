@@ -98,7 +98,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_default_tweet_route_with_empty_text(): void
@@ -109,7 +109,7 @@ class TweetRoutesTest extends TestCase
             ['text' => $text]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_default_tweet_route_with_invalid_group_id(): void
@@ -127,7 +127,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_repost_tweet_basic(): void
@@ -137,7 +137,7 @@ class TweetRoutesTest extends TestCase
             route('repostTweet', ['tweet' => $tweetToRepost->id]),
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_repost_tweet_invalid_request_target(): void
@@ -157,7 +157,7 @@ class TweetRoutesTest extends TestCase
             route('unrepostTweet', ['tweet' => $tweet->linked_tweet_id]),
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_unrepost_tweet_invalid_request_target(): void
@@ -177,7 +177,7 @@ class TweetRoutesTest extends TestCase
             route('unrepostTweet', ['tweet' => $tweet->id]),
         );
 
-        $response->assertStatus(204);
+        $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
     public function test_create_reply_tweet_route_basic(): void
@@ -195,7 +195,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_reply_tweet_route_with_empty_text(): void
@@ -213,7 +213,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_reply_tweet_route_invalid_linked_tweet_id(): void
@@ -231,7 +231,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_quote_tweet_route_basic(): void
@@ -249,7 +249,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_quote_tweet_route_with_empty_text(): void
@@ -267,7 +267,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_quote_tweet_route_invalid_linked_tweet_id(): void
@@ -285,7 +285,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_thread_route_basic(): void
@@ -306,7 +306,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_thread_route_with_an_empty_text(): void
@@ -329,7 +329,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_thread_route_invalid_group_id(): void
@@ -351,7 +351,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_thread_route_with_any_type(): void
@@ -374,7 +374,7 @@ class TweetRoutesTest extends TestCase
             ]
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_delete_tweet_basic(): void
@@ -387,7 +387,7 @@ class TweetRoutesTest extends TestCase
             route('deleteTweet', ['tweet' => $tweet->id]),
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_delete_tweet_invalid_request_target(): void
@@ -421,7 +421,7 @@ class TweetRoutesTest extends TestCase
         );
 
         $createdResource = TweetResource::make($tweetData)->resolve();
-        $response->assertStatus(200)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
     public function test_show_tweet_route_invalid_request_target(): void
@@ -531,7 +531,7 @@ class TweetRoutesTest extends TestCase
         $tweetData->favorites_count = empty($tweetData->favorites_count) ? 1 : $tweetData->favorites_count + 1;
 
         $createdResource = TweetResource::collection([$tweetData])->resolve();
-        $response->assertStatus(200)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
     public function test_get_bookmarks_route_empty(): void
@@ -542,7 +542,7 @@ class TweetRoutesTest extends TestCase
 
         $bookmarks = new Collection();
         $createdResource = TweetResource::collection($bookmarks)->resolve();
-        $response->assertStatus(200)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
     public function test_get_user_tweets_basic(): void
@@ -556,7 +556,7 @@ class TweetRoutesTest extends TestCase
             route('getUserTweets', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount($tweetsCount);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount($tweetsCount);
     }
 
     public function test_get_user_tweets_empty(): void
@@ -565,7 +565,7 @@ class TweetRoutesTest extends TestCase
             route('getUserTweets', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_user_replies_basic(): void
@@ -585,7 +585,7 @@ class TweetRoutesTest extends TestCase
             route('getUserReplies', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount($repliesCount);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount($repliesCount);
     }
 
     public function test_get_user_replies_empty(): void
@@ -599,7 +599,7 @@ class TweetRoutesTest extends TestCase
             route('getUserReplies', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_user_likes_basic(): void
@@ -617,7 +617,7 @@ class TweetRoutesTest extends TestCase
         $tweetData->likes_count = empty($tweetData->likes_count) ? 1 : $tweetData->likes_count + 1;
 
         $createdResource = TweetResource::collection([$tweetData])->resolve();
-        $response->assertStatus(200)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
     public function test_get_user_likes_empty(): void
@@ -626,7 +626,7 @@ class TweetRoutesTest extends TestCase
             route('getUserLikes', ['user' => $this->authorizedUser->id])
         );
 
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_user_feed_route_basic(): void
@@ -644,13 +644,13 @@ class TweetRoutesTest extends TestCase
         $this->post(route('subscribeOnUser', ['user' => $this->secondUser->id]));
 
         $response = $this->getJson(route('getUserFeed'));
-        $response->assertStatus(200)->assertJsonCount($secondUserTweetsCount);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount($secondUserTweetsCount);
     }
 
     public function test_get_user_feed_route_empty_subscribtions(): void
     {
         $response = $this->getJson(route('getUserFeed'));
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_user_feed_route_empty_tweets(): void
@@ -659,7 +659,7 @@ class TweetRoutesTest extends TestCase
         $this->post(route('subscribeOnUser', ['user' => $this->thirdUser->id]));
 
         $response = $this->getJson(route('getUserFeed'));
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_list_tweets_route_basic(): void
@@ -686,7 +686,7 @@ class TweetRoutesTest extends TestCase
 
         $response = $this->getJson(route('getUsersListTweets', ['usersList' => $usersList->id]));
 
-        $response->assertStatus(200)->assertJsonCount($authorizedUserTweetsCount);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount($authorizedUserTweetsCount);
     }
 
     public function test_get_list_tweets_route_empty_members(): void
@@ -708,7 +708,7 @@ class TweetRoutesTest extends TestCase
 
         $response = $this->getJson(route('getUsersListTweets', ['usersList' => $usersList->id]));
 
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_list_tweets_route_empty_tweets(): void
@@ -724,7 +724,7 @@ class TweetRoutesTest extends TestCase
         ]));
 
         $response = $this->getJson(route('getUsersListTweets', ['usersList' => $usersList->id]));
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_list_tweets_route_private_list_allowed(): void
@@ -744,7 +744,7 @@ class TweetRoutesTest extends TestCase
         $usersList->save();
 
         $response = $this->getJson(route('getUsersListTweets', ['usersList' => $usersList->id]));
-        $response->assertStatus(200)->assertJsonCount(0);
+        $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
     public function test_get_list_tweets_route_private_list_private(): void

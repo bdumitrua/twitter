@@ -52,7 +52,7 @@ class SearchRoutesTest extends TestCase
         $response = $this->get(route('getAuthorizedUserRecentSearches'));
         $createdResources = RecentSearchesResource::make($recentSearches)->resolve();
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_get_authorized_user_recent_searches_empty(): void
@@ -62,7 +62,7 @@ class SearchRoutesTest extends TestCase
         $response = $this->get(route('getAuthorizedUserRecentSearches'));
         $createdResources = RecentSearchesResource::make($recentSearches)->resolve();
 
-        $response->assertStatus(200)->assertJson($createdResources);
+        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
     public function test_create_new_recent_search_basic(): void
@@ -76,7 +76,7 @@ class SearchRoutesTest extends TestCase
             $newRecentSearchData
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_new_recent_search_with_linked_user(): void
@@ -92,7 +92,7 @@ class SearchRoutesTest extends TestCase
             $newRecentSearchData
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_create_new_recent_search_incorrect_request(): void
@@ -106,7 +106,7 @@ class SearchRoutesTest extends TestCase
             $newRecentSearchData
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_create_new_recent_search_invalid_request_with_linked_user(): void
@@ -122,7 +122,7 @@ class SearchRoutesTest extends TestCase
             $newRecentSearchData
         );
 
-        $response->assertStatus(422);
+        $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
     public function test_clear_authorized_user_recent_searches_basic(): void
@@ -133,6 +133,6 @@ class SearchRoutesTest extends TestCase
 
         $response = $this->deleteJson(route('clearAuthorizedUserRecentSearches'));
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 }

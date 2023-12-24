@@ -36,7 +36,7 @@ class TweetActionsRoutesTest extends TestCase
             route('likeTweet', ['tweet' => $tweet->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_like_tweet_route_incorrect_request_target(): void
@@ -83,7 +83,7 @@ class TweetActionsRoutesTest extends TestCase
             route('dislikeTweet', ['tweet' => $tweet->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_dislike_tweet_route_incorrect_request_target(): void
@@ -149,7 +149,7 @@ class TweetActionsRoutesTest extends TestCase
             route('addTweetToBookmarks', ['tweet' => $tweet->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_bookmark_tweet_route_incorrect_request_target(): void
@@ -196,7 +196,7 @@ class TweetActionsRoutesTest extends TestCase
             route('removeTweetFromBookmarks', ['tweet' => $tweet->id])
         );
 
-        $response->assertStatus(200);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function test_unbookmark_tweet_route_incorrect_request_target(): void
