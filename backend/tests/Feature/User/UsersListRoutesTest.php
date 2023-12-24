@@ -222,7 +222,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_add_member_to_list_route_incorrect_route_group_target(): void
+    public function test_add_member_to_list_route_incorrect_request_group_target(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -238,7 +238,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_add_member_to_list_route_incorrect_route_user_target(): void
+    public function test_add_member_to_list_route_incorrect_request_user_target(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -413,5 +413,203 @@ class UsersListRoutesTest extends TestCase
         );
 
         $response->assertStatus(Response::HTTP_NO_CONTENT);
+    }
+
+    public function test_get_list_members_basic(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $this->postJson(
+            route('addMemberToUsersList', [
+                'usersList' => $usersList->id,
+                'user' => $this->anotherUser->id
+            ]),
+        );
+
+        $response = $this->getJson(
+            route('getUsersListMembers', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(200)->assertJsonCount(1);
+    }
+
+    public function test_get_list_members_empty(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $response = $this->getJson(
+            route('getUsersListMembers', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(200)->assertJsonCount(0);
+    }
+
+    public function test_get_list_subscribers_basic(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->anotherUser->id,
+            'is_private' => false
+        ]);
+
+        $this->postJson(
+            route('subscribeToUsersList', [
+                'usersList' => $usersList->id
+            ]),
+        );
+
+        $response = $this->getJson(
+            route('getUsersListSubscribers', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(200)->assertJsonCount(1);
+    }
+
+    public function test_get_list_subscribers_empty(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->anotherUser->id,
+            'is_private' => false
+        ]);
+
+        $response = $this->getJson(
+            route('getUsersListSubscribers', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(200)->assertJsonCount(0);
+    }
+
+    public function test_subscribe_on_list_route_basic(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $response = $this->postJson(
+            route('subscribeToUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(200);
+    }
+
+    public function test_subscribe_on_list_route_repeat(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $this->postJson(
+            route('subscribeToUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response = $this->postJson(
+            route('subscribeToUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(204);
+    }
+
+    public function test_subscribe_on_list_route_invalid_request_target(): void
+    {
+        UsersList::factory()->create();
+
+        $response = $this->postJson(
+            route('subscribeToUsersList', ['usersList' => UsersList::latest()->first()->id + 10])
+        );
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    public function test_subscribe_on_list_route_private_list(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->anotherUser->id,
+            'is_private' => true
+        ]);
+
+        $response = $this->postJson(
+            route('subscribeToUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
+    }
+
+    public function test_unsubscribe_from_list_route_basic(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $this->postJson(
+            route('subscribeToUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response = $this->deleteJson(
+            route('unsubscribeFromUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(200);
+    }
+
+    public function test_unsubscribe_from_list_route_repeat(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $this->postJson(
+            route('subscribeToUsersList', ['usersList' => $usersList->id])
+        );
+
+        $this->deleteJson(
+            route('unsubscribeFromUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response = $this->deleteJson(
+            route('unsubscribeFromUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(204);
+    }
+
+    public function test_unsubscribe_from_list_route_without_subscribtion(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $response = $this->deleteJson(
+            route('unsubscribeFromUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(204);
+    }
+
+    public function test_unsubscribe_from_list_route_invalid_request_target(): void
+    {
+        UsersList::factory()->create();
+
+        $response = $this->deleteJson(
+            route('unsubscribeFromUsersList', ['usersList' => UsersList::latest()->first()->id + 10])
+        );
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    public function test_unsubscribe_from_list_route_private_list(): void
+    {
+        $usersList = UsersList::factory()->create([
+            'user_id' => $this->anotherUser->id,
+            'is_private' => true
+        ]);
+
+        $response = $this->deleteJson(
+            route('unsubscribeFromUsersList', ['usersList' => $usersList->id])
+        );
+
+        $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 }
