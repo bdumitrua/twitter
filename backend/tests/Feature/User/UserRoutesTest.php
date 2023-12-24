@@ -24,7 +24,7 @@ class UserRoutesTest extends TestCase
         $this->authorizedUser = User::factory()->create();
     }
 
-    public function test_get_authorized_user_data_route_basic(): void
+    public function testGetAuthorizedUserDataRouteBasic(): void
     {
         $this->actingAs($this->authorizedUser, 'api');
         $response = $this->get(route('getAuthorizedUserData'));
@@ -32,14 +32,14 @@ class UserRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_get_authorized_user_data_route_without_authorization(): void
+    public function testGetAuthorizedUserDataRouteWithoutAuthorization(): void
     {
         $response = $this->get(route('getAuthorizedUserData'));
 
         $response->assertStatus(Response::HTTP_UNAUTHORIZED);
     }
 
-    public function test_get_user_data_by_id_route_basic(): void
+    public function testGetUserDataByIdRouteBasic(): void
     {
         $response = $this->get(
             route('showUser', ['user' => $this->authorizedUser->id])
@@ -50,7 +50,7 @@ class UserRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
-    public function test_get_user_data_by_id_route_incorrect_request_target(): void
+    public function testGetUserDataByIdRouteIncorrectRequestTarget(): void
     {
         $response = $this->get(
             route('showUser', ['user' => $this->authorizedUser->id + 10])
@@ -59,7 +59,7 @@ class UserRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_update_user_data_route_basic(): void
+    public function testUpdateUserDataRouteBasic(): void
     {
         $this->actingAs($this->authorizedUser, 'api');
         $response = $this->patchJson(
@@ -73,7 +73,7 @@ class UserRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_update_user_data_route_incorrect_request(): void
+    public function testUpdateUserDataRouteIncorrectRequest(): void
     {
         $this->actingAs($this->authorizedUser, 'api');
         $response = $this->patchJson(
@@ -87,7 +87,7 @@ class UserRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_update_user_data_route_empty_request(): void
+    public function testUpdateUserDataRouteEmptyRequest(): void
     {
         $this->actingAs($this->authorizedUser, 'api');
         $response = $this->patchJson(

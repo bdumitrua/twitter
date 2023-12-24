@@ -26,7 +26,7 @@ class TweetActionsRoutesTest extends TestCase
         $this->actingAs($this->authorizedUser, 'api');
     }
 
-    public function test_like_tweet_route_basic(): void
+    public function testLikeTweetRouteBasic(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -39,7 +39,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_like_tweet_route_incorrect_request_target(): void
+    public function testLikeTweetRouteIncorrectRequestTarget(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -52,7 +52,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_like_tweet_route_repeated(): void
+    public function testLikeTweetRouteRepeated(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -69,7 +69,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_dislike_tweet_route_basic(): void
+    public function testDislikeTweetRouteBasic(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -86,7 +86,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_dislike_tweet_route_incorrect_request_target(): void
+    public function testDislikeTweetRouteIncorrectRequestTarget(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -103,7 +103,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_dislike_tweet_route_without_like(): void
+    public function testDislikeTweetRouteWithoutLike(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -116,7 +116,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_dislike_tweet_route_repeated(): void
+    public function testDislikeTweetRouteRepeated(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -139,7 +139,7 @@ class TweetActionsRoutesTest extends TestCase
 
     // FAVORITES START =====================================
 
-    public function test_bookmark_tweet_route_basic(): void
+    public function testBookmarkTweetRouteBasic(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -152,7 +152,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_bookmark_tweet_route_incorrect_request_target(): void
+    public function testBookmarkTweetRouteIncorrectRequestTarget(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -165,7 +165,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_bookmark_tweet_route_repeated(): void
+    public function testBookmarkTweetRouteRepeated(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -182,7 +182,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_unbookmark_tweet_route_basic(): void
+    public function testUnbookmarkTweetRouteBasic(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -199,7 +199,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_unbookmark_tweet_route_incorrect_request_target(): void
+    public function testUnbookmarkTweetRouteIncorrectRequestTarget(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -216,7 +216,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_unbookmark_tweet_route_without_like(): void
+    public function testUnbookmarkTweetRouteWithoutLike(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id
@@ -229,7 +229,7 @@ class TweetActionsRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_unbookmark_tweet_route_repeated(): void
+    public function testUnbookmarkTweetRouteRepeated(): void
     {
         $tweet = Tweet::factory()->create([
             'user_id' => $this->tweetsCreator->id

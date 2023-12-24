@@ -27,7 +27,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $this->actingAs($this->authorizedUser, 'api');
     }
 
-    public function test_notifications_subscribe_route_basic(): void
+    public function testNotificationsSubscribeRouteBasic(): void
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
@@ -41,7 +41,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_notifications_subscribe_route_incorrect_request_target(): void
+    public function testNotificationsSubscribeRouteIncorrectRequestTarget(): void
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
@@ -55,7 +55,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_notifications_subscribe_route_on_yourself(): void
+    public function testNotificationsSubscribeRouteOnYourself(): void
     {
         $response = $this->postJson(
             route('subscribeOnUserNotification', ['user' => $this->authorizedUser->id])
@@ -64,7 +64,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_notifications_subscribe_route_without_base_subscribtion(): void
+    public function testNotificationsSubscribeRouteWithoutBaseSubscribtion(): void
     {
         $response = $this->postJson(
             route('subscribeOnUserNotification', ['user' => $this->anotherUser->id])
@@ -73,7 +73,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_notifications_subscribe_route_repeated(): void
+    public function testNotificationsSubscribeRouteRepeated(): void
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
@@ -91,7 +91,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_notifications_unsubscribe_route_basic(): void
+    public function testNotificationsUnsubscribeRouteBasic(): void
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
@@ -110,7 +110,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     }
 
 
-    public function test_notifications_unsubscribe_route_incorrect_request_target(): void
+    public function testNotificationsUnsubscribeRouteIncorrectRequestTarget(): void
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
@@ -129,7 +129,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
     }
 
 
-    public function test_notifications_unsubscribe_route_on_yourself(): void
+    public function testNotificationsUnsubscribeRouteOnYourself(): void
     {
         $response = $this->deleteJson(
             route('unsubscribeFromUserNotification', ['user' => $this->authorizedUser->id])
@@ -138,7 +138,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_notifications_unsubscribe_route_without_base_subscribtion(): void
+    public function testNotificationsUnsubscribeRouteWithoutBaseSubscribtion(): void
     {
         $response = $this->deleteJson(
             route('unsubscribeFromUserNotification', ['user' => $this->anotherUser->id])
@@ -147,7 +147,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_notifications_unsubscribe_route_without_notification_subscribtion(): void
+    public function testNotificationsUnsubscribeRouteWithoutNotificationSubscribtion(): void
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,
@@ -161,7 +161,7 @@ class NotificationsSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_notifications_unsubscribe_route_repeated(): void
+    public function testNotificationsUnsubscribeRouteRepeated(): void
     {
         UserSubscribtion::create([
             'user_id' => $this->anotherUser->id,

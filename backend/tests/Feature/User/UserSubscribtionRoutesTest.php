@@ -29,7 +29,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $this->actingAs($this->authorizedUser, 'api');
     }
 
-    public function test_get_authorized_user_base_subscribtions_route_basic(): void
+    public function testGetAuthorizedUserBaseSubscribtionsRouteBasic(): void
     {
         User::factory(10)->create();
         $userSubscribtions = UserSubscribtion::factory(5)->create([
@@ -47,7 +47,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
-    public function test_get_authorized_user_base_subscribtions_route_empty(): void
+    public function testGetAuthorizedUserBaseSubscribtionsRouteEmpty(): void
     {
         $usersData = new Collection();
         $createdResources = ShortUserResource::collection($usersData)->resolve();
@@ -59,7 +59,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
-    public function test_get_authorized_user_base_subscribers_route_basic(): void
+    public function testGetAuthorizedUserBaseSubscribersRouteBasic(): void
     {
         User::factory(10)->create();
         $userSubscribtions = UserSubscribtion::factory(5)->create([
@@ -77,7 +77,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
-    public function test_get_authorized_user_base_subscribers_route_empty(): void
+    public function testGetAuthorizedUserBaseSubscribersRouteEmpty(): void
     {
         $usersData = new Collection();
         $createdResources = ShortUserResource::collection($usersData)->resolve();
@@ -89,7 +89,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
-    public function test_base_subscribe_route_basic(): void
+    public function testBaseSubscribeRouteBasic(): void
     {
         $response = $this->postJson(
             route('subscribeOnUser', ['user' => $this->anotherUser->id])
@@ -98,7 +98,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_base_subscribe_route_incorrect_request_target(): void
+    public function testBaseSubscribeRouteIncorrectRequestTarget(): void
     {
         $response = $this->postJson(
             route('subscribeOnUser', ['user' => User::latest()->first()->id + 10])
@@ -107,7 +107,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_base_subscribe_route_repeated(): void
+    public function testBaseSubscribeRouteRepeated(): void
     {
         $this->postJson(
             route('subscribeOnUser', ['user' => $this->anotherUser->id])
@@ -120,7 +120,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_base_unsubscribe_route_basic(): void
+    public function testBaseUnsubscribeRouteBasic(): void
     {
         $this->postJson(
             route('subscribeOnUser', ['user' => $this->anotherUser->id])
@@ -134,7 +134,7 @@ class UserSubscribtionRoutesTest extends TestCase
     }
 
 
-    public function test_base_unsubscribe_route_incorrect_request_target(): void
+    public function testBaseUnsubscribeRouteIncorrectRequestTarget(): void
     {
         $this->postJson(
             route('subscribeOnUser', ['user' => $this->anotherUser->id])
@@ -147,7 +147,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_base_unsubscribe_route_without_base_subscribtion(): void
+    public function testBaseUnsubscribeRouteWithoutBaseSubscribtion(): void
     {
         $response = $this->deleteJson(
             route('unsubscribeFromUser', ['user' => $this->anotherUser->id])
@@ -156,7 +156,7 @@ class UserSubscribtionRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_base_unsubscribe_route_repeated(): void
+    public function testBaseUnsubscribeRouteRepeated(): void
     {
         $this->postJson(
             route('subscribeOnUser', ['user' => $this->anotherUser->id])

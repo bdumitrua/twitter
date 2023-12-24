@@ -36,7 +36,7 @@ class SearchRoutesTest extends TestCase
         return ['search' => 123];
     }
 
-    public function test_get_authorized_user_recent_searches_basic(): void
+    public function testGetAuthorizedUserRecentSearchesBasic(): void
     {
         $searchedUser = User::factory()->create();
         RecentSearch::factory()->create([
@@ -55,7 +55,7 @@ class SearchRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
-    public function test_get_authorized_user_recent_searches_empty(): void
+    public function testGetAuthorizedUserRecentSearchesEmpty(): void
     {
         $recentSearches = [];
 
@@ -65,7 +65,7 @@ class SearchRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
-    public function test_create_new_recent_search_basic(): void
+    public function testCreateNewRecentSearchBasic(): void
     {
         $newRecentSearchData = [
             'text' => $this->faker->word(5),
@@ -79,7 +79,7 @@ class SearchRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_create_new_recent_search_with_linked_user(): void
+    public function testCreateNewRecentSearchWithLinkedUser(): void
     {
         $user = User::factory()->create();
         $newRecentSearchData = [
@@ -95,7 +95,7 @@ class SearchRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_create_new_recent_search_incorrect_request(): void
+    public function testCreateNewRecentSearchIncorrectRequest(): void
     {
         $newRecentSearchData = [
             'text' => 1234,
@@ -109,7 +109,7 @@ class SearchRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_create_new_recent_search_invalid_request_with_linked_user(): void
+    public function testCreateNewRecentSearchInvalidRequestWithLinkedUser(): void
     {
         User::factory()->create();
         $newRecentSearchData = [
@@ -125,7 +125,7 @@ class SearchRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_clear_authorized_user_recent_searches_basic(): void
+    public function testClearAuthorizedUserRecentSearchesBasic(): void
     {
         RecentSearch::factory(3)->create([
             'user_id' => $this->authorizedUser->id

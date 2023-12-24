@@ -28,7 +28,7 @@ class UserGroupRoutesTest extends TestCase
         $this->actingAs($this->authorizedUser, 'api');
     }
 
-    public function test_get_my_group_route_basic(): void
+    public function testGetMyGroupRouteBasic(): void
     {
         $userGroups = UserGroup::factory(3)->create([
             'user_id' => $this->authorizedUser->id
@@ -40,7 +40,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
-    public function test_get_my_group_route_empty(): void
+    public function testGetMyGroupRouteEmpty(): void
     {
         $userGroups = new Collection();
         $createdResource = UserGroupResource::collection($userGroups)->resolve();
@@ -49,7 +49,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
-    public function test_create_user_group_route_basic(): void
+    public function testCreateUserGroupRouteBasic(): void
     {
         $name = $this->faker->words(2, true);
         $response = $this->postJson(
@@ -60,7 +60,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_create_user_group_route_incorrect_request(): void
+    public function testCreateUserGroupRouteIncorrectRequest(): void
     {
         $desription = 1324;
         $response = $this->postJson(
@@ -71,7 +71,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_show_user_group_route_basic(): void
+    public function testShowUserGroupRouteBasic(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -85,7 +85,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
-    public function test_show_user_group_route_incorrect_request_target(): void
+    public function testShowUserGroupRouteIncorrectRequestTarget(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -97,7 +97,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_show_user_group_route_another_user_group(): void
+    public function testShowUserGroupRouteAnotherUserGroup(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->anotherUser->id
@@ -109,7 +109,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_update_user_group_route_basic(): void
+    public function testUpdateUserGroupRouteBasic(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -122,7 +122,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_update_user_group_route_incorrect_request(): void
+    public function testUpdateUserGroupRouteIncorrectRequest(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -135,7 +135,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_update_user_group_route_another_user_group(): void
+    public function testUpdateUserGroupRouteAnotherUserGroup(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->anotherUser->id
@@ -148,7 +148,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_delete_user_group_route_basic(): void
+    public function testDeleteUserGroupRouteBasic(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -160,7 +160,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_delete_user_group_route_incorrect_request_target(): void
+    public function testDeleteUserGroupRouteIncorrectRequestTarget(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -172,7 +172,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_delete_user_group_route_another_user_group(): void
+    public function testDeleteUserGroupRouteAnotherUserGroup(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->anotherUser->id
@@ -184,7 +184,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_add_user_to_group_route_basic(): void
+    public function testAddUserToGroupRouteBasic(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -200,7 +200,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_add_user_to_group_route_incorrect_route_group_target(): void
+    public function testAddUserToGroupRouteIncorrectRouteGroupTarget(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -216,7 +216,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_add_user_to_group_route_incorrect_route_user_target(): void
+    public function testAddUserToGroupRouteIncorrectRouteUserTarget(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -232,7 +232,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_add_user_to_group_route_repeat(): void
+    public function testAddUserToGroupRouteRepeat(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -255,7 +255,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_remove_user_from_group_route_basic(): void
+    public function testRemoveUserFromGroupRouteBasic(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -277,7 +277,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_remove_user_from_group_route_incorrect_route_group_target(): void
+    public function testRemoveUserFromGroupRouteIncorrectRouteGroupTarget(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -299,7 +299,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_remove_user_from_group_route_incorrect_route_user_target(): void
+    public function testRemoveUserFromGroupRouteIncorrectRouteUserTarget(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -321,7 +321,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_remove_user_from_group_route_repeat(): void
+    public function testRemoveUserFromGroupRouteRepeat(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -351,7 +351,7 @@ class UserGroupRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_remove_user_from_group_route_without_adding(): void
+    public function testRemoveUserFromGroupRouteWithoutAdding(): void
     {
         $userGroup = UserGroup::factory()->create([
             'user_id' => $this->authorizedUser->id

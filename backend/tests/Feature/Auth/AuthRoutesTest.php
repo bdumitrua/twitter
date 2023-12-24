@@ -43,7 +43,7 @@ class AuthRoutesTest extends TestCase
         ];
     }
 
-    public function test_registration_start_route_basic(): void
+    public function testRegistrationStartRouteBasic(): void
     {
         $startRegistrationData = $this->generateStartRegistrationData();
         $response = $this->postJson(route('startRegistration'), $startRegistrationData);
@@ -56,7 +56,7 @@ class AuthRoutesTest extends TestCase
             ->assertJson($createdResource);
     }
 
-    public function test_registration_start_route_incorrect_request(): void
+    public function testRegistrationStartRouteIncorrectRequest(): void
     {
         $startRegistrationData = $this->generateIncorrectStartRegistrationData();
 
@@ -64,7 +64,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_registration_confirm_route_basic(): void
+    public function testRegistrationConfirmRouteBasic(): void
     {
         $authRegistration = AuthRegistration::factory()->create();
         $response = $this->postJson(
@@ -79,7 +79,7 @@ class AuthRoutesTest extends TestCase
             ->assertJson($createdResource);
     }
 
-    public function test_registration_confirm_route_incorrect_request(): void
+    public function testRegistrationConfirmRouteIncorrectRequest(): void
     {
         $authRegistration = AuthRegistration::factory()->create();
         $response = $this->postJson(
@@ -90,7 +90,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_registration_confirm_route_incorrect_code(): void
+    public function testRegistrationConfirmRouteIncorrectCode(): void
     {
         $authRegistration = AuthRegistration::factory()->create();
         $response = $this->postJson(
@@ -102,7 +102,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
     }
 
-    public function test_registration_end_route_base(): void
+    public function testRegistrationEndRouteBase(): void
     {
         $authRegistration = AuthRegistration::factory()->create(['confirmed' => true]);
         $response = $this->postJson(
@@ -113,7 +113,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_registration_end_route_code_not_confirmed(): void
+    public function testRegistrationEndRouteCodeNotConfirmed(): void
     {
         $authRegistration = AuthRegistration::factory()->create();
         $response = $this->postJson(
@@ -124,7 +124,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_registration_end_route_incorrect_password(): void
+    public function testRegistrationEndRouteIncorrectPassword(): void
     {
         $authRegistration = AuthRegistration::factory()->create(['confirmed' => true]);
         $response = $this->postJson(
@@ -135,7 +135,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_reset_start_route_basic(): void
+    public function testResetStartRouteBasic(): void
     {
         $user = User::factory()->create();
         $response = $this->postJson(
@@ -151,7 +151,7 @@ class AuthRoutesTest extends TestCase
             ->assertJson($createdResource);
     }
 
-    public function test_reset_start_route_incorrect_request(): void
+    public function testResetStartRouteIncorrectRequest(): void
     {
         User::factory()->create();
         $response = $this->postJson(
@@ -162,7 +162,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_reset_start_route_incorrect_email(): void
+    public function testResetStartRouteIncorrectEmail(): void
     {
         User::factory()->create();
         $response = $this->postJson(
@@ -173,7 +173,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_reset_confirm_code_route_basic(): void
+    public function testResetConfirmCodeRouteBasic(): void
     {
         $user = User::factory()->create();
         $authReset = AuthReset::factory()->create(['user_id' => $user->id]);
@@ -189,7 +189,7 @@ class AuthRoutesTest extends TestCase
             ->assertJson($createdResource);
     }
 
-    public function test_reset_confirm_code_route_incorrect_request(): void
+    public function testResetConfirmCodeRouteIncorrectRequest(): void
     {
         $user = User::factory()->create();
         $authReset = AuthReset::factory()->create(['user_id' => $user->id]);
@@ -201,7 +201,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_reset_confirm_code_route_incorrect_code(): void
+    public function testResetConfirmCodeRouteIncorrectCode(): void
     {
         $user = User::factory()->create();
         $authReset = AuthReset::factory()->create(['user_id' => $user->id]);
@@ -213,7 +213,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_BAD_REQUEST);
     }
 
-    public function test_reset_end_route_basic(): void
+    public function testResetEndRouteBasic(): void
     {
         $user = User::factory()->create();
         $authReset = AuthReset::factory()->create([
@@ -228,7 +228,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_reset_end_route_incorrect_request(): void
+    public function testResetEndRouteIncorrectRequest(): void
     {
         $user = User::factory()->create();
         $authReset = AuthReset::factory()->create([
@@ -243,7 +243,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_reset_end_route_code_not_confirmed(): void
+    public function testResetEndRouteCodeNotConfirmed(): void
     {
         $user = User::factory()->create();
         $authReset = AuthReset::factory()->create([
@@ -257,7 +257,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_login_route_basic(): void
+    public function testLoginRouteBasic(): void
     {
         $password = 'password';
         $email = 'test@test.com';
@@ -277,7 +277,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_login_route_incorrect_request(): void
+    public function testLoginRouteIncorrectRequest(): void
     {
         $password = 'short';
         $email = 'notAnEmail';
@@ -292,7 +292,7 @@ class AuthRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_login_route_invalid_credentials(): void
+    public function testLoginRouteInvalidCredentials(): void
     {
         $password = 'password';
         $email = 'test@test.com';

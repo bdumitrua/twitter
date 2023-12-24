@@ -36,7 +36,7 @@ class TweetDraftRoutesTest extends TestCase
         return ['text' => 123];
     }
 
-    public function test_get_authorized_user_drafts_route_basic(): void
+    public function testGetAuthorizedUserDraftsRouteBasic(): void
     {
         $tweetDrafts = TweetDraft::factory(3)->create([
             'user_id' => $this->authorizedUser->id,
@@ -48,7 +48,7 @@ class TweetDraftRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
-    public function test_get_authorized_user_drafts_route_empty(): void
+    public function testGetAuthorizedUserDraftsRouteEmpty(): void
     {
         $tweetDrafts = new Collection();
         $response = $this->get(route('getAuthorizedUserDrafts'));
@@ -57,7 +57,7 @@ class TweetDraftRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResources);
     }
 
-    public function test_create_tweet_draft_route_basic(): void
+    public function testCreateTweetDraftRouteBasic(): void
     {
         $response = $this->postJson(
             route('createTweetDraft'),
@@ -67,7 +67,7 @@ class TweetDraftRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_create_tweet_draft_route_incorrect_request(): void
+    public function testCreateTweetDraftRouteIncorrectRequest(): void
     {
         $response = $this->postJson(
             route('createTweetDraft'),
@@ -77,7 +77,7 @@ class TweetDraftRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_create_tweet_draft_route_with_same_text(): void
+    public function testCreateTweetDraftRouteWithSameText(): void
     {
         $tweetDraft = TweetDraft::factory()->create();
         $response = $this->postJson(
@@ -88,7 +88,7 @@ class TweetDraftRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_delete_tweet_draft_route_basic(): void
+    public function testDeleteTweetDraftRouteBasic(): void
     {
         $tweetDraft = TweetDraft::factory(3)->create();
         $draftsIds = $tweetDraft->pluck('id')->toArray();
@@ -100,7 +100,7 @@ class TweetDraftRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_delete_tweet_draft_route_incorrect_request_target(): void
+    public function testDeleteTweetDraftRouteIncorrectRequestTarget(): void
     {
         $response = $this->delete(
             route('deleteTweetDrafts'),

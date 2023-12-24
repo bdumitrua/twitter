@@ -31,7 +31,7 @@ class UsersListRoutesTest extends TestCase
         $this->actingAs($this->authorizedUser, 'api');
     }
 
-    public function test_get_my_lists_route_basic(): void
+    public function testGetMyListsRouteBasic(): void
     {
         $usersLists = UsersList::factory(3)->create([
             'user_id' => $this->authorizedUser->id
@@ -43,7 +43,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
-    public function test_get_my_lists_route_empty(): void
+    public function testGetMyListsRouteEmpty(): void
     {
         $usersLists = new Collection();
         $createdResource = UserGroupResource::collection($usersLists)->resolve();
@@ -52,7 +52,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
-    public function test_create_users_list_route_basic(): void
+    public function testCreateUsersListRouteBasic(): void
     {
         $name = $this->faker->words(2, true);
         $response = $this->postJson(
@@ -63,7 +63,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_create_users_list_route_incorrect_request(): void
+    public function testCreateUsersListRouteIncorrectRequest(): void
     {
         $desription = 1324;
         $response = $this->postJson(
@@ -74,7 +74,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_show_users_list_route_basic(): void
+    public function testShowUsersListRouteBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -90,7 +90,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
     }
 
-    public function test_show_users_list_route_incorrect_request_target(): void
+    public function testShowUsersListRouteIncorrectRequestTarget(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -102,7 +102,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_show_users_lists_route_private_list(): void
+    public function testShowUsersListsRoutePrivateList(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id,
@@ -115,7 +115,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_update_users_list_route_basic(): void
+    public function testUpdateUsersListRouteBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -128,7 +128,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_update_users_list_route_incorrect_request(): void
+    public function testUpdateUsersListRouteIncorrectRequest(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -141,7 +141,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY);
     }
 
-    public function test_update_users_list_route_another_user_list(): void
+    public function testUpdateUsersListRouteAnotherUserList(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id
@@ -154,7 +154,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_delete_users_list_route_basic(): void
+    public function testDeleteUsersListRouteBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -166,7 +166,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_delete_users_list_route_incorrect_request_target(): void
+    public function testDeleteUsersListRouteIncorrectRequestTarget(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -178,7 +178,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_delete_users_list_route_another_user_list(): void
+    public function testDeleteUsersListRouteAnotherUserList(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id
@@ -190,7 +190,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_add_member_to_list_route_basic(): void
+    public function testAddMemberToListRouteBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -206,7 +206,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_add_member_to_list_route_another_user_list(): void
+    public function testAddMemberToListRouteAnotherUserList(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id
@@ -222,7 +222,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_add_member_to_list_route_incorrect_request_group_target(): void
+    public function testAddMemberToListRouteIncorrectRequestGroupTarget(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -238,7 +238,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_add_member_to_list_route_incorrect_request_user_target(): void
+    public function testAddMemberToListRouteIncorrectRequestUserTarget(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -254,7 +254,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_add_member_to_list_route_repeat(): void
+    public function testAddMemberToListRouteRepeat(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -277,7 +277,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_remove_member_from_list_route_basic(): void
+    public function testRemoveMemberFromListRouteBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -300,7 +300,7 @@ class UsersListRoutesTest extends TestCase
     }
 
 
-    public function test_remove_member_from_list_route_another_user_list(): void
+    public function testRemoveMemberFromListRouteAnotherUserList(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id
@@ -325,7 +325,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_remove_member_from_list_route_incorrect_route_group_target(): void
+    public function testRemoveMemberFromListRouteIncorrectRouteGroupTarget(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -347,7 +347,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_remove_member_from_list_route_incorrect_route_user_target(): void
+    public function testRemoveMemberFromListRouteIncorrectRouteUserTarget(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -369,7 +369,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_remove_member_from_list_route_repeat(): void
+    public function testRemoveMemberFromListRouteRepeat(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -399,7 +399,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_remove_member_from_list_route_without_adding(): void
+    public function testRemoveMemberFromListRouteWithoutAdding(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -415,7 +415,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_get_list_members_basic(): void
+    public function testGetListMembersBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -435,7 +435,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJsonCount(1);
     }
 
-    public function test_get_list_members_empty(): void
+    public function testGetListMembersEmpty(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -448,7 +448,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
-    public function test_get_list_subscribers_basic(): void
+    public function testGetListSubscribersBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id,
@@ -468,7 +468,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJsonCount(1);
     }
 
-    public function test_get_list_subscribers_empty(): void
+    public function testGetListSubscribersEmpty(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id,
@@ -482,7 +482,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK)->assertJsonCount(0);
     }
 
-    public function test_subscribe_on_list_route_basic(): void
+    public function testSubscribeOnListRouteBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -495,7 +495,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_subscribe_on_list_route_repeat(): void
+    public function testSubscribeOnListRouteRepeat(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -512,7 +512,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_subscribe_on_list_route_invalid_request_target(): void
+    public function testSubscribeOnListRouteInvalidRequestTarget(): void
     {
         UsersList::factory()->create();
 
@@ -523,7 +523,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_subscribe_on_list_route_private_list(): void
+    public function testSubscribeOnListRoutePrivateList(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id,
@@ -537,7 +537,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_FORBIDDEN);
     }
 
-    public function test_unsubscribe_from_list_route_basic(): void
+    public function testUnsubscribeFromListRouteBasic(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -554,7 +554,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_OK);
     }
 
-    public function test_unsubscribe_from_list_route_repeat(): void
+    public function testUnsubscribeFromListRouteRepeat(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -575,7 +575,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_unsubscribe_from_list_route_without_subscribtion(): void
+    public function testUnsubscribeFromListRouteWithoutSubscribtion(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->authorizedUser->id
@@ -588,7 +588,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NO_CONTENT);
     }
 
-    public function test_unsubscribe_from_list_route_invalid_request_target(): void
+    public function testUnsubscribeFromListRouteInvalidRequestTarget(): void
     {
         UsersList::factory()->create();
 
@@ -599,7 +599,7 @@ class UsersListRoutesTest extends TestCase
         $response->assertStatus(Response::HTTP_NOT_FOUND);
     }
 
-    public function test_unsubscribe_from_list_route_private_list(): void
+    public function testUnsubscribeFromListRoutePrivateList(): void
     {
         $usersList = UsersList::factory()->create([
             'user_id' => $this->anotherUser->id,
