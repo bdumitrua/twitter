@@ -239,10 +239,10 @@ class TweetService
      * 
      * @return void
      */
-    public function destroy(Tweet $tweet, Request $request): void
+    public function delete(Tweet $tweet, Request $request): void
     {
         $this->logger->info('Deleting tweet', array_merge($tweet->toArray(), ['ip' => $request->ip()]));
-        $this->tweetRepository->destroy($tweet);
+        $this->tweetRepository->delete($tweet);
     }
 
     /**

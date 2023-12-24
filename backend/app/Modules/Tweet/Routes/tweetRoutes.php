@@ -26,7 +26,7 @@ Route::prefix('tweets')->controller(TweetController::class)->group(function () {
         Route::delete('unrepost/{tweet}', 'unrepost')->name('unrepostTweet');
         Route::middleware(['checkRights:tweet'])->group(function () {
             // Удалить твит
-            Route::delete('{tweet}', 'destroy')->name('deleteTweet');
+            Route::delete('{tweet}', 'delete')->name('deleteTweet');
         });
     });
 

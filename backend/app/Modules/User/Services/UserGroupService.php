@@ -97,7 +97,7 @@ class UserGroupService
      * 
      * @return void
      */
-    public function destroy(UserGroup $userGroup, Request $request): void
+    public function delete(UserGroup $userGroup, Request $request): void
     {
         $this->logger->info('Deleting UserGroup', array_merge($userGroup->toArray(), ['ip' => $request->ip()]));
         $this->userGroupRepository->delete($userGroup);

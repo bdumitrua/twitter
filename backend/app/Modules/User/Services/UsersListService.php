@@ -102,7 +102,7 @@ class UsersListService
      * 
      * @return void
      */
-    public function destroy(UsersList $usersList, Request $request): void
+    public function delete(UsersList $usersList, Request $request): void
     {
         $this->logger->info(
             'Deleting UsersList',

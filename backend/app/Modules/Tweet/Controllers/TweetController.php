@@ -107,10 +107,10 @@ class TweetController extends Controller
         });
     }
 
-    public function destroy(Tweet $tweet, Request $request): JsonResponse
+    public function delete(Tweet $tweet, Request $request): JsonResponse
     {
         return $this->handleServiceCall(function () use ($tweet, $request) {
-            return $this->tweetService->destroy($tweet, $request);
+            return $this->tweetService->delete($tweet, $request);
         });
     }
 }

@@ -17,7 +17,7 @@ Route::prefix('users/lists')->middleware(['auth:api'])->controller(UsersListCont
         // Изменить список
         Route::patch('{usersList}', 'update')->name('updateUsersList');
         // Удалить список
-        Route::delete('{usersList}', 'destroy')->name('deleteUsersList');
+        Route::delete('{usersList}', 'delete')->name('deleteUsersList');
 
         // Добавить пользователя в список читаемых в списке
         Route::post('members/{usersList}/{user}', 'add')->name('addMemberToUsersList');

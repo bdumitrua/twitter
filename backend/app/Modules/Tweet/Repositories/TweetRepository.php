@@ -342,7 +342,7 @@ class TweetRepository
      * 
      * @return void
      */
-    public function destroy(Tweet $tweet): void
+    public function delete(Tweet $tweet): void
     {
         $tweetId = $tweet->id;
         $userId = $tweet->user_id;

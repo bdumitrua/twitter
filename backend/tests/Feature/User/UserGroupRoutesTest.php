@@ -154,7 +154,7 @@ class UserGroupRoutesTest extends TestCase
             'user_id' => $this->authorizedUser->id
         ]);
         $response = $this->delete(
-            route('destroyUserGroup', ['userGroup' => $userGroup->id]),
+            route('deleteUserGroup', ['userGroup' => $userGroup->id]),
         );
 
         $response->assertStatus(200);
@@ -166,7 +166,7 @@ class UserGroupRoutesTest extends TestCase
             'user_id' => $this->authorizedUser->id
         ]);
         $response = $this->delete(
-            route('destroyUserGroup', ['userGroup' => $userGroup->id + 10]),
+            route('deleteUserGroup', ['userGroup' => $userGroup->id + 10]),
         );
 
         $response->assertStatus(Response::HTTP_NOT_FOUND);
@@ -178,7 +178,7 @@ class UserGroupRoutesTest extends TestCase
             'user_id' => $this->anotherUser->id
         ]);
         $response = $this->delete(
-            route('destroyUserGroup', ['userGroup' => $userGroup->id]),
+            route('deleteUserGroup', ['userGroup' => $userGroup->id]),
         );
 
         $response->assertStatus(Response::HTTP_FORBIDDEN);
