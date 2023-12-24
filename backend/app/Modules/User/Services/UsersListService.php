@@ -211,7 +211,7 @@ class UsersListService
      * 
      * @throws AccessDeniedException
      */
-    protected function checkUserAccessToList(UsersList $usersList, int $userId): void
+    public function checkUserAccessToList(UsersList $usersList, int $userId): void
     {
         $hasAccess = !($usersList->is_private)
             || in_array($usersList->id, $this->usersListRepository->getUserListsIds($userId));

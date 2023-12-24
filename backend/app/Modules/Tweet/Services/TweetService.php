@@ -57,10 +57,10 @@ class TweetService
      */
     public function feed(): JsonResource
     {
-        // Фильтр по группам происходит в репозитории (в самом запросе)
-        return TweetResource::collection(
-            $this->tweetRepository->getUserFeed($this->authorizedUserId)
-        );
+        $tweets = $this->tweetRepository->getUserFeed($this->authorizedUserId);
+        $tweets = $this->filterLinkedByGroup($tweets);
+
+        return TweetResource::collection($tweets);
     }
 
     /**
@@ -71,7 +71,8 @@ class TweetService
     public function user(User $user): JsonResource
     {
         $userTweets = $this->tweetRepository->getByUserId($user->id);
-        $userTweets = $this->filterTweetsByGroup($userTweets, $this->authorizedUserId);
+        $userTweets = $this->filterTweetsByGroup($userTweets);
+        $userTweets = $this->filterLinkedByGroup($userTweets);
 
         return TweetResource::collection($userTweets);
     }
@@ -84,7 +85,7 @@ class TweetService
     public function replies(User $user): JsonResource
     {
         $userReplies = $this->tweetRepository->getUserReplies($user->id);
-        $userReplies = $this->filterTweetsByGroup($userReplies, $this->authorizedUserId);
+        $userReplies = $this->filterLinkedByGroup($userReplies, $this->authorizedUserId);
 
         return TweetResource::collection($userReplies);
     }
@@ -100,7 +101,7 @@ class TweetService
         throw new UnavailableMethodException('Media request doesn\'t work at the moment');
 
         $userTweetsWithMedia = $this->tweetRepository->getUserTweetsWithMedia($user->id);
-        $userTweetsWithMedia = $this->filterTweetsByGroup($userTweetsWithMedia, $this->authorizedUserId);
+        $userTweetsWithMedia = $this->filterTweetsByGroup($userTweetsWithMedia);
 
         return TweetResource::collection($userTweetsWithMedia);
     }
@@ -113,7 +114,7 @@ class TweetService
     public function likes(User $user): JsonResource
     {
         $userLikedTweets = $this->tweetRepository->getUserLikedTweets($user->id);
-        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets, $this->authorizedUserId);
+        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets);
 
         return TweetResource::collection($userLikedTweets);
     }
@@ -124,7 +125,6 @@ class TweetService
     public function bookmarks(): JsonResource
     {
         $userLikedTweets = $this->tweetRepository->getUserBookmarks($this->authorizedUserId);
-        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets, $this->authorizedUserId);
 
         return TweetResource::collection($userLikedTweets);
     }
@@ -136,19 +136,12 @@ class TweetService
      */
     public function list(UsersList $usersList): JsonResource
     {
-        $usersList = $this->usersListService->filterPrivateLists(
-            new Collection([$usersList]),
-            $this->authorizedUserId
-        )->first();
+        $this->usersListService->checkUserAccessToList($usersList, $this->authorizedUserId);
 
-        if (empty($usersList)) {
-            throw new AccessDeniedException();
-        }
+        $tweets = $this->tweetRepository->getFeedByUsersList($usersList, $this->authorizedUserId);
+        $tweets = $this->filterLinkedByGroup($tweets);
 
-        // Фильтр по группам происходит в репозитории (в самом запросе)
-        return TweetResource::collection(
-            $this->tweetRepository->getFeedByUsersList($usersList, $this->authorizedUserId)
-        );
+        return TweetResource::collection($tweets);
     }
 
     /**
@@ -159,16 +152,14 @@ class TweetService
     public function show(Tweet $tweet): JsonResource
     {
         $tweet = $this->tweetRepository->getById($tweet->id);
-        $tweetAfterFiltering = $this->filterTweetsByGroup(
-            new Collection([$tweet]),
-            $this->authorizedUserId
-        )->first();
+        $tweetAfterBaseFiltering = $this->filterTweetsByGroup(new Collection([$tweet]))->first();
+        $tweetAfterLinkedFiltering = $this->filterLinkedByGroup(new Collection([$tweet]))->first();
 
-        if (empty($tweetAfterFiltering)) {
+        if (empty($tweetAfterBaseFiltering) || empty($tweetAfterLinkedFiltering)) {
             throw new NotFoundException('Tweet');
         }
 
-        return new TweetResource($tweetAfterFiltering);
+        return new TweetResource($tweet);
     }
 
     /**
@@ -271,6 +262,32 @@ class TweetService
 
         return $tweets->filter(function ($tweet) use ($groupIds) {
             return is_object($tweet) && (is_null($tweet->user_group_id) || in_array($tweet->user_group_id, $groupIds));
+        });
+    }
+
+    /**
+     * @param Collection $tweets
+     * 
+     * @return Collection
+     */
+    protected function filterLinkedByGroup(Collection $tweets): Collection
+    {
+        $groupIds = [];
+        if (!empty($this->authorizedUserId)) {
+            $groupIds = $this->userGroupRepository->getUserAvailableGroupsIds($this->authorizedUserId);
+        }
+
+        return $tweets->filter(function ($tweet) use ($groupIds) {
+            /**
+             *  Переводя на человеческий:
+             * 
+             *  Объект это твит и:
+             *  1. Либо свзяанный с ним твит пуст
+             *  2. Либо наш пользователь есть в группе связанного твита (не основного)
+             * 
+             */
+            return is_object($tweet) && empty($tweet->linkedTweetData) || (is_object($tweet->linkedTweetData)
+                && (is_null($tweet->linkedTweetData->user_group_id) || in_array($tweet->linkedTweetData->user_group_id, $groupIds)));
         });
     }
 
