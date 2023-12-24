@@ -278,16 +278,16 @@ class TweetService
         }
 
         return $tweets->filter(function ($tweet) use ($groupIds) {
-            /**
-             *  Переводя на человеческий:
-             * 
-             *  Объект это твит и:
-             *  1. Либо свзяанный с ним твит пуст
-             *  2. Либо наш пользователь есть в группе связанного твита (не основного)
-             * 
-             */
-            return is_object($tweet) && empty($tweet->linkedTweetData) || (is_object($tweet->linkedTweetData)
-                && (is_null($tweet->linkedTweetData->user_group_id) || in_array($tweet->linkedTweetData->user_group_id, $groupIds)));
+            $isObject = is_object($tweet);
+            $hasLinkedData = $isObject && is_object($tweet->linkedTweetData);
+
+            if ($hasLinkedData) {
+                // Если есть связанный твит, то фильтруем по его группе
+                return is_null($tweet->linkedTweetData->user_group_id) || in_array($tweet->linkedTweetData->user_group_id, $groupIds);
+            }
+
+            // Если связанного твита нет, то пропускаем всё, что является объектом, т.е. твитом
+            return $isObject;
         });
     }
 

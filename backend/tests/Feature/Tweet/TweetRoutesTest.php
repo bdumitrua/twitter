@@ -6,6 +6,7 @@ use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Resources\TweetResource;
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserGroup;
+use App\Modules\User\Models\UserGroupMember;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListSubscribtion;
 use Illuminate\Database\Eloquent\Collection;
@@ -14,10 +15,14 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\Response;
 use Tests\TestCase;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
 
 class TweetRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
+
+    // show, feed, list, user, replies, likes
+    // asd
 
     protected $authorizedUser;
     protected $secondUser;
@@ -71,17 +76,19 @@ class TweetRoutesTest extends TestCase
         return Tweet::latest()->first()->id + 10;
     }
 
-    protected function createFactoryGroup($userId): UserGroup
+    protected function createGroup(array $data = []): UserGroup
     {
-        return UserGroup::factory()->create([
-            'user_id' => $userId
-        ]);
+        if (empty($data['user_id'])) {
+            $data['user_id'] = $this->authorizedUser->id;
+        }
+
+        return UserGroup::factory()->create($data);
     }
 
     public function test_create_default_tweet_route_basic(): void
     {
         $text = $this->generateText();
-        $group = $this->createFactoryGroup($this->authorizedUser->id);
+        $group = $this->createGroup();
 
         $response = $this->postJson(
             route('createTweet'),
@@ -109,7 +116,7 @@ class TweetRoutesTest extends TestCase
     {
         $text = $this->generateText();
 
-        $this->createFactoryGroup($this->authorizedUser->id);
+        $this->createGroup();
         $groupId = UserGroup::latest()->first()->id + 10;
 
         $response = $this->postJson(
@@ -283,7 +290,7 @@ class TweetRoutesTest extends TestCase
 
     public function test_create_thread_route_basic(): void
     {
-        $group = $this->createFactoryGroup($this->authorizedUser->id);
+        $group = $this->createGroup();
         $tweets = [];
         for ($i = 0; $i < 5; $i++) {
             $tweets[] = [
@@ -304,7 +311,7 @@ class TweetRoutesTest extends TestCase
 
     public function test_create_thread_route_with_an_empty_text(): void
     {
-        $group = $this->createFactoryGroup($this->authorizedUser->id);
+        $group = $this->createGroup();
         $tweets = [];
         for ($i = 0; $i < 5; $i++) {
             $tweets[] = [
@@ -327,7 +334,7 @@ class TweetRoutesTest extends TestCase
 
     public function test_create_thread_route_invalid_group_id(): void
     {
-        $this->createFactoryGroup($this->authorizedUser->id);
+        $this->createGroup();
         $groupId = UserGroup::latest()->first()->id + 10;
         $tweets = [];
         for ($i = 0; $i < 5; $i++) {
@@ -350,7 +357,7 @@ class TweetRoutesTest extends TestCase
     public function test_create_thread_route_with_any_type(): void
     {
         $type = 'repost';
-        $group = $this->createFactoryGroup($this->authorizedUser->id);
+        $group = $this->createGroup();
         $tweets = [];
         for ($i = 0; $i < 5; $i++) {
             $tweets[] = [
@@ -421,6 +428,89 @@ class TweetRoutesTest extends TestCase
     {
         $response = $this->get(
             route('getTweetById', ['tweet' => $this->getInvalidTweetId()])
+        );
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    public function test_show_tweet_route_group_author(): void
+    {
+        $group = $this->createGroup([
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $tweetId = $this->createTweet([
+            'user_id' => $this->authorizedUser->id,
+            'user_group_id' => $group->id,
+        ])->id;
+
+        $response = $this->get(
+            route('getTweetById', ['tweet' => $tweetId])
+        );
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    public function test_show_tweet_route_group_access_allowed(): void
+    {
+        $group = $this->createGroup([
+            'user_id' => $this->secondUser->id
+        ]);
+
+        UserGroupMember::factory()->create([
+            'user_group_id' => $group->id,
+            'user_id' => $this->authorizedUser->id
+        ]);
+
+        $tweetId = $this->createTweet([
+            'user_id' => $this->secondUser->id,
+            'user_group_id' => $group->id,
+        ])->id;
+
+        $response = $this->get(
+            route('getTweetById', ['tweet' => $tweetId])
+        );
+
+        $response->assertStatus(Response::HTTP_OK);
+    }
+
+    public function test_show_tweet_route_group_access_denied(): void
+    {
+        $group = $this->createGroup([
+            'user_id' => $this->secondUser->id
+        ]);
+
+        $tweetId = $this->createTweet([
+            'user_id' => $this->secondUser->id,
+            'user_group_id' => $group->id,
+        ])->id;
+
+        $response = $this->get(
+            route('getTweetById', ['tweet' => $tweetId])
+        );
+
+        $response->assertStatus(Response::HTTP_NOT_FOUND);
+    }
+
+    public function test_show_tweet_route_linked_group_access_denied(): void
+    {
+        $group = $this->createGroup([
+            'user_id' => $this->secondUser->id
+        ]);
+
+        $linkedTweet = $this->createTweet([
+            'user_id' => $this->secondUser->id,
+            'user_group_id' => $group->id
+        ]);
+
+        $tweetId = $this->createTweet([
+            'type' => 'reply',
+            'user_id' => $this->secondUser->id,
+            'linked_tweet_id' => $linkedTweet->id
+        ]);
+
+        $response = $this->get(
+            route('getTweetById', ['tweet' => $tweetId])
         );
 
         $response->assertStatus(Response::HTTP_NOT_FOUND);
