@@ -152,10 +152,10 @@ class TweetService
     public function show(Tweet $tweet): JsonResource
     {
         $tweet = $this->tweetRepository->getById($tweet->id);
-        $tweetAfterBaseFiltering = $this->filterTweetsByGroup(new Collection([$tweet]))->first();
-        $tweetAfterLinkedFiltering = $this->filterLinkedByGroup(new Collection([$tweet]))->first();
+        $tweet = $this->filterTweetsByGroup(new Collection([$tweet]))->first();
+        $tweet = $this->filterLinkedByGroup(new Collection([$tweet]))->first();
 
-        if (empty($tweetAfterBaseFiltering) || empty($tweetAfterLinkedFiltering)) {
+        if (empty($tweet)) {
             throw new NotFoundException('Tweet');
         }
 
