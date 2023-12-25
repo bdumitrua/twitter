@@ -76,7 +76,7 @@ class Controller extends BaseController
         } catch (\Exception $exception) {
             return $this->responseToError(
                 $exception->getMessage(),
-                $exception->getCode()
+                418
             );
         } catch (\Throwable $exception) {
             return $this->responseToError(

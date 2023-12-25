@@ -85,10 +85,15 @@ class UserRepository
      * @param int $userId
      * 
      * @return User
+     * 
+     * @throws NotFoundException
      */
     public function getById(int $userId): User
     {
         $user = $this->getUserData($userId);
+        if (empty($user)) {
+            throw new NotFoundException('User');
+        }
 
         $authorizedUserId = Auth::id();
         if (!empty($authorizedUserId)) {
@@ -100,23 +105,31 @@ class UserRepository
     }
 
     /**
+     * @param array $usersIds
+     * 
+     * @return Collection
+     */
+    public function getUsersData(array $usersIds): Collection
+    {
+        return new Collection(array_map(function ($userId) {
+            if (!empty($user = $this->getUserData($userId))) {
+                return $user;
+            }
+        }, $usersIds));
+    }
+
+    /**
      * @param int $userId
      * @param bool $updateCache
      * 
-     * @return User
+     * @return User|null
      */
-    public function getUserData(int $userId, bool $updateCache = false): User
+    public function getUserData(int $userId, bool $updateCache = false): ?User
     {
         $cacheKey = KEY_USER_DATA . $userId;
-        $user = $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
+        return $this->getCachedData($cacheKey, 5 * 60, function () use ($userId) {
             return $this->queryById($userId)->first();
         }, $updateCache);
-
-        if (empty($user)) {
-            throw new NotFoundException('User');
-        }
-
-        return $user;
     }
 
     /**

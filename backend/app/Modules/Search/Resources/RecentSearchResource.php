@@ -12,14 +12,14 @@ class RecentSearchResource extends JsonResource
     public function toArray(Request $request): array
     {
         $linkedUser = $this->whenLoaded('linkedUser', function () {
-            return new ShortUserResource($this->linkedUser);
+            return ShortUserResource::make($this->linkedUser)->resolve();
         }, []);
 
         return [
             'id' => $this->id,
             'text' => $this->text,
             'linkedUser' => $linkedUser,
-            "updated_at" => $this->updated_at,
+            "updated_at" => $this->updated_at->toW3cString(),
         ];
     }
 }

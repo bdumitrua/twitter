@@ -4,8 +4,11 @@ namespace App\Modules\User\Services;
 
 use App\Modules\Notification\Services\NotificationsSubscribtionService;
 use App\Modules\User\Models\User;
+use App\Modules\User\Repositories\UserRepository;
 use App\Modules\User\Repositories\UserSubscribtionRepository;
+use App\Modules\User\Resources\ShortUserResource;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
@@ -13,35 +16,44 @@ class UserSubscribtionService
 {
     protected NotificationsSubscribtionService $notificationsSubscribtionService;
     protected UserSubscribtionRepository $userSubscribtionRepository;
+    protected UserRepository $userRepository;
     protected ?int $authorizedUserId;
 
     public function __construct(
         NotificationsSubscribtionService $notificationsSubscribtionService,
         UserSubscribtionRepository $userSubscribtionRepository,
+        UserRepository $userRepository,
     ) {
         $this->notificationsSubscribtionService = $notificationsSubscribtionService;
         $this->userSubscribtionRepository = $userSubscribtionRepository;
+        $this->userRepository = $userRepository;
         $this->authorizedUserId = Auth::id();
     }
 
     /**
      * @param User $user
      * 
-     * @return Collection
+     * @return JsonResource
      */
-    public function subscribtions(User $user): Collection
+    public function subscribtions(User $user): JsonResource
     {
-        return $this->userSubscribtionRepository->getSubscribtions($user->id);
+        $usersIds = $this->userSubscribtionRepository->getSubscribtionsIds($user->id);
+        $usersData = $this->userRepository->getUsersData($usersIds);
+
+        return ShortUserResource::collection($usersData);
     }
 
     /**
      * @param User $user
      * 
-     * @return Collection
+     * @return JsonResource
      */
-    public function subscribers(User $user): Collection
+    public function subscribers(User $user): JsonResource
     {
-        return $this->userSubscribtionRepository->getSubscribers($user->id);
+        $usersIds = $this->userSubscribtionRepository->getSubscribersIds($user->id);
+        $usersData = $this->userRepository->getUsersData($usersIds);
+
+        return ShortUserResource::collection($usersData);
     }
 
     /**

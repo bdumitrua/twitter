@@ -2,6 +2,7 @@
 
 namespace App\Traits;
 
+use App\Helpers\StringHelper;
 use App\Modules\User\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
@@ -19,6 +20,7 @@ trait UpdateFromDTO
         $dtoProperties = get_object_vars($dto);
         foreach ($dtoProperties as $property => $value) {
             if ($value !== null) {
+                $property = StringHelper::camelToSnake($property);
                 $entity->$property = $value;
             }
         }

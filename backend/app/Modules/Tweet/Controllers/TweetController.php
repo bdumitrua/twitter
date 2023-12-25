@@ -5,6 +5,7 @@ namespace App\Modules\Tweet\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Modules\Tweet\Models\Tweet;
+use App\Modules\Tweet\Requests\CreateRepostRequest;
 use App\Modules\Tweet\Requests\CreateThreadRequest;
 use App\Modules\Tweet\Requests\TweetRequest;
 use App\Modules\Tweet\Services\TweetService;
@@ -85,6 +86,13 @@ class TweetController extends Controller
         });
     }
 
+    public function repost(Tweet $tweet): JsonResponse
+    {
+        return $this->handleServiceCall(function () use ($tweet) {
+            return $this->tweetService->repost($tweet);
+        });
+    }
+
     public function thread(CreateThreadRequest $сreateThreadRequest): JsonResponse
     {
         return $this->handleServiceCall(function () use ($сreateThreadRequest) {
@@ -99,10 +107,10 @@ class TweetController extends Controller
         });
     }
 
-    public function destroy(Tweet $tweet, Request $request): JsonResponse
+    public function delete(Tweet $tweet, Request $request): JsonResponse
     {
         return $this->handleServiceCall(function () use ($tweet, $request) {
-            return $this->tweetService->destroy($tweet, $request);
+            return $this->tweetService->delete($tweet, $request);
         });
     }
 }

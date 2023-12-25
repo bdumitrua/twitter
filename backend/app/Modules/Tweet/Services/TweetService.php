@@ -10,6 +10,7 @@ use App\Modules\Tweet\DTO\TweetDTO;
 use Illuminate\Http\Request;
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Repositories\TweetRepository;
+use App\Modules\Tweet\Requests\CreateRepostRequest;
 use App\Modules\Tweet\Requests\CreateThreadRequest;
 use App\Modules\Tweet\Requests\TweetRequest;
 use App\Modules\Tweet\Resources\TweetResource;
@@ -21,6 +22,7 @@ use App\Modules\User\Services\UsersListService;
 use App\Traits\CreateDTO;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -55,10 +57,10 @@ class TweetService
      */
     public function feed(): JsonResource
     {
-        // Фильтр по группам происходит в репозитории (в самом запросе)
-        return TweetResource::collection(
-            $this->tweetRepository->getUserFeed($this->authorizedUserId)
-        );
+        $tweets = $this->tweetRepository->getUserFeed($this->authorizedUserId);
+        $tweets = $this->filterLinkedByGroup($tweets);
+
+        return TweetResource::collection($tweets);
     }
 
     /**
@@ -69,7 +71,8 @@ class TweetService
     public function user(User $user): JsonResource
     {
         $userTweets = $this->tweetRepository->getByUserId($user->id);
-        $userTweets = $this->filterTweetsByGroup($userTweets, $this->authorizedUserId);
+        $userTweets = $this->filterTweetsByGroup($userTweets);
+        $userTweets = $this->filterLinkedByGroup($userTweets);
 
         return TweetResource::collection($userTweets);
     }
@@ -82,7 +85,7 @@ class TweetService
     public function replies(User $user): JsonResource
     {
         $userReplies = $this->tweetRepository->getUserReplies($user->id);
-        $userReplies = $this->filterTweetsByGroup($userReplies, $this->authorizedUserId);
+        $userReplies = $this->filterLinkedByGroup($userReplies, $this->authorizedUserId);
 
         return TweetResource::collection($userReplies);
     }
@@ -98,7 +101,7 @@ class TweetService
         throw new UnavailableMethodException('Media request doesn\'t work at the moment');
 
         $userTweetsWithMedia = $this->tweetRepository->getUserTweetsWithMedia($user->id);
-        $userTweetsWithMedia = $this->filterTweetsByGroup($userTweetsWithMedia, $this->authorizedUserId);
+        $userTweetsWithMedia = $this->filterTweetsByGroup($userTweetsWithMedia);
 
         return TweetResource::collection($userTweetsWithMedia);
     }
@@ -111,7 +114,7 @@ class TweetService
     public function likes(User $user): JsonResource
     {
         $userLikedTweets = $this->tweetRepository->getUserLikedTweets($user->id);
-        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets, $this->authorizedUserId);
+        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets);
 
         return TweetResource::collection($userLikedTweets);
     }
@@ -122,7 +125,6 @@ class TweetService
     public function bookmarks(): JsonResource
     {
         $userLikedTweets = $this->tweetRepository->getUserBookmarks($this->authorizedUserId);
-        $userLikedTweets = $this->filterTweetsByGroup($userLikedTweets, $this->authorizedUserId);
 
         return TweetResource::collection($userLikedTweets);
     }
@@ -134,19 +136,12 @@ class TweetService
      */
     public function list(UsersList $usersList): JsonResource
     {
-        $usersList = $this->usersListService->filterPrivateLists(
-            new Collection([$usersList]),
-            $this->authorizedUserId
-        )->first();
+        $this->usersListService->checkUserAccessToList($usersList, $this->authorizedUserId);
 
-        if (empty($usersList)) {
-            throw new AccessDeniedException();
-        }
+        $tweets = $this->tweetRepository->getFeedByUsersList($usersList, $this->authorizedUserId);
+        $tweets = $this->filterLinkedByGroup($tweets);
 
-        // Фильтр по группам происходит в репозитории (в самом запросе)
-        return TweetResource::collection(
-            $this->tweetRepository->getFeedByUsersList($usersList, $this->authorizedUserId)
-        );
+        return TweetResource::collection($tweets);
     }
 
     /**
@@ -157,16 +152,14 @@ class TweetService
     public function show(Tweet $tweet): JsonResource
     {
         $tweet = $this->tweetRepository->getById($tweet->id);
-        $tweetAfterFiltering = $this->filterTweetsByGroup(
-            new Collection([$tweet]),
-            $this->authorizedUserId
-        )->first();
+        $tweet = $this->filterTweetsByGroup(new Collection([$tweet]))->first();
+        $tweet = $this->filterLinkedByGroup(new Collection([$tweet]))->first();
 
-        if (empty($tweetAfterFiltering)) {
+        if (empty($tweet)) {
             throw new NotFoundException('Tweet');
         }
 
-        return new TweetResource($tweetAfterFiltering);
+        return new TweetResource($tweet);
     }
 
     /**
@@ -178,13 +171,31 @@ class TweetService
     {
         $this->logger->info('Validating tweet type data', $tweetRequest->toArray());
         $this->validateTweetTypeData($tweetRequest);
-        $this->validateTweetText($tweetRequest);
 
         $tweetDTO = $this->createDTO($tweetRequest, TweetDTO::class);
         $tweetDTO->userId = $this->authorizedUserId;
 
         $this->logger->info('Creating tweet from tweetDTO', $tweetDTO->toArray());
         $this->tweetRepository->create($tweetDTO);
+    }
+
+    /**
+     * @param Tweet $tweet
+     * 
+     * @return Response
+     */
+    public function repost(Tweet $tweet): Response
+    {
+        $tweetDTO = new TweetDTO(
+            $this->authorizedUserId,
+            [
+                'type' => 'repost',
+                'linkedTweetId' => $tweet->id
+            ]
+        );
+
+        $this->logger->info('Creating repost from tweetDTO', $tweetDTO->toArray());
+        return $this->tweetRepository->repost($tweetDTO);
     }
 
     /**
@@ -219,22 +230,22 @@ class TweetService
      * 
      * @return void
      */
-    public function destroy(Tweet $tweet, Request $request): void
+    public function delete(Tweet $tweet, Request $request): void
     {
         $this->logger->info('Deleting tweet', array_merge($tweet->toArray(), ['ip' => $request->ip()]));
-        $this->tweetRepository->destroy($tweet);
+        $this->tweetRepository->delete($tweet);
     }
 
     /**
      * @param Tweet $tweet
      * @param Request $request
      * 
-     * @return void
+     * @return Response
      */
-    public function unrepost(Tweet $tweet, Request $request): void
+    public function unrepost(Tweet $tweet, Request $request): Response
     {
         $this->logger->info("Deleting repost of tweet {$tweet->id}", ['userId' => $this->authorizedUserId, 'ip' => $request->ip()]);
-        $this->tweetRepository->unrepost($tweet->id, $this->authorizedUserId);
+        return $this->tweetRepository->unrepost($tweet->id, $this->authorizedUserId);
     }
 
     /**
@@ -255,6 +266,32 @@ class TweetService
     }
 
     /**
+     * @param Collection $tweets
+     * 
+     * @return Collection
+     */
+    protected function filterLinkedByGroup(Collection $tweets): Collection
+    {
+        $groupIds = [];
+        if (!empty($this->authorizedUserId)) {
+            $groupIds = $this->userGroupRepository->getUserAvailableGroupsIds($this->authorizedUserId);
+        }
+
+        return $tweets->filter(function ($tweet) use ($groupIds) {
+            $isObject = is_object($tweet);
+            $hasLinkedData = $isObject && is_object($tweet->linkedTweetData);
+
+            if ($hasLinkedData) {
+                // Если есть связанный твит, то фильтруем по его группе
+                return is_null($tweet->linkedTweetData->user_group_id) || in_array($tweet->linkedTweetData->user_group_id, $groupIds);
+            }
+
+            // Если связанного твита нет, то пропускаем всё, что является объектом, т.е. твитом
+            return $isObject;
+        });
+    }
+
+    /**
      * @param TweetRequest $tweetRequest
      * 
      * @return void
@@ -263,18 +300,6 @@ class TweetService
     {
         if (!empty($tweetRequest->type) && empty($tweetRequest->linkedTweetId)) {
             throw new UnprocessableContentException('Linked tweet id can\'t be empty, if it\'s not default tweet');
-        }
-    }
-
-    /**
-     * @param TweetRequest $tweetRequest
-     * 
-     * @return void
-     */
-    private function validateTweetText(TweetRequest $tweetRequest): void
-    {
-        if (empty($tweetRequest->text) && $tweetRequest->type !== 'repost') {
-            throw new UnprocessableContentException('Tweet text is required');
         }
     }
 }

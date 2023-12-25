@@ -10,7 +10,7 @@ class RecentSearchesResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
-        $recentSearches = RecentSearchResource::collection($this->resource);
+        $recentSearches = RecentSearchResource::collection($this->resource)->resolve();
 
         $actions = (array) ActionsResource::collection([
             [

@@ -2,6 +2,7 @@
 
 namespace App\Modules\Tweet\Repositories;
 
+use App\Helpers\ResponseHelper;
 use App\Helpers\TweetAgeHelper;
 use App\Modules\Tweet\DTO\TweetDTO;
 use App\Modules\Tweet\Models\Tweet;
@@ -17,6 +18,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Elastic\ScoutDriverPlus\Support\Query;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 
 class TweetRepository
@@ -147,10 +149,7 @@ class TweetRepository
     {
         $cacheKey = KEY_AUTH_USER_FEED . $userId;
         $userFeedTweetsIds = $this->getCachedData($cacheKey, 5, function () use ($userId) {
-            $subscribedUserIds = $this->pluckKey(
-                $this->userSubscribtionRepository->getSubscribtions($userId),
-                'user_id'
-            );
+            $subscribedUserIds = $this->userSubscribtionRepository->getSubscribtionsIds($userId);
             $userGroupIds = $this->pluckKey(
                 $this->userGroupRepository->getByUserId($userId),
                 'id'
@@ -306,6 +305,23 @@ class TweetRepository
     }
 
     /**
+     * @param TweetDTO $tweetDTO
+     * 
+     * @return Response
+     */
+    public function repost(TweetDTO $tweetDTO): Response
+    {
+        $tweet = $this->queryFindRepost($tweetDTO->userId, $tweetDTO->linkedTweetId)->first() ?? [];
+
+        if (!empty($tweet)) {
+            return ResponseHelper::noContent();
+        }
+
+        $this->create($tweetDTO);
+        return ResponseHelper::okResponse();
+    }
+
+    /**
      * @param TweetDTO[] $tweetDTOs 
      * 
      * @return void
@@ -326,7 +342,7 @@ class TweetRepository
      * 
      * @return void
      */
-    public function destroy(Tweet $tweet): void
+    public function delete(Tweet $tweet): void
     {
         $tweetId = $tweet->id;
         $userId = $tweet->user_id;
@@ -341,19 +357,22 @@ class TweetRepository
      * @param int $tweetId
      * @param int $authorizedUserId
      * 
-     * @return void
+     * @return Response
      */
-    public function unrepost(int $tweetId, int $authorizedUserId): void
+    public function unrepost(int $tweetId, int $authorizedUserId): Response
     {
         $tweet = $this->queryFindRepost($authorizedUserId, $tweetId)->first() ?? [];
 
-        if (!empty($tweet)) {
-            $repostTweetId = $tweet->id;
-            $tweet->delete();
-
-            $this->clearTweetCache($repostTweetId);
-            $this->clearUserTweetsCache($authorizedUserId);
+        if (empty($tweet)) {
+            return ResponseHelper::noContent();
         }
+
+        $repostTweetId = $tweet->id;
+        $tweet->delete();
+        $this->clearTweetCache($repostTweetId);
+        $this->clearUserTweetsCache($authorizedUserId);
+
+        return ResponseHelper::okResponse();
     }
 
     /**

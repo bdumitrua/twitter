@@ -42,10 +42,9 @@ class UsersListService
      */
     public function index(): JsonResource
     {
-        $usersLists = $this->usersListRepository->getByUserId($this->authorizedUserId);
-        $filteredUsersLists = $this->filterPrivateLists($usersLists, $this->authorizedUserId);
-
-        return UsersListResource::collection($filteredUsersLists);
+        return UsersListResource::collection(
+            $this->usersListRepository->getByUserId($this->authorizedUserId)
+        );
     }
 
     /**
@@ -55,14 +54,11 @@ class UsersListService
      */
     public function show(UsersList $usersList): JsonResource
     {
-        $usersList = $this->usersListRepository->getById($usersList->id);
-        $filteredUsersList = $this->filterPrivateLists(new Collection([$usersList]), $this->authorizedUserId)->first();
+        $this->checkUserAccessToList($usersList, $this->authorizedUserId);
 
-        if (empty($filteredUsersList)) {
-            throw new AccessDeniedException();
-        }
-
-        return new UsersListResource($filteredUsersList);
+        return new UsersListResource(
+            $this->usersListRepository->getById($usersList->id)
+        );
     }
 
     /**
@@ -100,7 +96,13 @@ class UsersListService
         $this->usersListRepository->update($usersList, $usersListDTO);
     }
 
-    public function destroy(UsersList $usersList, Request $request): void
+    /**
+     * @param UsersList $usersList
+     * @param Request $request
+     * 
+     * @return void
+     */
+    public function delete(UsersList $usersList, Request $request): void
     {
         $this->logger->info(
             'Deleting UsersList',
@@ -109,33 +111,6 @@ class UsersListService
         $this->usersListRepository->delete($usersList);
     }
 
-    /**
-     * @param UsersList $usersList
-     * 
-     * @return JsonResource
-     */
-    public function members(UsersList $usersList): JsonResource
-    {
-        $membersData = $this->usersListRepository->members($usersList->id);
-
-        if ($this->authorizedUserId === $usersList->user_id) {
-            return ListUserResource::collection($membersData);
-        }
-
-        return SubscribableUserResource::collection($membersData);
-    }
-
-    /**
-     * @param UsersList $usersList
-     * 
-     * @return JsonResource
-     */
-    public function subscribtions(UsersList $usersList): JsonResource
-    {
-        return SubscribableUserResource::collection(
-            $this->usersListRepository->subscribtions($usersList->id)
-        );
-    }
 
     /**
      * @param UsersList $usersList
@@ -162,10 +137,43 @@ class UsersListService
     /**
      * @param UsersList $usersList
      * 
+     * @return JsonResource
+     */
+    public function members(UsersList $usersList): JsonResource
+    {
+        $this->checkUserAccessToList($usersList, $this->authorizedUserId);
+
+        $membersData = $this->usersListRepository->members($usersList->id);
+        if ($this->authorizedUserId === $usersList->user_id) {
+            return ListUserResource::collection($membersData);
+        }
+
+        return SubscribableUserResource::collection($membersData);
+    }
+
+    /**
+     * @param UsersList $usersList
+     * 
+     * @return JsonResource
+     */
+    public function subscribtions(UsersList $usersList): JsonResource
+    {
+        $this->checkUserAccessToList($usersList, $this->authorizedUserId);
+
+        return SubscribableUserResource::collection(
+            $this->usersListRepository->subscribtions($usersList->id)
+        );
+    }
+
+    /**
+     * @param UsersList $usersList
+     * 
      * @return Response
      */
     public function subscribe(UsersList $usersList): Response
     {
+        $this->checkUserAccessToList($usersList, $this->authorizedUserId);
+
         return $this->usersListRepository->subscribe($usersList->id, $this->authorizedUserId);
     }
 
@@ -176,6 +184,8 @@ class UsersListService
      */
     public function unsubscribe(UsersList $usersList): Response
     {
+        $this->checkUserAccessToList($usersList, $this->authorizedUserId);
+
         return $this->usersListRepository->unsubscribe($usersList->id, $this->authorizedUserId);
     }
 
@@ -189,7 +199,25 @@ class UsersListService
     {
         return $usersLists->filter(function ($usersList) use ($userId) {
             return !($usersList->is_private)
-                || in_array($userId, $this->usersListRepository->getUserListsIds($userId));
+                || in_array($usersList->id, $this->usersListRepository->getUserListsIds($userId));
         });
+    }
+
+    /**
+     * @param UsersList $usersList
+     * @param int $userId
+     * 
+     * @return void
+     * 
+     * @throws AccessDeniedException
+     */
+    public function checkUserAccessToList(UsersList $usersList, int $userId): void
+    {
+        $hasAccess = !($usersList->is_private)
+            || in_array($usersList->id, $this->usersListRepository->getUserListsIds($userId));
+
+        if (!$hasAccess) {
+            throw new AccessDeniedException();
+        }
     }
 }

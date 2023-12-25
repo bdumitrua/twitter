@@ -39,9 +39,9 @@ class NotificationsSubscribtionRepository
      * @param int $userId
      * @param int $subscriberId
      * 
-     * @return Builder
+     * @return NotificationsSubscribtion|null
      */
-    public function getByBothIds(int $userId, int $subscriberId): Builder
+    public function getByBothIds(int $userId, int $subscriberId): ?NotificationsSubscribtion
     {
         return $this->queryByBothIds($userId, $subscriberId)->first();
     }
