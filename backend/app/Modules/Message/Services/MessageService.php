@@ -54,24 +54,24 @@ class MessageService
             $user->id,
             $this->authorizedUserId
         ];
-        $this->messageRepository->findOrCreateChat($participants);
+        $chat = $this->messageRepository->findOrCreateChat($participants);
 
         $messageDTO = $this->createDTO($messageRequest, MessageDTO::class);
         $messageDTO->senderId = $this->authorizedUserId;
         $messageDTO->receiverId = $user->id;
 
         $this->logger->info('Sending message from messageDTO', $messageDTO->toArray());
-        $this->messageRepository->send($messageDTO);
+        $this->messageRepository->send($messageDTO, $chat->id);
     }
 
-    public function read(int $messageId): Response
+    public function read(string $messageUuid): Response
     {
-        return $this->messageRepository->read($messageId);
+        return $this->messageRepository->read($messageUuid);
     }
 
-    public function delete(int $messageId): Response
+    public function delete(string $messageUuid): Response
     {
-        return $this->messageRepository->delete($messageId);
+        return $this->messageRepository->delete($messageUuid);
     }
 
     protected function validateMessageRequest(MessageRequest $messageRequest): void

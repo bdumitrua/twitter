@@ -32,17 +32,17 @@ class MessageController extends Controller
         });
     }
 
-    public function read(int $messageId)
+    public function read(string $messageUuid)
     {
-        return $this->handleServiceCall(function () use ($messageId) {
-            return $this->messageService->read($messageId);
+        return $this->handleServiceCall(function () use ($messageUuid) {
+            return $this->messageService->read($messageUuid);
         });
     }
 
-    public function delete(int $messageId)
+    public function delete(string $messageUuid)
     {
-        return $this->handleServiceCall(function () use ($messageId) {
-            return $this->messageService->delete($messageId);
+        return $this->handleServiceCall(function () use ($messageUuid) {
+            return $this->messageService->delete($messageUuid);
         });
     }
 

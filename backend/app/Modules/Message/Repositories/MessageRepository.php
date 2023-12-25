@@ -2,9 +2,11 @@
 
 namespace App\Modules\Message\Repositories;
 
+use App\Firebase\FirebaseService;
 use App\Helpers\ResponseHelper;
 use App\Modules\Message\DTO\MessageDTO;
 use App\Modules\Message\Models\Chat;
+use App\Modules\Message\Models\ChatMessage;
 use App\Modules\Message\Models\Message;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
@@ -13,11 +15,17 @@ use Illuminate\Http\Response;
 class MessageRepository
 {
     protected Chat $chat;
+    protected ChatMessage $chatMessage;
+    protected FirebaseService $firebaseService;
 
     public function __construct(
-        Chat $chat
+        Chat $chat,
+        ChatMessage $chatMessage,
+        FirebaseService $firebaseService
     ) {
         $this->chat = $chat;
+        $this->chatMessage = $chatMessage;
+        $this->firebaseService = $firebaseService;
     }
 
     protected function queryUserChats(int $userId): Builder
@@ -68,18 +76,25 @@ class MessageRepository
         return $this->chat->create($data);
     }
 
-    public function send(MessageDTO $messageDTO): void
+    public function send(MessageDTO $messageDTO, int $chatId): void
     {
-        // 
+        $messageUuid = $this->firebaseService->sendMessage($messageDTO);
+
+        $this->chatMessage->create([
+            'chat_id' => $chatId,
+            'message_uuid' => $messageUuid
+        ]);
     }
 
-    public function read(int $messageId): Response
+    public function read(string $messageUuid): Response
     {
-        return ResponseHelper::okResponse();
+        $messageStatusUpdated = $this->firebaseService->readMessage($messageUuid);
+        return ResponseHelper::okResponse($messageStatusUpdated);
     }
 
-    public function delete(int $messageId): Response
+    public function delete(string $messageUuid): Response
     {
-        return ResponseHelper::okResponse();
+        $messageDeleted = $this->firebaseService->deleteMessage($messageUuid);
+        return ResponseHelper::okResponse($messageDeleted);
     }
 }
