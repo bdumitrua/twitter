@@ -31,8 +31,8 @@ class MessageRepository
     protected function queryUserChats(int $userId): Builder
     {
         return $this->chat
-            ->whereIn('first_user_id', $userId)
-            ->orWhereIn('second_user_id', $userId)
+            ->where('first_user_id', $userId)
+            ->orWhere('second_user_id', $userId)
             ->latest('updated_at');
     }
 
@@ -54,9 +54,9 @@ class MessageRepository
         return $chat;
     }
 
-    public function getChatMessages(array $participants): array
+    public function getChatMessages(Chat $chat): array
     {
-        return [];
+        return $this->firebaseService->getChatMessages($chat->id);
     }
 
     public function getUserChats(int $userId): Collection
@@ -78,23 +78,55 @@ class MessageRepository
 
     public function send(MessageDTO $messageDTO, int $chatId): void
     {
-        $messageUuid = $this->firebaseService->sendMessage($messageDTO);
+        $messageUuid = $this->firebaseService->sendMessage($messageDTO, $chatId);
 
         $this->chatMessage->create([
             'chat_id' => $chatId,
             'message_uuid' => $messageUuid
         ]);
+
+        $this->updateChatTimestamp($chatId);
     }
 
     public function read(string $messageUuid): Response
     {
-        $messageStatusUpdated = $this->firebaseService->readMessage($messageUuid);
+        $chatId = $this->getChatIdByMessage($messageUuid);
+        $messageStatusUpdated = $this->firebaseService->readMessage($messageUuid, $chatId);
+
         return ResponseHelper::okResponse($messageStatusUpdated);
     }
 
     public function delete(string $messageUuid): Response
     {
-        $messageDeleted = $this->firebaseService->deleteMessage($messageUuid);
-        return ResponseHelper::okResponse($messageDeleted);
+        $chatId = $this->getChatIdByMessage($messageUuid);
+        $lastChatActivityTime = $this->firebaseService->deleteMessage($messageUuid, $chatId);
+
+        if (empty($lastChatActivityTime)) {
+            return ResponseHelper::noContent();
+        }
+
+        $this->chatMessage->where('message_uuid', $messageUuid)->delete();
+        $this->updateChatTimestamp($chatId, date('Y-m-d H:i:s', $lastChatActivityTime));
+
+        return ResponseHelper::okResponse();
+    }
+
+    protected function getChatIdByMessage(string $messageUuid): int
+    {
+        $chatMessage = $this->chatMessage->where('message_uuid', $messageUuid)->first();
+
+        if (empty($chatMessage)) {
+            return 0;
+        }
+
+        return $chatMessage->pluck('chat_id')->toArray()[0];
+    }
+
+    protected function updateChatTimestamp(int $chatId, $date = null): void
+    {
+        $date = $date ?? now();
+        $this->chat->find($chatId)->update([
+            'updated_at' => $date
+        ]);
     }
 }

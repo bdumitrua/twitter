@@ -10,6 +10,7 @@ use App\Modules\Message\Repositories\MessageRepository;
 use App\Modules\Message\Requests\MessageRequest;
 use App\Modules\User\Models\User;
 use App\Traits\CreateDTO;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -30,8 +31,10 @@ class MessageService
         $this->authorizedUserId = Auth::id();
     }
 
-    public function chats()
+    public function chats(): Collection
     {
+        // $aa = $this->messageRepository->getUserChats($this->authorizedUserId)->toArray();
+        // die(var_dump($aa));
         return $this->messageRepository->getUserChats($this->authorizedUserId);
     }
 
@@ -42,7 +45,9 @@ class MessageService
             $this->authorizedUserId
         ];
 
-        return $this->messageRepository->getChatMessages($participants);
+        $chat = $this->messageRepository->findOrCreateChat($participants);
+
+        return $this->messageRepository->getChatMessages($chat);
     }
 
     public function send(User $user, MessageRequest $messageRequest)
