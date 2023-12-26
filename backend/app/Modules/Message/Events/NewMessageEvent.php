@@ -13,5 +13,4 @@ class NewMessageEvent
     {
         $this->message = $message;
     }
-
 }
