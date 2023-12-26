@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Notification;
+namespace Tests\Feature\Tweet;
 
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Resources\TweetResource;

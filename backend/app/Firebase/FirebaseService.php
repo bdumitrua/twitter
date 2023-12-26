@@ -15,12 +15,23 @@ class FirebaseService
         $this->database = app('firebase.database');
     }
 
-    public function storeNotification(Notification $notification)
+    /**
+     * @param Notification $notification
+     * 
+     * @return void
+     */
+    public function storeNotification(Notification $notification): void
     {
         $this->database->getReference('notifications')->push($notification->toArray());
     }
 
-    public function getMessage(string $messageUuid, int $chatId)
+    /**
+     * @param string $messageUuid
+     * @param int $chatId
+     * 
+     * @return array|null
+     */
+    public function getMessage(string $messageUuid, int $chatId): ?array
     {
         $messageReference = $this->database->getReference("messages/{$chatId}/{$messageUuid}");
         if (!$messageReference->getSnapshot()->exists()) {
@@ -30,53 +41,120 @@ class FirebaseService
         return $messageReference->getValue();
     }
 
-    public function sendMessage(MessageDTO $messageDTO, int $chatId): ?string
+    /**
+     * @param MessageDTO $messageDTO
+     * @param int $chatId
+     * @param array $participants
+     * 
+     * @return string|null
+     */
+    public function sendMessage(MessageDTO $messageDTO, int $chatId, array $participants): ?string
     {
-        return $this->database->getReference("messages/{$chatId}/")->push(array_merge(
+        $pathToChatMessages = "messages/{$chatId}";
+
+        $newMessageUuid = $this->database->getReference($pathToChatMessages)->push()->getKey();
+        $newMessageData = array_merge(
             $messageDTO->toArray(),
             ['created_at' => Database::SERVER_TIMESTAMP]
-        ))->getKey();
+        );
+
+        $updates = [];
+        foreach ($participants as $userId) {
+            $updates["{$pathToChatMessages}/{$userId}/{$newMessageUuid}"] = $newMessageData;
+        }
+
+        $this->database->getReference()->update($updates);
+
+        return $newMessageUuid;
     }
 
+    /**
+     * @param string $messageUuid
+     * @param int $chatId
+     * 
+     * @return bool
+     */
     public function readMessage(string $messageUuid, int $chatId): bool
     {
-        $messageReference = $this->database->getReference("messages/{$chatId}/{$messageUuid}");
+        $pathToChatMessages = "messages/{$chatId}";
+        $messageReference = $this->database->getReference($pathToChatMessages);
         if (!$messageReference->getSnapshot()->exists()) {
             return false;
         }
 
-        $updates = ["messages/{$chatId}/{$messageUuid}/status" => "read"];
+        $updates = [];
+        $participants = array_keys($messageReference->getValue());
+        foreach ($participants as $userId) {
+            $updates["{$pathToChatMessages}/{$userId}/{$messageUuid}/status"] = 'read';
+        }
+
         $this->database->getReference()->update($updates);
 
         return true;
     }
 
-    public function deleteMessage(string $messageUuid, int $chatId): ?int
+    /**
+     * @param string $messageUuid
+     * @param int $chatId
+     * @param int $authorizedUserId
+     * 
+     * @return int|null
+     */
+    public function deleteMessage(string $messageUuid, int $chatId, int $authorizedUserId): ?int
     {
-        $messageReference = $this->database->getReference("messages/{$chatId}/{$messageUuid}");
+        $messageReference = $this->database->getReference("messages/{$chatId}/{$authorizedUserId}/{$messageUuid}");
         if (!$messageReference->getSnapshot()->exists()) {
             return null;
         }
         $messageReference->remove();
 
-        $newestMessage = $this->database->getReference("messages/{$chatId}")
+        $newestMessage = $this->database->getReference("messages/{$chatId}/{$authorizedUserId}")
             ->orderByKey()
             ->limitToFirst(1)
             ->getSnapshot()
             ->getValue();
 
-        $chatLastActivityTime = $newestMessage['created_at'];
-        return $chatLastActivityTime;
+        if (empty($newestMessage)) {
+            return 0;
+        }
+
+        // Last chat activity time
+        return array_values($newestMessage)[0]['created_at'];
     }
 
-    public function getChatMessages(int $chatId): array
+    /**
+     * @param int $chatId
+     * @param int $authorizedUserId
+     * 
+     * @return array|null
+     */
+    public function getChatMessages(int $chatId, int $authorizedUserId): ?array
     {
-        $messages = $this->database->getReference("messages/{$chatId}")
+        $messages = $this->database->getReference("messages/{$chatId}/{$authorizedUserId}")
             ->orderByKey()
             ->limitToFirst(15)
             ->getSnapshot()
             ->getValue();
 
         return $messages;
+    }
+
+    /**
+     * @param int $chatId
+     * @param int $authorizedUserId
+     * 
+     * @return bool
+     */
+    public function clearChatMessages(int $chatId, int $authorizedUserId): bool
+    {
+        $pathToChatMessages = "messages/{$chatId}";
+        $chatReference = $this->database->getReference("{$pathToChatMessages}/{$authorizedUserId}");
+        if (!$chatReference->getSnapshot()->exists()) {
+            return false;
+        }
+
+        $chatReference->remove();
+
+        return true;
     }
 }

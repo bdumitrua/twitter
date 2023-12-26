@@ -2,11 +2,13 @@
 
 namespace App\Modules\Message\Repositories;
 
+use App\Exceptions\UnprocessableContentException;
 use App\Firebase\FirebaseService;
 use App\Helpers\ResponseHelper;
 use App\Modules\Message\DTO\MessageDTO;
 use App\Modules\Message\Models\Chat;
 use App\Modules\Message\Models\ChatMessage;
+use App\Modules\Message\Models\HiddenChat;
 use App\Modules\Message\Models\Message;
 use App\Modules\Tweet\Repositories\TweetRepository;
 use App\Modules\User\Repositories\UserRepository;
@@ -19,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 class MessageRepository
 {
     protected Chat $chat;
+    protected HiddenChat $hiddenChat;
     protected ChatMessage $chatMessage;
     protected UserRepository $userRepository;
     protected FirebaseService $firebaseService;
@@ -26,12 +29,14 @@ class MessageRepository
 
     public function __construct(
         Chat $chat,
+        HiddenChat $hiddenChat,
         ChatMessage $chatMessage,
         UserRepository $userRepository,
         FirebaseService $firebaseService,
         TweetRepository $tweetRepository,
     ) {
         $this->chat = $chat;
+        $this->hiddenChat = $hiddenChat;
         $this->chatMessage = $chatMessage;
         $this->userRepository = $userRepository;
         $this->firebaseService = $firebaseService;
@@ -58,7 +63,6 @@ class MessageRepository
     public function findOrCreateChat(array $participants): Chat
     {
         $chat = $this->queryChatByParticipants($participants)->first();
-
         if (empty($chat)) {
             $chat = $this->create($participants);
         }
@@ -68,12 +72,13 @@ class MessageRepository
 
     /**
      * @param Chat $chat
+     * @param int $authorizedUserId
      * 
      * @return array
      */
-    public function getChatMessages(Chat $chat): array
+    public function getChatMessages(Chat $chat, int $authorizedUserId): array
     {
-        $messages = $this->firebaseService->getChatMessages($chat->id);
+        $messages = $this->firebaseService->getChatMessages($chat->id, $authorizedUserId) ?? [];
         $messagesFinal = [];
 
         foreach ($messages as $uuid => $message) {
@@ -108,6 +113,16 @@ class MessageRepository
             ->latest('updated_at')
             ->get();
 
+        $hiddenChatsIds = $this->hiddenChat
+            ->where('user_id', $userId)
+            ->get()
+            ->pluck('chat_id')
+            ->toArray();
+
+        $chats = $chats->filter(function ($chat) use ($hiddenChatsIds) {
+            return !in_array($chat->id, $hiddenChatsIds);
+        });
+
         foreach ($chats as &$chat) {
             $this->assembleChatData($chat);
         }
@@ -119,9 +134,15 @@ class MessageRepository
      * @param array $participants
      * 
      * @return Chat
+     * 
+     * @throws UnprocessableContentException
      */
     public function create(array $participants): Chat
     {
+        if ($participants[0] === $participants[1]) {
+            throw new UnprocessableContentException('You can\'t write to yourself');
+        }
+
         $data = [
             'first_user_id' => $participants[0],
             'second_user_id' => $participants[1],
@@ -131,20 +152,35 @@ class MessageRepository
     }
 
     /**
+     * @param int $chatId
+     * @param int $authorizedUserId
+     * 
+     * @return Response
+     */
+    public function clear(int $chatId, int $authorizedUserId): Response
+    {
+        $chatMessagesDeleted = $this->firebaseService->clearChatMessages($chatId, $authorizedUserId);
+        $this->hideChatFromUser($chatId, $authorizedUserId);
+
+        return ResponseHelper::okResponse($chatMessagesDeleted);
+    }
+
+    /**
      * @param MessageDTO $messageDTO
      * @param int $chatId
+     * @param array $participants
      * 
      * @return void
      */
-    public function send(MessageDTO $messageDTO, int $chatId): void
+    public function send(MessageDTO $messageDTO, int $chatId, array $participants): void
     {
-        $messageUuid = $this->firebaseService->sendMessage($messageDTO, $chatId);
+        $messageUuid = $this->firebaseService->sendMessage($messageDTO, $chatId, $participants);
 
         $this->chatMessage->create([
             'chat_id' => $chatId,
             'message_uuid' => $messageUuid
         ]);
-
+        $this->hiddenChat->where('chat_id', $chatId)->delete();
         $this->updateChatTimestamp($chatId);
     }
 
@@ -156,27 +192,34 @@ class MessageRepository
     public function read(string $messageUuid): Response
     {
         $chatId = $this->getChatIdByMessage($messageUuid);
-        $messageStatusUpdated = $this->firebaseService->readMessage($messageUuid, $chatId);
+        if (empty($chatId)) {
+            return ResponseHelper::noContent();
+        }
 
+        $messageStatusUpdated = $this->firebaseService->readMessage($messageUuid, $chatId);
         return ResponseHelper::okResponse($messageStatusUpdated);
     }
 
     /**
      * @param string $messageUuid
+     * @param int $authorizedUserId
      * 
      * @return Response
      */
-    public function delete(string $messageUuid): Response
+    public function delete(string $messageUuid, int $authorizedUserId): Response
     {
         $chatId = $this->getChatIdByMessage($messageUuid);
-        $lastChatActivityTime = $this->firebaseService->deleteMessage($messageUuid, $chatId);
-
-        if (empty($lastChatActivityTime)) {
+        if (empty($chatId)) {
             return ResponseHelper::noContent();
         }
 
-        $this->chatMessage->where('message_uuid', $messageUuid)->delete();
-        $this->updateChatTimestamp($chatId, date('Y-m-d H:i:s', $lastChatActivityTime / 1000));
+        $lastChatActivityTime = $this->firebaseService->deleteMessage($messageUuid, $chatId, $authorizedUserId);
+        if ($lastChatActivityTime === null) {
+            return ResponseHelper::noContent();
+        }
+        if ($lastChatActivityTime === 0) {
+            $this->hideChatFromUser($chatId, $authorizedUserId);
+        }
 
         return ResponseHelper::okResponse();
     }
@@ -188,13 +231,12 @@ class MessageRepository
      */
     protected function getChatIdByMessage(string $messageUuid): int
     {
-        $chatMessage = $this->chatMessage->where('message_uuid', $messageUuid)->first();
-
+        $chatMessage = $this->chatMessage->where('message_uuid', $messageUuid)->first(['chat_id']);
         if (empty($chatMessage)) {
             return 0;
         }
 
-        return $chatMessage->pluck('chat_id')->toArray()[0];
+        return $chatMessage->toArray()['chat_id'];
     }
 
     /**
@@ -206,8 +248,23 @@ class MessageRepository
     protected function updateChatTimestamp(int $chatId, $date = null): void
     {
         $date = $date ?? now();
-        $this->chat->find($chatId)->update([
-            'updated_at' => $date
+        $chat = $this->chat->find($chatId)->first();
+
+        $chat->updated_at = $date;
+        $chat->save();
+    }
+
+    /**
+     * @param int $chatId
+     * @param int $userId
+     * 
+     * @return void
+     */
+    protected function hideChatFromUser(int $chatId, int $userId): void
+    {
+        $this->hiddenChat->create([
+            'chat_id' => $chatId,
+            'user_id' => $userId,
         ]);
     }
 
@@ -215,13 +272,15 @@ class MessageRepository
      * @param int $linkedEntityId
      * @param string $linkedEntityType
      * 
-     * @return Model
+     * @return ?Model
      */
-    protected function getLinkedEntityData(int $linkedEntityId, string $linkedEntityType): Model
+    protected function getLinkedEntityData(int $linkedEntityId, string $linkedEntityType): ?Model
     {
         if ($linkedEntityType === 'tweet') {
             return $this->tweetRepository->getTweetData($linkedEntityId);
         }
+
+        return null;
     }
 
     /**

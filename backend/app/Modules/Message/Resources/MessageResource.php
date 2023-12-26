@@ -40,6 +40,9 @@ class MessageResource extends JsonResource
         ];
     }
 
+    /**
+     * @return array|null
+     */
     protected function getEntityData(): ?array
     {
         if (empty($this->linkedEntityType) || empty($this->linkedEntityId)) {
@@ -49,5 +52,7 @@ class MessageResource extends JsonResource
         if ($this->linkedEntityType === 'tweet') {
             return (new TweetResource($this->linkedEntityData))->resolve();
         }
+
+        return null;
     }
 }

@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('chat_participants_settings', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('chat_id');
-            $table->unsignedBigInteger('user_id');
+            $table->unsignedBigInteger('chat_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->integer('notifications_enabled')->default(1);
             $table->timestamps();
 

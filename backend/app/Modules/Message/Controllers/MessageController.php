@@ -4,8 +4,10 @@ namespace App\Modules\Message\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Modules\Message\Models\Chat;
 use App\Modules\Message\Models\Message;
 use App\Modules\Message\Requests\MessageRequest;
+use App\Modules\Message\Requests\MessagesDeletingRequest;
 use App\Modules\Message\Services\MessageService;
 use App\Modules\User\Models\User;
 
@@ -50,6 +52,13 @@ class MessageController extends Controller
     {
         return $this->handleServiceCall(function () {
             return $this->messageService->chats();
+        });
+    }
+
+    public function clear(Chat $chat)
+    {
+        return $this->handleServiceCall(function () use ($chat) {
+            return $this->messageService->clear($chat);
         });
     }
 }

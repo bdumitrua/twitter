@@ -11,9 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('chat_messages', function (Blueprint $table) {
-            $table->index('chat_id');
-            $table->index('message_uuid');
+        Schema::create('hidden_chats', function (Blueprint $table) {
+            $table->id();
+            $table->unsignedBigInteger('chat_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
+            $table->timestamps();
         });
     }
 
@@ -22,9 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('chat_messages', function (Blueprint $table) {
-            $table->index('chat_id');
-            $table->index('message_uuid');
-        });
+        Schema::dropIfExists('hidden_chats');
     }
 };

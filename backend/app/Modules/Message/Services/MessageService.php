@@ -4,10 +4,12 @@ namespace App\Modules\Message\Services;
 
 use App\Exceptions\UnprocessableContentException;
 use App\Modules\Message\DTO\MessageDTO;
+use App\Modules\Message\Models\Chat;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
 use App\Modules\Message\Repositories\MessageRepository;
 use App\Modules\Message\Requests\MessageRequest;
+use App\Modules\Message\Requests\MessagesDeletingRequest;
 use App\Modules\Message\Resources\ChatResource;
 use App\Modules\Message\Resources\MessageResource;
 use App\Modules\User\Models\User;
@@ -45,6 +47,16 @@ class MessageService
     }
 
     /**
+     * @param Chat $chat
+     * 
+     * @return Response
+     */
+    public function clear(Chat $chat): Response
+    {
+        return $this->messageRepository->clear($chat->id, $this->authorizedUserId);
+    }
+
+    /**
      * @param User $user
      * 
      * @return JsonResource
@@ -59,7 +71,7 @@ class MessageService
         $chat = $this->messageRepository->findOrCreateChat($participants);
 
         return MessageResource::collection(
-            $this->messageRepository->getChatMessages($chat)
+            $this->messageRepository->getChatMessages($chat, $this->authorizedUserId)
         );
     }
 
@@ -84,7 +96,7 @@ class MessageService
         $messageDTO->senderId = $this->authorizedUserId;
 
         $this->logger->info('Sending message from messageDTO', $messageDTO->toArray());
-        $this->messageRepository->send($messageDTO, $chat->id);
+        $this->messageRepository->send($messageDTO, $chat->id, $participants);
     }
 
     /**
@@ -105,13 +117,15 @@ class MessageService
     public function delete(string $messageUuid): Response
     {
         $this->logger->info('Deleting message', ['messageUuid' => $messageUuid]);
-        return $this->messageRepository->delete($messageUuid);
+        return $this->messageRepository->delete($messageUuid, $this->authorizedUserId);
     }
 
     /**
      * @param MessageRequest $messageRequest
      * 
      * @return void
+     * 
+     * @throws UnprocessableContentException
      */
     protected function validateMessageRequest(MessageRequest $messageRequest): void
     {
