@@ -74,8 +74,11 @@ class MessageRepository
     public function getChatMessages(Chat $chat): array
     {
         $messages = $this->firebaseService->getChatMessages($chat->id);
+        $messagesFinal = [];
 
-        foreach ($messages as &$message) {
+        foreach ($messages as $uuid => $message) {
+            $message['uuid'] = $uuid;
+
             if (isset(
                 $message['linkedEntityId'],
                 $message['linkedEntityType']
@@ -85,9 +88,11 @@ class MessageRepository
                     $message['linkedEntityType'],
                 );
             }
+
+            $messagesFinal[] = $message;
         }
 
-        return $messages;
+        return $messagesFinal;
     }
 
     /**

@@ -15,7 +15,7 @@ Route::prefix('messages')->middleware(['auth:api'])->controller(MessageControlle
     // Написать сообщение в диалог с пользователем
     Route::post('/{user}', 'send')->name('sendMessageToChatWithUser');
     // Изменить статус сообщения на прочитано
-    Route::patch('/{messageUuid}', 'read')->name('changeMessageStatus');
+    Route::patch('/{messageUuid}', 'read')->name('readMessage');
     // Удалить сообщение (для обеих сторон)
     Route::delete('/{messageUuid}', 'delete')->name('deleteMessage');
 });
