@@ -9,10 +9,12 @@ use Kreait\Firebase\Database;
 class FirebaseService
 {
     protected Database $database;
+    protected string $bucket;
 
     public function __construct()
     {
         $this->database = app('firebase.database');
+        $this->bucket = config('firebase.projects.app.storage.bucket');
     }
 
     /**
@@ -22,23 +24,7 @@ class FirebaseService
      */
     public function storeNotification(Notification $notification): void
     {
-        $this->database->getReference('notifications')->push($notification->toArray());
-    }
-
-    /**
-     * @param string $messageUuid
-     * @param int $chatId
-     * 
-     * @return array|null
-     */
-    public function getMessage(string $messageUuid, int $chatId): ?array
-    {
-        $messageReference = $this->database->getReference("messages/{$chatId}/{$messageUuid}");
-        if (!$messageReference->getSnapshot()->exists()) {
-            return [];
-        }
-
-        return $messageReference->getValue();
+        $this->database->getReference($this->getNotificationsPath())->push($notification->toArray());
     }
 
     /**
@@ -50,9 +36,7 @@ class FirebaseService
      */
     public function sendMessage(MessageDTO $messageDTO, int $chatId, array $participants): ?string
     {
-        $pathToChatMessages = "messages/{$chatId}";
-
-        $newMessageUuid = $this->database->getReference($pathToChatMessages)->push()->getKey();
+        $newMessageUuid = $this->database->getReference($this->getChatMessagesPath($chatId))->push()->getKey();
         $newMessageData = array_merge(
             $messageDTO->toArray(),
             ['created_at' => Database::SERVER_TIMESTAMP]
@@ -60,7 +44,7 @@ class FirebaseService
 
         $updates = [];
         foreach ($participants as $userId) {
-            $updates["{$pathToChatMessages}/{$userId}/{$newMessageUuid}"] = $newMessageData;
+            $updates[$this->getMessagePath($chatId, $userId, $newMessageUuid)] = $newMessageData;
         }
 
         $this->database->getReference()->update($updates);
@@ -76,8 +60,7 @@ class FirebaseService
      */
     public function readMessage(string $messageUuid, int $chatId): bool
     {
-        $pathToChatMessages = "messages/{$chatId}";
-        $messageReference = $this->database->getReference($pathToChatMessages);
+        $messageReference = $this->database->getReference($this->getChatMessagesPath($chatId));
         if (!$messageReference->getSnapshot()->exists()) {
             return false;
         }
@@ -85,7 +68,8 @@ class FirebaseService
         $updates = [];
         $participants = array_keys($messageReference->getValue());
         foreach ($participants as $userId) {
-            $updates["{$pathToChatMessages}/{$userId}/{$messageUuid}/status"] = 'read';
+            $messagePath = $this->getMessagePath($chatId, $userId, $messageUuid);
+            $updates["{$messagePath}/status"] = 'read';
         }
 
         $this->database->getReference()->update($updates);
@@ -102,13 +86,13 @@ class FirebaseService
      */
     public function deleteMessage(string $messageUuid, int $chatId, int $authorizedUserId): ?int
     {
-        $messageReference = $this->database->getReference("messages/{$chatId}/{$authorizedUserId}/{$messageUuid}");
+        $messageReference = $this->database->getReference($this->getMessagePath($chatId, $authorizedUserId, $messageUuid));
         if (!$messageReference->getSnapshot()->exists()) {
             return null;
         }
         $messageReference->remove();
 
-        $newestMessage = $this->database->getReference("messages/{$chatId}/{$authorizedUserId}")
+        $newestMessage = $this->database->getReference($this->getUserMessagesPath($chatId, $authorizedUserId))
             ->orderByKey()
             ->limitToFirst(1)
             ->getSnapshot()
@@ -130,7 +114,7 @@ class FirebaseService
      */
     public function getChatMessages(int $chatId, int $authorizedUserId): ?array
     {
-        $messages = $this->database->getReference("messages/{$chatId}/{$authorizedUserId}")
+        $messages = $this->database->getReference($this->getUserMessagesPath($chatId, $authorizedUserId))
             ->orderByKey()
             ->limitToFirst(15)
             ->getSnapshot()
@@ -147,8 +131,7 @@ class FirebaseService
      */
     public function clearChatMessages(int $chatId, int $authorizedUserId): bool
     {
-        $pathToChatMessages = "messages/{$chatId}";
-        $chatReference = $this->database->getReference("{$pathToChatMessages}/{$authorizedUserId}");
+        $chatReference = $this->database->getReference($this->getUserMessagesPath($chatId, $authorizedUserId));
         if (!$chatReference->getSnapshot()->exists()) {
             return false;
         }
@@ -156,5 +139,25 @@ class FirebaseService
         $chatReference->remove();
 
         return true;
+    }
+
+    protected function getNotificationsPath(): string
+    {
+        return $this->bucket . '/notifications';
+    }
+
+    protected function getChatMessagesPath(int $chatId): string
+    {
+        return $this->bucket . "/messages/{$chatId}";
+    }
+
+    protected function getUserMessagesPath(int $chatId, int $userId): string
+    {
+        return $this->bucket . "/messages/{$chatId}/{$userId}";
+    }
+
+    protected function getMessagePath(int $chatId, int $userId, string $messageUuid): string
+    {
+        return $this->bucket . "/messages/{$chatId}/{$userId}/{$messageUuid}";
     }
 }
