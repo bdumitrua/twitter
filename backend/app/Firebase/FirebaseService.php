@@ -24,7 +24,7 @@ class FirebaseService
      */
     public function storeNotification(Notification $notification): void
     {
-        $this->database->getReference($this->getNotificationsPath())->push($notification->toArray());
+        $this->database->getReference($this->getUserNotificationsPath($notification->user_id))->push($notification->toArray());
     }
 
     /**
@@ -141,9 +141,9 @@ class FirebaseService
         return true;
     }
 
-    protected function getNotificationsPath(): string
+    protected function getUserNotificationsPath(int $userId): string
     {
-        return $this->bucket . '/notifications';
+        return $this->bucket . "/notifications/{$userId}";
     }
 
     protected function getChatMessagesPath(int $chatId): string
