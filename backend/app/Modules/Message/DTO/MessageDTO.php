@@ -6,7 +6,6 @@ class MessageDTO
 {
     public ?string $text;
     public ?int $senderId;
-    public ?int $receiverId;
     public ?int $linkedEntityId;
     public ?string $linkedEntityType;
     public string $status = 'unread';
@@ -15,7 +14,6 @@ class MessageDTO
     {
         $this->text = $data ? $data['text'] : null;
         $this->senderId = $data ? $data['senderId'] : null;
-        $this->receiverId = $data ? $data['receiverId'] : null;
         $this->linkedEntityId = $data ? $data['linkedEntityId'] : null;
         $this->linkedEntityType = $data ? $data['linkedEntityType'] : null;
     }
@@ -25,7 +23,6 @@ class MessageDTO
         return [
             'text' => $this->text,
             'senderId' => $this->senderId,
-            'receiverId' => $this->receiverId,
             'linkedEntityId' => $this->linkedEntityId,
             'linkedEntityType' => $this->linkedEntityType,
             'status' => $this->status,
