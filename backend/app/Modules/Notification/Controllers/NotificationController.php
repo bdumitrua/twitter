@@ -4,8 +4,6 @@ namespace App\Modules\Notification\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Modules\Notification\Models\Notification;
-use App\Modules\Notification\Requests\UpdateNotificationStatusRequest;
 use App\Modules\Notification\Services\NotificationService;
 
 class NotificationController extends Controller
@@ -24,10 +22,17 @@ class NotificationController extends Controller
         });
     }
 
-    public function update(Notification $notification, UpdateNotificationStatusRequest $updateNotificationStatusRequest)
+    public function read(string $notificationUuid)
     {
-        return $this->handleServiceCall(function () use ($notification, $updateNotificationStatusRequest) {
-            return $this->notificationService->update($notification, $updateNotificationStatusRequest);
+        return $this->handleServiceCall(function () use ($notificationUuid) {
+            return $this->notificationService->read($notificationUuid);
+        });
+    }
+
+    public function delete(string $notificationUuid)
+    {
+        return $this->handleServiceCall(function () use ($notificationUuid) {
+            return $this->notificationService->delete($notificationUuid);
         });
     }
 }

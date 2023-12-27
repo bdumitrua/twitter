@@ -4,7 +4,6 @@ namespace App\Firebase;
 
 use App\Modules\Message\DTO\MessageDTO;
 use App\Modules\Notification\DTO\NotificationDTO;
-use App\Modules\Notification\Models\Notification;
 use Kreait\Firebase\Database;
 
 class FirebaseService
@@ -18,21 +17,6 @@ class FirebaseService
         $this->bucket = config('firebase.projects.app.storage.bucket');
     }
 
-    /**
-     * @param Notification $notification
-     * 
-     * @return void
-     */
-    public function storeNotification(NotificationDTO $notificationDTO): void
-    {
-        $this->database->getReference($this->getUserNotificationsPath($notificationDTO->userId))->push(
-            array_merge(
-                $notificationDTO->toArray(),
-                ['created_at' => Database::SERVER_TIMESTAMP]
-            )
-        );
-    }
-
     public function getUserNotifications(int $userId): ?array
     {
         $notifications = $this->database->getReference($this->getUserNotificationsPath($userId))
@@ -42,6 +26,48 @@ class FirebaseService
             ->getValue();
 
         return $notifications;
+    }
+
+    /**
+     * @param NotificationDTO $notificationDTO
+     * 
+     * @return string|null
+     */
+    public function storeNotification(NotificationDTO $notificationDTO): ?string
+    {
+        $notificationUuid = $this->database->getReference($this->getUserNotificationsPath($notificationDTO->userId))->push(
+            array_merge(
+                $notificationDTO->toArray(),
+                ['created_at' => Database::SERVER_TIMESTAMP]
+            )
+        )->getKey();
+
+        return $notificationUuid;
+    }
+
+    public function readNotification(int $authorizedUserId, string $notificationUuid): bool
+    {
+        $notificationPath = $this->getNotificationsPath($authorizedUserId, $notificationUuid);
+        $notificationReference = $this->database->getReference($notificationPath);
+        if (!$notificationReference->getSnapshot()->exists()) {
+            return false;
+        }
+
+        $updates = ["{$notificationPath}/status" => 'readed'];
+        $this->database->getReference()->update($updates);
+
+        return true;
+    }
+
+    public function deleteNotification(int $authorizedUserId, string $notificationUuid): bool
+    {
+        $notificationReference = $this->database->getReference($this->getNotificationsPath($authorizedUserId, $notificationUuid));
+        if (!$notificationReference->getSnapshot()->exists()) {
+            return false;
+        }
+
+        $notificationReference->remove();
+        return true;
     }
 
     /**
@@ -161,6 +187,11 @@ class FirebaseService
     protected function getUserNotificationsPath(int $userId): string
     {
         return $this->bucket . "/notifications/{$userId}";
+    }
+
+    protected function getNotificationsPath(int $userId, string $notificationUuid): string
+    {
+        return $this->bucket . "/notifications/{$userId}/{$notificationUuid}";
     }
 
     protected function getChatMessagesPath(int $chatId): string

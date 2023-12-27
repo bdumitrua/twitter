@@ -4,12 +4,11 @@ namespace App\Modules\Notification\Services;
 
 use App\Firebase\FirebaseService;
 use App\Modules\Notification\DTO\NotificationDTO;
-use App\Modules\Notification\Models\Notification;
 use App\Modules\Notification\Repositories\NotificationRepository;
-use App\Modules\Notification\Requests\UpdateNotificationStatusRequest;
 use App\Modules\Notification\Resources\NotificationResource;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
+use Illuminate\Http\Response;
 use Illuminate\Log\LogManager;
 use Illuminate\Support\Facades\Auth;
 
@@ -49,24 +48,16 @@ class NotificationService
     public function create(NotificationDTO $notificationDTO): void
     {
         $this->logger->info('Creating notification in firebase', $notificationDTO->toArray());
-        $this->firebaseService->storeNotification($notificationDTO);
+        $this->notificationRepository->send($notificationDTO);
     }
 
-    /**
-     * @param Notification $notification
-     * @param UpdateNotificationStatusRequest $updateNotificationStatusRequest
-     * 
-     * @return void
-     */
-    public function update(Notification $notification, UpdateNotificationStatusRequest $updateNotificationStatusRequest): void
+    public function read(string $notificationUuid): Response
     {
-        $this->logger->info(
-            'Updating notification from update request',
-            [
-                'notification_uuid' => $notification->uuid,
-                'Request' => $updateNotificationStatusRequest->toArray()
-            ]
-        );
-        $this->notificationRepository->update($notification, $updateNotificationStatusRequest->status);
+        return $this->notificationRepository->read($notificationUuid, $this->authorizedUserId);
+    }
+
+    public function delete(string $notificationUuid): Response
+    {
+        return $this->notificationRepository->delete($notificationUuid, $this->authorizedUserId);
     }
 }
