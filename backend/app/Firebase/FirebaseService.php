@@ -3,6 +3,7 @@
 namespace App\Firebase;
 
 use App\Modules\Message\DTO\MessageDTO;
+use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Models\Notification;
 use Kreait\Firebase\Database;
 
@@ -22,9 +23,25 @@ class FirebaseService
      * 
      * @return void
      */
-    public function storeNotification(Notification $notification): void
+    public function storeNotification(NotificationDTO $notificationDTO): void
     {
-        $this->database->getReference($this->getUserNotificationsPath($notification->user_id))->push($notification->toArray());
+        $this->database->getReference($this->getUserNotificationsPath($notificationDTO->userId))->push(
+            array_merge(
+                $notificationDTO->toArray(),
+                ['created_at' => Database::SERVER_TIMESTAMP]
+            )
+        );
+    }
+
+    public function getUserNotifications(int $userId): ?array
+    {
+        $notifications = $this->database->getReference($this->getUserNotificationsPath($userId))
+            ->orderByKey()
+            ->limitToFirst(15)
+            ->getSnapshot()
+            ->getValue();
+
+        return $notifications;
     }
 
     /**

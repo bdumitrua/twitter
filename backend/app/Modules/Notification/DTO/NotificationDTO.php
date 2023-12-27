@@ -12,8 +12,8 @@ class NotificationDTO
     public function toArray()
     {
         return [
-            'user_id' => $this->userId,
-            'related_id' => $this->relatedId,
+            'userId' => $this->userId,
+            'relatedId' => $this->relatedId,
             'type' => $this->type,
             'status' => $this->status,
         ];

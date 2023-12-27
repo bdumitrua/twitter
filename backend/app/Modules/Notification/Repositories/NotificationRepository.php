@@ -2,6 +2,7 @@
 
 namespace App\Modules\Notification\Repositories;
 
+use App\Firebase\FirebaseService;
 use App\Modules\Notification\DTO\NotificationDTO;
 use App\Modules\Notification\Models\Notification;
 use App\Traits\GetCachedData;
@@ -12,23 +13,47 @@ class NotificationRepository
     use GetCachedData;
 
     protected Notification $notification;
+    protected FirebaseService $firebaseService;
 
-    public function __construct(Notification $notification)
-    {
+    public function __construct(
+        Notification $notification,
+        FirebaseService $firebaseService
+    ) {
         $this->notification = $notification;
+        $this->firebaseService = $firebaseService;
     }
 
     /**
      * @param int $userId
      * 
-     * @return Collection
+     * @return ?array
      */
-    public function getByUserId(int $userId): Collection
+    public function getByUserId(int $userId): ?array
     {
         $cacheKey = KEY_USER_NOTIFICATIONS . $userId;
-        return $this->getCachedData($cacheKey, 30, function () use ($userId) {
-            return $this->notification->where('user_id', '=', $userId)->take(20)->get();
+        $notifications = $this->getCachedData($cacheKey, 15, function () use ($userId) {
+            return $this->firebaseService->getUserNotifications($userId);
         }, false);
+
+        $notificationsFinal = [];
+        foreach ($notifications as $uuid => $notification) {
+            $notification['uuid'] = $uuid;
+
+            // TODO ADD DATA
+            // if (isset(
+            //     $notification['linkedEntityId'],
+            //     $notification['linkedEntityType']
+            // )) {
+            //     $notification['linkedEntityData'] = $this->getLinkedEntityData(
+            //         $notification['linkedEntityId'],
+            //         $notification['linkedEntityType'],
+            //     );
+            // }
+
+            $notificationsFinal[] = $notification;
+        }
+
+        return $notificationsFinal;
     }
 
     /**

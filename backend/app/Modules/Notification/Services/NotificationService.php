@@ -48,11 +48,8 @@ class NotificationService
      */
     public function create(NotificationDTO $notificationDTO): void
     {
-        $this->logger->info('Creating notification from request DTO', $notificationDTO->toArray());
-        $newNotification = $this->notificationRepository->create($notificationDTO);
-
-        $this->logger->info('Sending notification to firebase', $newNotification->toArray());
-        $this->firebaseService->storeNotification($newNotification);
+        $this->logger->info('Creating notification in firebase', $notificationDTO->toArray());
+        $this->firebaseService->storeNotification($notificationDTO);
     }
 
     /**

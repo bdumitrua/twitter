@@ -12,6 +12,8 @@ class NotificationResource extends JsonResource
     // Прикрепить свзанную сущность
     public function toArray(Request $request): array
     {
+        $this->resource = (object) $this->resource;
+
         $allStatuses = ['unread', 'sended', 'readed'];
         $status = $this->status;
         $availableStatuses = [];
@@ -35,12 +37,11 @@ class NotificationResource extends JsonResource
 
         return [
             'uuid' => $this->uuid,
-            'userId' => $this->user_id,
+            'userId' => $this->userId,
             'type' => $this->type,
-            'relatedId' => $this->related_id,
+            'relatedId' => $this->relatedId ?? null,
             'status' => $this->status,
-            'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at,
+            'created_at' => date('Y-m-d H:i:s', $this->created_at / 1000),
             'actions' => $actions,
         ];
     }
