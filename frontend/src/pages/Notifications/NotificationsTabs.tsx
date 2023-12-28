@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
-import styles from '../../assets/styles/pages/Notifications/NotificationTabs.module.scss';
 import { Link } from 'react-router-dom';
+
+import styles from '../../assets/styles/pages/Notifications/NotificationTabs.module.scss';
 
 type Props = {
 	links: { text: string; link: string }[];
