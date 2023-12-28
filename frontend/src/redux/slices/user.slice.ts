@@ -4,7 +4,6 @@ import UserService from "../services/user.service";
 
 export const getMeAsync = createAsyncThunk("user/me", async () => {
 	const user = await UserService.getMe();
-	console.log(user);
 
 	return user;
 });
