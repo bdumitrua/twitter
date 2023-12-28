@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Notification;
+namespace Tests\Feature\User;
 
 use App\Modules\User\Models\User;
 use App\Modules\User\Models\UserSubscribtion;

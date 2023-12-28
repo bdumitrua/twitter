@@ -32,7 +32,7 @@ class NewSubscribtionsNotifyConsumer extends BaseConsumer
             if (!empty($userSubscribtion)) {
                 $notificationDTO = new NotificationDTO();
                 $notificationDTO->type = 'newSubscribtions';
-                $notificationDTO->relatedId = $userSubscribtion->subscriber_id;
+                $notificationDTO->relatedUserId = $userSubscribtion->subscriber_id;
                 $notificationDTO->userId = $userSubscribtion->user_id;
 
                 $this->notificationService->create($notificationDTO);

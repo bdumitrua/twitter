@@ -130,7 +130,7 @@ return [
                  * override it here.
                  */
 
-                'default_bucket' => env('FIREBASE_STORAGE_DEFAULT_BUCKET'),
+                'bucket' => env('FIREBASE_STORAGE_BUCKET', 'undefined'),
 
             ],
 
