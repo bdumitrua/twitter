@@ -62,7 +62,7 @@ const router = createBrowserRouter([
 				element: (
 					<Notifications
 						links={[
-							{ text: 'Все', link: '/notifications/all' },
+							{ text: 'All', link: '/notifications' },
 							{
 								text: 'Mentions',
 								link: '/notifications/mentions',
@@ -73,7 +73,7 @@ const router = createBrowserRouter([
 				children: [
 					{
 						path: '/notifications',
-						element: <Navigate to='/notifications/' />,
+						element: <Navigate to='/notifications' />,
 					},
 					{
 						path: '/notifications/:link',
