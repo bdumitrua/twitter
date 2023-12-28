@@ -1,24 +1,25 @@
-import CreateTweet from "@/pages/CreateTweet/CreateTweet";
-import { RootState } from "@/redux/store";
-import { User } from "@/types/redux/user";
-import { ReactNode } from "react";
-import { useSelector } from "react-redux";
-import { createBrowserRouter, Navigate } from "react-router-dom";
-import Authorization from "../pages/Authorization/Authorization";
-import DefaultLayout from "../pages/DefaultLayout";
-import Feed from "../pages/Feed/Feed";
-import Profile from "../pages/Profile/Profile";
-import LikesTab from "../pages/Profile/Tabs/LikesTab";
-import MediaTab from "../pages/Profile/Tabs/MediaTab";
-import TweetsAndRepliesTab from "../pages/Profile/Tabs/TweetsAndRepliesTab";
-import TweetsTab from "../pages/Profile/Tabs/TweetsTab";
-import Registration from "../pages/Registration/Registration";
-import RegistrationCode from "../pages/Registration/RegistrationCode";
-import RegistrationConfirmation from "../pages/Registration/RegistrationConfirmation";
-import RegistrationEnd from "../pages/Registration/RegistrationEnd";
-import RegistrationStart from "../pages/Registration/RegistrationStart";
-import TweetPage from "../pages/TweetPage/TweetPage";
-import Welcome from "../pages/Welcome/Welcome";
+import CreateTweet from '@/pages/CreateTweet/CreateTweet';
+import { RootState } from '@/redux/store';
+import { User } from '@/types/redux/user';
+import { ReactNode } from 'react';
+import { useSelector } from 'react-redux';
+import { createBrowserRouter, Navigate } from 'react-router-dom';
+import Authorization from '../pages/Authorization/Authorization';
+import DefaultLayout from '../pages/DefaultLayout';
+import Feed from '../pages/Feed/Feed';
+import Profile from '../pages/Profile/Profile';
+import LikesTab from '../pages/Profile/Tabs/LikesTab';
+import MediaTab from '../pages/Profile/Tabs/MediaTab';
+import Notifications from '@/pages/Notifications/Notifications';
+import TweetsAndRepliesTab from '../pages/Profile/Tabs/TweetsAndRepliesTab';
+import TweetsTab from '../pages/Profile/Tabs/TweetsTab';
+import Registration from '../pages/Registration/Registration';
+import RegistrationCode from '../pages/Registration/RegistrationCode';
+import RegistrationConfirmation from '../pages/Registration/RegistrationConfirmation';
+import RegistrationEnd from '../pages/Registration/RegistrationEnd';
+import RegistrationStart from '../pages/Registration/RegistrationStart';
+import TweetPage from '../pages/TweetPage/TweetPage';
+import Welcome from '../pages/Welcome/Welcome';
 
 interface ProtectedRouteProps {
 	children: ReactNode;
@@ -28,10 +29,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 	const authorizedUser: User | null = useSelector(
 		(state: RootState) => state.user.authorizedUser
 	);
+	console.log('children', children);
+	console.log('authorizedUser', authorizedUser);
 
 	if (!authorizedUser) {
 		// Перенаправление на страницу авторизации
-		return <Navigate to="/welcome" />;
+		return <Navigate to='/welcome' />;
 	}
 
 	return children;
@@ -39,51 +42,75 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
 const router = createBrowserRouter([
 	{
-		path: "/",
+		path: '/',
 		element: (
-			<ProtectedRoute>
+			// <ProtectedRoute>
 				<DefaultLayout />
-			</ProtectedRoute>
+			// </ProtectedRoute>
 		),
 		children: [
 			{
-				path: "/",
-				element: <Navigate to="/feed" />,
+				path: '/',
+				element: <Navigate to='/feed' />,
 			},
 			{
-				path: "/feed",
+				path: '/feed',
 				element: <Feed />,
 			},
 			{
-				path: "/tweet",
+				path: '/notifications',
+				element: (
+					<Notifications
+						links={[
+							{ text: 'Все', link: '/notifications/all' },
+							{
+								text: 'Mentions',
+								link: '/notifications/mentions',
+							},
+						]}
+					/>
+				),
+				children: [
+					{
+						path: '/notifications',
+						element: <Navigate to='/notifications/' />,
+					},
+					{
+						path: '/notifications/:link',
+						element: <Navigate to='/notifications/:id' />,
+					},
+				],
+			},
+			{
+				path: '/tweet',
 				element: <TweetPage />,
 			},
 			{
-				path: "/create",
+				path: '/create',
 				element: <CreateTweet />,
 			},
 			{
-				path: "/profile/:id",
+				path: '/profile/:id',
 				element: <Profile />,
 				children: [
 					{
-						path: "/profile/:id",
-						element: <Navigate to="tweets" />,
+						path: '/profile/:id',
+						element: <Navigate to='tweets' />,
 					},
 					{
-						path: "tweets",
+						path: 'tweets',
 						element: <TweetsTab />,
 					},
 					{
-						path: "tweets-with-replies",
+						path: 'tweets-with-replies',
 						element: <TweetsAndRepliesTab />,
 					},
 					{
-						path: "media",
+						path: 'media',
 						element: <MediaTab />,
 					},
 					{
-						path: "likes",
+						path: 'likes',
 						element: <LikesTab />,
 					},
 				],
@@ -91,35 +118,35 @@ const router = createBrowserRouter([
 		],
 	},
 	{
-		path: "/welcome",
+		path: '/welcome',
 		element: <Welcome />,
 	},
 	{
-		path: "/auth",
+		path: '/auth',
 		element: <Authorization />,
 	},
 	{
-		path: "/registration",
+		path: '/registration',
 		element: <Registration />,
 		children: [
 			{
-				path: "/registration",
-				element: <Navigate to="/registration/start" />,
+				path: '/registration',
+				element: <Navigate to='/registration/start' />,
 			},
 			{
-				path: "/registration/start",
+				path: '/registration/start',
 				element: <RegistrationStart />,
 			},
 			{
-				path: "/registration/confirm/:registrationId",
+				path: '/registration/confirm/:registrationId',
 				element: <RegistrationConfirmation />,
 			},
 			{
-				path: "/registration/code/:registrationId",
+				path: '/registration/code/:registrationId',
 				element: <RegistrationCode />,
 			},
 			{
-				path: "/registration/end/:registrationId",
+				path: '/registration/end/:registrationId',
 				element: <RegistrationEnd />,
 			},
 		],
