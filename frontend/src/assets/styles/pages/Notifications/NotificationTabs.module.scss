@@ -1,0 +1,18 @@
+.tabs-bar {
+	box-shadow: 0px 0.33px 0px 0px $gray;
+	display: flex;
+	justify-content: space-between;
+}
+
+.tab {
+	padding: 12px 0;
+	width: 50%;
+	text-align: center;
+	@include text-dark-gray(16px, 600);
+	
+
+	&.active {
+		@include text-activity(16px, 600);
+		border-bottom: 2px solid $blue;
+	}
+}
