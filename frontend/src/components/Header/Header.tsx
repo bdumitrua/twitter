@@ -5,7 +5,7 @@ import { User } from "@/types/redux/user";
 import { useSelector } from "react-redux";
 import accountImage from "../../assets/images/Header/accountImage.svg";
 import leftArrowIcon from "../../assets/images/Header/leftArrowIcon.svg";
-import somthingIcon from "../../assets/images/Header/somethingIcon.svg";
+import somethingIcon from "../../assets/images/Header/somethingIcon.svg";
 import twitterLogo from "../../assets/images/Header/twitterLogo.svg";
 import styles from "../../assets/styles/components/Header.module.scss";
 import UserAvatarPlug from "../UserAvatar/UserAvatarPlug";
@@ -62,7 +62,7 @@ const Header: React.FC<HeaderProps> = (props) => {
 						<img src={twitterLogo} alt="" />
 					</Link>
 					<div>
-						<img src={somthingIcon} alt="" />
+						<img src={somethingIcon} alt="" />
 					</div>
 				</>
 			)}
