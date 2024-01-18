@@ -36,7 +36,7 @@ class NotificationService
     public function index(): JsonResource
     {
         return NotificationResource::collection(
-            $this->notificationRepository->getByUserId($this->authorizedUserId)
+            $this->notificationRepository->getByUserId($this->authorizedUserId) ?? []
         );
     }
 

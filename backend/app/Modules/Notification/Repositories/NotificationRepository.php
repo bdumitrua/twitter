@@ -38,14 +38,18 @@ class NotificationRepository
     /**
      * @param int $userId
      * 
-     * @return ?array
+     * @return array
      */
-    public function getByUserId(int $userId): ?array
+    public function getByUserId(int $userId): array
     {
         $cacheKey = KEY_USER_NOTIFICATIONS . $userId;
         $notifications = $this->getCachedData($cacheKey, 15, function () use ($userId) {
             return $this->firebaseService->getUserNotifications($userId);
         }, false);
+
+        if (empty($notifications)) {
+            return [];
+        }
 
         $notificationsFinal = [];
         foreach ($notifications as $uuid => $notification) {

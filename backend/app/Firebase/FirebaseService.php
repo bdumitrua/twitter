@@ -17,6 +17,17 @@ class FirebaseService
         $this->bucket = config('firebase.projects.app.storage.bucket');
     }
 
+    public function wipeMyData(): bool
+    {
+        $bucketReference = $this->database->getReference($this->bucket);
+        if (!$bucketReference->getSnapshot()->exists()) {
+            return false;
+        }
+
+        $bucketReference->remove();
+        return true;
+    }
+
     public function getUserNotifications(int $userId): ?array
     {
         $notifications = $this->database->getReference($this->getUserNotificationsPath($userId))
