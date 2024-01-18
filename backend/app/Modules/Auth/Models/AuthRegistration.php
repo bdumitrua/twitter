@@ -3,7 +3,7 @@
 namespace App\Modules\Auth\Models;
 
 use App\Modules\Auth\Events\RegistrationStartedEvent;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\AuthRegistrationFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -38,7 +38,7 @@ class AuthRegistration extends Model
         parent::boot();
 
         static::creating(function ($registrationData) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('AuthRegistration');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('AuthRegistration');
 
             event(new RegistrationStartedEvent($registrationData));
         });

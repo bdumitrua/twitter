@@ -41,6 +41,7 @@
             "Database\\Seeders\\": "database/seeders/"
         }
     },
+    "php-implementor.useComposerAutoloads": true,
     "autoload-dev": {
         "psr-4": {
             "Tests\\": "tests/"

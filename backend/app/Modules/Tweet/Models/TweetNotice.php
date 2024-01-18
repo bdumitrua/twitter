@@ -3,7 +3,7 @@
 namespace App\Modules\Tweet\Models;
 
 use App\Modules\Tweet\Events\TweetNoticeEvent;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -31,7 +31,7 @@ class TweetNotice extends Model
         parent::boot();
 
         static::created(function ($tweetNotice) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('TweetNotice');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('TweetNotice');
 
             event(new TweetNoticeEvent($tweetNotice));
         });

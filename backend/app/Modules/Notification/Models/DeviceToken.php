@@ -3,7 +3,7 @@
 namespace App\Modules\Notification\Models;
 
 use App\Modules\User\Models\User;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\DeviceTokenFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -46,7 +46,7 @@ class DeviceToken extends Model
         parent::boot();
 
         static::created(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('DeviceToken');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('DeviceToken');
         });
     }
 }

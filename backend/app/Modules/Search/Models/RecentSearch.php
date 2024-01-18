@@ -3,7 +3,7 @@
 namespace App\Modules\Search\Models;
 
 use App\Modules\User\Models\User;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\RecentSearchFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,7 +45,7 @@ class RecentSearch extends Model
         parent::boot();
 
         static::created(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('RecentSearch');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('RecentSearch');
         });
     }
 }

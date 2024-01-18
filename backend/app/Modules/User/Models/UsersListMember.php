@@ -2,7 +2,7 @@
 
 namespace App\Modules\User\Models;
 
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\UsersListMemberFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -52,7 +52,7 @@ class UsersListMember extends Model
         parent::boot();
 
         static::created(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('UsersListMember');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('UsersListMember');
         });
     }
 }

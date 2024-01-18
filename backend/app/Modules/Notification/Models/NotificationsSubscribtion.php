@@ -2,7 +2,7 @@
 
 namespace App\Modules\Notification\Models;
 
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,7 +25,7 @@ class NotificationsSubscribtion extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('NotificationsSubscriber');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('NotificationsSubscriber');
         });
     }
 }

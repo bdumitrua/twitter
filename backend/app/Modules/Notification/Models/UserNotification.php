@@ -2,7 +2,7 @@
 
 namespace App\Modules\Notification\Models;
 
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -25,7 +25,7 @@ class UserNotification extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('UserNotification');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('UserNotification');
         });
     }
 }

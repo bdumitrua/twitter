@@ -3,10 +3,9 @@
 namespace App\Prometheus;
 
 use Prometheus\CollectorRegistry;
-use Prometheus\Counter;
 use Prometheus\RenderTextFormat;
 
-class PrometheusService
+class PrometheusService implements IPrometheusService
 {
     protected $countersNamespace = 'twitter';
     public $registry;
@@ -15,10 +14,10 @@ class PrometheusService
     {
         \Prometheus\Storage\Redis::setDefaultOptions(
             [
-                'host' => env('REDIS_HOST', 'redis'),
-                'port' => env('REDIS_PORT', '6379'),
-                'username' => env('REDIS_USERNAME'),
-                'password' => env('REDIS_PASSWORD'),
+                'host' => config('database.redis.cache.host'),
+                'port' => config('database.redis.cache.port'),
+                'username' => config('database.redis.cache.username'),
+                'password' => config('database.redis.cache.password'),
                 'timeout' => 0.1, // in seconds
                 'read_timeout' => '5', // in seconds
                 'persistent_connections' => false
