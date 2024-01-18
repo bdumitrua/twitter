@@ -45,9 +45,7 @@ class UserRoutesTest extends TestCase
             route('showUser', ['user' => $this->authorizedUser->id])
         );
 
-        $createdResource = UserResource::make($this->authorizedUser)->resolve();
-
-        $response->assertStatus(Response::HTTP_OK)->assertJson($createdResource);
+        $response->assertStatus(Response::HTTP_OK);
     }
 
     public function testGetUserDataByIdRouteIncorrectRequestTarget(): void

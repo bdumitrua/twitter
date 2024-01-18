@@ -21,9 +21,6 @@ class TweetRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
 
-    // show, feed, list, user, replies, likes
-    // asd
-
     protected $authorizedUser;
     protected $secondUser;
     protected $thirdUser;
@@ -686,7 +683,9 @@ class TweetRoutesTest extends TestCase
 
         $response = $this->getJson(route('getUsersListTweets', ['usersList' => $usersList->id]));
 
-        $response->assertStatus(Response::HTTP_OK)->assertJsonCount($authorizedUserTweetsCount);
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonCount($authorizedUserTweetsCount);
     }
 
     public function testGetListTweetsRouteEmptyMembers(): void
