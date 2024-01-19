@@ -7,6 +7,12 @@ use Illuminate\Support\Facades\Log;
 
 class PasswordResetStartedListener
 {
+    protected KafkaProducer $kafkaProducer;
+
+    public function __construct(KafkaProducer $kafkaProducer)
+    {
+        $this->kafkaProducer = $kafkaProducer;
+    }
     public function handle($event)
     {
         $authReset = $event->authReset->toArray();
@@ -19,6 +25,6 @@ class PasswordResetStartedListener
         );
 
         Log::info("Creating message in {$topic} topic", $mergedData);
-        new KafkaProducer($topic, $mergedData);
+        $this->kafkaProducer->produce($topic, $mergedData);
     }
 }

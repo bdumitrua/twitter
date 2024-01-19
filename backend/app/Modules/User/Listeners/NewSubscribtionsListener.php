@@ -7,12 +7,19 @@ use Illuminate\Support\Facades\Log;
 
 class NewSubscribtionsListener
 {
+    protected KafkaProducer $kafkaProducer;
+
+    public function __construct(KafkaProducer $kafkaProducer)
+    {
+        $this->kafkaProducer = $kafkaProducer;
+    }
+
     public function handle($event)
     {
         $userSubscribtion = $event->userSubscribtion->toArray();
         $topic = 'newSubscribtions';
 
         Log::info("Creating message in {$topic} topic", $userSubscribtion);
-        new KafkaProducer($topic, $userSubscribtion);
+        $this->kafkaProducer->produce($topic, $userSubscribtion);
     }
 }
