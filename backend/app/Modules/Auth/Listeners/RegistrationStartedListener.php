@@ -7,12 +7,19 @@ use Illuminate\Support\Facades\Log;
 
 class RegistrationStartedListener
 {
+    protected KafkaProducer $kafkaProducer;
+
+    public function __construct(KafkaProducer $kafkaProducer)
+    {
+        $this->kafkaProducer = $kafkaProducer;
+    }
+
     public function handle($event)
     {
         $authRegistration = $event->authRegistration->toArray();
         $topic = 'newRegistrations';
 
         Log::info("Creating message in {$topic} topic", $authRegistration);
-        new KafkaProducer($topic, $authRegistration);
+        $this->kafkaProducer->produce($topic, $authRegistration);
     }
 }

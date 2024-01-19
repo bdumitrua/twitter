@@ -9,7 +9,7 @@ class NewPasswordResetsConsumerCommand extends Command
 {
     protected $topic = 'passwordResets';
     protected $consumerGroup = NewPasswordResetsConsumer::class;
-    protected $signature = 'kafka:consume:password_reset_mailing';
+    protected $signature = 'kafka:consume:passwordResetMailing';
 
     public function __construct()
     {

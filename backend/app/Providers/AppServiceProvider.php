@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Kafka\KafkaConsumer;
+use App\Kafka\KafkaProducer;
 use App\Prometheus\PrometheusServiceProxy;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
+use Enqueue\RdKafka\RdKafkaConnectionFactory;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
@@ -21,6 +23,16 @@ class AppServiceProvider extends ServiceProvider
             return ClientBuilder::create()
                 ->setHosts([config('services.elasticsearch.host')])
                 ->build();
+        });
+
+        $this->app->singleton(KafkaProducer::class, function ($app) {
+            $connectionFactory = new RdKafkaConnectionFactory([
+                'global' => [
+                    'metadata.broker.list' => config('kafka.broker_list'),
+                ],
+            ]);
+
+            return new KafkaProducer($connectionFactory);
         });
     }
 
