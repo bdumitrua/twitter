@@ -3,16 +3,10 @@
 namespace App\Modules\Notification\Services;
 
 use App\Helpers\ResponseHelper;
-use App\Modules\Notification\Models\DeviceToken;
 use Illuminate\Http\Request;
-use App\Modules\Notification\Repositories\DeviceTokenRepository;
 use App\Modules\Notification\Repositories\NotificationsSubscribtionRepository;
-use App\Modules\Notification\Requests\DeviceTokenRequest;
-use App\Modules\Notification\Resources\DeviceTokenResource;
 use App\Modules\User\Models\User;
 use App\Modules\User\Repositories\UserSubscribtionRepository;
-use App\Modules\User\Services\UserSubscribtionService;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Log\LogManager;

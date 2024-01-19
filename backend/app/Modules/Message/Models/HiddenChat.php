@@ -2,10 +2,7 @@
 
 namespace App\Modules\Message\Models;
 
-use App\Modules\User\Models\User;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class HiddenChat extends Model
 {
