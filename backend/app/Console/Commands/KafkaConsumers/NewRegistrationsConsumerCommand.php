@@ -9,7 +9,7 @@ class NewRegistrationsConsumerCommand extends Command
 {
     protected $topic = 'newRegistrations';
     protected $consumerGroup = NewRegistrationsConsumer::class;
-    protected $signature = 'kafka:consume:new_registration_mailing';
+    protected $signature = 'kafka:consume:newRegistrationMailing';
 
     public function __construct()
     {

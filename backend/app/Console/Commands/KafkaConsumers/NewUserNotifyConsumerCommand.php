@@ -9,7 +9,7 @@ class NewUserNotifyConsumerCommand extends Command
 {
     protected $topic = 'newUsers';
     protected $consumerGroup = NewUserNotifyConsumer::class;
-    protected $signature = 'kafka:consume:new_user_notify';
+    protected $signature = 'kafka:consume:newUserNotify';
 
     public function __construct()
     {
