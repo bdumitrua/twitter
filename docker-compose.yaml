@@ -56,7 +56,7 @@ services:
             - app
 
     mysql:
-        image: mysql
+        image: mysql:8.3
         environment:
             MYSQL_DATABASE: "twitter"
             MYSQL_USER: "admin"
@@ -71,7 +71,7 @@ services:
             - app
 
     redis:
-        image: redis
+        image: redis:7.2.3
         command: redis-server /etc/redis/redis.conf
         ports:
             - 6379:6379
