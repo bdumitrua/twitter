@@ -40,11 +40,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 const router = createBrowserRouter([
 	{
 		path: "/",
-		element: (
-			<ProtectedRoute>
-				<DefaultLayout />
-			</ProtectedRoute>
-		),
+		element: <DefaultLayout />,
 		children: [
 			{
 				path: "/",

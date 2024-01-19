@@ -2,16 +2,19 @@ $gray: #bdc5cd;
 $dark-gray: #687684;
 $light-gray: #e7ecf0;
 $blue: #4c9eeb;
+$dark-blue: #177cc0;
 $white: #fff;
+$transparent-button-hover: rgba(29, 155, 240, 0.2);
 $red: #ce395f;
 $green: #59bc6c;
 $unactive: #b9dcf7;
-$bold-text: #141619;
+$black: #141619;
 $overlay: rgba(0, 0, 0, 0.5);
 
 $z-action-button: 1;
 $z-footer: 1;
 $z-header: 1;
+$z-divider-text: 1;
 $z-overlay: 2;
 $z-modals: 3;
 
@@ -46,11 +49,33 @@ $z-modals: 3;
 @mixin text-black($text-size, $text-weight) {
 	font-size: $text-size;
 	font-weight: $text-weight;
-	color: $bold-text;
+	color: $black;
 }
 
 @mixin text-activity($text-size, $text-weight) {
 	font-size: $text-size;
 	font-weight: $text-weight;
 	color: $blue;
+}
+
+@mixin black-button() {
+	background-color: $black;
+	font-size: 12px;
+	font-weight: 600;
+	color: white;
+}
+
+@mixin blue-button() {
+	background-color: $blue;
+	font-size: 13px;
+	font-weight: 800;
+	color: white;
+}
+
+@mixin white-button() {
+	background-color: transparent;
+	border: 1px $blue solid;
+	font-size: 13px;
+	font-weight: 800;
+	color: $black;
 }
