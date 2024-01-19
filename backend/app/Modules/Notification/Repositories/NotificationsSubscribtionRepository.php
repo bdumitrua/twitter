@@ -4,7 +4,6 @@ namespace App\Modules\Notification\Repositories;
 
 use App\Helpers\ResponseHelper;
 use App\Modules\Notification\DTO\NotificationDTO;
-use App\Modules\Notification\Models\Notification;
 use App\Modules\Notification\Models\NotificationsSubscribtion;
 use App\Traits\GetCachedData;
 use Illuminate\Database\Eloquent\Builder;

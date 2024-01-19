@@ -3,7 +3,7 @@
 namespace App\Http\Middleware;
 
 use App\Helpers\Stopwatch;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Closure;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,9 +13,9 @@ class PrometheusMiddleware
     protected $prometheusService;
 
     /**
-     * @param PrometheusService $prometheusService
+     * @param PrometheusServiceProxy $prometheusService
      */
-    public function __construct(PrometheusService $prometheusService)
+    public function __construct(PrometheusServiceProxy $prometheusService)
     {
         $this->prometheusService = $prometheusService;
     }

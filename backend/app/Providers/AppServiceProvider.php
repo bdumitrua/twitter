@@ -3,7 +3,7 @@
 namespace App\Providers;
 
 use App\Kafka\KafkaConsumer;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
 use Illuminate\Http\Request;
@@ -30,8 +30,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         DB::listen(function ($query) {
-            /** @var PrometheusService */
-            $prometheusService = app(PrometheusService::class);
+            /** @var PrometheusServiceProxy */
+            $prometheusService = app(PrometheusServiceProxy::class);
             $source = optional(request()->route())->getActionName() ?? 'unknown';
             $executionTimeInSeconds = floatval($query->time) / 1000;
 

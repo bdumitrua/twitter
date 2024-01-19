@@ -5,7 +5,6 @@ namespace App\Modules\User\Repositories;
 use App\Exceptions\NotFoundException;
 use App\Helpers\ResponseHelper;
 use App\Modules\User\DTO\UsersListDTO;
-use App\Modules\User\Events\DeletedUsersListEvent;
 use App\Modules\User\Models\UsersList;
 use App\Modules\User\Models\UsersListMember;
 use App\Modules\User\Models\UsersListSubscribtion;
@@ -185,12 +184,10 @@ class UsersListRepository
      */
     public function delete(UsersList $usersList): void
     {
-        $usersListData = $usersList->toArray();
+        $usersList->toArray();
         $deletingStatus = $usersList->delete();
 
         if (!empty($deletingStatus)) {
-            event(new DeletedUsersListEvent($usersListData));
-
             $this->clearListCache($usersList->id);
         }
     }

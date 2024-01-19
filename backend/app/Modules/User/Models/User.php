@@ -4,9 +4,8 @@ namespace App\Modules\User\Models;
 
 use App\Modules\Auth\Events\UserCreatedEvent;
 use App\Modules\Notification\Models\DeviceToken;
-use App\Modules\Notification\Models\Notification;
 use App\Modules\Notification\Models\NotificationsSubscribtion;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -183,14 +182,6 @@ class User extends Authenticatable implements JWTSubject
     }
 
     /**
-     * @return HasMany
-     */
-    public function notifications(): HasMany
-    {
-        return $this->hasMany(Notification::class, 'user_id', 'id');
-    }
-
-    /**
      * @return void
      */
     protected static function boot(): void
@@ -198,7 +189,7 @@ class User extends Authenticatable implements JWTSubject
         parent::boot();
 
         static::created(function ($user) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('User');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('User');
 
             event(new UserCreatedEvent($user));
         });

@@ -3,14 +3,8 @@
 namespace App\Modules\Tweet\Models;
 
 use App\Modules\Tweet\Events\TweetNoticeEvent;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Illuminate\Database\Eloquent\Model;
-
-/* 
-    Т.к. упоминание можно только создать (изменить логически нельзя, 
-    а для удаления необходимо изменить твит (что на данный момент невозможно сделать)),
-    то для него создана только таблица и модель, без путей, сервиса и т.д.
-*/
 
 /**
  * * Модель, относящаяся к таблице tweet_notices
@@ -37,7 +31,7 @@ class TweetNotice extends Model
         parent::boot();
 
         static::created(function ($tweetNotice) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('TweetNotice');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('TweetNotice');
 
             event(new TweetNoticeEvent($tweetNotice));
         });

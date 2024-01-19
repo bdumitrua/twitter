@@ -4,7 +4,7 @@ namespace App\Modules\Tweet\Models;
 
 use App\Modules\Tweet\Events\NewTweetEvent;
 use App\Modules\User\Models\User;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\TweetFactory;
 use Elastic\ScoutDriverPlus\Searchable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -141,7 +141,7 @@ class Tweet extends Model
         parent::boot();
 
         static::created(function ($tweet) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('Tweet');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('Tweet');
 
             event(new NewTweetEvent($tweet));
         });

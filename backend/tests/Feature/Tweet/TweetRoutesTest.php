@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Notification;
+namespace Tests\Feature\Tweet;
 
 use App\Modules\Tweet\Models\Tweet;
 use App\Modules\Tweet\Resources\TweetResource;
@@ -20,9 +20,6 @@ use Illuminate\Testing\TestResponse;
 class TweetRoutesTest extends TestCase
 {
     use RefreshDatabase, WithFaker;
-
-    // show, feed, list, user, replies, likes
-    // asd
 
     protected $authorizedUser;
     protected $secondUser;
@@ -686,7 +683,9 @@ class TweetRoutesTest extends TestCase
 
         $response = $this->getJson(route('getUsersListTweets', ['usersList' => $usersList->id]));
 
-        $response->assertStatus(Response::HTTP_OK)->assertJsonCount($authorizedUserTweetsCount);
+        $response
+            ->assertStatus(Response::HTTP_OK)
+            ->assertJsonCount($authorizedUserTweetsCount);
     }
 
     public function testGetListTweetsRouteEmptyMembers(): void

@@ -4,7 +4,7 @@ namespace App\Traits;
 
 use App\Helpers\FileGeneratorHelper;
 use App\Helpers\TimeHelper;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Illuminate\Support\Facades\Cache;
 
 trait GetCachedData
@@ -19,7 +19,7 @@ trait GetCachedData
      */
     protected function getCachedData(string $cacheKey, ?int $seconds, \Closure $callback, bool $updateCache = false)
     {
-        $prometheusService = app(PrometheusService::class);
+        $prometheusService = app(PrometheusServiceProxy::class);
         $cacheKeyForMetrics = explode(':', $cacheKey)[0];
 
         if ($updateCache || !Cache::has($cacheKey)) {

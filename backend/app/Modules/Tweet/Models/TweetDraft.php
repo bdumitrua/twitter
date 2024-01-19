@@ -2,7 +2,7 @@
 
 namespace App\Modules\Tweet\Models;
 
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\TweetDraftFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +34,7 @@ class TweetDraft extends Model
         parent::boot();
 
         static::created(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('TweetDraft');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('TweetDraft');
         });
     }
 }

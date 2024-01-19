@@ -15,12 +15,10 @@ use App\Modules\Tweet\Events\TweetRepostEvent;
 use App\Modules\Tweet\Listeners\NewLikesListener;
 use App\Modules\Tweet\Listeners\NewNoticeListener;
 use App\Modules\Tweet\Listeners\NewTweetsListener;
-use App\Modules\User\Events\DeletedUsersListEvent;
 use App\Modules\User\Events\UserGroupMembersUpdateEvent;
 use App\Modules\User\Events\UsersListMembersUpdateEvent;
 use App\Modules\User\Events\UsersListSubscribtionEvent;
 use App\Modules\User\Events\UserSubscribtionEvent;
-use App\Modules\User\Listeners\DeletedUsersListsListener;
 use App\Modules\User\Listeners\NewSubscribtionsListener;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -46,9 +44,6 @@ class EventServiceProvider extends ServiceProvider
         ],
         UserGroupMembersUpdateEvent::class => [
             // 
-        ],
-        DeletedUsersListEvent::class => [
-            DeletedUsersListsListener::class,
         ],
         UsersListSubscribtionEvent::class => [
             // 

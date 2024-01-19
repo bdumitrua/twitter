@@ -3,7 +3,7 @@
 namespace App\Modules\Auth\Models;
 
 use App\Modules\User\Models\User;
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\AuthResetFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -45,7 +45,7 @@ class AuthReset extends Model
         parent::boot();
 
         static::creating(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('AuthReset');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('AuthReset');
         });
     }
 }

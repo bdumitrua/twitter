@@ -2,7 +2,7 @@
 
 namespace App\Modules\Tweet\Models;
 
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\TweetFavoriteFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -34,7 +34,7 @@ class TweetFavorite extends Model
         parent::boot();
 
         static::created(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('TweetFavorite');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('TweetFavorite');
         });
     }
 }

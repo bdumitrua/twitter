@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Notifications;
+namespace Tests\Feature\Search;
 
 use App\Modules\Search\Models\RecentSearch;
 use App\Modules\Search\Resources\RecentSearchesResource;

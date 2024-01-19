@@ -2,7 +2,7 @@
 
 namespace App\Modules\User\Models;
 
-use App\Prometheus\PrometheusService;
+use App\Prometheus\PrometheusServiceProxy;
 use Database\Factories\UserGroupMemberFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -44,7 +44,7 @@ class UserGroupMember extends Model
         parent::boot();
 
         static::created(function ($model) {
-            app(PrometheusService::class)->incrementEntityCreatedCount('UserGroupMember');
+            app(PrometheusServiceProxy::class)->incrementEntityCreatedCount('UserGroupMember');
         });
     }
 }
