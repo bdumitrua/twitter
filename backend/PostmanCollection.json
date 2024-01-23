@@ -1,0 +1,2370 @@
+{
+	"info": {
+		"_postman_id": "04be7652-77de-47a9-9f32-bdf64223a263",
+		"name": "Twitter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "28599839",
+		"_collection_link": "https://crimson-equinox-754836.postman.co/workspace/Madumey~bda88832-b1f7-4238-8044-28804b0c3893/collection/28599839-04be7652-77de-47a9-9f32-bdf64223a263?action=share&source=collection_link&creator=28599839"
+	},
+	"item": [
+		{
+			"name": "Search",
+			"item": [
+				{
+					"name": "My searches",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/search",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/search/users?search=Prof",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"search",
+								"users"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "Prof"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search tweets",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/search/tweets?search=sol",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"search",
+								"tweets"
+							],
+							"query": [
+								{
+									"key": "search",
+									"value": "sol"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create recent",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"text\": \"search11235\",\n    \"linkedUserId\": 2\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/search",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"search"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear recent searches",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/search",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"search"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Registration",
+					"item": [
+						{
+							"name": "Start registration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"MyName\",\n    \"email\": \"test2@test.com\",\n    \"birthDate\": \"2003-03-03\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/auth/registration/start",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"auth",
+										"registration",
+										"start"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm registration code",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"code\": \"11111\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/auth/registration/confirm/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"auth",
+										"registration",
+										"confirm",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "End registration",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"password\": \"12341234\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/auth/registration/end/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"auth",
+										"registration",
+										"end",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Reset password",
+					"item": [
+						{
+							"name": "Check email",
+							"protocolProfileBehavior": {
+								"disableBodyPruning": true
+							},
+							"request": {
+								"method": "GET",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"test2@test.com\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/auth/reset/check",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"auth",
+										"reset",
+										"check"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Confirm reset code",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"code\": \"11111\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/auth/reset/confirm/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"auth",
+										"reset",
+										"confirm",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "End password reset",
+							"request": {
+								"auth": {
+									"type": "noauth"
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"password\": \"12341234\"\n}"
+								},
+								"url": {
+									"raw": "{{URL}}/auth/reset/end/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"auth",
+										"reset",
+										"end",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"cronin.lupe@jaskolski.com\",\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/auth/login",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vZml0YmFyLm1lL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNjg5Njc3Nzg0LCJleHAiOjE2ODk2ODEzODQsIm5iZiI6MTY4OTY3Nzc4NCwianRpIjoiaFNCc2lHSTBLNWdsMnVHbyIsInN1YiI6IjUxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.WF1K5pNZgTx7zOjvchd3BhLmg8uB9A1LpSiGjACmMhM"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/auth/logout",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"logout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh token",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/auth/refresh?token={{TOKEN}}",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"auth",
+								"refresh"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Actions",
+					"item": [
+						{
+							"name": "Get subscribtions",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/subscribtions/5",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"subscribtions",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get subscribers",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/subscribers/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"subscribers",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Subscribe",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/subscribtions/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"subscribtions",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unsubscribe",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/subscribtions/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"subscribtions",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Groups",
+					"item": [
+						{
+							"name": "Members",
+							"item": [
+								{
+									"name": "Add user to group",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/users/groups/members/2/3",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"users",
+												"groups",
+												"members",
+												"2",
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove user from group",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/users/groups/members/2/3",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"users",
+												"groups",
+												"members",
+												"2",
+												"3"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Get my",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/groups/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"groups",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/groups/5",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"groups",
+										"5"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"mygroup\",\n    \"description\": \"mydesssss\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/users/groups",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"groups"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"myg234rouasdfsdp\",\n    \"description\": \"mydesss2341ss\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/users/groups/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"groups",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/groups/12",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"groups",
+										"12"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Lists",
+					"item": [
+						{
+							"name": "Actions",
+							"item": [
+								{
+									"name": "Add list account",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/users/lists/members/2/3",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"users",
+												"lists",
+												"members",
+												"2",
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove list account",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/users/lists/members/2/3",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"users",
+												"lists",
+												"members",
+												"2",
+												"3"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Subscribe on list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/users/lists/subscribtions/1",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"users",
+												"lists",
+												"subscribtions",
+												"1"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Unsubscribe from list",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/users/lists/subscribtions/1",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"users",
+												"lists",
+												"subscribtions",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "My lists",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/lists/",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"lists",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get by id",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/lists/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"lists",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create new list",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"My list name\",\n    \"description\": \"My list description\",\n    \"isPrivate\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/users/lists",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"lists"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"My list name2\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/users/lists/9",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"lists",
+										"9"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/lists/40",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"lists",
+										"40"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List members",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/lists/members/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"lists",
+										"members",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "List subscribers",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/users/lists/subscribtions/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"users",
+										"lists",
+										"subscribtions",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get me",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vZml0YmFyLm1lL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNjg5Njc3Nzg0LCJleHAiOjE2ODk2ODEzODQsIm5iZiI6MTY4OTY3Nzc4NCwianRpIjoiaFNCc2lHSTBLNWdsMnVHbyIsInN1YiI6IjUxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.WF1K5pNZgTx7zOjvchd3BhLmg8uB9A1LpSiGjACmMhM"
+							}
+						],
+						"url": {
+							"raw": "{{URL}}/users/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/users/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwOi8vZml0YmFyLm1lL2FwaS9hdXRoL2xvZ2luIiwiaWF0IjoxNjg5Njc3Nzg0LCJleHAiOjE2ODk2ODEzODQsIm5iZiI6MTY4OTY3Nzc4NCwianRpIjoiaFNCc2lHSTBLNWdsMnVHbyIsInN1YiI6IjUxIiwicHJ2IjoiMjNiZDVjODk0OWY2MDBhZGIzOWU3MDFjNDAwODcyZGI3YTU5NzZmNyJ9.WF1K5pNZgTx7zOjvchd3BhLmg8uB9A1LpSiGjACmMhM"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"password\": \"password\"\n}"
+						},
+						"url": {
+							"raw": "{{URL}}/users",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"users"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Tweets",
+			"item": [
+				{
+					"name": "Actions",
+					"item": [
+						{
+							"name": "Favorites",
+							"item": [
+								{
+									"name": "Add to favorites",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/tweets/actions/favorites/31",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"tweets",
+												"actions",
+												"favorites",
+												"31"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Remove from favorites",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/tweets/actions/favorites/1",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"tweets",
+												"actions",
+												"favorites",
+												"1"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						},
+						{
+							"name": "Likes",
+							"item": [
+								{
+									"name": "Like",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "POST",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/tweets/actions/likes/2",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"tweets",
+												"actions",
+												"likes",
+												"2"
+											]
+										}
+									},
+									"response": []
+								},
+								{
+									"name": "Dislike",
+									"request": {
+										"auth": {
+											"type": "bearer",
+											"bearer": [
+												{
+													"key": "token",
+													"value": "{{TOKEN}}",
+													"type": "string"
+												}
+											]
+										},
+										"method": "DELETE",
+										"header": [],
+										"url": {
+											"raw": "{{URL}}/tweets/actions/likes/31",
+											"host": [
+												"{{URL}}"
+											],
+											"path": [
+												"tweets",
+												"actions",
+												"likes",
+												"31"
+											]
+										}
+									},
+									"response": []
+								}
+							]
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "Get by user id",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/tweets/user/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"tweets",
+										"user",
+										"2"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get user replies",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/tweets/user/1/replies",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"tweets",
+										"user",
+										"1",
+										"replies"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get user likes",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/tweets/user/2/likes",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"tweets",
+										"user",
+										"2",
+										"likes"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get user media",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/tweets/user/2/media",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"tweets",
+										"user",
+										"2",
+										"media"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Drafts",
+					"item": [
+						{
+							"name": "Get my",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/tweets/drafts",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"tweets",
+										"drafts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"text\": \"Draft text\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/tweets/drafts",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"tweets",
+										"drafts"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"drafts\": [1, 2, 3]\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/tweets/drafts",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"tweets",
+										"drafts"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Get by id",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/tweets/show/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"show",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get feed",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/tweets/feed",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"feed"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get by list",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/tweets/list/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"list",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user bookmarks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/tweets/bookmarks",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"bookmarks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "// {\n//     \"text\": \"@winfield7846497, @asdasdsad, asdfafs\"\n// }\n\n{\n    \"text\": \"333333\"\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/tweets/create/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"create",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Repost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/tweets/repost/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"repost",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create thread",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"tweets\": [\n        {\n            \"text\": \"Текст начала треда\"\n        },\n        {\n            \"text\": \"Второй твит треда\"\n        },\n        {\n            \"text\": \"Третий твит треда\"\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{URL}}/tweets/thread",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"thread"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/tweets/508",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"508"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Unrepost",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/tweets/unrepost/31",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"tweets",
+								"unrepost",
+								"31"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Notifications",
+			"item": [
+				{
+					"name": "DeviceTokens",
+					"item": [
+						{
+							"name": "Get my device tokens",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/notifications/tokens",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"notifications",
+										"tokens"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Save device token",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\": \"SDFCG7YIC\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/notifications/tokens",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"notifications",
+										"tokens"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update device token",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PATCH",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\": \"SDFCG7YIC\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/notifications/tokens/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"notifications",
+										"tokens",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete device token",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"token\": \"SDFCG7YIC\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{URL}}/notifications/tokens/1",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"notifications",
+										"tokens",
+										"1"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Subscribtions",
+					"item": [
+						{
+							"name": "Subscribe",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/notifications/subscribtions/3",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"notifications",
+										"subscribtions",
+										"3"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Unsubscribe",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{TOKEN}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"url": {
+									"raw": "{{URL}}/notifications/subscribtions/2",
+									"host": [
+										"{{URL}}"
+									],
+									"path": [
+										"notifications",
+										"subscribtions",
+										"2"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "My notifications",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/notifications/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"notifications",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Read notification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/notifications/-NmgLfm9duPcYwjFQQ-V",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"notifications",
+								"-NmgLfm9duPcYwjFQQ-V"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete notification",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/notifications/-Nmg8o8XO1T6lQ_QzY7B",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"notifications",
+								"-Nmg8o8XO1T6lQ_QzY7B"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Get chats",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/messages/chats/",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"messages",
+								"chats",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get chat messages",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/messages/3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"messages",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send message to user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "text",
+									"value": "{{$randomWords}}",
+									"type": "text"
+								},
+								{
+									"key": "linkedEntityId",
+									"value": "1",
+									"type": "text",
+									"disabled": true
+								},
+								{
+									"key": "linkedEntityType",
+									"value": "tweet",
+									"type": "text",
+									"disabled": true
+								}
+							]
+						},
+						"url": {
+							"raw": "{{URL}}/messages/3",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"messages",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update message status",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/messages/-NmbjeagoJPj1w0ZggnJ",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"messages",
+								"-NmbjeagoJPj1w0ZggnJ"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete message",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/messages/-NoSP79_mTfN07vhA5sM",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"messages",
+								"-NoSP79_mTfN07vhA5sM"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Clear chat",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{TOKEN}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{URL}}/messages/chats/1",
+							"host": [
+								"{{URL}}"
+							],
+							"path": [
+								"messages",
+								"chats",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
