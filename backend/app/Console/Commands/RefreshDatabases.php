@@ -6,6 +6,7 @@ use App\Firebase\FirebaseService;
 use App\Modules\Auth\Services\AuthService;
 use App\Modules\User\Models\User;
 use Illuminate\Console\Command;
+use Kreait\Firebase\Exception\InvalidArgumentException;
 
 class RefreshDatabases extends Command
 {
@@ -28,9 +29,13 @@ class RefreshDatabases extends Command
      */
     public function handle()
     {
-        $firebase = new FirebaseService();
+        try {
+            $firebase = new FirebaseService();
+            $firebase->wipeMyData();
+        } catch (InvalidArgumentException) {
+            $this->info("You don't have firebase authentication file");
+        }
 
-        $firebase->wipeMyData();
         $this->call('migrate:fresh');
         $this->call('cache:clear');
         $this->call('db:seed');
