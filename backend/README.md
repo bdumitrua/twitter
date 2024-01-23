@@ -1,66 +1,64 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Структура модулей
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Каждый модуль проекта содержит следующие папки:
 
-## About Laravel
+## Consumers (Консьюмеры)
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+**Задача:** Выполнение фоновых задач на основе новых сообщений в топиках Kafka.
+**Использование:** Для каждого топика может быть создан консьюмер, который будет прослушивать этот топик и выполнять определенную логику фоново при появлении новых сообщений.
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Controllers (Контроллеры)
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+**Задача:** Обработка входящих HTTP-запросов, валидация входных данных и отправка ответов.
+**Использование:** Каждый контроллер ассоциируется с определенным роутом и типом запроса, обращается к сервисам для выполнения бизнес-логики и возвращает структурированный ответ.
 
-## Learning Laravel
+## DTO (ДТО-шки)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+**Задача:** Создание объектов для передачи данных между разными частями программы.
+**Использование:** В основном используются для сбора данных перед отправкой в репозиторий или для передачи данных в сервисы, если вызов сервиса не происходит через контроллер.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+## Events (События)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+**Задача:** Запуск определенных процессов при возникновении события.
+**Использование:** События используются для отправки уведомлений о происходящих событиях в системе, что в свою очередь инициирует связанную логику.
 
-## Laravel Sponsors
+## Listeners (Слушатели Событий)
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+**Задача:** Реакция на определенные события в системе и выполнение соответствующих действий.
+**Использование:** Слушатели активируются при возникновении события и выполняют задачи, такие как обработка данных или взаимодействие с другими компонентами системы.
 
-### Premium Partners
+## Models (Модели)
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+**Задача:** Представление и взаимодействие с данными в базе данных.
+**Использование:** Модели используются для определения структуры данных, связей между таблицами и запросов к базе данных через Eloquent ORM.
 
-## Contributing
+## Repositories (Репозитории)
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+**Задача:** Инкапсуляция логики запросов к базе данных.
+**Использование:** Отделяют логику запросов от бизнес-логики в сервисах, облегчают переиспользование логики работы с данными.
 
-## Code of Conduct
+## Requests (Реквесты)
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+**Задача:** Автоматическая валидация данных, отправленных в HTTP запросах.
+**Использование:** Под каждый энд-поинт создается специальный реквест с правилами валидации, используемый в соответствующем контроллере.
 
-## Security Vulnerabilities
+## Resources (Ресурсы)
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+**Задача:** Компановка данных перед отправкой ответа.
+**Использование:** Используются в сервисах перед возвратом данных в контроллер, формируют JSON ответ и содержат дополнительную логику.
 
-## License
+## Routes (Роуты)
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+**Задача:** Создание энд-поинтов для взаимодействия с бэкендом через HTTP запросы.
+**Использование:** Для каждого контроллера создается отдельный файл роутов, которые подключаются в RouteServiceProvider.
+
+## Services (Сервисы)
+
+**Задача:** Выполнение основной бизнес-логики приложения.
+**Использование:** Принимают данные от контроллеров, обрабатывают их и возвращают результат обратно в контроллеры.
+
+# Общие правила: (Coming soon)
+
+# Команды: (Coming soon)
+
+# Таблицы: (Coming soon)
