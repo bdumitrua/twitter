@@ -8,6 +8,11 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
+/**
+ * * Модель, относящаяся к таблице chats
+ * 
+ * * Необходима для хранения списка участников в чате.
+ */
 class Chat extends Model
 {
     protected $fillable = [
