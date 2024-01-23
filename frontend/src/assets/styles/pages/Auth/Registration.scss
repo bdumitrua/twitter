@@ -1,0 +1,52 @@
+.registration {
+	padding: 25px 45px;
+
+	&__page-container {
+	}
+
+	&__header {
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		margin-bottom: 36px;
+	}
+
+	&__title {
+		@include text-black(24px, 700);
+		margin-bottom: 28px;
+	}
+
+	&__fields {
+		@include flex-column();
+		row-gap: 25px;
+
+		margin-bottom: 16px;
+	}
+
+	&__birth-date {
+		@include flex-column();
+
+		&-title {
+			@include text-black(14px, 700);
+
+			margin-bottom: 8px;
+		}
+
+		&-text {
+			@include text-black(12px, 500);
+			margin-bottom: 24px;
+		}
+
+		&-fields {
+			display: flex;
+			gap: 8px;
+		}
+	}
+
+	&__changer {
+		@include text-activity(12px, 500);
+		width: 100%;
+		display: flex;
+		justify-content: flex-end;
+	}
+}

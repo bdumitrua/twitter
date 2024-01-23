@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import styles from "@/assets/styles/pages/Auth/Registration.scss";
+import styles from "@/assets/styles/components/InputField.module.scss";
 import { InputRules } from "@/types/inputRules";
 
+import { CSSProperties, useRef, useState } from "react";
 import {
 	Control,
 	Controller,
@@ -15,6 +16,7 @@ interface InputFieldProps<
 	TFieldValues extends FieldValues = FieldValues,
 	TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>
 > {
+	style?: CSSProperties;
 	label: string;
 	type: string;
 	name?: string;
@@ -33,6 +35,7 @@ interface InputFieldProps<
 }
 
 const InputField: React.FC<InputFieldProps> = ({
+	style,
 	label,
 	type,
 	name = type,
@@ -47,40 +50,59 @@ const InputField: React.FC<InputFieldProps> = ({
 	required = false,
 	disabled = false,
 }) => {
+	const [active, setActive] = useState(false);
+
+	const inputRef = useRef<HTMLInputElement>(null);
+
+	const onInputUnfocus = () => {
+		if (inputRef.current && inputRef.current.value === "") {
+			setActive(false);
+		}
+	};
+
 	return (
-		<div className={styles["registration__input-container"]}>
-			<label
-				className={styles["registration__input-label"]}
-				htmlFor={name}
-			>
-				{label}
-			</label>
-			<Controller
-				name={name}
-				control={control}
-				defaultValue={defaultValue}
-				rules={rules}
-				render={({ field }) => (
-					<input
-						id={id}
-						type={type}
-						placeholder={placeholder}
-						className={`${styles["registration__input"]} ${
-							error ? styles["input__error"] : ""
-						}`}
-						{...field}
-						onBlur={() => {
-							field.onBlur();
-							trigger(name);
-						}}
-						required={required}
-						disabled={disabled}
-						maxLength={maxLength}
-					/>
-				)}
-			/>
+		<>
+			<div className={styles["input"]} style={style}>
+				<label
+					className={
+						active
+							? styles["input__label--active"]
+							: styles["input__label"]
+					}
+					htmlFor={name}
+				>
+					{label}
+				</label>
+				<Controller
+					name={name}
+					control={control}
+					defaultValue={defaultValue}
+					rules={rules}
+					render={({ field }) => (
+						<input
+							id={id}
+							type={type}
+							// placeholder={placeholder}
+							className={`${styles["input__field"]} ${
+								error ? styles["input__error"] : ""
+							}`}
+							{...field}
+							onBlur={() => {
+								field.onBlur();
+								onInputUnfocus();
+								trigger(name);
+							}}
+							ref={inputRef}
+							onFocus={() => setActive(true)}
+							required={required}
+							disabled={disabled}
+							maxLength={maxLength}
+						/>
+					)}
+				/>
+			</div>
 			<ErrorMessage error={error} />
-		</div>
+		</>
 	);
 };
 

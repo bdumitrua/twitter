@@ -10,6 +10,8 @@ import InputField from "../../components/InputField/InputField";
 import { startRegisterAsync } from "../../redux/slices/register.slice";
 import { emailRules, nameRules } from "../../utils/inputRules";
 
+import cancelReg from "@/assets/images/Tweet/cancelReg.svg";
+
 const RegistrationStart: React.FC = () => {
 	const {
 		control,
@@ -65,48 +67,97 @@ const RegistrationStart: React.FC = () => {
 	}, [error]);
 
 	return (
-		<form
-			onSubmit={handleSubmit(handleStartRegistration)}
-			className={styles["registration__form"]}
-		>
-			<InputField
-				label="Имя"
-				type="text"
-				name="name"
-				error={errors?.name?.message?.toString()}
-				placeholder="Имя"
-				rules={nameRules}
-				trigger={trigger}
-				control={control}
-				required={true}
-			/>
-			<InputField
-				label="Почта"
-				type="email"
-				name="email"
-				error={errors?.email?.message?.toString()}
-				placeholder="Почта"
-				rules={emailRules}
-				trigger={trigger}
-				control={control}
-				required={true}
-			/>
-			<InputField
-				label="Дата рождения"
-				type="date"
-				name="birthDate"
-				error={errors?.birthDate?.message?.toString()}
-				rules={{
-					required: "Дата обязательна к заполнению.",
-				}}
-				trigger={trigger}
-				control={control}
-				required={true}
-			/>
-			<button className={styles["registration__button"]} type="submit">
-				Зарегистрироваться
-			</button>
-		</form>
+		<div className={styles["registration__page-container"]}>
+			<header className={styles["registration__header"]}>
+				<img src={cancelReg} alt="Cancel" />
+				Шаг 1 из 5
+			</header>
+			<form
+				onSubmit={handleSubmit(handleStartRegistration)}
+				className={styles["registration__form"]}
+			>
+				<h2 className={styles["registration__title"]}>
+					Создайте учетную запись
+				</h2>
+				<div className={styles["registration__fields"]}>
+					<InputField
+						label="Имя"
+						type="text"
+						name="name"
+						error={errors?.name?.message?.toString()}
+						placeholder="Имя"
+						rules={nameRules}
+						trigger={trigger}
+						control={control}
+						required={true}
+					/>
+					<InputField
+						label="Адрес электронной почты"
+						type="email"
+						name="email"
+						error={errors?.email?.message?.toString()}
+						placeholder="Почта"
+						rules={emailRules}
+						trigger={trigger}
+						control={control}
+						required={true}
+					/>
+				</div>
+				{}
+				<button className={styles["registration__changer"]}>
+					Использовать телефон
+				</button>
+				<div className={styles["registration__birth-date"]}>
+					<h6 className={styles["registration__birth-date-title"]}>
+						Дата рождения
+					</h6>
+					<p className={styles["registration__birth-date-text"]}>
+						Эта информация не будет общедоступной. Подтвердите свой
+						возраст даже если эта учетная запись предназначена для
+						компании, домашнего животного и т.д.
+					</p>
+					<div className={styles["registration__birth-date-fields"]}>
+						<InputField
+							style={{ flex: 6 }}
+							label="Месяц"
+							type="text"
+							name="birthMonth"
+							error={errors?.birthDate?.message?.toString()}
+							rules={{
+								required: "Дата обязательна к заполнению.",
+							}}
+							trigger={trigger}
+							control={control}
+							required={true}
+						/>
+						<InputField
+							style={{ flex: 3 }}
+							label="День"
+							type="text"
+							name="birthDay"
+							trigger={trigger}
+							control={control}
+							required={true}
+						/>
+						<InputField
+							style={{ flex: 4 }}
+							label="Год"
+							type="text"
+							name="birthYear"
+							trigger={trigger}
+							control={control}
+							required={true}
+						/>
+					</div>
+				</div>
+				<button
+					className={styles["registration__button"]}
+					type="submit"
+				>
+					Зарегистрироваться
+				</button>
+			</form>
+		</div>
 	);
 };
 
