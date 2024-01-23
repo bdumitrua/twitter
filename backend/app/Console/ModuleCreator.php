@@ -4,8 +4,6 @@ namespace App\Console;
 
 use App\Traits\FileGeneratorTrait;
 use Illuminate\Support\Facades\Artisan;
-use RecursiveDirectoryIterator;
-use RecursiveIteratorIterator;
 
 class ModuleCreator
 {
@@ -26,13 +24,6 @@ class ModuleCreator
         'Request' => 'Requests',
         'DTO' => 'DTO'
     ];
-
-    public function updateModules($moduleName): void
-    {
-        foreach ($this->moduleDirectories as $entityName => $folderName) {
-            $this->createModuleContent($moduleName, $folderName, $entityName);
-        }
-    }
 
     public function createModule($moduleName): void
     {
@@ -88,42 +79,5 @@ class ModuleCreator
     protected function createSeeder($moduleName): void
     {
         Artisan::call('make:seeder', ['name' => "{$moduleName}TableSeeder"]);
-    }
-
-    public function moduleExists($moduleName): bool
-    {
-        $moduleDir = app_path('Modules');
-        return is_dir("$moduleDir/$moduleName");
-    }
-
-    public function renameModule($oldName, $newName): void
-    {
-        $moduleDir = app_path('Modules');
-
-        // Переименование директории модуля
-        rename("$moduleDir/$oldName", "$moduleDir/$newName");
-
-        // Обновление имен файлов внутри переименованной директории
-        $this->renameModuleFiles("$moduleDir/$newName", $oldName, $newName);
-    }
-
-    protected function renameModuleFiles($modulePath, $oldName, $newName): void
-    {
-        $iterator = new RecursiveIteratorIterator(
-            new RecursiveDirectoryIterator($modulePath, RecursiveDirectoryIterator::SKIP_DOTS),
-            RecursiveIteratorIterator::SELF_FIRST
-        );
-
-        foreach ($iterator as $item) {
-            if ($item->isFile() && $item->getExtension() === 'php') {
-                $oldFileName = $item->getFilename();
-                $newFileName = str_replace($oldName, $newName, $oldFileName);
-                $newFilePath = $item->getPath() . '/' . $newFileName;
-
-                if (strpos($oldFileName, $oldName) !== false) {
-                    rename($item->getRealPath(), $newFilePath);
-                }
-            }
-        }
     }
 }
