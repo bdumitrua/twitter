@@ -12,6 +12,9 @@ export interface RegisterState {
 export interface RegisterStartPayload {
 	name: string;
 	email: string;
+	birthDay?: string;
+	birthMonth?: string;
+	birthYear?: string;
 	birthDate: string;
 }
 

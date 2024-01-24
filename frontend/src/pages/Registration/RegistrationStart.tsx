@@ -2,7 +2,7 @@ import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { AppDispatch, RootState } from "@/redux/store";
 import { ErrorMessages } from "@/types/api";
 import { RegisterError, RegisterStartPayload } from "@/types/redux/register";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { NavigateFunction, useNavigate } from "react-router-dom";
@@ -11,6 +11,20 @@ import { startRegisterAsync } from "../../redux/slices/register.slice";
 import { emailRules, nameRules } from "../../utils/inputRules";
 
 import cancelReg from "@/assets/images/Tweet/cancelReg.svg";
+
+interface Month {
+	value: string;
+	label: string;
+	days: number;
+}
+
+interface DayOption {
+	value: number;
+	label: number;
+}
+
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 100 }, (_, index) => currentYear - index);
 
 const RegistrationStart: React.FC = () => {
 	const {
@@ -30,7 +44,7 @@ const RegistrationStart: React.FC = () => {
 			startRegisterAsync({
 				name: data.name,
 				email: data.email,
-				birthDate: data.birthDate,
+				birthDate: `${data.birthYear}-${data.birthDay}-${data.birthMonth}`,
 			})
 		);
 		if (response.meta.requestStatus === "fulfilled") {
@@ -65,6 +79,45 @@ const RegistrationStart: React.FC = () => {
 			});
 		}
 	}, [error]);
+
+	const months: Month[] = [
+		{ value: "00", label: "", days: 31 },
+		{ value: "01", label: "Январь", days: 31 },
+		{ value: "02", label: "Февраль", days: 29 },
+		{ value: "03", label: "Март", days: 31 },
+		{ value: "04", label: "Апрель", days: 30 },
+		{ value: "05", label: "Май", days: 31 },
+		{ value: "06", label: "Июнь", days: 30 },
+		{ value: "07", label: "Июль", days: 31 },
+		{ value: "08", label: "Август", days: 31 },
+		{ value: "09", label: "Сентябрь", days: 30 },
+		{ value: "10", label: "Октябрь", days: 31 },
+		{ value: "11", label: "Ноябрь", days: 30 },
+		{ value: "12", label: "Декабрь", days: 31 },
+	];
+
+	const [selectedMonth, setSelectedMonth] = useState<string>("00");
+	const [selectedDay, setSelectedDay] = useState<string>("");
+	const [selectedYear, setSelectedYear] = useState<string>("");
+
+	const generateDays = (monthValue: string): DayOption[] => {
+		const month = months.find((m) => m.value === monthValue);
+		if (!month) {
+			return [];
+		}
+		return Array.from({ length: month.days }, (_, index) => ({
+			value: index + 1,
+			label: index + 1,
+		}));
+	};
+
+	useEffect(() => {
+		setSelectedDay("");
+	}, [selectedMonth]);
+
+	const dayOptions: DayOption[] = selectedMonth
+		? generateDays(selectedMonth)
+		: [];
 
 	return (
 		<div className={styles["registration__page-container"]}>
@@ -117,37 +170,44 @@ const RegistrationStart: React.FC = () => {
 						компании, домашнего животного и т.д.
 					</p>
 					<div className={styles["registration__birth-date-fields"]}>
-						<InputField
-							style={{ flex: 6 }}
-							label="Месяц"
-							type="text"
+						<select
 							name="birthMonth"
-							error={errors?.birthDate?.message?.toString()}
-							rules={{
-								required: "Дата обязательна к заполнению.",
-							}}
-							trigger={trigger}
-							control={control}
-							required={true}
-						/>
-						<InputField
-							style={{ flex: 3 }}
-							label="День"
-							type="text"
+							onChange={(e) => setSelectedMonth(e.target.value)}
+						>
+							{months.map((month) => (
+								<option key={month.value} value={month.value}>
+									{month.label}
+								</option>
+							))}
+						</select>
+						<select
 							name="birthDay"
-							trigger={trigger}
-							control={control}
-							required={true}
-						/>
-						<InputField
-							style={{ flex: 4 }}
-							label="Год"
-							type="text"
+							onChange={(e) => setSelectedDay(e.target.value)}
+							value={selectedDay}
+						>
+							<option value="" disabled>
+								{""}
+							</option>
+							{dayOptions.map((day) => (
+								<option key={day.value} value={day.value}>
+									{day.label}
+								</option>
+							))}
+						</select>
+						<select
 							name="birthYear"
-							trigger={trigger}
-							control={control}
-							required={true}
-						/>
+							onChange={(e) => setSelectedYear(e.target.value)}
+							value={selectedYear}
+						>
+							<option value="" disabled>
+								{""}
+							</option>
+							{years.map((year) => (
+								<option key={year} value={year}>
+									{year}
+								</option>
+							))}
+						</select>
 					</div>
 				</div>
 				<button
