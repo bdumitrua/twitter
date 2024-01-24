@@ -1,7 +1,10 @@
 .registration {
 	padding: 25px 45px;
+	position: relative;
 
 	&__page-container {
+		height: 100vh;
+		position: relative;
 	}
 
 	&__header {
@@ -43,10 +46,58 @@
 		}
 	}
 
+	&__select {
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		position: absolute;
+		left: 0;
+		top: 0;
+	}
+
+	&__select-wrapper {
+		@include flex-column();
+		height: 56px;
+		padding: 6px 12px;
+		border: 1px $black solid;
+		border-radius: 5px;
+
+		position: relative;
+	}
+
+	&__select-label {
+		@include text-black(12px, 500);
+	}
+
+	&__select-value {
+		margin-top: 4px;
+		@include text-black(16px, 500);
+	}
+
+	&__dropdown {
+		width: 16px;
+		position: absolute;
+		right: 12px;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
 	&__changer {
 		@include text-activity(12px, 500);
 		width: 100%;
 		display: flex;
 		justify-content: flex-end;
+	}
+
+	&__button {
+		width: 100%;
+		height: 50px;
+		border-radius: 100px;
+
+		background-color: #91a7bc;
+		color: $white;
+
+		position: absolute;
+		bottom: 5vh;
 	}
 }

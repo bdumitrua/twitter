@@ -10,6 +10,7 @@ import InputField from "../../components/InputField/InputField";
 import { startRegisterAsync } from "../../redux/slices/register.slice";
 import { emailRules, nameRules } from "../../utils/inputRules";
 
+import openDropdown from "@/assets/images/Pages/openDropdown.svg";
 import cancelReg from "@/assets/images/Tweet/cancelReg.svg";
 
 interface Month {
@@ -19,7 +20,7 @@ interface Month {
 }
 
 interface DayOption {
-	value: number;
+	value: string;
 	label: number;
 }
 
@@ -44,14 +45,14 @@ const RegistrationStart: React.FC = () => {
 			startRegisterAsync({
 				name: data.name,
 				email: data.email,
-				birthDate: `${data.birthYear}-${data.birthDay}-${data.birthMonth}`,
+				birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
 			})
 		);
 		if (response.meta.requestStatus === "fulfilled") {
 			const queryParams = new URLSearchParams({
 				name: data.name,
 				email: data.email,
-				birthDate: data.birthDate,
+				birthDate: `${selectedYear}-${selectedMonth}-${selectedDay}`,
 			}).toString();
 			navigate(
 				`/registration/confirm/${response.payload}?${queryParams}`
@@ -81,7 +82,6 @@ const RegistrationStart: React.FC = () => {
 	}, [error]);
 
 	const months: Month[] = [
-		{ value: "00", label: "", days: 31 },
 		{ value: "01", label: "Январь", days: 31 },
 		{ value: "02", label: "Февраль", days: 29 },
 		{ value: "03", label: "Март", days: 31 },
@@ -96,7 +96,7 @@ const RegistrationStart: React.FC = () => {
 		{ value: "12", label: "Декабрь", days: 31 },
 	];
 
-	const [selectedMonth, setSelectedMonth] = useState<string>("00");
+	const [selectedMonth, setSelectedMonth] = useState<string>("");
 	const [selectedDay, setSelectedDay] = useState<string>("");
 	const [selectedYear, setSelectedYear] = useState<string>("");
 
@@ -106,7 +106,10 @@ const RegistrationStart: React.FC = () => {
 			return [];
 		}
 		return Array.from({ length: month.days }, (_, index) => ({
-			value: index + 1,
+			value:
+				(index + 1).toString().length === 2
+					? (index + 1).toString()
+					: "0" + (index + 1),
 			label: index + 1,
 		}));
 	};
@@ -170,51 +173,131 @@ const RegistrationStart: React.FC = () => {
 						компании, домашнего животного и т.д.
 					</p>
 					<div className={styles["registration__birth-date-fields"]}>
-						<select
-							name="birthMonth"
-							onChange={(e) => setSelectedMonth(e.target.value)}
+						<div
+							className={styles["registration__select-wrapper"]}
+							style={{ flex: 6 }}
 						>
-							{months.map((month) => (
-								<option key={month.value} value={month.value}>
-									{month.label}
+							<label
+								htmlFor="birthMonth"
+								className={styles["registration__select-label"]}
+							>
+								Месяц
+							</label>
+
+							<select
+								name="birthMonth"
+								id="birthMonth"
+								onChange={(e) =>
+									setSelectedMonth(e.target.value)
+								}
+								className={styles["registration__select"]}
+							>
+								<option value="" disabled>
+									{""}
 								</option>
-							))}
-						</select>
-						<select
-							name="birthDay"
-							onChange={(e) => setSelectedDay(e.target.value)}
-							value={selectedDay}
+								{months.map((month) => (
+									<option
+										key={month.value}
+										value={month.value}
+									>
+										{month.label}
+									</option>
+								))}
+							</select>
+							<p className={styles["registration__select-value"]}>
+								{selectedMonth
+									? months[+selectedMonth].label
+									: ""}
+							</p>
+							<img
+								src={openDropdown}
+								alt="Иконка"
+								className={styles["registration__dropdown"]}
+							/>
+						</div>
+
+						<div
+							className={styles["registration__select-wrapper"]}
+							style={{ flex: 3 }}
 						>
-							<option value="" disabled>
-								{""}
-							</option>
-							{dayOptions.map((day) => (
-								<option key={day.value} value={day.value}>
-									{day.label}
+							<label
+								htmlFor="birthDay"
+								className={styles["registration__select-label"]}
+							>
+								День
+							</label>
+
+							<select
+								name="birthDay"
+								id="birthDay"
+								onChange={(e) => setSelectedDay(e.target.value)}
+								value={selectedDay}
+								className={styles["registration__select"]}
+							>
+								<option value="" disabled>
+									{""}
 								</option>
-							))}
-						</select>
-						<select
-							name="birthYear"
-							onChange={(e) => setSelectedYear(e.target.value)}
-							value={selectedYear}
+								{dayOptions.map((day) => (
+									<option key={day.value} value={day.value}>
+										{day.label}
+									</option>
+								))}
+							</select>
+							<p className={styles["registration__select-value"]}>
+								{selectedDay}
+							</p>
+							<img
+								src={openDropdown}
+								alt="Иконка"
+								className={styles["registration__dropdown"]}
+							/>
+						</div>
+
+						<div
+							className={styles["registration__select-wrapper"]}
+							style={{ flex: 4 }}
 						>
-							<option value="" disabled>
-								{""}
-							</option>
-							{years.map((year) => (
-								<option key={year} value={year}>
-									{year}
+							<label
+								htmlFor="birthYear"
+								className={styles["registration__select-label"]}
+							>
+								Год
+							</label>
+
+							<select
+								name="birthYear"
+								id="birthYear"
+								onChange={(e) =>
+									setSelectedYear(e.target.value)
+								}
+								value={selectedYear}
+								className={styles["registration__select"]}
+							>
+								<option value="" disabled>
+									{""}
 								</option>
-							))}
-						</select>
+								{years.map((year) => (
+									<option key={year} value={year}>
+										{year}
+									</option>
+								))}
+							</select>
+							<p className={styles["registration__select-value"]}>
+								{selectedYear}
+							</p>
+							<img
+								src={openDropdown}
+								alt="Иконка"
+								className={styles["registration__dropdown"]}
+							/>
+						</div>
 					</div>
 				</div>
 				<button
 					className={styles["registration__button"]}
 					type="submit"
 				>
-					Зарегистрироваться
+					Далее
 				</button>
 			</form>
 		</div>
