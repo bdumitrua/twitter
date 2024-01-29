@@ -77,7 +77,6 @@ const RegistrationCode = () => {
 				type="text"
 				name="code"
 				error={errors?.code?.message?.toString()}
-				placeholder="Код подтверждения"
 				rules={codeRules}
 				maxLength={5}
 				trigger={trigger}

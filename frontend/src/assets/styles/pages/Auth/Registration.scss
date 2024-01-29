@@ -27,8 +27,6 @@
 	}
 
 	&__birth-date {
-		@include flex-column();
-
 		&-title {
 			@include text-black(14px, 700);
 
@@ -49,10 +47,10 @@
 	&__select {
 		width: 100%;
 		height: 100%;
-		opacity: 0;
 		position: absolute;
-		left: 0;
 		top: 0;
+		left: 0;
+		opacity: 0;
 	}
 
 	&__select-wrapper {
@@ -70,15 +68,15 @@
 	}
 
 	&__select-value {
-		margin-top: 4px;
 		@include text-black(16px, 500);
+		margin-top: 4px;
 	}
 
 	&__dropdown {
 		width: 16px;
 		position: absolute;
-		right: 12px;
 		top: 50%;
+		right: 12px;
 		transform: translateY(-50%);
 	}
 
@@ -90,14 +88,37 @@
 	}
 
 	&__button {
-		width: 100%;
-		height: 50px;
-		border-radius: 100px;
+		&-next {
+			width: 100%;
+			height: 50px;
+			background-color: #91a7bc;
+			border-radius: 100px;
+			color: $white;
 
-		background-color: #91a7bc;
-		color: $white;
+			position: absolute;
+			bottom: 5vh;
+		}
+
+		&-reg {
+			width: 100%;
+			height: 50px;
+			background-color: $blue;
+			border-radius: 100px;
+			color: $white;
+
+			position: absolute;
+			bottom: 5vh;
+		}
+	}
+
+	&__terms {
+		@include text-black(10px, 500);
 
 		position: absolute;
-		bottom: 5vh;
+		bottom: calc(5vh + 75px);
+	}
+
+	&__terms-link {
+		@include text-activity(10px, 500);
 	}
 }

@@ -53,7 +53,6 @@ const Authorization = () => {
 					type="email"
 					name="email"
 					error={errors?.email?.message?.toString()}
-					placeholder="Почта"
 					trigger={trigger}
 					control={control}
 					required={true}
@@ -62,7 +61,6 @@ const Authorization = () => {
 				<InputField
 					label="Пароль"
 					type="password"
-					placeholder="Пароль"
 					error={errors?.password?.message?.toString()}
 					control={control}
 					required={true}

@@ -21,7 +21,6 @@ interface InputFieldProps<
 	type: string;
 	name?: string;
 	id?: string;
-	placeholder?: string;
 	defaultValue?: string | null;
 	rules?:
 		| InputRules
@@ -40,7 +39,6 @@ const InputField: React.FC<InputFieldProps> = ({
 	type,
 	name = type,
 	id = name,
-	placeholder = "",
 	defaultValue = "",
 	rules = {},
 	error = "",
@@ -50,7 +48,7 @@ const InputField: React.FC<InputFieldProps> = ({
 	required = false,
 	disabled = false,
 }) => {
-	const [active, setActive] = useState(false);
+	const [active, setActive] = useState(defaultValue !== "");
 
 	const inputRef = useRef<HTMLInputElement>(null);
 

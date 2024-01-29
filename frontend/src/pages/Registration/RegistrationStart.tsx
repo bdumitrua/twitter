@@ -5,7 +5,7 @@ import { RegisterError, RegisterStartPayload } from "@/types/redux/register";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
 import { startRegisterAsync } from "../../redux/slices/register.slice";
 import { emailRules, nameRules } from "../../utils/inputRules";
@@ -125,7 +125,12 @@ const RegistrationStart: React.FC = () => {
 	return (
 		<div className={styles["registration__page-container"]}>
 			<header className={styles["registration__header"]}>
-				<img src={cancelReg} alt="Cancel" />
+				<Link
+					to="/welcome"
+					style={{ display: "flex", alignItems: "center" }}
+				>
+					<img src={cancelReg} alt="Cancel" />
+				</Link>
 				Шаг 1 из 5
 			</header>
 			<form
@@ -141,7 +146,6 @@ const RegistrationStart: React.FC = () => {
 						type="text"
 						name="name"
 						error={errors?.name?.message?.toString()}
-						placeholder="Имя"
 						rules={nameRules}
 						trigger={trigger}
 						control={control}
@@ -152,7 +156,6 @@ const RegistrationStart: React.FC = () => {
 						type="email"
 						name="email"
 						error={errors?.email?.message?.toString()}
-						placeholder="Почта"
 						rules={emailRules}
 						trigger={trigger}
 						control={control}
@@ -294,7 +297,7 @@ const RegistrationStart: React.FC = () => {
 					</div>
 				</div>
 				<button
-					className={styles["registration__button"]}
+					className={styles["registration__button-next"]}
 					type="submit"
 				>
 					Далее

@@ -61,7 +61,6 @@ const RegistrationEnd = () => {
 				type="password"
 				name="password"
 				error={errors?.password?.message?.toString()}
-				placeholder="Пароль"
 				rules={passwordRules}
 				trigger={trigger}
 				control={control}
@@ -72,7 +71,6 @@ const RegistrationEnd = () => {
 				type="password"
 				name="repeatPassword"
 				error={errors?.repeatPassword?.message?.toString()}
-				placeholder="Повторите пароль"
 				rules={{
 					required: "Повторите пароль",
 					validate: (value: string) =>
