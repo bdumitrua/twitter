@@ -162,7 +162,7 @@ const RegistrationStart: React.FC = () => {
 						required={true}
 					/>
 				</div>
-				{}
+
 				<button className={styles["registration__changer"]}>
 					Использовать телефон
 				</button>
@@ -209,7 +209,7 @@ const RegistrationStart: React.FC = () => {
 							</select>
 							<p className={styles["registration__select-value"]}>
 								{selectedMonth
-									? months[+selectedMonth].label
+									? months[+selectedMonth - 1].label
 									: ""}
 							</p>
 							<img

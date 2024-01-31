@@ -30,7 +30,7 @@ const RegistrationConfirmation = () => {
 	const birthDate: string | null = queryParams.get("birthDate");
 
 	const handleConfirmRegistration: () => void = () => {
-		navigate(`/registration/code/${registrationId}`);
+		navigate(`/registration/code/${registrationId}?email=${email}`);
 	};
 
 	return (

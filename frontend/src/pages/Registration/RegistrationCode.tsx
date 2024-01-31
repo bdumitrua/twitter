@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+import cancelReg from "@/assets/images/Tweet/cancelReg.svg";
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { AppDispatch, RootState } from "@/redux/store";
 import { ErrorMessages } from "@/types/api";
@@ -7,6 +8,7 @@ import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import {
+	Link,
 	Location,
 	NavigateFunction,
 	useLocation,
@@ -53,6 +55,9 @@ const RegistrationCode = () => {
 		}
 	}, [error]);
 
+	const queryParams: URLSearchParams = new URLSearchParams(location.search);
+	const email: string | null = queryParams.get("email");
+
 	const handleRegistration: (
 		data: RegisterCodePayload
 	) => Promise<void> = async (data) => {
@@ -68,25 +73,50 @@ const RegistrationCode = () => {
 	};
 
 	return (
-		<form
-			className={styles["registration__form"]}
-			onSubmit={handleSubmit(handleRegistration)}
-		>
-			<InputField
-				label="Код подтверждения"
-				type="text"
-				name="code"
-				error={errors?.code?.message?.toString()}
-				rules={codeRules}
-				maxLength={5}
-				trigger={trigger}
-				control={control}
-				required={true}
-			/>
-			<button className={styles["registration__button"]} type="submit">
-				Зарегистрироваться
-			</button>
-		</form>
+		<div className={styles["registration__page-container"]}>
+			<header className={styles["registration__header"]}>
+				<Link
+					to="/welcome"
+					style={{ display: "flex", alignItems: "center" }}
+				>
+					<img src={cancelReg} alt="Cancel" />
+				</Link>
+				Шаг 3 из 5
+			</header>
+			<form
+				className={styles["registration__form"]}
+				onSubmit={handleSubmit(handleRegistration)}
+			>
+				<h2 className={styles["registration__title"]}>
+					Мы отправили вам код
+				</h2>
+				<span>
+					Введите код в расположенном ниже поле для подтверждения{" "}
+					{email}
+				</span>
+				<InputField
+					style={{ marginTop: "12px" }}
+					label="Проверочный код"
+					type="text"
+					name="code"
+					error={errors?.code?.message?.toString()}
+					rules={codeRules}
+					maxLength={5}
+					trigger={trigger}
+					control={control}
+					required={true}
+				/>
+				<Link to="/" className={styles["registration__no-code"]}>
+					Не получили сообщение электронной почты?
+				</Link>
+				<button
+					className={styles["registration__button-next"]}
+					type="submit"
+				>
+					Далее
+				</button>
+			</form>
+		</div>
 	);
 };
 
