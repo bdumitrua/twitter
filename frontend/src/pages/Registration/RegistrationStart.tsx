@@ -131,7 +131,7 @@ const RegistrationStart: React.FC = () => {
 				>
 					<img src={cancelReg} alt="Cancel" />
 				</Link>
-				Шаг 1 из 5
+				Шаг 1 из 4
 			</header>
 			<form
 				onSubmit={handleSubmit(handleStartRegistration)}

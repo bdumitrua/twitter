@@ -42,7 +42,7 @@ const RegistrationConfirmation = () => {
 				>
 					<img src={cancelReg} alt="Cancel" />
 				</Link>
-				Шаг 2 из 5
+				Шаг 2 из 4
 			</header>
 			<form
 				className={styles["registration__fields"]}

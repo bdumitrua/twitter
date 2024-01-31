@@ -81,7 +81,7 @@ const RegistrationCode = () => {
 				>
 					<img src={cancelReg} alt="Cancel" />
 				</Link>
-				Шаг 3 из 5
+				Шаг 3 из 4
 			</header>
 			<form
 				className={styles["registration__form"]}

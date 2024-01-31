@@ -1,3 +1,4 @@
+import cancelReg from "@/assets/images/Tweet/cancelReg.svg";
 import styles from "@/assets/styles/pages/Auth/Registration.scss";
 import { ErrorMessage } from "@/components/ErrorMessage/ErrorMessage";
 import { registerAsync } from "@/redux/slices/register.slice";
@@ -7,7 +8,7 @@ import { RegisterEndPayload, RegisterError } from "@/types/redux/register";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
-import { NavigateFunction, useNavigate } from "react-router-dom";
+import { Link, NavigateFunction, useNavigate } from "react-router-dom";
 import InputField from "../../components/InputField/InputField";
 import { getSubstring } from "../../utils/functions/getSubstring";
 import { passwordRules } from "../../utils/inputRules";
@@ -55,37 +56,58 @@ const RegistrationEnd = () => {
 	};
 
 	return (
-		<form onSubmit={handleSubmit(handleRegistration)}>
-			<InputField
-				label="Пароль"
-				type="password"
-				name="password"
-				error={errors?.password?.message?.toString()}
-				rules={passwordRules}
-				trigger={trigger}
-				control={control}
-				required={true}
-			/>
-			<InputField
-				label="Повторите пароль"
-				type="password"
-				name="repeatPassword"
-				error={errors?.repeatPassword?.message?.toString()}
-				rules={{
-					required: "Повторите пароль",
-					validate: (value: string) =>
-						value === watch("password") || "Пароли не совпадают",
-				}}
-				trigger={trigger}
-				control={control}
-				required={true}
-			/>
-			{generalError && <ErrorMessage error={generalError} />}
+		<div className={styles["registration__page-container"]}>
+			<header className={styles["registration__header"]}>
+				<Link
+					to="/welcome"
+					style={{ display: "flex", alignItems: "center" }}
+				>
+					<img src={cancelReg} alt="Cancel" />
+				</Link>
+				Шаг 4 из 4
+			</header>
+			<form
+				onSubmit={handleSubmit(handleRegistration)}
+				className={styles["registration__fields"]}
+			>
+				<h2 className={styles["registration__title"]}>
+					Задайте пароль
+				</h2>
+				<InputField
+					label="Пароль"
+					type="password"
+					name="password"
+					error={errors?.password?.message?.toString()}
+					rules={passwordRules}
+					trigger={trigger}
+					control={control}
+					required={true}
+				/>
+				<InputField
+					label="Повторите пароль"
+					type="password"
+					name="repeatPassword"
+					error={errors?.repeatPassword?.message?.toString()}
+					rules={{
+						required: "Повторите пароль",
+						validate: (value: string) =>
+							value === watch("password") ||
+							"Пароли не совпадают",
+					}}
+					trigger={trigger}
+					control={control}
+					required={true}
+				/>
+				{generalError && <ErrorMessage error={generalError} />}
 
-			<button className={styles["registration__button"]} type="submit">
-				Зарегистрироваться
-			</button>
-		</form>
+				<button
+					className={styles["registration__button-reg"]}
+					type="submit"
+				>
+					Зарегистрироваться
+				</button>
+			</form>
+		</div>
 	);
 };
 
