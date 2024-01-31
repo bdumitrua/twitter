@@ -1,3 +1,4 @@
+import cancelReg from "@/assets/images/Tweet/cancelReg.svg";
 import styles from "@/assets/styles/pages/Auth/Authorization.scss";
 import { loginAsync, setLoggedIn } from "@/redux/slices/auth.slice";
 import { getMeAsync } from "@/redux/slices/user.slice";
@@ -7,7 +8,6 @@ import { useState } from "react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, NavigateFunction, useNavigate } from "react-router-dom";
-import { ErrorMessage } from "../../components/ErrorMessage/ErrorMessage";
 import InputField from "../../components/InputField/InputField";
 import { emailRules, passwordRules } from "../../utils/inputRules";
 
@@ -40,16 +40,22 @@ const Authorization = () => {
 
 	return (
 		<div className={styles["auth"]}>
-			<Link to="/registration" className={`${styles["auth__switch"]}`}>
-				Регистрация
-			</Link>
-
+			<header className={styles["auth__header"]}>
+				<Link
+					to="/welcome"
+					style={{ display: "flex", alignItems: "center" }}
+				>
+					<img src={cancelReg} alt="Cancel" />
+				</Link>
+			</header>
 			<form
 				className={styles["auth__form"]}
 				onSubmit={handleSubmit(handleLogin)}
 			>
+				<h2 className={styles["auth__title"]}>Введите пароль</h2>
+
 				<InputField
-					label="Почта"
+					label="Адрес электронной почты"
 					type="email"
 					name="email"
 					error={errors?.email?.message?.toString()}
@@ -67,8 +73,6 @@ const Authorization = () => {
 					trigger={trigger}
 					rules={passwordRules}
 				/>
-
-				<ErrorMessage error={generalError} />
 
 				<button className={styles["auth__button"]} type="submit">
 					{loading ? "Вход..." : "Войти"}

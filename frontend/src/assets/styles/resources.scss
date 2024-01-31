@@ -58,23 +58,38 @@ $z-modals: 3;
 	color: $blue;
 }
 
-@mixin black-button() {
+@mixin black-button($width, $height) {
+	@include flex-center();
+	width: $width;
+	height: $height;
 	background-color: $black;
+	border-radius: 100px;
+	border-radius: 100px;
 	font-size: 12px;
 	font-weight: 600;
 	color: white;
 }
 
-@mixin blue-button() {
+@mixin blue-button($width, $height) {
+	@include flex-center();
+	width: $width;
+	height: $height;
 	background-color: $blue;
+	border-radius: 100px;
+	border-radius: 100px;
 	font-size: 13px;
 	font-weight: 800;
 	color: white;
 }
 
-@mixin white-button() {
+@mixin white-button($width, $height) {
+	@include flex-center();
+	width: $width;
+	height: $height;
 	background-color: transparent;
 	border: 1px $blue solid;
+	border-radius: 100px;
+	border-radius: 100px;
 	font-size: 13px;
 	font-weight: 800;
 	color: $black;
