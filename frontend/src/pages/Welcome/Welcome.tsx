@@ -28,101 +28,135 @@ const Welcome: React.FC = () => {
 	}, [user, error]);
 
 	return (
-		<div className={styles["welcome"]}>
-			<h1 className={styles["welcome__title"]}>В курсе происходящего</h1>
-			<div className={styles["welcome__content"]}>
-				<h3 className={styles["welcome__content-title"]}>
-					Присоединяйтесь сегодня.
-				</h3>
-				<div className={styles["welcome__register"]}>
-					<div className={styles["welcome__register-services"]}>
+		<>
+			<div className={styles["welcome"]}>
+				<h1 className={styles["welcome__title"]}>
+					В курсе происходящего
+				</h1>
+				<div className={styles["welcome__content"]}>
+					<h3 className={styles["welcome__content-title"]}>
+						Присоединяйтесь сегодня.
+					</h3>
+					<div className={styles["welcome__register"]}>
+						<div className={styles["welcome__register-services"]}>
+							<Link
+								to="/"
+								className={
+									styles["welcome__register-button--black"]
+								}
+							>
+								Войти с Google
+							</Link>
+							<Link
+								to="/"
+								className={
+									styles["welcome__register-button--black"]
+								}
+							>
+								Зарегистрироваться с Apple ID
+							</Link>
+						</div>
+						<div className={styles["welcome__divider"]}>
+							<p className={styles["welcome__divider-text"]}>
+								или
+							</p>
+						</div>
+						<div className={styles["welcome__register-standart"]}>
+							<Link
+								to="/registration"
+								className={
+									styles["welcome__register-button--blue"]
+								}
+							>
+								Зарегистрироваться
+							</Link>
+							<span className={styles["welcome__agreement"]}>
+								Регистрируюясь, вы соглашаетесь с{" "}
+								<Link
+									to="/"
+									className={
+										styles["welcome__agreement-links"]
+									}
+								>
+									Условиями предоставления услуг
+								</Link>{" "}
+								и{" "}
+								<Link
+									to="/"
+									className={
+										styles["welcome__agreement-links"]
+									}
+								>
+									Политикой конфиденциальности
+								</Link>
+								, а также с{" "}
+								<Link
+									to="/"
+									className={
+										styles["welcome__agreement-links"]
+									}
+								>
+									Политикой использования файлов cookie
+								</Link>
+							</span>
+						</div>
+					</div>
+
+					<div className={styles["welcome__auth"]}>
+						<h4 className={styles["welcome__auth-title"]}>
+							Уже зарегистрированы?
+						</h4>
 						<Link
-							to="/"
+							to="/auth"
 							className={
-								styles["welcome__register-button--black"]
+								styles["welcome__register-button--white"]
 							}
 						>
-							Войти с Google
+							Войти
+						</Link>
+					</div>
+
+					<footer className={styles["welcome__footer"]}>
+						<Link
+							to="/"
+							className={styles["welcome__footer-button"]}
+						>
+							О нас
 						</Link>
 						<Link
 							to="/"
-							className={
-								styles["welcome__register-button--black"]
-							}
+							className={styles["welcome__footer-button"]}
 						>
-							Зарегистрироваться с Apple ID
+							Скачать приложение
 						</Link>
-					</div>
-					<div className={styles["welcome__divider"]}>
-						<p className={styles["welcome__divider-text"]}>или</p>
-					</div>
-					<div className={styles["welcome__register-standart"]}>
 						<Link
-							to="/registration"
-							className={styles["welcome__register-button--blue"]}
+							to="/"
+							className={styles["welcome__footer-button"]}
 						>
-							Зарегистрироваться
+							Справочный центр
 						</Link>
-						<span className={styles["welcome__agreement"]}>
-							Регистрируюясь, вы соглашаетесь с{" "}
-							<Link
-								to="/"
-								className={styles["welcome__agreement-links"]}
-							>
-								Условиями предоставления услуг
-							</Link>{" "}
-							и{" "}
-							<Link
-								to="/"
-								className={styles["welcome__agreement-links"]}
-							>
-								Политикой конфиденциальности
-							</Link>
-							, а также с{" "}
-							<Link
-								to="/"
-								className={styles["welcome__agreement-links"]}
-							>
-								Политикой использования файлов cookie
-							</Link>
-						</span>
-					</div>
+						<Link
+							to="/"
+							className={styles["welcome__footer-button"]}
+						>
+							Условия предоставления услуг
+						</Link>
+						<Link
+							to="/"
+							className={styles["welcome__footer-button"]}
+						>
+							Политика конфиденциальности
+						</Link>
+						<Link
+							to="/"
+							className={styles["welcome__footer-button"]}
+						>
+							Политика в отношении файлов cookie
+						</Link>
+					</footer>
 				</div>
-
-				<div className={styles["welcome__auth"]}>
-					<h4 className={styles["welcome__auth-title"]}>
-						Уже зарегистрированы?
-					</h4>
-					<Link
-						to="/auth"
-						className={styles["welcome__register-button--white"]}
-					>
-						Войти
-					</Link>
-				</div>
-
-				<footer className={styles["welcome__footer"]}>
-					<Link to="/" className={styles["welcome__footer-button"]}>
-						О нас
-					</Link>
-					<Link to="/" className={styles["welcome__footer-button"]}>
-						Скачать приложение
-					</Link>
-					<Link to="/" className={styles["welcome__footer-button"]}>
-						Справочный центр
-					</Link>
-					<Link to="/" className={styles["welcome__footer-button"]}>
-						Условия предоставления услуг
-					</Link>
-					<Link to="/" className={styles["welcome__footer-button"]}>
-						Политика конфиденциальности
-					</Link>
-					<Link to="/" className={styles["welcome__footer-button"]}>
-						Политика в отношении файлов cookie
-					</Link>
-				</footer>
 			</div>
-		</div>
+		</>
 	);
 };
 
