@@ -1,9 +1,13 @@
 import CreateTweet from "@/pages/CreateTweet/CreateTweet";
-import { RootState } from "@/redux/store";
-import { User } from "@/types/redux/user";
+import { AppDispatch, RootState } from "@/redux/store";
 import { ReactNode } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { createBrowserRouter, Navigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import Cookies from "js-cookie";
+
+import { getMeAsync } from "@/redux/slices/user.slice";
+
 import Authorization from "../pages/Authorization/Authorization";
 import DefaultLayout from "../pages/DefaultLayout";
 import Feed from "../pages/Feed/Feed";
@@ -25,16 +29,35 @@ interface ProtectedRouteProps {
 }
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
-	const authorizedUser: User | null = useSelector(
-		(state: RootState) => state.user.authorizedUser
+	const dispatch = useDispatch<AppDispatch>();
+	const [hasCheckedUser, setHasCheckedUser] = useState(false);
+
+	const { authorizedUser, error, loading } = useSelector(
+		(state: RootState) => state.user
 	);
 
+	useEffect(() => {
+		if (
+			!authorizedUser &&
+			Cookies.get("accessToken") &&
+			!error &&
+			!loading
+		) {
+			dispatch(getMeAsync()).then(() => setHasCheckedUser(true));
+		} else {
+			setHasCheckedUser(true);
+		}
+	}, [authorizedUser, error, loading, dispatch]);
+
+	if (loading || !hasCheckedUser) {
+		return <div>Loading...</div>;
+	}
+
 	if (!authorizedUser) {
-		// Перенаправление на страницу авторизации
 		return <Navigate to="/welcome" />;
 	}
 
-	return children;
+	return <>{children}</>;
 };
 
 const router = createBrowserRouter([
